@@ -5,6 +5,7 @@ Disallow: /admin/
 Disallow: /admin/*
 Disallow: /test
 Disallow: /test/*
+Disallow: /test-pas
 Disallow: /newsletter
 Disallow: /scorecard
 Disallow: /lead-leakage-scorecard
@@ -12,6 +13,32 @@ Disallow: /lead-leakage-scorecard
 # Disallow dynamic filters that create duplicate content
 Disallow: /*?category=
 Disallow: /*?preview=true
+
+# AI crawlers and answer engines are welcome on public content.
+# Admin, API, and preview routes stay excluded via the rules above.
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+User-agent: CCBot
+Allow: /
 
 # Sitemaps
 Sitemap: https://orvnlabs.com/sitemap.xml

@@ -10,7 +10,7 @@
       name="description"
       content="ORVN Labs builds brokerage intelligence infrastructure. PAS answers, qualifies, routes, books, and logs inbound real estate leads before delay kills conversion."
     />
-    <meta name="robots" content="index,follow" />
+    <meta name="robots" content="index,follow,max-image-preview:large" />
     <meta name="google-site-verification" content="y9EvTx7LQUGQEk1WDaEZRxLEbzdZtt5RTnYmPCcyFVY" />
     <link rel="canonical" href="https://orvnlabs.com/" />
 
@@ -28,6 +28,53 @@
     <link rel="icon" type="image/png" href="/logo.png" />
     <link rel="apple-touch-icon" href="/logo.png" />
     <link rel="manifest" href="/manifest.json" />
+    <link rel="alternate" type="text/plain" title="LLMs.txt" href="/llms.txt" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://orvnlabs.com/#org",
+            "name": "ORVN Labs",
+            "url": "https://orvnlabs.com/",
+            "logo": "https://orvnlabs.com/logo.png",
+            "description": "Brokerage intelligence infrastructure. PAS answers, qualifies, routes, books, and logs inbound real estate leads before delay kills conversion.",
+            "email": "hello@orvnlabs.com",
+            "knowsAbout": [
+              "first-contact infrastructure",
+              "lead response management",
+              "real estate lead conversion",
+              "AI call handling",
+              "appointment booking automation",
+              "CRM hygiene"
+            ],
+            "sameAs": [
+              "https://twitter.com/orvnlabs",
+              "https://linkedin.com/company/orvnlabs"
+            ]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://orvnlabs.com/#website",
+            "url": "https://orvnlabs.com/",
+            "name": "ORVN Labs",
+            "publisher": { "@id": "https://orvnlabs.com/#org" }
+          },
+          {
+            "@type": "SoftwareApplication",
+            "@id": "https://orvnlabs.com/pas#pas",
+            "name": "PAS — Performative AI Superstaff",
+            "applicationCategory": "BusinessApplication",
+            "operatingSystem": "Web",
+            "url": "https://orvnlabs.com/pas",
+            "description": "The operating layer that controls the gap between inquiry and qualified appointment: detect, decide, act across six movements — inquiry, answer, qualify, route, book, log.",
+            "publisher": { "@id": "https://orvnlabs.com/#org" }
+          }
+        ]
+      }
+    </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

@@ -938,3 +938,135 @@ input[type="number"]::-webkit-outer-spin-button {
     padding-left: 1rem;
   }
 }
+
+/* ─── Global media safety ─── */
+img, video {
+  max-width: 100%;
+  height: auto;
+}
+
+svg {
+  max-width: 100%;
+}
+
+iframe {
+  max-width: 100%;
+}
+
+/* Missing utility used by calculators */
+.grid-cols-responsive {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+@media (min-width: 860px) {
+  .grid-cols-responsive {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+}
+
+/* ─── Mobile-first hardening (phones) ─── */
+@media (max-width: 640px) {
+  .container-page {
+    padding-inline: 16px;
+  }
+
+  .section-y {
+    padding-block: 56px;
+  }
+
+  .section-y-sm {
+    padding-block: 40px;
+  }
+
+  .h-mega {
+    font-size: clamp(40px, 13vw, 56px);
+    line-height: 1.04;
+    word-break: break-word;
+  }
+
+  .h-display-2 {
+    font-size: clamp(30px, 8.5vw, 40px);
+    line-height: 1.08;
+    word-break: break-word;
+  }
+
+  .h-section-2 {
+    font-size: clamp(24px, 6.5vw, 30px);
+  }
+
+  .lead-2 {
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  .number-display {
+    font-size: clamp(40px, 14vw, 56px);
+  }
+
+  .card {
+    padding: 20px;
+  }
+
+  .tool-preview {
+    padding: 22px;
+  }
+
+  .metric {
+    padding: 20px;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+    max-width: 100%;
+    padding: 14px 20px;
+    font-size: 14.5px;
+    text-align: center;
+  }
+
+  .pipeline-node {
+    min-width: 0;
+  }
+
+  .statement {
+    padding: 20px;
+  }
+
+  /* Never allow fixed-min grids to force horizontal scroll */
+  [style*="minmax(300px"],
+  [style*="minmax(320px"],
+  [style*="minmax(360px"] {
+    max-width: 100%;
+  }
+
+  /* Calculator tables: scroll inside instead of breaking layout */
+  .tbl-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-inline: -16px;
+    padding-inline: 16px;
+  }
+
+  input, textarea, select {
+    font-size: 16px; /* prevents iOS auto-zoom on focus */
+  }
+}
+
+@media (max-width: 400px) {
+  .container-page {
+    padding-inline: 14px;
+  }
+
+  .card {
+    padding: 18px;
+    border-radius: 18px;
+  }
+
+  .label-mono,
+  .label-mono-primary {
+    font-size: 9.5px;
+    letter-spacing: 0.1em;
+  }
+}

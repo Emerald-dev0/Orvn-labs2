@@ -523,7 +523,7 @@ export default function LeakageScorecard() {
                     zIndex: 0
                   }}
                 >
-                  <img src="/logo.png" style={{ width: '400px', height: 'auto' }} alt="" />
+                  <img src="/logo.png" style={{ width: '100%', maxWidth: 400, height: 'auto' }} alt="" />
                 </div>
 
                 {/* Content Wrapper */}

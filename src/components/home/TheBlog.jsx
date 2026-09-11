@@ -29,7 +29,7 @@ export default function TheBlog() {
           Insights from the trenches: first-contact strategy, operational frameworks, and real estate market analysis.
         </motion.p>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 24 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 24 }}>
           {posts.map((post, i) => (
             <motion.a
               key={post.slug}

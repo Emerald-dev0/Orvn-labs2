@@ -482,7 +482,7 @@ function Pipeline() {
           </motion.p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 24 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 24 }}>
           {steps.map((s, i) => (
             <motion.div key={s.n} {...fadeUp(0.1 + i * 0.05)} className="card" style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
               <div className="pipeline-node__badge">{s.n}</div>
@@ -523,7 +523,7 @@ function EngineArchitecture() {
         </motion.p>
       </div>
 
-      <div className="grid-responsive-2" style={{ gap: 32, gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))' }}>
+      <div className="grid-responsive-2" style={{ gap: 32, gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))' }}>
         {stages.map((s, i) => {
           const Icon = s.icon;
           return (
@@ -622,7 +622,7 @@ function ProductProof() {
         </motion.p>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 32, marginBottom: 40 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 32, marginBottom: 40 }}>
         {screenshots.map((s, i) => (
           <Screenshot key={s.key} src={s.src} title={s.title} caption={s.caption} delay={i * 0.1} />
         ))}
@@ -811,7 +811,7 @@ function OperationalVisibility() {
           self-reported activity. For each inbound lead, PAS is built to show:
         </motion.p>
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 16 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 16 }}>
         {items.map((it, i) => (
           <motion.div
             key={it}
@@ -837,7 +837,7 @@ function UseCases() {
         </motion.h2>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 24 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 24 }}>
         {cases.map((c, i) => {
           const Icon = c.icon;
           return (

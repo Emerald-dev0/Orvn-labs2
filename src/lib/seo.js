@@ -64,21 +64,52 @@ export function useDocumentMeta({ title, description, path, image, type = 'websi
     setMeta('twitter:image', finalImage);
     setLink('canonical', finalCanonical);
 
-    // Default global schema
+    // Default global schema: @graph so AI agents and search engines get the
+    // site entity, the org entity, and the product entity in one payload.
+    // Page-level `schema` merges in and wins on conflicting keys.
     const defaultSchema = {
       '@context': 'https://schema.org',
-      '@type': 'Organization',
-      name: SITE.name,
-      url: SITE.url,
-      logo: `${SITE.url}/logo.png`,
-      sameAs: [
-        'https://twitter.com/orvnlabs',
-        'https://linkedin.com/company/orvnlabs'
-      ]
+      '@graph': [
+        {
+          '@type': 'Organization',
+          '@id': `${SITE.url}/#org`,
+          name: SITE.name,
+          url: SITE.url,
+          logo: `${SITE.url}/logo.png`,
+          description: SITE.defaultDescription,
+          email: 'hello@orvnlabs.com',
+          knowsAbout: [
+            'first-contact infrastructure',
+            'lead response management',
+            'real estate lead conversion',
+            'AI call handling',
+            'appointment booking automation',
+            'CRM hygiene',
+          ],
+          sameAs: [
+            'https://twitter.com/orvnlabs',
+            'https://linkedin.com/company/orvnlabs',
+          ],
+        },
+        {
+          '@type': 'WebSite',
+          '@id': `${SITE.url}/#website`,
+          url: SITE.url,
+          name: SITE.name,
+          publisher: { '@id': `${SITE.url}/#org` },
+        },
+      ],
     };
 
     if (schema) {
-      setJsonLd({ ...defaultSchema, ...schema });
+      if (schema['@graph']) {
+        setJsonLd({
+          '@context': 'https://schema.org',
+          '@graph': [...defaultSchema['@graph'], ...schema['@graph']],
+        });
+      } else {
+        setJsonLd({ ...defaultSchema, ...schema });
+      }
     } else {
       setJsonLd(defaultSchema);
     }

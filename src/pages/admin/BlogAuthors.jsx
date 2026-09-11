@@ -123,7 +123,7 @@ export default function BlogAuthors() {
         {loading ? (
           <div style={{ textAlign: 'center', padding: 40, color: '#94A3B8' }}>Loading authors...</div>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: 20 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: 20 }}>
             {authors.map((author) => (
               <div key={author.id} style={{ background: '#fff', borderRadius: 16, padding: 24, border: '1px solid #E5E8F0', display: 'flex', gap: 16 }}>
                 <div style={{ width: 64, height: 64, borderRadius: '50%', background: '#F1F5F9', flexShrink: 0, overflow: 'hidden' }}>

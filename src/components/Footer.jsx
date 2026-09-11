@@ -63,8 +63,8 @@ export default function Footer() {
             marginBottom: 64,
           }}
         >
-          <div style={{ gridColumn: '1 / -1' }} className="grid-cols-responsive">
-            <div style={{ marginBottom: 40 }}>
+          <div style={{ gridColumn: '1 / -1', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 32 }}>
+            <div style={{ marginBottom: 8, minWidth: 0 }}>
               <Link to="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 10, marginBottom: 18 }}>
                 <Logo size={32} />
                 <span style={{ fontWeight: 800, fontSize: 18, color: 'var(--ink)', letterSpacing: '-0.02em', fontFamily: 'var(--font-display)' }}>

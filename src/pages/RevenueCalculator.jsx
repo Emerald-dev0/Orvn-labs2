@@ -132,7 +132,7 @@ const TblRow = ({ cols, header }) => (
   <div
     style={{
       display: 'grid',
-      gridTemplateColumns: 'minmax(140px, 2fr) repeat(3, minmax(80px, 1fr))',
+      gridTemplateColumns: 'minmax(100px, 2fr) repeat(3, minmax(56px, 1fr))',
       gap: 8,
       padding: '8px 12px',
       background: header ? 'var(--surface)' : '#fff',
@@ -798,7 +798,7 @@ export default function RevenueCalculator() {
                     zIndex: 0
                   }}
                 >
-                  <img src="/logo.png" style={{ width: '400px', height: 'auto' }} alt="" />
+                  <img src="/logo.png" style={{ width: '100%', maxWidth: 400, height: 'auto' }} alt="" />
                 </div>
 
                 {/* Content Wrapper */}

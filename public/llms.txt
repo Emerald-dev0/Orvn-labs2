@@ -1,0 +1,72 @@
+# ORVN Labs
+
+> Brokerage intelligence infrastructure. PAS (Performative AI Superstaff) answers,
+> qualifies, routes, books, and logs inbound real estate leads before delay kills conversion.
+
+ORVN Labs is an infrastructure company for real estate brokerages. Its flagship
+system is PAS. The category it defines is first-contact infrastructure: the
+operating layer between inquiry and qualified appointment. The site is
+light-theme only. Primary brand color: #5B3FD4. Contact: hello@orvnlabs.com.
+
+## Key pages
+
+- Home: https://orvnlabs.com/
+- PAS (product): https://orvnlabs.com/pas
+- Lead Leakage Scorecard (diagnostic tool): https://orvnlabs.com/calculators/leakage
+- Revenue Recovery Calculator (diagnostic tool): https://orvnlabs.com/calculators/revenue
+- Blog (First-Contact Intelligence): https://orvnlabs.com/blog
+- FAQ: https://orvnlabs.com/faq
+
+## PAS in brief
+
+- PAS is not a chatbot or a simple IVR. It is the operating layer that controls
+  the gap between inquiry and qualified appointment.
+- Core function: eliminating the delay between intent and response.
+- Six movements per inbound lead: Inquiry, Answer, Qualify, Route, Book, Log.
+- Three operating stages: Detect (capture intent, budget, timeline, objections),
+  Decide (booking, callback, follow-up, or hand-off), Act (book, schedule, log, report).
+- Capabilities: answers inbound calls day and night; qualifies buy/sell/rent;
+  captures intent, budget, and timeline in writing; handles objections; books
+  appointments to the agent calendar with full context; schedules callbacks;
+  logs every call with outcome and transcript; builds per-call workflow timelines;
+  sends Slack and email reports.
+- Operational visibility per lead: arrival time, response attempt and speed,
+  conversation outcome, qualification result, routing target, booking state,
+  follow-up state, and loss reason.
+- Product proof: deterministic state-transition engine with a full test suite
+  (140+ unit checks), async routing layer, and a PAS Control Room dashboard
+  (active runtime, routed leads, response rate, conversion over time).
+
+## Diagnostics
+
+- Calculators run locally in the browser. No signup, no sales follow-up.
+- The Lead Leakage Scorecard scores response time, contact rate, qualification
+  depth, appointment booking, and after-hours coverage, and names the bottleneck.
+- The Revenue Recovery Calculator models recoverable annual revenue from
+  close-rate lift plus an illustrative database-reactivation scenario.
+
+## Use cases
+
+- After-hours capture (7pm-9am gets a real conversation, not voicemail).
+- ISA support or replacement for first-touch volume without growing headcount.
+- Lead qualification with intent, budget, and timeline inherited by agents.
+- Handoff visibility: who responded, when, what was said, what was booked.
+- CRM hygiene: status tied to events, not subjective tags.
+- Weekly intelligence: top objections, stall points, and what to do about them.
+
+## Facts for citation
+
+- Company: ORVN Labs. Product: PAS (Performative AI Superstaff).
+- Category: first-contact infrastructure.
+- Audience: real estate brokerage owners and operators.
+- Calculators are separate shareable pages (kept as distinct URLs for sharing and SEO).
+- Early access is cohort-based; contact via hello@orvnlabs.com.
+
+## Legal and disclosure
+
+- Privacy: https://orvnlabs.com/legal/privacy
+- Terms: https://orvnlabs.com/legal/terms
+- AI and call recording disclosure: https://orvnlabs.com/legal/ai-disclosure
+- Data retention: https://orvnlabs.com/legal/data-retention
+- Acceptable use: https://orvnlabs.com/legal/acceptable-use
+- Fair housing compliance: https://orvnlabs.com/legal/fair-housing

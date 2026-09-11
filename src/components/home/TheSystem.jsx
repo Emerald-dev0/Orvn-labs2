@@ -209,7 +209,7 @@ function VerticalSystem() {
           </p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 20 }}>
           {steps.map((s, i) => (
             <motion.div key={s.n} {...fadeUp(0.05 * i)} className="card" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               <div

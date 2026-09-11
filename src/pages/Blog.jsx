@@ -21,7 +21,7 @@ const fmt = (iso) =>
   new Date(iso).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
 const BlogSkeleton = () => (
-  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 24, width: '100%' }}>
+  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 24, width: '100%' }}>
     {[1, 2, 3].map((i) => (
       <div key={i} className="card" style={{ padding: 0, height: 440, overflow: 'hidden' }}>
         <div style={{ height: 200, background: 'var(--line-strong)', animation: 'pulse 1.5s infinite' }} />
@@ -445,7 +445,7 @@ export default function Blog() {
               </button>
             </motion.div>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 24 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 24 }}>
               {filteredPosts.map((post, idx) => {
                 const isFeatured = idx === 0 && !searchQuery && !selectedCategory;
 

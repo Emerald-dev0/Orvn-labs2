@@ -179,7 +179,7 @@ function IntelligenceHub() {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 14 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 14 }}>
         {posts.map((p, i) => (
           <motion.article
             key={p.slug}
@@ -225,7 +225,7 @@ function NewsletterSection() {
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
           gap: 'clamp(28px, 5vw, 64px)',
           alignItems: 'center',
         }}

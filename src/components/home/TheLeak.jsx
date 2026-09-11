@@ -44,7 +44,7 @@ export default function TheLeak() {
           {...fadeUp(0.18)}
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
             gap: 20,
             marginBottom: 'clamp(32px, 5vw, 48px)',
           }}
@@ -130,7 +130,7 @@ export default function TheLeak() {
           {...fadeUp(0.3)}
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
             gap: 20,
             marginBottom: 'clamp(24px, 3vw, 32px)',
           }}

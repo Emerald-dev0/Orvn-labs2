@@ -13,7 +13,7 @@ export default function TheProof() {
   return (
     <section className="section-y" style={{ background: '#fff', borderTop: '1px solid var(--line)' }}>
       <div className="container-page" style={{ maxWidth: 900 }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 32 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 32 }}>
           {/* Systems & Proof */}
           <motion.div
             {...fadeUp(0)}

@@ -664,7 +664,7 @@ export default function BlogPost() {
           <h2 className="h-section" style={{ fontSize: 'clamp(24px, 3vw, 32px)', margin: '0 0 20px' }}>
             Keep reading
           </h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 24 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 24 }}>
             {related.map((p) => (
               <article key={p.slug} className="card" style={{ padding: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
                 {p.featured_image_url && (
