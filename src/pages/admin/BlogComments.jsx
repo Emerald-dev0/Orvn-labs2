@@ -17,7 +17,7 @@ export default function BlogComments() {
     try {
       setLoading(true);
       const { data: { session } } = await supabase.auth.getSession();
-      const res = await fetch(`/api/blog/admin/comments/list?status=${filter}`, {
+      const res = await fetch(`/api/blog/admin/comments?status=${filter}`, {
         headers: { 'Authorization': `Bearer ${session?.access_token}` }
       });
       if (res.ok) {
@@ -34,7 +34,7 @@ export default function BlogComments() {
   const handleModerate = async (id, status) => {
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      const res = await fetch(`/api/blog/admin/comments/moderate?id=${id}`, {
+      const res = await fetch(`/api/blog/admin/comments?id=${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -55,7 +55,7 @@ export default function BlogComments() {
     if (!window.confirm('Permanently delete this comment?')) return;
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      const res = await fetch(`/api/blog/admin/comments/moderate?id=${id}`, {
+      const res = await fetch(`/api/blog/admin/comments?id=${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${session?.access_token}` }
       });
@@ -76,7 +76,7 @@ export default function BlogComments() {
       // Better: add support to moderate API for bulk.
       const spamIds = comments.filter(c => c.status === 'spam').map(c => c.id);
       for (const id of spamIds) {
-        await fetch(`/api/blog/admin/comments/moderate?id=${id}`, {
+        await fetch(`/api/blog/admin/comments?id=${id}`, {
           method: 'DELETE',
           headers: { 'Authorization': `Bearer ${session?.access_token}` }
         });

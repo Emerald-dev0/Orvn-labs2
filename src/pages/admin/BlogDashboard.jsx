@@ -129,7 +129,7 @@ export default function BlogDashboard() {
       }
 
       // 1. Call the API to delete from DB and Storage
-      const res = await fetch(`/api/blog/admin/delete?slug=${slug}`, {
+      const res = await fetch(`/api/blog/admin/posts?slug=${slug}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${session.access_token}`,
@@ -163,7 +163,7 @@ export default function BlogDashboard() {
         return;
       }
 
-      const res = await fetch(`/api/blog/admin/update?slug=${post.slug}`, {
+      const res = await fetch(`/api/blog/admin/posts?slug=${post.slug}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -209,7 +209,7 @@ export default function BlogDashboard() {
       delete duplicatedPost.created_at;
       delete duplicatedPost.updated_at;
 
-      const res = await fetch('/api/blog/admin/create', {
+      const res = await fetch('/api/blog/admin/posts', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -235,7 +235,7 @@ export default function BlogDashboard() {
 
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      const res = await fetch(`/api/blog/admin/update?slug=${post.slug}`, {
+      const res = await fetch(`/api/blog/admin/posts?slug=${post.slug}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

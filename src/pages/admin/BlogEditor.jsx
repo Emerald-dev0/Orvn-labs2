@@ -102,14 +102,15 @@ export default function BlogEditor() {
 
   const loadCategories = async () => {
     try {
-      const res = await fetch('/api/blog/categories');
-      if (res.ok) {
-        const data = await res.json();
-        const cats = data.categories || [];
-        setCategories(cats);
-        if (!isEditing && cats.length > 0) {
-          setPost(prev => ({ ...prev, category: cats[0] }));
-        }
+      const { data, error } = await supabase
+        .from('blog_categories')
+        .select('name')
+        .order('name', { ascending: true });
+      if (error) throw error;
+      const cats = (data || []).map((c) => c.name);
+      setCategories(cats);
+      if (!isEditing && cats.length > 0) {
+        setPost(prev => ({ ...prev, category: cats[0] }));
       }
     } catch (err) {
       console.warn('Failed to load categories:', err);
@@ -200,8 +201,8 @@ export default function BlogEditor() {
       }
 
       const endpoint = isEditing
-        ? `/api/blog/admin/update?slug=${slug}`
-        : '/api/blog/admin/create';
+        ? `/api/blog/admin/posts?slug=${slug}`
+        : '/api/blog/admin/posts';
 
       const method = isEditing ? 'PUT' : 'POST';
 
