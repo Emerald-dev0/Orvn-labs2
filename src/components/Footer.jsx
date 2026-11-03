@@ -8,25 +8,18 @@ const COLS = [
   {
     title: 'Product',
     links: [
-      { label: 'PAS — Performative AI Superstaff', to: '/pas' },
-      // { label: 'Pricing', to: '/pricing' },
-      // { label: 'Test PAS', to: '/demo' },
-      { label: 'PAS Control Room', href: PAS_LINKS.controlRoom, external: true },
-    ],
-  },
-  {
-    title: 'Tools',
-    links: [
-      { label: 'Lead Leakage Scorecard', to: '/calculators/leakage' },
-      { label: 'Revenue Calculator', to: '/calculators/revenue' },
-      { label: 'All Calculators', to: '/calculate' },
-    ],
-  },
-  {
-    title: 'Insights',
-    links: [
-      { label: 'First-Contact Intelligence (Blog)', to: '/blog' },
+      { label: 'Product overview', to: '/product' },
+      { label: 'How it works', to: '/how-it-works' },
+      { label: 'Who it’s for', to: '/who-its-for' },
       { label: 'FAQ', to: '/faq' },
+    ],
+  },
+  {
+    title: 'Company',
+    links: [
+      { label: 'ORVN Labs', to: '/' },
+      { label: 'Contact', to: '/contact' },
+      { label: 'Early access', to: '/early-access' },
     ],
   },
   {
@@ -34,10 +27,7 @@ const COLS = [
     links: [
       { label: 'Privacy Policy', to: '/legal/privacy' },
       { label: 'Terms of Use', to: '/legal/terms' },
-      { label: 'AI / Call Recording Disclosure', to: '/legal/ai-disclosure' },
-      { label: 'Data Retention Policy', to: '/legal/data-retention' },
-      { label: 'Acceptable Use Policy', to: '/legal/acceptable-use' },
-      { label: 'Fair Housing Compliance', to: '/legal/fair-housing' },
+      { label: 'AI Disclosure', to: '/legal/ai-disclosure' },
     ],
   },
 ];
@@ -72,7 +62,7 @@ export default function Footer() {
                 </span>
               </Link>
               <p style={{ color: 'var(--ink-mid)', fontSize: 14, lineHeight: 1.6, maxWidth: 280, margin: 0, fontFamily: 'var(--font-body)' }}>
-                Brokerage intelligence infrastructure. PAS controls what happens between inquiry and qualified appointment.
+                Software for clearer real-estate presentation.
               </p>
               <a
                 href="mailto:hello@orvnlabs.com"
@@ -170,7 +160,7 @@ export default function Footer() {
           }}
         >
           <p style={{ fontSize: 12.5, color: 'var(--ink-dim)', margin: 0, fontWeight: 500, fontFamily: 'var(--font-body)' }}>
-            © {year} ORVN Labs. Built for real estate brokerages. PAS is a product of ORVN Labs.
+            © {year} ORVN Labs. Brand/product names subject to legal review.
           </p>
           <p style={{ fontSize: 12.5, color: 'var(--ink-dim)', margin: 0, fontWeight: 500, fontFamily: 'var(--font-body)' }}>
             Not affiliated with Fair Housing enforcement agencies. Not a CRM.

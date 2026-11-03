@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 
@@ -7,32 +7,38 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
 
-import Home from './pages/Home';
-import PAS from './pages/PAS';
+const Home = lazy(() => import('./pages/Home'));
+const Product = lazy(() => import('./pages/Product'));
+const HowItWorks = lazy(() => import('./pages/HowItWorks'));
+const WhoItsFor = lazy(() => import('./pages/WhoItsFor'));
+const EarlyAccess = lazy(() => import('./pages/EarlyAccess'));
+const Contact = lazy(() => import('./pages/Contact'));
+const SignIn = lazy(() => import('./pages/SignIn'));
+const PAS = lazy(() => import('./pages/PAS'));
 // import Thesis from './pages/Thesis';
-import RevenueCalculator from './pages/RevenueCalculator';
-import LeakageScorecard from './pages/LeakageScorecard';
-import Blog from './pages/Blog';
-import BlogPost from './pages/BlogPost';
-import FAQ from './pages/FAQ';
-import AdminLogin from './pages/admin/AdminLogin';
-import BlogDashboard from './pages/admin/BlogDashboard';
-import BlogEditor from './pages/admin/BlogEditor';
-import BlogCategories from './pages/admin/BlogCategories';
-import BlogTags from './pages/admin/BlogTags';
-import BlogSettings from './pages/admin/BlogSettings';
-import BlogAuthors from './pages/admin/BlogAuthors';
-import BlogComments from './pages/admin/BlogComments';
-import BlogSubscribers from './pages/admin/BlogSubscribers';
+const RevenueCalculator = lazy(() => import('./pages/RevenueCalculator'));
+const LeakageScorecard = lazy(() => import('./pages/LeakageScorecard'));
+const Blog = lazy(() => import('./pages/Blog'));
+const BlogPost = lazy(() => import('./pages/BlogPost'));
+const FAQ = lazy(() => import('./pages/FAQ'));
+const AdminLogin = lazy(() => import('./pages/admin/AdminLogin'));
+const BlogDashboard = lazy(() => import('./pages/admin/BlogDashboard'));
+const BlogEditor = lazy(() => import('./pages/admin/BlogEditor'));
+const BlogCategories = lazy(() => import('./pages/admin/BlogCategories'));
+const BlogTags = lazy(() => import('./pages/admin/BlogTags'));
+const BlogSettings = lazy(() => import('./pages/admin/BlogSettings'));
+const BlogAuthors = lazy(() => import('./pages/admin/BlogAuthors'));
+const BlogComments = lazy(() => import('./pages/admin/BlogComments'));
+const BlogSubscribers = lazy(() => import('./pages/admin/BlogSubscribers'));
 // import Login from './pages/Login';
-import NotFound from './pages/NotFound';
+const NotFound = lazy(() => import('./pages/NotFound'));
 
-import Privacy from './pages/legal/Privacy';
-import Terms from './pages/legal/Terms';
-import AIDisclosure from './pages/legal/AIDisclosure';
-import DataRetention from './pages/legal/DataRetention';
-import AcceptableUse from './pages/legal/AcceptableUse';
-import FairHousing from './pages/legal/FairHousing';
+const Privacy = lazy(() => import('./pages/legal/Privacy'));
+const Terms = lazy(() => import('./pages/legal/Terms'));
+const AIDisclosure = lazy(() => import('./pages/legal/AIDisclosure'));
+const DataRetention = lazy(() => import('./pages/legal/DataRetention'));
+const AcceptableUse = lazy(() => import('./pages/legal/AcceptableUse'));
+const FairHousing = lazy(() => import('./pages/legal/FairHousing'));
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -55,6 +61,7 @@ function AnimatedRoutes() {
 
   return (
     <AnimatePresence mode="wait">
+      <Suspense fallback={<div style={{ minHeight: '60vh' }} />}>
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Home />} />
         <Route path="/pas" element={<PAS />} />
@@ -107,12 +114,18 @@ function AnimatedRoutes() {
         <Route path="/ai-call-disclosure" element={<Navigate to="/legal/ai-disclosure" replace />} />
         <Route path="/fair-housing" element={<Navigate to="/legal/fair-housing" replace />} />
 
+        <Route path="/product" element={<Product />} />
+        <Route path="/how-it-works" element={<HowItWorks />} />
+        <Route path="/who-its-for" element={<WhoItsFor />} />
+        <Route path="/early-access" element={<EarlyAccess />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/sign-in" element={<SignIn />} />
         {/* Legacy routes from the previous site — redirect rather than break inbound links. */}
-        <Route path="/product" element={<Navigate to="/pas" replace />} />
-        <Route path="/why-orvn" element={<Navigate to="/pas" replace />} />
+        <Route path="/why-orvn" element={<Navigate to="/" replace />} />
 
         <Route path="*" element={<NotFound />} />
       </Routes>
+      </Suspense>
     </AnimatePresence>
   );
 }

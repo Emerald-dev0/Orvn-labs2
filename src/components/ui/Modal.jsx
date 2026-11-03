@@ -53,7 +53,7 @@ export default function Modal({
         left: 0,
         right: 0,
         bottom: 0,
-        backgroundColor: 'rgba(15, 23, 42, 0.65)',
+        backgroundColor: 'rgba(10, 10, 15, 0.65)',
         backdropFilter: 'blur(4px)',
         display: 'flex',
         alignItems: 'center',
@@ -79,7 +79,7 @@ export default function Modal({
       >
         {/* Header */}
         <div style={{ padding: '24px 24px 8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <h3 style={{ margin: 0, fontSize: '20px', fontWeight: 700, color: '#0F172A' }}>
+          <h3 style={{ margin: 0, fontSize: '20px', fontWeight: 700, color: 'var(--ink)' }}>
             {title}
           </h3>
           <button
@@ -104,7 +104,7 @@ export default function Modal({
         </div>
 
         {/* Content */}
-        <div style={{ padding: '16px 24px 24px', fontSize: '15px', lineHeight: 1.6, color: '#475569' }}>
+        <div style={{ padding: '16px 24px 24px', fontSize: '15px', lineHeight: 1.6, color: 'var(--ink-mid)' }}>
           {children}
         </div>
 
@@ -112,8 +112,8 @@ export default function Modal({
         {footer && (
           <div style={{
             padding: '16px 24px',
-            backgroundColor: '#F8FAFC',
-            borderTop: '1px solid #F1F5F9',
+            backgroundColor: 'var(--surface)',
+            borderTop: '1px solid var(--line)',
             display: 'flex',
             justifyContent: 'flex-end',
             gap: '12px'

@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X } from 'lucide-react';
+import { SlMenu, SlClose } from 'react-icons/sl';
 import Logo from './Logo';
 import { PAS_LINKS } from '../lib/pas';
 
 const NAV_LINKS = [
-  { label: 'Product', to: '/pas' },
-  { label: 'Calculators', to: '/calculate' },
-  { label: 'Blog', to: '/blog' },
-  // { label: 'Pricing', to: '/pricing' },
-  // { label: 'Thesis', to: '/thesis' },
+  { label: 'Product', to: '/product' },
+  { label: 'How it works', to: '/how-it-works' },
+  { label: 'Who it’s for', to: '/who-its-for' },
   { label: 'FAQ', to: '/faq' },
 ];
 
@@ -63,12 +61,12 @@ export default function Navbar() {
           height: 72,
           display: 'flex',
           alignItems: 'center',
-          background: scrolled ? 'rgba(255,255,255,0.82)' : 'rgba(255,255,255,0.98)',
+          background: scrolled ? 'rgba(245,241,234,0.82)' : 'rgba(245,241,234,0.98)',
           backdropFilter: scrolled ? 'saturate(180%) blur(16px)' : 'none',
           WebkitBackdropFilter: scrolled ? 'saturate(180%) blur(16px)' : 'none',
-          borderBottom: scrolled ? '1px solid rgba(229,232,240,0.7)' : '1px solid transparent',
+          borderBottom: scrolled ? '1px solid rgba(216,216,213,0.7)' : '1px solid transparent',
           transition: 'all 0.4s cubic-bezier(0.23, 1, 0.32, 1)',
-          boxShadow: scrolled ? '0 1px 12px rgba(15,23,42,0.04)' : 'none',
+          boxShadow: scrolled ? '0 1px 12px rgba(10,10,15,0.04)' : 'none',
         }}
       >
         <div
@@ -103,6 +101,7 @@ export default function Navbar() {
           </nav>
 
           <div className="nav-desktop" style={{ display: 'none', alignItems: 'center', gap: 10 }}>
+            <Link to="/sign-in" style={{ fontSize: 14, fontWeight: 600, color: 'var(--ink-mid)', textDecoration: 'none', padding: '8px 14px', fontFamily: 'var(--font-body)' }}>Sign in</Link>
             {/* <a
               href={PAS_LINKS.login}
               target="_blank"
@@ -113,11 +112,11 @@ export default function Navbar() {
               Login
             </a> */}
             <Link
-              to="/calculators/leakage"
+              to="/early-access"
               className="btn-primary"
               style={{ padding: '10px 22px', fontSize: 14, borderRadius: 'var(--radius-pill)' }}
             >
-              Run leakage score
+              Request early access
             </Link>
           </div>
 
@@ -141,7 +140,7 @@ export default function Navbar() {
               transition: 'all 0.2s',
             }}
           >
-            {open ? <X size={20} /> : <Menu size={20} />}
+            {open ? <SlClose size={20} /> : <SlMenu size={20} />}
           </button>
         </div>
       </header>
@@ -157,7 +156,7 @@ export default function Navbar() {
               style={{
                 position: 'fixed',
                 inset: 0,
-                background: 'rgba(15,23,42,0.25)',
+                background: 'rgba(10,10,15,0.25)',
                 backdropFilter: 'blur(4px)',
                 zIndex: 88,
               }}
@@ -212,8 +211,8 @@ export default function Navbar() {
                 >
                   Login
                 </a> */}
-                <Link to="/calculators/leakage" className="btn-primary" style={{ flex: 1 }}>
-                  Run leakage score
+                <Link to="/early-access" className="btn-primary" style={{ flex: 1 }}>
+                  Request early access
                 </Link>
               </div>
             </motion.div>

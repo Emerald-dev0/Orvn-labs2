@@ -4,18 +4,18 @@ export default {
   theme: {
     extend: {
       colors: {
-        ink: "#0F172A",
-        "ink-mid": "#475569",
-        "ink-dim": "#94A3B8",
-        background: "#FFFFFF",
-        surface: "#F7F8FB",
-        line: "#E5E8F0",
-        "line-strong": "#CFD4E2",
+        ink: "#0A0A0F",
+        "ink-mid": "#66717A",
+        "ink-dim": "#9A9A95",
+        background: "#F5F1EA",
+        surface: "#EDEAE3",
+        line: "#D8D8D5",
+        "line-strong": "#BFBFB8",
         primary: {
-          DEFAULT: "#5B3FD4",
-          light: "#7B5FEA",
-          dark: "#3A2899",
-          pale: "#EEEAFB",
+          DEFAULT: "#397D77",
+          light: "#4A948D",
+          dark: "#2B635E",
+          pale: "#E6F0EE",
         },
         signal: {
           risk: "#DC2626",
@@ -28,13 +28,13 @@ export default {
       },
       fontFamily: {
         serif: ["'Instrument Serif'", "Georgia", "serif"],
-        sans: ["'Inter'", "system-ui", "sans-serif"],
+        sans: ["'Manrope'", "system-ui", "sans-serif"],
         mono: ["'JetBrains Mono'", "monospace"],
       },
       boxShadow: {
-        card: "0 1px 2px rgba(15,23,42,0.04), 0 4px 16px rgba(15,23,42,0.05)",
-        "card-hover": "0 2px 4px rgba(15,23,42,0.06), 0 12px 28px rgba(15,23,42,0.08)",
-        ring: "0 0 0 4px rgba(91,63,212,0.12)",
+        card: "0 1px 2px rgba(10,10,15,0.04), 0 4px 16px rgba(10,10,15,0.05)",
+        "card-hover": "0 2px 4px rgba(10,10,15,0.06), 0 12px 28px rgba(10,10,15,0.08)",
+        ring: "0 0 0 4px rgba(57,125,119,0.12)",
       },
       maxWidth: {
         page: "1160px",
