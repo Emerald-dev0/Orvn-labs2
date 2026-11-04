@@ -27,10 +27,7 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.15, ease: EASE }}
           >
-            <span className="pill pill-lime hero-badge">
-              <span className="hero-badge-dot" aria-hidden="true" />
-              LAREI by ORVN Labs · Real estate publishing and professional presence
-            </span>
+            <p className="hero-kicker">Real estate publishing and professional presence</p>
 
             <h1 className="hero-title">
               Your real estate business deserves a better place to be seen.
@@ -53,7 +50,9 @@ export default function Hero() {
               </Link>
             </div>
 
-            <p className="hero-note">Private beta · Applications reviewed individually</p>
+            <p className="hero-note">
+              LAREI is a product of ORVN Labs. Private beta, applications reviewed individually.
+            </p>
           </motion.div>
 
           <motion.aside
