@@ -27,8 +27,12 @@ buy. Revised for the stack agreed on 4 Nov: Next.js, Neon, Cloudflare Workers, G
   decisions, rights attestation, publish/unpublish/archive, inquiry status, site, invitations).
   Every action resolves the workspace and role from the session, validates with Zod, writes
   inside `withUserDb` and appends an audit entry.
-- **Wired**: `/properties`, `/properties/[id]` (with real publish/unpublish), `/properties/new`,
-  `/inquiries`, `/dashboard`. **Still sample data**: `/website`, `/analytics`, `/settings`.
+- **Uploads**: server-side validate-then-write to R2, per-file visibility, cover selection and
+  removal; the media route still gates every read on release state.
+- **CI**: `.github/workflows/ci.yml` typechecks, runs the unit suite, re-checks RLS coverage and
+  builds on every push, with no secrets required.
+- **Wired**: `/properties`, `/properties/[id]` (with real publish/unpublish and uploads),
+  `/properties/new`, `/inquiries`, `/dashboard`. **Still sample data**: `/website`, `/analytics`, `/settings`.
   With no `DATABASE_URL` the whole app shows the sample workspace behind a "Preview build"
   banner rather than pretending to be live.
 

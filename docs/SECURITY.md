@@ -196,7 +196,7 @@ debug log and it holds no message bodies.
 
 ## 11. What is tested, and what is not
 
-`npm test` — 60 tests, all green.
+`npm test` — 68 tests, all green.
 
 - **Snapshot boundary** (11): approval + public + non-empty; private media excluded; address
   gating; “on request” cannot leak an amount; missing price is not zero; leading-zero parcel
@@ -212,6 +212,9 @@ debug log and it holds no message bodies.
 - **Workspace layer** (17): money formatting never invents an amount, relative time, record
   completeness, label humanising, property update schema (uuid ids, money precision, location
   precision default), creation schema, and that the member form cannot mint an owner.
+- **Upload validation** (8): type comes from magic bytes, not the filename; HTML renamed to
+  `.jpg` is refused; declared/actual mismatch is refused; empty and oversized files are refused;
+  traversal fragments are stripped from stored names.
 - Existing email tests (4).
 
 Not covered yet, stated plainly:
@@ -264,8 +267,12 @@ Incident responses that exist today:
    cross-tenant reads return zero rows would turn the static checks into proof.
 3. **Better Auth rate limiting is per-isolate.** Move to the Postgres limiter or Workers rate
    limiting before the beta opens.
-4. **No upload pipeline.** R2 credentials, signed uploads, size/type limits and per-file
-   visibility are designed but not built.
+4. **Uploads are server-side only.** `uploadMedia` validates bytes, writes to R2 and records a
+   row; files start private and `setCoverMedia` / `setMediaVisibility` / `removeMedia` follow the
+   same rules. Still missing: image resizing and thumbnails, HEIC acceptance, per-workspace
+   storage quota, and a background sweep for objects whose rows were deleted mid-failure.
 5. **No admin surface.** Beta invitations are a script.
 6. **No CSP reporting.** `report-uri` plus a collector would tell us what breaks rather than
    waiting for a user to say the page is blank.
+7. **No integration tests against a live database.** CI now typechecks, runs the unit suite,
+   re-checks policy coverage and builds on every push, but nothing in CI opens a connection.
