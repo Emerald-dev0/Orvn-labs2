@@ -63,6 +63,11 @@ daily rotation, five-minute cookie cache. Signing out revokes the session row.
 account; the magic-link call swallows a beta-gate rejection and returns the same sentence. The
 invite page shows a masked address (`d•••@example.com`), never the full one.
 
+**Account recovery.** `/forgot-password` requests a single-use link (one hour) and `/reset-password`
+consumes it. The request form answers identically whether or not the address exists. A password
+change invalidates the other sessions on the account, which is the only safe behaviour when the
+reason for resetting might be a compromise.
+
 **Rate limits** on auth endpoints (Better Auth, per route) plus the application limiter below.
 Caveat: Better Auth's limiter is in-memory, so on Workers it is per-isolate. The
 application-level limiter is the one that holds.
@@ -271,7 +276,8 @@ Incident responses that exist today:
    row; files start private and `setCoverMedia` / `setMediaVisibility` / `removeMedia` follow the
    same rules. Still missing: image resizing and thumbnails, HEIC acceptance, per-workspace
    storage quota, and a background sweep for objects whose rows were deleted mid-failure.
-5. **No admin surface.** Beta invitations are a script.
+5. **No admin surface.** Beta invitations are a script; there is no UI for the waitlist or for
+   revoking a member, and `revokeMember` is a stub that says so rather than pretending.
 6. **No CSP reporting.** `report-uri` plus a collector would tell us what breaks rather than
    waiting for a user to say the page is blank.
 7. **No integration tests against a live database.** CI now typechecks, runs the unit suite,

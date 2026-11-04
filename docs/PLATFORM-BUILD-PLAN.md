@@ -27,6 +27,8 @@ buy. Revised for the stack agreed on 4 Nov: Next.js, Neon, Cloudflare Workers, G
   decisions, rights attestation, publish/unpublish/archive, inquiry status, site, invitations).
   Every action resolves the workspace and role from the session, validates with Zod, writes
   inside `withUserDb` and appends an audit entry.
+- **Account recovery**: `/forgot-password` and `/reset-password` work against Better Auth's
+  single-use tokens and are linked from the sign-in page.
 - **Uploads**: server-side validate-then-write to R2, per-file visibility, cover selection and
   removal; the media route still gates every read on release state.
 - **CI**: `.github/workflows/ci.yml` typechecks, runs the unit suite, re-checks RLS coverage and
