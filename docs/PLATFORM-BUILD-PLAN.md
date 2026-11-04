@@ -9,7 +9,11 @@ buy. Revised for the stack agreed on 4 Nov: Next.js, Neon, Cloudflare Workers, G
   same copy, server-rendered. 16 routes build and render.
 - The original Vite app at the repo root is frozen. It still holds the blog, the two
   calculators and the blog admin, which are PAS-era pages and are not part of the port yet.
-- No database, auth, property record or published page exists yet. That starts at M0.
+- The workspace UI is built against demo data in `src/app/data.js`: `/dashboard`, `/properties`,
+  `/properties/[id]` (seven tabs), `/properties/new`, `/website`, `/inquiries`, `/analytics`,
+  `/settings`. Append `?state=empty` to any list screen to see its empty state.
+- Icons: Hugeicons free set through `src/app/icons.jsx`, one module so the family can be swapped.
+- Backend wiring is next: the UI already names what is not live yet rather than faking it.
 
 ## 2. Build first: the publishing spine
 

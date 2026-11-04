@@ -32,9 +32,21 @@ async function deliver(message: Parameters<typeof sendEmail>[0]) {
  */
 const authSecret = process.env.BETTER_AUTH_SECRET;
 
-// In production a missing secret must stop the app, not fall back to a shared default.
-if (!authSecret && process.env.NODE_ENV === 'production') {
-  throw new Error('BETTER_AUTH_SECRET is required in production.');
+/**
+ * Checked per request rather than at import time, so `next build` can compile without a
+ * database or a secret while production still refuses to serve auth without one.
+ */
+export function assertAuthConfigured() {
+  if (!process.env.BETTER_AUTH_SECRET) {
+    throw new Error(
+      process.env.NODE_ENV === 'production'
+        ? 'BETTER_AUTH_SECRET is required in production.'
+        : 'BETTER_AUTH_SECRET is not set. Add it to apps/platform/.env.local.',
+    );
+  }
+  if (!process.env.DATABASE_URL) {
+    throw new Error('DATABASE_URL is not set. Auth needs the Neon connection string.');
+  }
 }
 
 export const auth = betterAuth({

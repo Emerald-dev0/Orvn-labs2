@@ -1,0 +1,422 @@
+'use client';
+
+import { useState } from 'react';
+import Link from 'next/link';
+import { Icon } from '../icons';
+import { PageHead, Card, StatusPill, Tabs, FactRow, EmptyState } from '../ui';
+import { properties, activity } from '../data';
+
+const TABS = [
+  { id: 'overview', label: 'Overview' },
+  { id: 'details', label: 'Details' },
+  { id: 'media', label: 'Media', count: 4 },
+  { id: 'copy', label: 'Copy & assets' },
+  { id: 'sheet', label: 'Deal sheet' },
+  { id: 'public', label: 'Public page' },
+  { id: 'activity', label: 'Activity' },
+];
+
+function Overview({ property }) {
+  const approved = property.facts.filter((f) => f.state === 'approved' && f.public).slice(0, 4);
+  return (
+    <div className="ws-split">
+      <Card>
+        <div className="ws-section-head">
+          <h2>What buyers see</h2>
+          <Link href={`/properties/${property.id}?tab=public`}>Preview page</Link>
+        </div>
+        <div style={{ display: 'flex', gap: 14 }}>
+          <img
+            src={property.cover}
+            alt=""
+            style={{ width: 128, height: 96, borderRadius: 14, objectFit: 'cover', flex: 'none' }}
+          />
+          <div>
+            <div style={{ fontSize: 16, fontWeight: 600, letterSpacing: '-0.015em' }}>{property.title}</div>
+            <div className="ws-small ws-muted" style={{ marginTop: 3 }}>
+              {property.place} · {property.type}
+            </div>
+            <div style={{ marginTop: 8, fontSize: 15, fontWeight: 600 }}>{property.price}</div>
+          </div>
+        </div>
+
+        <div className="ws-divider" />
+        <div className="ws-facts">
+          {approved.map((f) => (
+            <div className="ws-fact" key={f.key} style={{ gridTemplateColumns: 'minmax(0,1fr) auto' }}>
+              <span className="ws-fact-key">{f.key}</span>
+              <span className="ws-fact-value">{f.value}</span>
+            </div>
+          ))}
+        </div>
+        <p className="ws-small ws-muted" style={{ marginTop: 12 }}>
+          Public facts are the ones you approved for publication. Private values never appear on the page.
+        </p>
+      </Card>
+
+      <div className="ws-stack">
+        <Card>
+          <div className="ws-section-head">
+            <h2>Record</h2>
+            <span className="ws-small ws-muted">{property.completeness}%</span>
+          </div>
+          <div style={{ height: 8, borderRadius: 999, background: 'var(--bone-2)', overflow: 'hidden' }}>
+            <div
+              style={{
+                width: `${property.completeness}%`,
+                height: '100%',
+                background: 'var(--lime-2)',
+                borderRadius: 999,
+              }}
+            />
+          </div>
+          <p className="ws-small ws-muted" style={{ marginTop: 10 }}>{property.nextAction}</p>
+        </Card>
+
+        <Card>
+          <div className="ws-section-head">
+            <h2>Publishing</h2>
+          </div>
+          <div style={{ display: 'grid', gap: 8 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span className="ws-small ws-muted">Status</span>
+              <StatusPill status={property.status} />
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span className="ws-small ws-muted">Address visibility</span>
+              <span style={{ fontSize: 13 }}>Approximate location</span>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span className="ws-small ws-muted">Last updated</span>
+              <span style={{ fontSize: 13 }}>{property.updated}</span>
+            </div>
+          </div>
+        </Card>
+      </div>
+    </div>
+  );
+}
+
+function Details({ property }) {
+  return (
+    <Card>
+      <div className="ws-section-head">
+        <h2>Approved fields</h2>
+        <span className="ws-small ws-muted">Source and approval are stored per value</span>
+      </div>
+      <div className="ws-facts">
+        {property.facts.map((f) => (
+          <FactRow key={`${f.key}-${f.source}`} fact={f} />
+        ))}
+      </div>
+      <p className="ws-small ws-muted" style={{ marginTop: 14 }}>
+        A blank field stays blank. It is never rendered as “not in a flood zone” or “no restrictions”.
+      </p>
+    </Card>
+  );
+}
+
+function Media({ property }) {
+  const shots = ['/images/interior-1.jpg', '/images/prop-2.jpg', '/images/prop-4.jpg', '/images/prop-5.jpg'];
+  return (
+    <Card>
+      <div className="ws-section-head">
+        <h2>Photos</h2>
+        <span className="ws-small ws-muted">Visibility is per file</span>
+      </div>
+      <div className="ws-media-grid">
+        {shots.map((src, i) => (
+          <div className="ws-media" key={src}>
+            <img src={src} alt="" />
+            <div className="ws-media-tags">
+              {i === 0 ? <span className="ws-media-tag">Cover</span> : null}
+              <span className={`ws-media-tag ${i === 3 ? 'is-private' : ''}`}>
+                {i === 3 ? 'Private' : 'Public'}
+              </span>
+            </div>
+          </div>
+        ))}
+        <button type="button" className="ws-media-add">
+          <Icon name="upload" size={18} strokeWidth={1.6} />
+          Add files
+        </button>
+      </div>
+      <p className="ws-small ws-muted" style={{ marginTop: 12 }}>
+        Private files are never served on the public page, even if someone guesses the address.
+      </p>
+    </Card>
+  );
+}
+
+function CopyAssets({ property }) {
+  return (
+    <div className="ws-split">
+      <Card>
+        <div className="ws-section-head">
+          <h2>Buyer description</h2>
+          <span className="ws-mono-note">
+            <Icon name="magic" size={13} />
+            Draft
+          </span>
+        </div>
+        <div
+          style={{
+            background: 'var(--bone)',
+            borderRadius: 14,
+            padding: 16,
+            fontSize: 14.5,
+            lineHeight: 1.65,
+            color: 'var(--ink-2)',
+          }}
+        >
+          A four-bedroom house in the Harbour district with 620 m² of internal space, a walled
+          garden and a service charge confirmed by the developer. Viewings by appointment.
+        </div>
+        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 12 }}>
+          {['$480,000', '4 bedrooms', '620 m²', 'Harbour district'].map((chip) => (
+            <span key={chip} className="ws-mono-note">{chip}</span>
+          ))}
+        </div>
+        <p className="ws-small ws-muted" style={{ marginTop: 12 }}>
+          Generated from your approved facts. Editing a fact marks this copy as needing regeneration.
+        </p>
+        <div style={{ display: 'flex', gap: 8, marginTop: 14 }}>
+          <button type="button" className="ws-btn is-dark" disabled>
+            <Icon name="refresh" size={15} />
+            Regenerate
+          </button>
+          <button type="button" className="ws-btn is-quiet" disabled>Edit copy</button>
+        </div>
+      </Card>
+
+      <Card>
+        <div className="ws-section-head">
+          <h2>Drafting</h2>
+        </div>
+        <p className="ws-small ws-muted">
+          AI drafting is the next milestone. This screen shows where it lands and what it is allowed
+          to touch: the facts above, your tone, and nothing else.
+        </p>
+        <div className="ws-callout is-ok" style={{ marginTop: 12 }}>
+          <Icon name="checkCircle" size={16} />
+          <div>
+            <strong>Facts stay fixed</strong>
+            <p>Generated words can never change a price, an ID or a status.</p>
+          </div>
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+function DealSheet({ property }) {
+  return (
+    <div className="ws-split">
+      <Card style={{ background: 'var(--bone)' }}>
+        <div
+          style={{
+            background: 'var(--white)',
+            borderRadius: 12,
+            padding: 22,
+            boxShadow: 'var(--sh-1)',
+          }}
+        >
+          <div className="ws-small ws-muted">Northaven Property Group</div>
+          <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 24, letterSpacing: '-0.03em', marginTop: 4 }}>
+            {property.title}
+          </h3>
+          <div className="ws-small ws-muted">{property.place} · Approximate location</div>
+          <img
+            src={property.cover}
+            alt=""
+            style={{ width: '100%', aspectRatio: '16/9', objectFit: 'cover', borderRadius: 10, marginTop: 12 }}
+          />
+          <div className="ws-facts" style={{ marginTop: 10 }}>
+            {property.facts.slice(0, 5).map((f) => (
+              <div className="ws-fact" key={f.key} style={{ gridTemplateColumns: 'minmax(0,1fr) auto' }}>
+                <span className="ws-fact-key">{f.key}</span>
+                <span className="ws-fact-value">{f.value || '—'}</span>
+              </div>
+            ))}
+          </div>
+          <p className="ws-small ws-muted" style={{ marginTop: 12 }}>
+            Facts supplied by the seller’s representative and not independently verified.
+          </p>
+        </div>
+      </Card>
+
+      <Card>
+        <div className="ws-section-head">
+          <h2>Export</h2>
+        </div>
+        <p className="ws-small ws-muted">
+          One or two pages, print-ready, generated from the same record as the page.
+        </p>
+        <div style={{ display: 'flex', gap: 8, marginTop: 14 }}>
+          <button type="button" className="ws-btn is-dark" disabled>
+            <Icon name="printer" size={15} />
+            Print sheet
+          </button>
+          <button type="button" className="ws-btn is-quiet" disabled>
+            <Icon name="download" size={15} />
+            PDF
+          </button>
+        </div>
+        <p className="ws-small ws-muted" style={{ marginTop: 12 }}>
+          Export arrives with the record editor. The layout above is the print target.
+        </p>
+      </Card>
+    </div>
+  );
+}
+
+function PublicPage({ property }) {
+  return (
+    <div className="ws-split">
+      <Card>
+        <div className="ws-section-head">
+          <h2>Public link</h2>
+          <StatusPill status={property.status} />
+        </div>
+        <div
+          style={{
+            display: 'flex',
+            gap: 8,
+            alignItems: 'center',
+            background: 'var(--bone)',
+            borderRadius: 12,
+            padding: '10px 12px',
+          }}
+        >
+          <Icon name="link" size={16} className="ws-muted" />
+          <span style={{ fontSize: 13.5 }}>orvnlabs.com/w/northaven/p/{property.id}</span>
+          <button type="button" className="ws-btn is-quiet is-sm" style={{ marginLeft: 'auto' }} disabled>
+            Copy
+          </button>
+        </div>
+        <p className="ws-small ws-muted" style={{ marginTop: 12 }}>
+          Unpublishing removes the page and its files. Old links land on a neutral unavailable page,
+          never on a draft.
+        </p>
+      </Card>
+
+      <div className="ws-preview">
+        <div className="ws-preview-bar">
+          <span style={{ width: 9, height: 9, borderRadius: 99, background: '#d9d2c6' }} />
+          <span style={{ width: 9, height: 9, borderRadius: 99, background: '#d9d2c6' }} />
+          <span className="ws-preview-url">orvnlabs.com/w/northaven/p/{property.id}</span>
+        </div>
+        <div style={{ padding: 18 }}>
+          <img
+            src={property.cover}
+            alt=""
+            style={{ width: '100%', aspectRatio: '16/10', objectFit: 'cover', borderRadius: 12 }}
+          />
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 12, gap: 10 }}>
+            <div>
+              <div className="ws-preview-name" style={{ fontSize: 18 }}>{property.title}</div>
+              <div className="ws-preview-meta">{property.place} · Approximate location</div>
+            </div>
+            <div style={{ fontSize: 14, fontWeight: 600 }}>{property.price}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ActivityTab({ property }) {
+  return (
+    <Card>
+      <div className="ws-section-head">
+        <h2>History</h2>
+        <span className="ws-small ws-muted">{property.title}</span>
+      </div>
+      <div className="ws-stack" style={{ gap: 14 }}>
+        {activity.map((a) => (
+          <div key={a.id} style={{ display: 'flex', gap: 11 }}>
+            <span
+              style={{
+                width: 7,
+                height: 7,
+                borderRadius: 999,
+                background: 'var(--lime-2)',
+                marginTop: 7,
+                flex: 'none',
+              }}
+            />
+            <div>
+              <div style={{ fontSize: 13.5, fontWeight: 500 }}>{a.text}</div>
+              <div className="ws-small ws-muted">{a.detail} · {a.when}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </Card>
+  );
+}
+
+export default function PropertyDetail({ id, initialTab = 'overview' }) {
+  const [tab, setTab] = useState(initialTab);
+  const property = properties.find((p) => p.id === id);
+
+  if (!property) {
+    return (
+      <>
+        <PageHead title="Property" description="That record is not in this workspace." />
+        <EmptyState
+          icon="file"
+          title="No such property"
+          body="This link does not match a property in Northaven Property Group, or it was archived."
+          action={{ href: '/properties', label: 'Back to properties' }}
+          secondary={{ href: '/dashboard', label: 'Go to overview' }}
+        />
+      </>
+    );
+  }
+
+  return (
+    <>
+      <Link href="/properties" className="ws-small ws-muted" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+        <Icon name="arrowLeft" size={14} />
+        Properties
+      </Link>
+
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, marginTop: 10, marginBottom: 16, flexWrap: 'wrap' }}>
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+            <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 28, letterSpacing: '-0.03em' }}>
+              {property.title}
+            </h1>
+            <StatusPill status={property.status} />
+          </div>
+          <p className="ws-small ws-muted" style={{ marginTop: 4 }}>
+            {property.place} · {property.type} · {property.price}
+          </p>
+        </div>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button type="button" className="ws-btn is-quiet">
+            <Icon name="view" size={16} />
+            Preview
+          </button>
+          <button type="button" className="ws-btn is-dark" disabled>
+            <Icon name="upload" size={16} />
+            Publish
+          </button>
+        </div>
+      </div>
+
+      <div style={{ marginBottom: 14 }}>
+        <Tabs tabs={TABS} value={tab} onChange={setTab} />
+      </div>
+
+      {tab === 'overview' ? <Overview property={property} /> : null}
+      {tab === 'details' ? <Details property={property} /> : null}
+      {tab === 'media' ? <Media property={property} /> : null}
+      {tab === 'copy' ? <CopyAssets property={property} /> : null}
+      {tab === 'sheet' ? <DealSheet property={property} /> : null}
+      {tab === 'public' ? <PublicPage property={property} /> : null}
+      {tab === 'activity' ? <ActivityTab property={property} /> : null}
+    </>
+  );
+}

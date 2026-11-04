@@ -4,9 +4,6 @@ import '@fontsource-variable/figtree/wght-italic.css';
 import '../src/index.css';
 import '../src/styles/sections.css';
 
-import Nav from '../src/components/site/Nav';
-import Footer from '../src/components/site/Footer';
-
 export const metadata = {
   metadataBase: new URL('https://orvnlabs.com'),
   title: {
@@ -48,9 +45,7 @@ export default function RootLayout({ children }) {
         <a className="skip-link" href="#main">
           Skip to content
         </a>
-        <Nav />
         {children}
-        <Footer />
       </body>
     </html>
   );
