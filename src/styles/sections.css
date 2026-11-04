@@ -1376,7 +1376,7 @@
 
 /* ───────────────────────────── Deal sheet ───────────────────────────── */
 .sheet-section {
-  background: var(--paper);
+  background: var(--paper-deep);
   overflow: hidden;
 }
 
@@ -1435,7 +1435,7 @@
 .doc {
   position: relative;
   width: min(100%, 400px);
-  aspect-ratio: 1 / 1.32;
+  min-height: min(560px, 78vw);
   background: #fffdf8;
   border: 1px solid rgba(18, 18, 15, 0.18);
   box-shadow: var(--shadow-xl);
@@ -1553,7 +1553,7 @@
 
 /* ───────────────────────────── Compare ───────────────────────────── */
 .compare {
-  background: var(--paper-deep);
+  background: var(--paper);
 }
 
 .compare-table {
@@ -3108,7 +3108,7 @@
 
 .pas-title {
   font-family: var(--font-display);
-  font-size: clamp(46px, 7.4vw, 116px);
+  font-size: clamp(44px, 6.6vw, 100px);
   line-height: 0.9;
   letter-spacing: -0.042em;
   color: var(--paper);
@@ -3760,4 +3760,104 @@
   .chapter-lede {
     max-width: 52ch;
   }
+}
+
+
+/* ───────────────────────────── Section rail ───────────────────────────── */
+.section-rail {
+  position: fixed;
+  right: 22px;
+  top: 50%;
+  transform: translateY(-50%) translateX(10px);
+  z-index: 700;
+  display: none;
+  flex-direction: column;
+  gap: 2px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
+}
+
+.section-rail.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(-50%) translateX(0);
+}
+
+.section-rail a {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 4px 0;
+  color: var(--ink-dim);
+  transition: color 0.3s var(--ease-out);
+}
+
+.section-rail .rail-num {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.1em;
+  opacity: 0.7;
+}
+
+.section-rail .rail-label {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0;
+  transform: translateX(4px);
+  transition: opacity 0.35s var(--ease-out), transform 0.35s var(--ease-out);
+}
+
+.section-rail .rail-tick {
+  width: 12px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.45;
+  transition: width 0.4s var(--ease-out), opacity 0.3s;
+}
+
+.section-rail a:hover,
+.section-rail a.is-active {
+  color: var(--ember-ink);
+}
+
+.section-rail a:hover .rail-label,
+.section-rail a.is-active .rail-label {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.section-rail a:hover .rail-tick,
+.section-rail a.is-active .rail-tick {
+  width: 20px;
+  opacity: 1;
+}
+
+@media (min-width: 1240px) {
+  .section-rail {
+    display: flex;
+  }
+}
+
+/* Small tidy-ups */
+.marquee-sep {
+  display: inline-flex;
+  align-items: center;
+}
+
+.fit-mark.no {
+  color: var(--ink-dim);
+  border-color: var(--line);
+  opacity: 0.75;
+}
+
+.footer-wordmark {
+  transition: color 0.8s var(--ease-out);
+}
+
+.site-footer:hover .footer-wordmark {
+  color: rgba(239, 234, 225, 0.14);
 }

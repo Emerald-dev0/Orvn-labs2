@@ -51,7 +51,7 @@ export default function Hero() {
               </span>
             </motion.div>
 
-            <h1 className="hero-title">
+            <h1 className="hero-title" aria-label="A better place to be seen.">
               {[
                 <>A better</>,
                 <>place to be</>,

@@ -54,7 +54,7 @@ export default function PAS() {
                     Operating in production
                   </span>
                 </div>
-                <h1 className="pas-title">
+                <h1 className="pas-title" aria-label="The first reply wins.">
                   The first reply
                   <br />
                   <span className="em" style={{ color: 'var(--ember-bright)' }}>wins.</span>

@@ -1,5 +1,6 @@
 import React from 'react';
 import PageWrapper from '../components/PageWrapper';
+import SectionRail from '../components/site/SectionRail';
 import { useDocumentMeta } from '../lib/seo';
 
 import Hero from '../components/home2/Hero';
@@ -26,6 +27,19 @@ export default function Home() {
 
   return (
     <PageWrapper>
+      <SectionRail
+        items={[
+          { id: 'top', label: 'Index' },
+          { id: 'problem', label: 'Problem' },
+          { id: 'workspace', label: 'Workspace' },
+          { id: 'inside', label: 'Inside' },
+          { id: 'published', label: 'Published' },
+          { id: 'outputs', label: 'Outputs' },
+          { id: 'compare', label: 'Comparison' },
+          { id: 'pricing', label: 'Access' },
+          { id: 'faq', label: 'Questions' },
+        ]}
+      />
       <Hero />
       <Band />
       <Manifesto />
