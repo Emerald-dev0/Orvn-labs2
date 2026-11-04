@@ -3,9 +3,9 @@ import { useEffect } from 'react';
 const SITE = {
   name: 'ORVN Labs',
   url: 'https://orvnlabs.com',
-  defaultTitle: 'LAREI: one property record, every way to present it',
+  defaultTitle: 'LAREI by ORVN Labs | Professional websites and property deal pages',
   defaultDescription:
-    'LAREI keeps one verified record for each property, then publishes it as a property page, a deal sheet, a buyer summary and a print sheet. Private beta, open by application.',
+    'LAREI is being built for wholesalers, agents, investors and real-estate operators who want one professional home for their brand, property portfolio and deal presentations.',
 };
 
 const setMeta = (name, content, attr = 'name') => {

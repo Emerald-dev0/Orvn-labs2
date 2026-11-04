@@ -8,7 +8,6 @@ const LINKS = [
   { to: '/product', label: 'Product' },
   { to: '/how-it-works', label: 'How it works' },
   { to: '/who-its-for', label: "Who it's for" },
-  { to: '/blog', label: 'Journal' },
   { to: '/faq', label: 'FAQ' },
 ];
 
@@ -65,7 +64,7 @@ export default function Nav() {
               Sign in
             </Link>
             <Link to="/early-access" className="btn btn-primary btn-sm nav-cta">
-              Request access
+              Request early access
               <ArrowUpRight strokeWidth={2} />
             </Link>
             <button
@@ -110,7 +109,7 @@ export default function Nav() {
 
               <div className="nav-sheet-foot">
                 <Link to="/early-access" className="btn btn-lime btn-block" onClick={() => setOpen(false)}>
-                  Request beta access
+                  Request early access
                 </Link>
                 <div className="nav-sheet-meta">
                   <Link to="/sign-in" onClick={() => setOpen(false)}>Sign in</Link>

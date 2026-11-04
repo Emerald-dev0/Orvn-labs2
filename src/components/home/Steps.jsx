@@ -1,22 +1,31 @@
 import React from 'react';
 import { Reveal } from '../site/Reveal';
-import { ClipboardCheck, PenLine, ScanEye } from 'lucide-react';
 
 const STEPS = [
   {
-    icon: PenLine,
-    title: 'Put the property in',
-    body: 'Add the address, the price, the figures and your photographs. Import from a portal if you already have a listing there, or start from a blank record.',
+    n: '01',
+    title: 'Establish your presence',
+    body: 'Tell LAREI about your role, market, business and style; review a draft of your public website.',
   },
   {
-    icon: ScanEye,
-    title: 'Check it once',
-    body: 'LAREI shows you where the numbers disagree across your sources and asks you to confirm each one. Nothing is published while a conflict is open.',
+    n: '02',
+    title: 'Bring in the property',
+    body: 'Paste notes, enter details and upload supported files. Review the structured record and resolve missing information.',
   },
   {
-    icon: ClipboardCheck,
-    title: 'Publish what you need',
-    body: 'Send the page, sheet, summary or printout. Each one is generated from the same record, so they never drift apart.',
+    n: '03',
+    title: 'Prepare the presentation',
+    body: 'Edit generated descriptions, deal-sheet content and the individual property page.',
+  },
+  {
+    n: '04',
+    title: 'Publish with control',
+    body: 'Decide what is public, publish your site and property pages, then copy a link people can open without an account.',
+  },
+  {
+    n: '05',
+    title: 'Follow the interest',
+    body: 'Read buyer inquiries and examine measured page activity; revise and republish as needed.',
   },
 ];
 
@@ -26,31 +35,21 @@ export default function Steps() {
       <div className="shell">
         <div className="steps-head">
           <Reveal>
-            <span className="eyebrow">How it works</span>
+            <span className="eyebrow">How the system works</span>
           </Reveal>
           <Reveal delay={0.05}>
-            <h2 className="steps-title">From a set of notes to a published property.</h2>
-          </Reveal>
-          <Reveal delay={0.1}>
-            <p className="lead">
-              About twenty minutes for a property you already know, and less the second time.
-            </p>
+            <h2 className="steps-title">From a working file to a professional place to share it.</h2>
           </Reveal>
         </div>
 
-        <div className="steps-grid">
-          {STEPS.map((step, i) => {
-            const Icon = step.icon;
-            return (
-              <Reveal key={step.title} delay={0.07 * i} className="step-card">
-                <span className="step-icon">
-                  <Icon size={22} strokeWidth={1.8} />
-                </span>
-                <h3 className="step-title">{step.title}</h3>
-                <p className="step-body">{step.body}</p>
-              </Reveal>
-            );
-          })}
+        <div className="steps-grid is-five">
+          {STEPS.map((step, i) => (
+            <Reveal key={step.n} delay={0.05 * i} className="step-card">
+              <span className="step-number">{step.n}</span>
+              <h3 className="step-title">{step.title}</h3>
+              <p className="step-body">{step.body}</p>
+            </Reveal>
+          ))}
         </div>
       </div>
     </section>

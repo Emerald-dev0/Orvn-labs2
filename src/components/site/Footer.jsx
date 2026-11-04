@@ -1,87 +1,52 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Check } from 'lucide-react';
+import { ArrowUpRight, Mail } from 'lucide-react';
 import Logo from './Logo';
 
 const COLUMNS = [
   {
     title: 'Product',
     links: [
-      { to: '/product', label: 'Product overview' },
+      { to: '/product', label: 'Product' },
       { to: '/how-it-works', label: 'How it works' },
       { to: '/who-its-for', label: "Who it's for" },
-      { to: '/pas', label: 'PAS' },
+      { to: '/faq', label: 'FAQ' },
     ],
   },
   {
     title: 'Company',
     links: [
-      { to: '/blog', label: 'Journal' },
       { to: '/early-access', label: 'Early access' },
       { to: '/contact', label: 'Contact' },
-      { to: '/sign-in', label: 'Sign in' },
-    ],
-  },
-  {
-    title: 'Legal',
-    links: [
       { to: '/legal/privacy', label: 'Privacy' },
       { to: '/legal/terms', label: 'Terms' },
-      { to: '/legal/ai-disclosure', label: 'AI disclosure' },
-      { to: '/legal/fair-housing', label: 'Fair housing' },
     ],
   },
 ];
 
 export default function Footer() {
-  const [email, setEmail] = useState('');
-  const [sent, setSent] = useState(false);
-
-  const submit = (e) => {
-    e.preventDefault();
-    if (!email) return;
-    setSent(true);
-    setEmail('');
-  };
-
   return (
     <footer className="site-footer on-dark">
       <div className="shell">
         <div className="footer-top">
           <div className="footer-brand">
             <Logo dark />
-            <p className="footer-tagline">
-              One verified property record, published everywhere it needs to be seen.
+            <p className="footer-tagline">Software for clearer real-estate presentation.</p>
+            <p className="footer-note">
+              LAREI is our product for wholesalers, agents, investors and the teams behind
+              property deals.
             </p>
 
-            <form className="footer-form" onSubmit={submit}>
-              {sent ? (
-                <p className="footer-sent">
-                  <Check size={16} strokeWidth={2.4} />
-                  You are on the list. We will write when there is something worth reading.
-                </p>
-              ) : (
-                <>
-                  <label className="footer-form-label" htmlFor="footer-email">
-                    Field notes, occasionally
-                  </label>
-                  <div className="footer-input-row">
-                    <input
-                      id="footer-email"
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="you@brokerage.com"
-                      className="footer-input"
-                      required
-                    />
-                    <button type="submit" className="footer-submit" aria-label="Subscribe">
-                      <ArrowRight size={18} strokeWidth={2.2} />
-                    </button>
-                  </div>
-                </>
-              )}
-            </form>
+            <div className="footer-actions">
+              <Link to="/early-access" className="btn btn-lime btn-sm">
+                Request early access
+                <ArrowUpRight strokeWidth={2} />
+              </Link>
+              <a href="mailto:hello@orvnlabs.com" className="footer-mail-link">
+                <Mail size={15} strokeWidth={2} />
+                hello@orvnlabs.com
+              </a>
+            </div>
           </div>
 
           <div className="footer-cols">
@@ -103,16 +68,17 @@ export default function Footer() {
         </div>
 
         <div className="footer-bottom">
-          <p>© {new Date().getFullYear()} LAREI · A product of ORVN Labs</p>
-          <p className="footer-bottom-note">Built for property people, wherever they work.</p>
-          <a href="mailto:hello@orvnlabs.com" className="footer-mail">
-            hello@orvnlabs.com
-          </a>
+          <p>© {new Date().getFullYear()} ORVN Labs. LAREI is a product of ORVN Labs.</p>
+          <div className="footer-bottom-links">
+            <Link to="/blog">Journal</Link>
+            <Link to="/pas">PAS (archived)</Link>
+            <a href="mailto:hello@orvnlabs.com">hello@orvnlabs.com</a>
+          </div>
         </div>
       </div>
 
       <div className="footer-wordmark" aria-hidden="true">
-        LAREI
+        ORVN
       </div>
     </footer>
   );

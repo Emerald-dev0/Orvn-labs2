@@ -182,10 +182,14 @@ export default function Showcase() {
       <div className="shell">
         <div className="showcase-panel on-dark">
           <div className="showcase-head">
-            <span className="eyebrow on-dark">Inside the workspace</span>
-            <h2 className="showcase-title">A workspace that keeps the story straight.</h2>
+            <span className="eyebrow on-dark">AI that works with your facts</span>
+            <h2 className="showcase-title">
+              Spend less time assembling. Keep control of what gets said.
+            </h2>
             <p className="lead">
-              Four screens, one property. The record is the truth; the rest is formatting.
+              Start from notes, documents and photos. LAREI organizes what you supply, flags gaps for
+              review and helps draft property descriptions, deal sheets and outreach copy. Your
+              approval comes before publication.
             </p>
           </div>
 
@@ -247,6 +251,11 @@ export default function Showcase() {
               </div>
             </div>
           </div>
+
+          <p className="showcase-note">
+            AI assistance does not independently verify title, valuation, zoning, parcel boundaries
+            or buyer economics.
+          </p>
         </div>
       </div>
     </section>

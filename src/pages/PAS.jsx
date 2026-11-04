@@ -1,197 +1,95 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import {
-  ArrowRight,
-  ArrowUpRight,
-  Check,
-  Clock,
-  MessageSquare,
-  ShieldCheck,
-  UserRound,
-} from 'lucide-react';
+import { ArrowRight, ArrowUpRight, Archive, Mail } from 'lucide-react';
 import PageWrapper from '../components/PageWrapper';
 import PageHero from '../components/site/PageHero';
 import { Reveal } from '../components/site/Reveal';
 import { useDocumentMeta } from '../lib/seo';
 
-const FEATURES = [
-  {
-    icon: Clock,
-    title: 'It answers in seconds',
-    body: 'A property enquiry arrives and gets a real answer immediately, with the price, the size and the viewing arrangements already filled in.',
-  },
-  {
-    icon: ShieldCheck,
-    title: 'It only says what is true',
-    body: 'Answers are drawn from the record you approved. If a figure is missing, PAS says it is being confirmed rather than guessing.',
-  },
-  {
-    icon: UserRound,
-    title: 'It hands over properly',
-    body: 'When somebody is ready to talk, PAS passes the conversation to you with the property, the question and the contact details attached.',
-  },
+const DID = [
+  'Answered property enquiries when they first arrived.',
+  'Asked qualifying questions before a viewing was offered.',
+  'Passed the conversation to a person with the property attached.',
 ];
-
-const SPEC = [
-  ['Channels', 'Web form, WhatsApp link, portal enquiry'],
-  ['First response', 'Within seconds, any hour'],
-  ['Sources', 'Your approved property record only'],
-  ['Handover', 'To a named person, with context'],
-  ['Availability', 'Included in the beta'],
-];
-
-const LIMITS = [
-  'Not a CRM. PAS handles the first exchange, not the pipeline.',
-  'No mass messaging, cold outreach or purchased lists.',
-  'No invented answers when a fact is missing.',
-  'No pretending to be a person when it is not.',
-];
-
-function ChatMock() {
-  return (
-    <div className="chat-mock">
-      <div className="chat-head">
-        <span className="chat-avatar"><MessageSquare size={15} strokeWidth={2} /></span>
-        <div>
-          <strong>Adaora House enquiry</strong>
-          <span>Ikoyi, Lagos</span>
-        </div>
-        <span className="chat-live">Replied in 6s</span>
-      </div>
-
-      <div className="chat-body">
-        <div className="chat-bubble is-them">
-          Is the Ikoyi house still available? What is the service charge?
-        </div>
-        <div className="chat-bubble is-us">
-          Yes, it is available. The asking price is ₦480,000,000 and the service charge is
-          ₦4,200,000 per year. There are four bedrooms and the internal area is 620 m².
-        </div>
-        <div className="chat-bubble is-them">Can I see it this weekend?</div>
-        <div className="chat-bubble is-us">
-          Saturday morning is possible. I have passed this to Ada, who handles viewings, and she
-          will confirm a time today.
-        </div>
-      </div>
-
-      <div className="chat-foot">
-        <Check size={13} strokeWidth={3} />
-        Answered from the approved record. Ada has been notified.
-      </div>
-    </div>
-  );
-}
 
 export default function PAS() {
   useDocumentMeta({
-    title: 'PAS',
+    title: 'PAS (archived)',
     description:
-      'PAS answers property enquiries within seconds using the same verified record, then hands the conversation to a person.',
+      'PAS was an earlier ORVN Labs product for first-contact response. It is no longer actively developed. LAREI is the current product.',
     path: '/pas',
   });
 
   return (
     <PageWrapper>
-      <div className="pas on-dark">
-        <PageHero
-          dark
-          eyebrow="PAS, the second product"
-          title={<>The first reply still wins.</>}
-          lede="PAS answers property enquiries the moment they arrive, using facts from the same verified record. It is deliberately narrow: it handles first contact, then hands the conversation to a person."
-          actions={
-            <>
-              <Link to="/contact" className="btn btn-lime">
-                Ask about PAS
-                <ArrowRight strokeWidth={2.2} />
-              </Link>
-              <Link to="/product" className="btn btn-glass">
-                See LAREI first
-              </Link>
-            </>
-          }
-          media={<ChatMock />}
-        />
+      <PageHero
+        eyebrow="Archive"
+        title={<>PAS has been archived.</>}
+        lede="PAS was an earlier ORVN Labs product for first-contact response in brokerages. It is no longer actively developed and it is not part of the LAREI beta. This page stays online so old links and references lead somewhere honest."
+      />
 
-        <section className="pas-features">
-          <div className="shell">
-            <div className="section-head">
-              <span className="eyebrow on-dark">What it does</span>
-              <h2 className="section-title" style={{ color: 'var(--white)' }}>
-                Three things, done properly.
-              </h2>
-            </div>
-            <div className="pas-feature-grid">
-              {FEATURES.map((f, i) => {
-                const Icon = f.icon;
-                return (
-                  <Reveal key={f.title} delay={0.05 * i} className="pas-feature">
-                    <span className="pas-feature-icon"><Icon size={20} strokeWidth={1.9} /></span>
-                    <h3>{f.title}</h3>
-                    <p>{f.body}</p>
-                  </Reveal>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-
-        <section className="pas-spec section-y">
-          <div className="shell">
-            <div className="pas-spec-grid">
+      <section className="archive">
+        <div className="shell">
+          <Reveal className="archive-card">
+            <div className="archive-head">
+              <span className="archive-icon"><Archive size={20} strokeWidth={1.9} /></span>
               <div>
-                <span className="eyebrow on-dark">The short version</span>
-                <h2 className="section-title" style={{ color: 'var(--white)', marginTop: 14 }}>
-                  Narrow on purpose.
-                </h2>
-                <p className="lead" style={{ marginTop: 14 }}>
-                  PAS is not a platform. It is one job done well: making certain that the first
-                  reply a buyer gets is accurate, quick and in your name.
-                </p>
-                <Link to="/contact" className="arrow-link" style={{ marginTop: 22 }}>
-                  Talk through a use case
-                  <ArrowUpRight strokeWidth={2} />
-                </Link>
+                <h2>PAS · first-contact response</h2>
+                <p>Offered by ORVN Labs before LAREI. Archived, not erased.</p>
               </div>
+            </div>
 
-              <div className="pas-spec-card">
-                <p className="pas-spec-title">Specification</p>
-                <div className="pas-spec-list">
-                  {SPEC.map(([k, v]) => (
-                    <div key={k}>
-                      <span>{k}</span>
-                      <strong>{v}</strong>
-                    </div>
+            <div className="archive-grid">
+              <div>
+                <h3>What it did</h3>
+                <ul className="archive-list">
+                  {DID.map((item) => (
+                    <li key={item}><span aria-hidden="true">·</span>{item}</li>
                   ))}
-                </div>
+                </ul>
               </div>
-            </div>
-
-            <div className="pas-limits">
-              {LIMITS.map((l) => (
-                <div key={l} className="pas-limit">
-                  <span aria-hidden="true">·</span>
-                  {l}
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="cta-band">
-          <div className="shell">
-            <div className="cta-band-inner on-dark" style={{ background: 'var(--pine-2)' }}>
               <div>
-                <h2>PAS comes with the beta.</h2>
-                <p>If you are trying LAREI, you can turn on first-contact replies as well.</p>
+                <h3>Why it is archived</h3>
+                <p className="archive-body">
+                  Our attention moved to LAREI, the platform for professional websites, property
+                  portfolios and published property pages. PAS is not receiving updates, and we are
+                  not selling new deployments of it.
+                </p>
+                <p className="archive-body">
+                  If you arrived from an old link or you were using PAS, write to us and we will
+                  point you somewhere useful.
+                </p>
               </div>
-              <Link to="/early-access" className="btn btn-lime">
-                Request access
+            </div>
+
+            <div className="archive-actions">
+              <Link to="/product" className="btn btn-primary">
+                See the current product
                 <ArrowRight strokeWidth={2.2} />
               </Link>
+              <a href="mailto:hello@orvnlabs.com" className="arrow-link">
+                <Mail size={15} strokeWidth={2} />
+                hello@orvnlabs.com
+              </a>
             </div>
-          </div>
-        </section>
-      </div>
+          </Reveal>
+
+          <Reveal delay={0.08} className="archive-next">
+            <div>
+              <span className="eyebrow">Current work</span>
+              <h2>LAREI is the product now.</h2>
+              <p className="lead">
+                One professional home for your brand, your property portfolio and the materials you
+                send to buyers.
+              </p>
+            </div>
+            <Link to="/how-it-works" className="arrow-link">
+              How it works
+              <ArrowUpRight strokeWidth={2} />
+            </Link>
+          </Reveal>
+        </div>
+      </section>
     </PageWrapper>
   );
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, BedDouble, Bath, Ruler, ShieldCheck } from 'lucide-react';
+import { ArrowRight, Bath, BedDouble, MapPin, Ruler, ShieldCheck } from 'lucide-react';
 
 const EASE = [0.16, 1, 0.3, 1];
 
@@ -29,30 +29,31 @@ export default function Hero() {
           >
             <span className="pill pill-lime hero-badge">
               <span className="hero-badge-dot" aria-hidden="true" />
-              Private beta, applications open
+              LAREI · Real estate publishing and professional presence
             </span>
 
             <h1 className="hero-title">
-              Every property deserves a <span className="em">better page</span>.
+              Your real estate business deserves a better place to be seen.
             </h1>
 
             <p className="hero-sub">
-              LAREI keeps one verified record for each property, then turns it into a property page,
-              a deal sheet, a buyer summary and a print sheet. Check the facts once, publish them
-              everywhere.
+              LAREI is being built for wholesalers, agents, investors and real-estate operators who
+              want one professional home for their brand, property portfolio and deal presentations.
+              Organize the details, prepare the materials, publish with control, and share a page
+              people can actually use.
             </p>
 
             <div className="hero-actions">
               <Link to="/early-access" className="btn btn-lime">
-                Request beta access
+                Request early access
                 <ArrowRight strokeWidth={2.2} />
               </Link>
-              <Link to="/how-it-works" className="btn btn-glass">
-                See how it works
+              <Link to="/product" className="btn btn-glass">
+                Explore the product
               </Link>
             </div>
 
-            <p className="hero-note">No card required. Applications reviewed weekly.</p>
+            <p className="hero-note">Private beta · Applications reviewed individually</p>
           </motion.div>
 
           <motion.aside
@@ -62,15 +63,29 @@ export default function Hero() {
             transition={{ duration: 1.1, delay: 0.45, ease: EASE }}
           >
             <div className="hero-card-head">
-              <span className="hero-card-label">Live property page</span>
-              <span className="pill pill-glass hero-card-live">Published</span>
+              <span className="hero-card-label">My Website · Draft</span>
+              <span className="pill pill-glass hero-card-live">Preview</span>
+            </div>
+
+            <div className="hero-site-profile">
+              <span className="hero-site-avatar">AP</span>
+              <div>
+                <p className="hero-card-name">Adaora Property Group</p>
+                <p className="hero-card-addr">Wholesaler · Lagos</p>
+              </div>
+              <span className="hero-card-verified">
+                <ShieldCheck size={13} strokeWidth={2.2} />
+                Sample
+              </span>
             </div>
 
             <div className="hero-card-body">
               <img src="/images/prop-3.jpg" alt="" className="hero-card-thumb" />
               <div className="hero-card-info">
                 <p className="hero-card-name">Adaora House, Ikoyi</p>
-                <p className="hero-card-addr">4 bedroom detached · Lagos</p>
+                <p className="hero-card-addr">
+                  <MapPin size={11} strokeWidth={2} /> Ikoyi, Lagos · approximate location
+                </p>
                 <p className="hero-card-price">₦480,000,000</p>
               </div>
             </div>
@@ -83,19 +98,21 @@ export default function Hero() {
 
             <div className="hero-card-foot">
               <span className="hero-card-verified">
-                <ShieldCheck size={14} strokeWidth={2.2} />
-                Facts verified by the listing agent
+                <ArrowRight size={14} strokeWidth={2.2} />
+                Ask about this property
               </span>
-              <ArrowRight size={16} strokeWidth={2} className="hero-card-arrow" />
+              <span className="hero-card-publish">Publish site</span>
             </div>
+
+            <p className="hero-card-caption">Illustrative sample. Product preview, in development.</p>
           </motion.aside>
         </div>
 
         <div className="hero-rail">
-          <span>Property page</span>
-          <span>Deal sheet</span>
-          <span>Buyer summary</span>
-          <span>Print sheet</span>
+          <span>Professional site</span>
+          <span>Property portfolio</span>
+          <span>Property pages</span>
+          <span>Inquiries</span>
         </div>
       </div>
     </section>

@@ -566,7 +566,7 @@ export default function BlogPost() {
               <Link to="/calculators/leakage" className="btn-primary">
                 Run scorecard <ArrowRight size={15} />
               </Link>
-              <Link to="/pas" className="btn-secondary">Explore PAS</Link>
+              <Link to="/product" className="btn-secondary">Explore LAREI</Link>
             </div>
           </div>
         </div>

@@ -41,7 +41,8 @@ export default function SignIn() {
               </form>
 
               <p className="signin-note">
-                LAREI is invitation only during the beta. If you have not received an invitation,
+                Sign-in opens with the beta. Until then, access is arranged by a person. If you
+                have not received an invitation,
                 <Link to="/early-access"> request access</Link>.
               </p>
 

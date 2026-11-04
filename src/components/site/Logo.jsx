@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-/** The LAREI mark: a soft square holding a roofline cut from the accent. */
+/** The ORVN Studios mark: a soft square holding a roofline cut from the accent. */
 export function Mark({ size = 30, className = '' }) {
   return (
     <svg
@@ -29,15 +29,15 @@ export function Mark({ size = 30, className = '' }) {
 export function Wordmark({ dark = false }) {
   return (
     <span className={`wordmark ${dark ? 'wordmark-dark' : ''}`}>
-      LAREI
-      <span className="wordmark-dot" aria-hidden="true">.</span>
+      ORVN
+      <span className="wordmark-labs">Labs</span>
     </span>
   );
 }
 
 export default function Logo({ dark = false, compact = false, to = '/' }) {
   return (
-    <Link to={to} className="logo" aria-label="LAREI home">
+    <Link to={to} className="logo" aria-label="ORVN Labs home">
       <Mark size={compact ? 26 : 30} className="logo-mark" />
       <Wordmark dark={dark} />
     </Link>
