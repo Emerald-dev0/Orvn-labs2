@@ -75,7 +75,12 @@ module: every query goes through it, and the policies are written against the sa
 | Layer | Choice | Why |
 |---|---|---|
 | Auth | **Better Auth** (recommended) | Users, sessions, magic links and invitations live in our own Postgres. No per-MAU bill, no vendor lock, works on Workers. |
-| Email | **Resend** | Invitation, sign-in link, inquiry notification. Already in `.env.example`. |
+| Email | **Calder** (`api.calder.click`) | Invitations, sign-in links, inquiry notifications. Bearer keys, `Idempotency-Key` on every send, machine-readable codes (`suppressed`, `domain_not_verified`, `idempotency_conflict`). Behind a provider seam in `lib/email.ts`, so the app never calls the vendor directly. |
+
+Calder requires the `from` address to belong to a verified sending domain (or the connected
+Gmail account); anything else fails closed with `domain_not_verified`. Until `orvnlabs.com` is
+verified in Calder, invitation and sign-in mail go out from the test key and will be refused,
+so verifying the domain is a launch task, not a detail.
 
 ### AI
 
@@ -189,6 +194,7 @@ Settled:
 
 - **D1** Public pages render on the server. Yes, Next.js.
 - **D2** AI starts on Groq (`openai/gpt-oss-120b`), swappable later.
+- **D3** Email goes through Calder, behind `lib/email.ts`.
 - **D3** Hosting on Cloudflare Workers, database on Neon.
 
 Open:
