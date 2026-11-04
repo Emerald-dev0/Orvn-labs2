@@ -25,16 +25,16 @@ export function SiteEditorMock() {
           <div className="site-editor-profile">
             <span className="hero-site-avatar">AP</span>
             <div>
-              <p className="site-editor-name">Adaora Property Group</p>
-              <p className="site-editor-meta">Wholesaler · Lagos · 3 properties</p>
+              <p className="site-editor-name">Northaven Property Group</p>
+              <p className="site-editor-meta">Wholesaler · 6-person team · 3 properties</p>
             </div>
           </div>
 
           <div className="site-editor-grid">
             {[
-              ['/images/prop-3.jpg', 'Adaora House', '₦480,000,000'],
-              ['/images/prop-4.jpg', 'Ikate Courtyard', '₦320,000,000'],
-              ['/images/prop-2.jpg', 'Kaduna Row', '₦210,000,000'],
+              ['/images/prop-3.jpg', 'Halden House', '$480,000'],
+              ['/images/prop-4.jpg', 'Elm Court', '$320,000'],
+              ['/images/prop-2.jpg', 'Kestrel Row', '$210,000'],
             ].map(([src, name, price]) => (
               <div className="site-editor-card" key={name}>
                 <img src={src} alt="" />
@@ -77,7 +77,7 @@ export function VoiceMock() {
 
         <div className="voice-row">
           <span>Audience</span>
-          <strong>Buyers and agents in Lagos</strong>
+          <strong>Buyers and agents in your market</strong>
         </div>
         <div className="voice-row">
           <span>Terms to use</span>
@@ -90,8 +90,8 @@ export function VoiceMock() {
 
         <div className="voice-sample">
           <p>
-            “A four-bedroom detached house in Ikoyi, 620 m² internally, with a certificate of
-            occupancy and a service charge confirmed by the developer.”
+            “A four-bedroom detached house in the Harbour district, 620 m² internally, with title
+            documents on file and a service charge confirmed by the developer.”
           </p>
           <span><Check size={12} strokeWidth={3} /> Used in this draft</span>
         </div>

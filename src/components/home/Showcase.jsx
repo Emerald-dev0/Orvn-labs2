@@ -55,19 +55,19 @@ function RecordPanel() {
       <div className="mock-prop">
         <img src="/images/interior-1.jpg" alt="" />
         <div>
-          <p className="mock-prop-name">Adaora House</p>
-          <p className="mock-prop-addr">12 Ozumba Mbadiwe Avenue, Ikoyi, Lagos</p>
+          <p className="mock-prop-name">Halden House</p>
+          <p className="mock-prop-addr">18 Meridian Quay, Harbour district</p>
         </div>
         <span className="mock-status">Live</span>
       </div>
 
       <div className="mock-facts">
         {[
-          ['Asking price', '₦480,000,000', true],
+          ['Asking price', '$480,000', true],
           ['Internal area', '620 m²', true],
           ['Bedrooms', '4', true],
           ['Tenure', 'Certificate of occupancy', true],
-          ['Service charge', '₦4,200,000 per year', false],
+          ['Service charge', '$4,200 per year', false],
         ].map(([k, v, ok]) => (
           <div className="mock-fact" key={k}>
             <span className="mock-fact-key">{k}</span>
@@ -93,8 +93,8 @@ function CheckPanel() {
           <span className="mock-time">2h ago</span>
         </div>
         <div className="mock-conflict-rows">
-          <div><span>LAREI record</span><strong>₦480,000,000</strong><em>your source</em></div>
-          <div><span>PropertyPro</span><strong>₦465,000,000</strong><em>imported</em></div>
+          <div><span>LAREI record</span><strong>$480,000</strong><em>your source</em></div>
+          <div><span>Portal import</span><strong>$465,000</strong><em>imported</em></div>
         </div>
         <div className="mock-conflict-actions">
           <span className="mock-btn-dark">Use my figure</span>

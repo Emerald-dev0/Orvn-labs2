@@ -29,7 +29,7 @@ export default function Hero() {
           >
             <span className="pill pill-lime hero-badge">
               <span className="hero-badge-dot" aria-hidden="true" />
-              LAREI · Real estate publishing and professional presence
+              LAREI by ORVN Labs · Real estate publishing and professional presence
             </span>
 
             <h1 className="hero-title">
@@ -70,8 +70,8 @@ export default function Hero() {
             <div className="hero-site-profile">
               <span className="hero-site-avatar">AP</span>
               <div>
-                <p className="hero-card-name">Adaora Property Group</p>
-                <p className="hero-card-addr">Wholesaler · Lagos</p>
+                <p className="hero-card-name">Northaven Property Group</p>
+                <p className="hero-card-addr">Wholesaler · 6-person team</p>
               </div>
               <span className="hero-card-verified">
                 <ShieldCheck size={13} strokeWidth={2.2} />
@@ -82,11 +82,11 @@ export default function Hero() {
             <div className="hero-card-body">
               <img src="/images/prop-3.jpg" alt="" className="hero-card-thumb" />
               <div className="hero-card-info">
-                <p className="hero-card-name">Adaora House, Ikoyi</p>
+                <p className="hero-card-name">Halden House, Harbour district</p>
                 <p className="hero-card-addr">
-                  <MapPin size={11} strokeWidth={2} /> Ikoyi, Lagos · approximate location
+                  <MapPin size={11} strokeWidth={2} /> Harbour district · approximate location
                 </p>
-                <p className="hero-card-price">₦480,000,000</p>
+                <p className="hero-card-price">$480,000</p>
               </div>
             </div>
 

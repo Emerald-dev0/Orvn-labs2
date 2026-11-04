@@ -16,6 +16,7 @@ const COLUMNS = [
   {
     title: 'Company',
     links: [
+      { to: '/about', label: 'About ORVN Labs' },
       { to: '/early-access', label: 'Early access' },
       { to: '/contact', label: 'Contact' },
       { to: '/legal/privacy', label: 'Privacy' },

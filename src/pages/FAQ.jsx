@@ -104,8 +104,8 @@ const GROUPS = [
         a: 'We have not announced pricing because the product is still changing. When it is decided, beta users hear first and nobody is moved onto a paid plan without agreeing to it.',
       },
       {
-        q: 'Is it available outside Nigeria?',
-        a: 'Yes. The interface is in English, prices can be set in any currency and addresses work anywhere. Billing, when it starts, will depend on where you are.',
+        q: 'Which markets will it support?',
+        a: 'It is not built around one country. The interface is in English, prices can be set in any currency and addresses are free-form rather than a fixed list. Billing, when it starts, will depend on where you are.',
       },
       {
         q: 'Do you offer support?',

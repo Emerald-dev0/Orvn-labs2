@@ -70,14 +70,14 @@ function RecordMock() {
           <div className="mock-prop">
             <img src="/images/prop-3.jpg" alt="" />
             <div>
-              <p className="mock-prop-name">Adaora House</p>
-              <p className="mock-prop-addr">12 Ozumba Mbadiwe Avenue, Ikoyi</p>
+              <p className="mock-prop-name">Halden House</p>
+              <p className="mock-prop-addr">18 Meridian Quay, Harbour district</p>
             </div>
             <span className="mock-status">Live</span>
           </div>
           <div className="mock-facts">
             {[
-              ['Asking price', '₦480,000,000', 'Taken from your brief, 2 days ago'],
+              ['Asking price', '$480,000', 'Taken from your brief, 2 days ago'],
               ['Internal area', '620 m²', 'Survey plan uploaded'],
               ['Bedrooms', '4', 'Confirmed by the developer'],
               ['Tenure', 'Certificate of occupancy', 'Document attached'],
@@ -114,8 +114,8 @@ function ConflictMock() {
               <span className="mock-time">2h ago</span>
             </div>
             <div className="mock-conflict-rows">
-              <div><span>LAREI record</span><strong>₦480,000,000</strong><em>your source</em></div>
-              <div><span>PropertyPro</span><strong>₦465,000,000</strong><em>imported</em></div>
+              <div><span>LAREI record</span><strong>$480,000</strong><em>your source</em></div>
+              <div><span>Portal import</span><strong>$465,000</strong><em>imported</em></div>
             </div>
             <div className="mock-conflict-actions">
               <span className="mock-btn-dark">Use my figure</span>

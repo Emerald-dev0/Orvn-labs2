@@ -91,8 +91,8 @@ function Visual({ kind }) {
       <div className="flow-visual">
         <div className="flow-card">
           <p className="flow-card-kicker">New property</p>
-          <div className="flow-field"><span>Address</span><strong>12 Ozumba Mbadiwe Avenue, Ikoyi</strong></div>
-          <div className="flow-field"><span>Asking price</span><strong>₦480,000,000</strong></div>
+          <div className="flow-field"><span>Address</span><strong>18 Meridian Quay, Harbour district</strong></div>
+          <div className="flow-field"><span>Asking price</span><strong>$480,000</strong></div>
           <div className="flow-field"><span>Bedrooms</span><strong>4</strong></div>
           <div className="flow-dropzone">
             <Camera size={16} strokeWidth={2} />
@@ -111,7 +111,7 @@ function Visual({ kind }) {
             <CircleAlert size={14} strokeWidth={2.4} />
             <div>
               <strong>Price disagrees with the portal</strong>
-              <span>₦480,000,000 against ₦465,000,000</span>
+              <span>$480,000 against $465,000</span>
             </div>
           </div>
           <div className="flow-check-row is-ok">
@@ -163,7 +163,7 @@ function Visual({ kind }) {
         <div className="flow-update">
           <span className="flow-update-dot" />
           <div>
-            <strong>Price changed to ₦475,000,000</strong>
+            <strong>Price changed to $475,000</strong>
             <span>Today, 09:14 by Ada Okonkwo</span>
           </div>
         </div>

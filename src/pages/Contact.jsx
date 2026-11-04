@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Check, Mail, MapPin } from 'lucide-react';
+import { ArrowRight, Building2, Check, Mail } from 'lucide-react';
 import PageWrapper from '../components/PageWrapper';
 import PageHero from '../components/site/PageHero';
 import { Reveal } from '../components/site/Reveal';
@@ -105,10 +105,10 @@ export default function Contact() {
                   </span>
                 </a>
                 <div className="contact-line">
-                  <MapPin size={16} strokeWidth={1.9} />
+                  <Building2 size={16} strokeWidth={1.9} />
                   <span>
-                    <span className="contact-line-label">Team</span>
-                    Lagos, Nigeria
+                    <span className="contact-line-label">Company</span>
+                    ORVN Labs, makers of LAREI
                   </span>
                 </div>
               </div>

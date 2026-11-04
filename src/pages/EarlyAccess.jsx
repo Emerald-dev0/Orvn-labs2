@@ -73,7 +73,7 @@ export default function EarlyAccess() {
                   </div>
                   <div className="field">
                     <label className="field-label" htmlFor="markets">Primary market</label>
-                    <input id="markets" required className="input" placeholder="Lagos, Abuja" />
+                    <input id="markets" required className="input" placeholder="City or region" />
                   </div>
                   <div className="field">
                     <label className="field-label" htmlFor="volume">Properties presented monthly</label>

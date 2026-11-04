@@ -12,6 +12,7 @@ const HowItWorks = lazy(() => import('./pages/HowItWorks'));
 const WhoItsFor = lazy(() => import('./pages/WhoItsFor'));
 const EarlyAccess = lazy(() => import('./pages/EarlyAccess'));
 const Contact = lazy(() => import('./pages/Contact'));
+const About = lazy(() => import('./pages/About'));
 const SignIn = lazy(() => import('./pages/SignIn'));
 const PAS = lazy(() => import('./pages/PAS'));
 // import Thesis from './pages/Thesis';
@@ -118,6 +119,7 @@ function AnimatedRoutes() {
         <Route path="/who-its-for" element={<WhoItsFor />} />
         <Route path="/early-access" element={<EarlyAccess />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/about" element={<About />} />
         <Route path="/sign-in" element={<SignIn />} />
         {/* Legacy routes from the previous site — redirect rather than break inbound links. */}
         <Route path="/why-orvn" element={<Navigate to="/" replace />} />

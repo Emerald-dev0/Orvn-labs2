@@ -10,6 +10,7 @@ import Showcase from '../components/home/Showcase';
 import Steps from '../components/home/Steps';
 import Roles from '../components/home/Roles';
 import Trust from '../components/home/Trust';
+import Company from '../components/home/Company';
 import Faq from '../components/home/Faq';
 import Cta from '../components/home/Cta';
 import { SiteEditorMock, VoiceMock, StatsMock } from '../components/home/mocks';
@@ -58,6 +59,7 @@ export default function Home() {
       <Steps />
       <Roles />
       <Trust />
+      <Company />
       <Faq />
       <Cta />
     </PageWrapper>

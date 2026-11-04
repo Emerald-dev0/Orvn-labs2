@@ -3,10 +3,10 @@ import { Reveal } from '../site/Reveal';
 import { Building2, Eye, Inbox, LayoutGrid } from 'lucide-react';
 
 const HOMES = [
-  { img: '/images/interior-1.jpg', name: 'Adaora House', place: 'Ikoyi, Lagos', price: '₦480,000,000' },
-  { img: '/images/prop-2.jpg', name: 'Kaduna Row', place: 'Ikoyi, Lagos', price: '₦210,000,000' },
-  { img: '/images/prop-5.jpg', name: 'Marina Heights', place: 'Victoria Island, Lagos', price: '₦1,150,000,000' },
-  { img: '/images/prop-4.jpg', name: 'Ikate Courtyard', place: 'Lekki Phase 1, Lagos', price: '₦320,000,000' },
+  { img: '/images/interior-1.jpg', name: 'Halden House', place: 'Harbour district', price: '$480,000' },
+  { img: '/images/prop-2.jpg', name: 'Kestrel Row', place: 'Harbour district', price: '$210,000' },
+  { img: '/images/prop-5.jpg', name: 'Harbour Point', place: 'Riverside', price: '$1,150,000' },
+  { img: '/images/prop-4.jpg', name: 'Elm Court', place: 'Old town', price: '$320,000' },
 ];
 
 const MINI = [
