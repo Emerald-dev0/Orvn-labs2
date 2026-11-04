@@ -1,0 +1,167 @@
+/* Invitation acceptance. A single card, no navigation: the person has one thing to do. */
+
+.invite {
+  min-height: 100vh;
+  background:
+    radial-gradient(120% 90% at 15% 0%, rgba(201, 242, 110, 0.28), transparent 55%),
+    var(--bone);
+  color: var(--ink);
+  font-family: var(--font-body);
+  display: flex;
+  flex-direction: column;
+}
+
+.invite-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px clamp(18px, 4vw, 40px);
+}
+
+.invite-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.invite-mark {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+  background: var(--pine);
+  color: var(--lime);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.invite-tag {
+  font-size: 12px;
+  color: var(--muted);
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-pill);
+  padding: 5px 12px;
+}
+
+.invite-main {
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: clamp(12px, 4vw, 48px) clamp(18px, 4vw, 40px) 80px;
+}
+
+.invite-card {
+  width: min(560px, 100%);
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--r-xl);
+  box-shadow: var(--sh-3);
+  padding: clamp(24px, 4vw, 40px);
+  display: grid;
+  gap: 14px;
+}
+
+.invite-eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+}
+
+.invite-title {
+  font-family: var(--font-display);
+  font-size: clamp(26px, 4.6vw, 34px);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  margin: 0;
+  text-wrap: balance;
+}
+
+.invite-lede {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--ink-2);
+}
+
+.invite-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 6px; }
+
+.invite-form { display: grid; gap: 14px; margin-top: 6px; }
+
+.invite-field { display: grid; gap: 6px; }
+
+.invite-field label { font-size: 12.5px; color: var(--muted); }
+
+.invite-field > input,
+.invite-prefix input {
+  height: 46px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--line-2);
+  background: var(--bone);
+  padding: 0 14px;
+  font-family: inherit;
+  font-size: 14.5px;
+  color: var(--ink);
+  width: 100%;
+}
+
+.invite-field > input:focus-visible,
+.invite-prefix input:focus-visible {
+  outline: 2px solid var(--lime-2);
+  outline-offset: 1px;
+}
+
+.invite-prefix {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-sm);
+  background: var(--bone);
+  overflow: hidden;
+  padding-left: 12px;
+}
+
+.invite-prefix span { font-size: 13.5px; color: var(--muted); white-space: nowrap; }
+
+.invite-prefix input {
+  border: 0;
+  background: transparent;
+  border-radius: 0;
+  height: 44px;
+}
+
+.invite-hint { font-size: 11.5px; color: var(--muted-2); }
+
+.invite-summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  background: var(--bone);
+  border-radius: var(--r-sm);
+  padding: 14px 16px;
+  font-size: 14px;
+}
+
+.invite-summary-label { display: block; font-size: 11.5px; color: var(--muted); margin-bottom: 2px; }
+
+.invite-error {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--neg);
+}
+
+.invite-note { margin: 0; font-size: 12px; line-height: 1.6; color: var(--muted-2); }
+
+@media (max-width: 480px) {
+  .invite-summary { grid-template-columns: 1fr; }
+}

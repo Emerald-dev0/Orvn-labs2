@@ -13,7 +13,18 @@ buy. Revised for the stack agreed on 4 Nov: Next.js, Neon, Cloudflare Workers, G
   `/properties/[id]` (seven tabs), `/properties/new`, `/website`, `/inquiries`, `/analytics`,
   `/settings`. Append `?state=empty` to any list screen to see its empty state.
 - Icons: Hugeicons free set through `src/app/icons.jsx`, one module so the family can be swapped.
-- Backend wiring is next: the UI already names what is not live yet rather than faking it.
+- **Backend M0 is built** (4 Nov): invite-only auth with a single account-creation gate,
+  invitation acceptance in a `SECURITY DEFINER` function, a scoped-by-default data layer
+  (`withUserDb` / `withPublicDb`), RLS on all thirteen tenant tables, audit log, rate limiter,
+  environment validation, nonce-based CSP and a security header baseline. `docs/SECURITY.md`
+  documents the model, the runbook and the gaps.
+- **Public pages are real**: `/w/{username}` and `/w/{username}/p/{slug}` render server-side from
+  an immutable publication snapshot, with generated OG metadata and an `og:image` route.
+  Media is served only through `/api/media/[...key]`, which checks release state first.
+  With no database configured these routes 404 — nothing published means nothing to show.
+- **Still fixtures**: `/dashboard`, `/properties`, the record editor, website, inquiries and
+  analytics. Wiring them to the backend is the next slice; the UI already names what is not
+  live rather than faking it.
 
 ## 2. Build first: the publishing spine
 
@@ -155,9 +166,11 @@ metadata and a generated OG image, cached at the edge.
 
 ## 6. Order of work
 
-**M0 — Foundation**
-Marketing app running on Next (done). Then: Neon project, Drizzle schema and migrations, Better
-Auth with magic links and invitations, workspace bootstrap, RLS policies, CI, Sentry.
+**M0 — Foundation** — code complete, infrastructure pending
+Marketing app running on Next (done). Drizzle schema, migrations and RLS policies (done, managed
+by `npm run db:migrate` and `npm run db:policies`). Better Auth with magic links plus an
+invitation gate (done). Workspace bootstrap via `app_accept_invitation` (done). Remaining: a Neon
+project, CI, Sentry, and an admin path for issuing invitations.
 
 *Demo:* an invited email can sign in and lands on an empty private workspace; an uninvited one
 cannot; another workspace's URL returns nothing.

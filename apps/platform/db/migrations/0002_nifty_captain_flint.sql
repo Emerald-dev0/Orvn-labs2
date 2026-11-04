@@ -1,0 +1,1 @@
+ALTER TABLE "properties" ADD COLUMN "show_on_portfolio" boolean DEFAULT true NOT NULL;

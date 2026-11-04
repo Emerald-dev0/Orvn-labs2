@@ -94,6 +94,8 @@ export const properties = pgTable(
       .references(() => workspaces.id, { onDelete: 'cascade' }),
     title: text('title').notNull(),
     slug: text('slug').notNull(),
+    /** Owner-written copy for the public page. Facts stay in property_details. */
+    description: text('description'),
     propertyType: propertyType('property_type').notNull(),
     addressLine: text('address_line'),
     addressVisible: boolean('address_visible').notNull().default(true),
@@ -106,9 +108,14 @@ export const properties = pgTable(
     priceAmount: numeric('price_amount', { precision: 14, scale: 2 }),
     currency: text('currency'),
     priceVisibility: priceVisibility('price_visibility').notNull().default('on_request'),
+    /** A published property stays off the professional portfolio until its owner opts in. */
+    showOnPortfolio: boolean('show_on_portfolio').notNull().default(true),
     availabilityStatus: availabilityStatus('availability_status').notNull().default('available'),
     publicationStatus: publicationStatus('publication_status').notNull().default('draft'),
     publishedAt: timestamp('published_at', { withTimezone: true }),
+    /** F08 requires an explicit attestation that the user has the right to publish. */
+    rightsAttestedAt: timestamp('rights_attested_at', { withTimezone: true }),
+    rightsAttestedBy: text('rights_attested_by').references(() => user.id, { onDelete: 'set null' }),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
     createdBy: text('created_by').references(() => user.id, { onDelete: 'set null' }),
@@ -192,10 +199,17 @@ export const inquiries = pgTable(
     message: text('message').notNull(),
     consent: boolean('consent').notNull().default(false),
     source: text('source'),
+    /** Hashed submit token. The unique index is what makes "exactly once" true, not retries. */
+    dedupeKey: text('dedupe_key'),
+    /** Salted hash of the submitter's address, for abuse limits only. Raw IP is never stored. */
+    ipHash: text('ip_hash'),
     status: inquiryStatus('status').notNull().default('new'),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   },
-  (t) => [index('inquiries_workspace_idx').on(t.workspaceId, t.createdAt)],
+  (t) => [
+    index('inquiries_workspace_idx').on(t.workspaceId, t.createdAt),
+    uniqueIndex('inquiries_dedupe_key').on(t.dedupeKey),
+  ],
 );
 
 export const analyticsEvents = pgTable(
@@ -227,7 +241,9 @@ export const invitations = pgTable(
     tokenHash: text('token_hash').notNull(),
     expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
     acceptedAt: timestamp('accepted_at', { withTimezone: true }),
+    acceptedBy: text('accepted_by').references(() => user.id, { onDelete: 'set null' }),
     revokedAt: timestamp('revoked_at', { withTimezone: true }),
+    note: text('note'),
     invitedBy: text('invited_by').references(() => user.id, { onDelete: 'set null' }),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   },
@@ -253,4 +269,57 @@ export const aiGenerations = pgTable(
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [index('ai_generations_workspace_idx').on(t.workspaceId, t.createdAt)],
+);
+
+/* ── Professional profile (the public "site") ──────────────────────────── */
+
+export const professionalProfiles = pgTable(
+  'professional_profiles',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    workspaceId: uuid('workspace_id')
+      .notNull()
+      .references(() => workspaces.id, { onDelete: 'cascade' }),
+    displayName: text('display_name'),
+    headline: text('headline'),
+    bio: text('bio'),
+    markets: jsonb('markets').$type<string[]>().notNull().default([]),
+    services: jsonb('services').$type<{ title: string; body: string }[]>().notNull().default([]),
+    contactEmail: text('contact_email'),
+    contactPhone: text('contact_phone'),
+    /** Only these are allowed on the public page. Anything else stays internal. */
+    showPhone: boolean('show_phone').notNull().default(false),
+    logoKey: text('logo_key'),
+    coverKey: text('cover_key'),
+    accent: text('accent'),
+    publishedAt: timestamp('published_at', { withTimezone: true }),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [uniqueIndex('professional_profiles_workspace_key').on(t.workspaceId)],
+);
+
+/* ── Operations ────────────────────────────────────────────────────────── */
+
+/** Fixed-window counters. Keys are hashed before they get here, never raw addresses. */
+export const rateLimits = pgTable('rate_limits', {
+  key: text('key').primaryKey(),
+  windowStart: timestamp('window_start', { withTimezone: true }).notNull(),
+  count: integer('count').notNull().default(0),
+});
+
+/** Who did what to which record. Append-only from the application's point of view. */
+export const auditEvents = pgTable(
+  'audit_events',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    workspaceId: uuid('workspace_id').references(() => workspaces.id, { onDelete: 'cascade' }),
+    actorId: text('actor_id').references(() => user.id, { onDelete: 'set null' }),
+    action: text('action').notNull(),
+    targetType: text('target_type'),
+    targetId: text('target_id'),
+    metadata: jsonb('metadata'),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index('audit_events_workspace_idx').on(t.workspaceId, t.createdAt)],
 );

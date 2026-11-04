@@ -2904,3 +2904,47 @@
   .footer-cols { grid-template-columns: 1fr; }
   .hero-card-thumb { width: 54px; height: 48px; }
 }
+
+/* ── Sign-in additions (magic link, mode switch) ───────────────────────── */
+
+.signin-sent {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  background: var(--lime-pale);
+  border: 1px solid rgba(34, 56, 12, 0.14);
+  border-radius: var(--r-md);
+  padding: 16px 18px;
+}
+
+.signin-sent strong { font-size: 14.5px; }
+.signin-sent p { margin: 4px 0 0; font-size: 13.5px; line-height: 1.6; color: var(--muted); }
+
+.signin-switch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.signin-switch button {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.signin-switch a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+
+.field-error {
+  font-size: 13px;
+  color: var(--neg);
+  line-height: 1.5;
+  margin: 0;
+}
