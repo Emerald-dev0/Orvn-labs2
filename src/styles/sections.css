@@ -3861,3 +3861,25 @@
 .site-footer:hover .footer-wordmark {
   color: rgba(239, 234, 225, 0.14);
 }
+
+
+/* Skip link — keyboard users get straight to the document */
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 10001;
+  transform: translateY(-200%);
+  background: var(--ink);
+  color: var(--paper);
+  padding: 10px 16px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transition: transform 0.3s var(--ease-out);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}

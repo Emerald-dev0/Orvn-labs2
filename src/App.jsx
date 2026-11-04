@@ -136,6 +136,9 @@ export default function App() {
   return (
     <BrowserRouter>
       <SmoothScroll>
+        <a className="skip-link" href="#main">
+          Skip to content
+        </a>
         <Intro />
         <Cursor />
         <ScrollToTop />
