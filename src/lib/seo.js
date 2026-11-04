@@ -3,9 +3,9 @@ import { useEffect } from 'react';
 const SITE = {
   name: 'ORVN Labs',
   url: 'https://orvnlabs.com',
-  defaultTitle: 'LAREI — A better place to be seen',
+  defaultTitle: 'LAREI: one property record, every way to present it',
   defaultDescription:
-    'LAREI is one professional home for your brand, your property portfolio and every deal you present. One verified record behind every page, deal sheet and summary you publish.',
+    'LAREI keeps one verified record for each property, then publishes it as a property page, a deal sheet, a buyer summary and a print sheet. Private beta, open by application.',
 };
 
 const setMeta = (name, content, attr = 'name') => {
@@ -44,7 +44,7 @@ const setJsonLd = (data) => {
 
 export function useDocumentMeta({ title, description, path, image, type = 'website', canonical, schema } = {}) {
   useEffect(() => {
-    const finalTitle = title ? `${title} — ${SITE.name}` : SITE.defaultTitle;
+    const finalTitle = title ? `${title} · ${SITE.name}` : SITE.defaultTitle;
     const finalDesc = description || SITE.defaultDescription;
     const finalUrl = path ? `${SITE.url}${path}` : SITE.url;
     const finalImage = image || `${SITE.url}/og-default.png`;

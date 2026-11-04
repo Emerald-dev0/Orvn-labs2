@@ -1,37 +1,45 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
-/**
- * LAREI mark — a land parcel: hairline plat grid with one surveyed quadrant.
- * The single filled cell is the thing being presented; the grid is the record.
- */
-export function Mark({ size = 28, color = 'currentColor', accent = 'var(--ember)' }) {
+/** The LAREI mark: a soft square holding a roofline cut from the accent. */
+export function Mark({ size = 30, className = '' }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 28 28" fill="none" aria-hidden="true">
-      <rect x="0.6" y="0.6" width="26.8" height="26.8" stroke={color} strokeWidth="1.2" />
-      <path d="M14 0.6V27.4M0.6 14H27.4" stroke={color} strokeWidth="1.2" opacity="0.55" />
-      <rect x="14.6" y="1.2" width="12.6" height="12.6" fill={accent} />
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 32 32"
+      className={className}
+      aria-hidden="true"
+      focusable="false"
+    >
+      <rect width="32" height="32" rx="10" fill="currentColor" />
+      <path
+        d="M8 19.6 16 12l8 7.6"
+        stroke="var(--lime, #c9f26e)"
+        strokeWidth="2.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+      />
+      <circle cx="16" cy="22.4" r="1.7" fill="var(--lime, #c9f26e)" />
     </svg>
   );
 }
 
-export default function Logo({ size = 26, showWord = true, wordSize = 20, color = 'var(--ink)', accent = 'var(--ember)' }) {
+export function Wordmark({ dark = false }) {
   return (
-    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 10 }}>
-      <Mark size={size} color={color} accent={accent} />
-      {showWord && (
-        <span
-          style={{
-            fontFamily: 'var(--font-display)',
-            fontSize: wordSize,
-            letterSpacing: '0.14em',
-            lineHeight: 1,
-            color,
-            fontVariationSettings: "'opsz' 72, 'SOFT' 0, 'WONK' 1, 'wght' 500",
-          }}
-        >
-          LAREI
-        </span>
-      )}
+    <span className={`wordmark ${dark ? 'wordmark-dark' : ''}`}>
+      LAREI
+      <span className="wordmark-dot" aria-hidden="true">.</span>
     </span>
+  );
+}
+
+export default function Logo({ dark = false, compact = false, to = '/' }) {
+  return (
+    <Link to={to} className="logo" aria-label="LAREI home">
+      <Mark size={compact ? 26 : 30} className="logo-mark" />
+      <Wordmark dark={dark} />
+    </Link>
   );
 }

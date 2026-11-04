@@ -2,11 +2,8 @@ import React, { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 
-import SmoothScroll from './components/SmoothScroll';
 import Nav from './components/site/Nav';
 import Footer from './components/site/Footer';
-import Cursor from './components/site/Cursor';
-import Intro from './components/site/Intro';
 import ScrollToTop from './components/ScrollToTop';
 
 const Home = lazy(() => import('./pages/Home'));
@@ -135,17 +132,13 @@ function AnimatedRoutes() {
 export default function App() {
   return (
     <BrowserRouter>
-      <SmoothScroll>
-        <a className="skip-link" href="#main">
-          Skip to content
-        </a>
-        <Intro />
-        <Cursor />
-        <ScrollToTop />
-        <Nav />
-        <AnimatedRoutes />
-        <Footer />
-      </SmoothScroll>
+      <a className="skip-link" href="#main">
+        Skip to content
+      </a>
+      <ScrollToTop />
+      <Nav />
+      <AnimatedRoutes />
+      <Footer />
     </BrowserRouter>
   );
 }

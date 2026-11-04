@@ -1,23 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import { Link, NavLink, useLocation } from 'react-router-dom';
-import { motion, AnimatePresence, useScroll, useSpring } from 'framer-motion';
-import { ArrowUpRight } from 'lucide-react';
+import { NavLink, Link, useLocation } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
+import { ArrowUpRight, Menu, X } from 'lucide-react';
 import Logo from './Logo';
 
 const LINKS = [
-  { label: 'Product', to: '/product', n: '01' },
-  { label: 'How it works', to: '/how-it-works', n: '02' },
-  { label: 'Who it’s for', to: '/who-its-for', n: '03' },
-  { label: 'Journal', to: '/blog', n: '04' },
-  { label: 'FAQ', to: '/faq', n: '05' },
+  { to: '/product', label: 'Product' },
+  { to: '/how-it-works', label: 'How it works' },
+  { to: '/who-its-for', label: "Who it's for" },
+  { to: '/blog', label: 'Journal' },
+  { to: '/faq', label: 'FAQ' },
 ];
 
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-  const location = useLocation();
-  const { scrollYProgress } = useScroll();
-  const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 24, mass: 0.4 });
+  const { pathname } = useLocation();
+
+  const onHero = pathname === '/' && !scrolled;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -26,10 +26,7 @@ export default function Nav() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setOpen(false);
-  }, [location.pathname]);
+  useEffect(() => setOpen(false), [pathname]);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -41,52 +38,38 @@ export default function Nav() {
     };
   }, [open]);
 
+  useEffect(() => {
+    const onKey = (e) => e.key === 'Escape' && setOpen(false);
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
+
   return (
     <>
-      <header
-        className="site-nav"
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          zIndex: 900,
-          height: 'var(--nav-h)',
-          display: 'flex',
-          alignItems: 'center',
-          borderBottom: `1px solid ${scrolled ? 'var(--line)' : 'transparent'}`,
-          background: scrolled ? 'rgba(239,234,225,0.82)' : 'transparent',
-          backdropFilter: scrolled ? 'saturate(150%) blur(14px)' : 'none',
-          WebkitBackdropFilter: scrolled ? 'saturate(150%) blur(14px)' : 'none',
-          transition: 'background-color .5s var(--ease-out), border-color .5s var(--ease-out)',
-        }}
-      >
-        <div className="shell" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 24 }}>
-          <Link to="/" aria-label="LAREI — home" style={{ display: 'inline-flex', alignItems: 'center', gap: 12 }}>
-            <Logo size={22} wordSize={19} />
-            <span className="hide-mobile nav-byline">by ORVN Labs</span>
-          </Link>
+      <header className={`site-nav ${scrolled ? 'is-scrolled' : ''} ${onHero ? 'on-hero' : ''}`}>
+        <div className="nav-bar">
+          <Logo compact={scrolled} />
 
-          <nav className="nav-links" aria-label="Primary" style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-            {LINKS.map((l) => (
-              <NavLink key={l.to} to={l.to} className={({ isActive }) => `nav-link ${isActive ? 'is-active' : ''}`}>
-                <span className="nav-link-stack">
-                  <span>{l.label}</span>
-                  <span aria-hidden>{l.label}</span>
-                </span>
+          <nav className="nav-links" aria-label="Primary">
+            {LINKS.map((link) => (
+              <NavLink
+                key={link.to}
+                to={link.to}
+                className={({ isActive }) => `nav-link ${isActive ? 'is-active' : ''}`}
+              >
+                {link.label}
               </NavLink>
             ))}
           </nav>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div className="nav-actions">
             <Link to="/sign-in" className="nav-signin">
               Sign in
             </Link>
-            <Link to="/early-access" className="btn-primary nav-cta">
+            <Link to="/early-access" className="btn btn-primary btn-sm nav-cta">
               Request access
-              <ArrowUpRight size={15} strokeWidth={1.75} />
+              <ArrowUpRight strokeWidth={2} />
             </Link>
-
             <button
               type="button"
               className="nav-burger"
@@ -94,98 +77,49 @@ export default function Nav() {
               aria-expanded={open}
               onClick={() => setOpen((v) => !v)}
             >
-              <span className={`burger-line ${open ? 'is-open' : ''}`} />
-              <span className={`burger-line ${open ? 'is-open' : ''}`} />
+              {open ? <X size={20} /> : <Menu size={20} />}
             </button>
           </div>
         </div>
-
-        <motion.div
-          aria-hidden
-          style={{
-            position: 'absolute',
-            left: 0,
-            bottom: -1,
-            height: 1,
-            width: '100%',
-            background: 'var(--ember)',
-            scaleX: progress,
-            transformOrigin: 'left',
-            opacity: scrolled ? 1 : 0,
-            transition: 'opacity .4s',
-          }}
-        />
       </header>
 
       <AnimatePresence>
         {open && (
           <motion.div
-            key="menu"
-            initial={{ y: '-100%' }}
-            animate={{ y: 0 }}
-            exit={{ y: '-100%' }}
-            transition={{ duration: 0.7, ease: [0.76, 0, 0.24, 1] }}
-            style={{
-              position: 'fixed',
-              inset: 0,
-              zIndex: 890,
-              background: 'var(--paper)',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              paddingTop: 'calc(var(--nav-h) + 32px)',
-              paddingBottom: 28,
-              overflowY: 'auto',
-            }}
+            className="nav-sheet on-dark"
+            initial={{ opacity: 0, y: -12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className="shell" style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-              {LINKS.map((l, i) => (
-                <motion.div
-                  key={l.to}
-                  initial={{ y: 40, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.16 + i * 0.055, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                  style={{ borderBottom: '1px solid var(--line)' }}
-                >
-                  <Link
-                    to={l.to}
-                    style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', padding: '18px 0' }}
+            <div className="nav-sheet-inner">
+              <p className="nav-sheet-kicker">Menu</p>
+              <ul className="nav-sheet-links">
+                {LINKS.map((link, i) => (
+                  <motion.li
+                    key={link.to}
+                    initial={{ opacity: 0, y: 18 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.06 + i * 0.05, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                   >
-                    <span
-                      style={{
-                        fontFamily: 'var(--font-display)',
-                        fontSize: 'clamp(34px, 9vw, 56px)',
-                        lineHeight: 1,
-                        letterSpacing: '-0.03em',
-                        fontVariationSettings: "'opsz' 96, 'WONK' 1, 'wght' 400",
-                      }}
-                    >
-                      {l.label}
-                    </span>
-                    <span className="label-mono">{l.n}</span>
-                  </Link>
-                </motion.div>
-              ))}
-            </div>
+                    <NavLink to={link.to} className="nav-sheet-link" onClick={() => setOpen(false)}>
+                      {link.label}
+                      <ArrowUpRight size={22} strokeWidth={1.8} />
+                    </NavLink>
+                  </motion.li>
+                ))}
+              </ul>
 
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
-              className="shell"
-              style={{ display: 'flex', flexDirection: 'column', gap: 18, marginTop: 40 }}
-            >
-              <Link to="/early-access" className="btn-primary" style={{ width: '100%' }}>
-                Request early access
-                <ArrowUpRight size={16} strokeWidth={1.75} />
-              </Link>
-              <div style={{ display: 'flex', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
-                <a href="mailto:hello@orvnlabs.com" className="label-mono">
-                  hello@orvnlabs.com
-                </a>
-                <span className="label-mono">Private beta · 2026</span>
+              <div className="nav-sheet-foot">
+                <Link to="/early-access" className="btn btn-lime btn-block" onClick={() => setOpen(false)}>
+                  Request beta access
+                </Link>
+                <div className="nav-sheet-meta">
+                  <Link to="/sign-in" onClick={() => setOpen(false)}>Sign in</Link>
+                  <Link to="/contact" onClick={() => setOpen(false)}>Contact</Link>
+                </div>
               </div>
-            </motion.div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

@@ -1,58 +1,38 @@
 import React from 'react';
 import PageWrapper from '../components/PageWrapper';
-import SectionRail from '../components/site/SectionRail';
 import { useDocumentMeta } from '../lib/seo';
 
-import Hero from '../components/home2/Hero';
-import Band from '../components/home2/Band';
-import Manifesto from '../components/home2/Manifesto';
-import Stage from '../components/home2/Stage';
-import Contents from '../components/home2/Contents';
-import Gallery from '../components/home2/Gallery';
-import Sheet from '../components/home2/Sheet';
-import Compare from '../components/home2/Compare';
-import Numbers from '../components/home2/Numbers';
-import Principles from '../components/home2/Principles';
-import Access from '../components/home2/Access';
-import FaqTeaser from '../components/home2/FaqTeaser';
-import ClosingCTA from '../components/home2/ClosingCTA';
+import Hero from '../components/home/Hero';
+import Outputs from '../components/home/Outputs';
+import Showcase from '../components/home/Showcase';
+import Gallery from '../components/home/Gallery';
+import Steps from '../components/home/Steps';
+import Verify from '../components/home/Verify';
+import Audience from '../components/home/Audience';
+import Access from '../components/home/Access';
+import Faq from '../components/home/Faq';
+import Cta from '../components/home/Cta';
 
 export default function Home() {
   useDocumentMeta({
-    title: 'A better place to be seen',
+    title: 'One property record, every way to present it',
     description:
-      'LAREI is one professional home for your brand, your property portfolio and every deal you present. One verified record behind every page, deal sheet and summary you publish.',
+      'LAREI keeps one verified record for each property and publishes it as a property page, a deal sheet, a buyer summary and a print sheet. Private beta, open by application.',
     path: '/',
   });
 
   return (
     <PageWrapper>
-      <SectionRail
-        items={[
-          { id: 'top', label: 'Index' },
-          { id: 'problem', label: 'Problem' },
-          { id: 'workspace', label: 'Workspace' },
-          { id: 'inside', label: 'Inside' },
-          { id: 'published', label: 'Published' },
-          { id: 'outputs', label: 'Outputs' },
-          { id: 'compare', label: 'Comparison' },
-          { id: 'pricing', label: 'Access' },
-          { id: 'faq', label: 'Questions' },
-        ]}
-      />
       <Hero />
-      <Band />
-      <Manifesto />
-      <Stage />
-      <Contents />
+      <Outputs />
+      <Showcase />
       <Gallery />
-      <Sheet />
-      <Compare />
-      <Numbers />
-      <Principles />
+      <Steps />
+      <Verify />
+      <Audience />
       <Access />
-      <FaqTeaser />
-      <ClosingCTA />
+      <Faq />
+      <Cta />
     </PageWrapper>
   );
 }

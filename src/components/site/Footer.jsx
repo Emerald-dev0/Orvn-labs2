@@ -1,97 +1,99 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowUp } from 'lucide-react';
-import { Mark } from './Logo';
+import { ArrowRight, Check } from 'lucide-react';
+import Logo from './Logo';
 
 const COLUMNS = [
   {
-    title: 'Platform',
+    title: 'Product',
     links: [
-      { label: 'Product', to: '/product' },
-      { label: 'How it works', to: '/how-it-works' },
-      { label: 'Who it’s for', to: '/who-its-for' },
-      { label: 'First-contact AI', to: '/pas' },
+      { to: '/product', label: 'Product overview' },
+      { to: '/how-it-works', label: 'How it works' },
+      { to: '/who-its-for', label: "Who it's for" },
+      { to: '/pas', label: 'PAS' },
     ],
   },
   {
     title: 'Company',
     links: [
-      { label: 'Journal', to: '/blog' },
-      { label: 'FAQ', to: '/faq' },
-      { label: 'Contact', to: '/contact' },
-      { label: 'Early access', to: '/early-access' },
+      { to: '/blog', label: 'Journal' },
+      { to: '/early-access', label: 'Early access' },
+      { to: '/contact', label: 'Contact' },
+      { to: '/sign-in', label: 'Sign in' },
     ],
   },
   {
     title: 'Legal',
     links: [
-      { label: 'Privacy', to: '/legal/privacy' },
-      { label: 'Terms', to: '/legal/terms' },
-      { label: 'AI disclosure', to: '/legal/ai-disclosure' },
-      { label: 'Fair housing', to: '/legal/fair-housing' },
+      { to: '/legal/privacy', label: 'Privacy' },
+      { to: '/legal/terms', label: 'Terms' },
+      { to: '/legal/ai-disclosure', label: 'AI disclosure' },
+      { to: '/legal/fair-housing', label: 'Fair housing' },
     ],
   },
 ];
 
-function Clock() {
-  const [time, setTime] = useState('');
-  useEffect(() => {
-    const tick = () =>
-      setTime(
-        new Intl.DateTimeFormat('en-GB', {
-          timeZone: 'Africa/Lagos',
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-          hour12: false,
-        }).format(new Date())
-      );
-    tick();
-    const id = setInterval(tick, 1000);
-    return () => clearInterval(id);
-  }, []);
-  return <span className="footer-meta-mono">{time} WAT</span>;
-}
-
 export default function Footer() {
-  const year = new Date().getFullYear();
+  const [email, setEmail] = useState('');
+  const [sent, setSent] = useState(false);
+
+  const submit = (e) => {
+    e.preventDefault();
+    if (!email) return;
+    setSent(true);
+    setEmail('');
+  };
 
   return (
-    <footer className="site-footer">
+    <footer className="site-footer on-dark">
       <div className="shell">
-        {/* Top: newsletter + statement */}
         <div className="footer-top">
-          <div style={{ maxWidth: 460 }}>
-            <span className="footer-eyebrow">Field notes</span>
-            <h2 className="footer-h">
-              Understand the record
-              <br />
-              <span className="em" style={{ color: 'var(--ember-bright)' }}>behind the page.</span>
-            </h2>
-            <p className="footer-sub">
-              Occasional notes on property presentation, verified facts and publishing with control. No noise.
+          <div className="footer-brand">
+            <Logo dark />
+            <p className="footer-tagline">
+              One verified property record, published everywhere it needs to be seen.
             </p>
-            <form
-              className="footer-form"
-              action="https://formspree.io/f/placeholder"
-              method="POST"
-              onSubmit={(e) => e.preventDefault()}
-            >
-              <input type="email" name="email" placeholder="Your email address" aria-label="Email address" required />
-              <button type="submit" aria-label="Subscribe">
-                <ArrowUp size={16} strokeWidth={1.5} style={{ transform: 'rotate(45deg)' }} />
-              </button>
+
+            <form className="footer-form" onSubmit={submit}>
+              {sent ? (
+                <p className="footer-sent">
+                  <Check size={16} strokeWidth={2.4} />
+                  You are on the list. We will write when there is something worth reading.
+                </p>
+              ) : (
+                <>
+                  <label className="footer-form-label" htmlFor="footer-email">
+                    Field notes, occasionally
+                  </label>
+                  <div className="footer-input-row">
+                    <input
+                      id="footer-email"
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="you@brokerage.com"
+                      className="footer-input"
+                      required
+                    />
+                    <button type="submit" className="footer-submit" aria-label="Subscribe">
+                      <ArrowRight size={18} strokeWidth={2.2} />
+                    </button>
+                  </div>
+                </>
+              )}
             </form>
           </div>
 
-          <div className="footer-columns">
+          <div className="footer-cols">
             {COLUMNS.map((col) => (
-              <div key={col.title}>
-                <span className="footer-col-title">{col.title}</span>
-                <ul className="footer-list">
+              <div key={col.title} className="footer-col">
+                <p className="footer-col-title">{col.title}</p>
+                <ul>
                   {col.links.map((l) => (
-                    <li key={l.label}>
-                      <Link to={l.to}>{l.label}</Link>
+                    <li key={l.to}>
+                      <Link to={l.to} className="footer-link">
+                        {l.label}
+                      </Link>
                     </li>
                   ))}
                 </ul>
@@ -100,31 +102,17 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Wordmark */}
-        <div className="footer-wordmark-wrap" aria-hidden="true">
-          <div className="footer-wordmark">LAREI</div>
-        </div>
-
-        {/* Bottom bar */}
         <div className="footer-bottom">
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <Mark size={16} color="rgba(239,234,225,0.75)" accent="var(--ember-bright)" />
-            <span className="footer-meta-mono">© {year} ORVN Labs</span>
-          </div>
-          <span className="footer-meta-mono hide-mobile">Built in Lagos · Operating worldwide</span>
-          <Clock />
-          <a
-            href="#top"
-            onClick={(e) => {
-              e.preventDefault();
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            className="footer-top-link"
-          >
-            Back to top
-            <ArrowUp size={13} strokeWidth={1.6} />
+          <p>© {new Date().getFullYear()} LAREI · A product of ORVN Labs</p>
+          <p className="footer-bottom-note">Built for property people, wherever they work.</p>
+          <a href="mailto:hello@orvnlabs.com" className="footer-mail">
+            hello@orvnlabs.com
           </a>
         </div>
+      </div>
+
+      <div className="footer-wordmark" aria-hidden="true">
+        LAREI
       </div>
     </footer>
   );
