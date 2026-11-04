@@ -3,8 +3,10 @@ import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-route
 import { AnimatePresence } from 'framer-motion';
 
 import SmoothScroll from './components/SmoothScroll';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
+import Nav from './components/site/Nav';
+import Footer from './components/site/Footer';
+import Cursor from './components/site/Cursor';
+import Intro from './components/site/Intro';
 import ScrollToTop from './components/ScrollToTop';
 
 const Home = lazy(() => import('./pages/Home'));
@@ -134,8 +136,10 @@ export default function App() {
   return (
     <BrowserRouter>
       <SmoothScroll>
+        <Intro />
+        <Cursor />
         <ScrollToTop />
-        <Navbar />
+        <Nav />
         <AnimatedRoutes />
         <Footer />
       </SmoothScroll>

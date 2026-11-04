@@ -1,63 +1,52 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Search, X } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Search, X, ArrowUpRight, ArrowRight } from 'lucide-react';
 
 import PageWrapper from '../components/PageWrapper';
-import Section from '../components/ui/Section';
-import Eyebrow from '../components/ui/Eyebrow';
-import Newsletter from '../components/Newsletter';
+import { Reveal } from '../components/site/Reveal';
 import { useDocumentMeta } from '../lib/seo';
 import { supabase, getAllCategories } from '../lib/supabase';
+
+const EASE = [0.16, 1, 0.3, 1];
 
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 18 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true, margin: '-80px' },
-  transition: { duration: 0.6, ease: [0.23, 1, 0.32, 1], delay },
+  transition: { duration: 0.7, ease: EASE, delay },
 });
 
 const fmt = (iso) =>
   new Date(iso).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
-const BlogSkeleton = () => (
-  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 24, width: '100%' }}>
-    {[1, 2, 3].map((i) => (
-      <div key={i} className="card" style={{ padding: 0, height: 440, overflow: 'hidden' }}>
-        <div style={{ height: 200, background: 'var(--line-strong)', animation: 'pulse 1.5s infinite' }} />
-        <div style={{ padding: 24 }}>
-          <div style={{ height: 12, width: '30%', background: 'var(--line-strong)', marginBottom: 12, borderRadius: 4, animation: 'pulse 1.5s infinite' }} />
-          <div style={{ height: 24, width: '80%', background: 'var(--line-strong)', marginBottom: 12, borderRadius: 4, animation: 'pulse 1.5s infinite' }} />
-          <div style={{ height: 16, width: '100%', background: 'var(--line-strong)', marginBottom: 8, borderRadius: 4, animation: 'pulse 1.5s infinite' }} />
-          <div style={{ height: 16, width: '90%', background: 'var(--line-strong)', marginBottom: 24, borderRadius: 4, animation: 'pulse 1.5s infinite' }} />
-          <div style={{ height: 12, width: '50%', background: 'var(--line-strong)', borderRadius: 4, animation: 'pulse 1.5s infinite' }} />
+function Skeleton() {
+  return (
+    <div className="blog-grid">
+      {[1, 2, 3, 4, 5, 6].map((i) => (
+        <div key={i} className="blog-card" style={{ minHeight: 300 }}>
+          <div style={{ aspectRatio: '16/10', background: 'var(--paper-deep)' }} />
+          <div style={{ height: 10, width: '30%', background: 'var(--paper-deep)' }} />
+          <div style={{ height: 18, width: '85%', background: 'var(--paper-deep)' }} />
+          <div style={{ height: 12, width: '60%', background: 'var(--paper-deep)' }} />
         </div>
-      </div>
-    ))}
-    <style>{`
-      @keyframes pulse {
-        0% { opacity: 1; }
-        50% { opacity: 0.5; }
-        100% { opacity: 1; }
-      }
-    `}</style>
-  </div>
-);
+      ))}
+    </div>
+  );
+}
 
 export default function Blog() {
   useDocumentMeta({
-    title: 'First-Contact Intelligence Blog — Insights for Brokerage Operators',
-    description: 'Weekly field notes on first-contact infrastructure, lead conversion, and brokerage operations. Learn how to recover lost revenue from your inbound pipeline.',
+    title: 'Journal — field notes on property presentation',
+    description:
+      'Notes on property presentation, verified facts, publishing with control and the work behind a professional real-estate presence.',
     path: '/blog',
     schema: {
       '@type': 'Blog',
-      'name': 'First-Contact Intelligence',
-      'description': 'Insights for real estate brokerage owners and operators on lead conversion and AI infrastructure.',
-      'publisher': {
-        '@type': 'Organization',
-        'name': 'ORVN Labs'
-      }
-    }
+      name: 'LAREI Journal',
+      description: 'Notes for real-estate professionals on presentation, records and publishing.',
+      publisher: { '@type': 'Organization', name: 'ORVN Labs' },
+    },
   });
 
   const [posts, setPosts] = useState([]);
@@ -71,24 +60,7 @@ export default function Blog() {
   const [error, setError] = useState('');
   const [offset, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(true);
-  const [isDesktop, setIsDesktop] = useState(window.innerWidth > 768);
   const LIMIT = 9;
-
-  useEffect(() => {
-    const handleResize = () => setIsDesktop(window.innerWidth > 768);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  useEffect(() => {
-    loadCategories();
-    loadTags();
-    loadPosts(true);
-  }, []);
-
-  useEffect(() => {
-    loadPosts(true);
-  }, [selectedCategory]);
 
   const loadCategories = async () => {
     try {
@@ -101,13 +73,11 @@ export default function Blog() {
 
   const loadTags = async () => {
     try {
-      const { data, error } = await supabase
+      const { data, error: tagError } = await supabase
         .from('blog_posts')
         .select('tags')
         .eq('is_published', true);
-
-      if (error) throw error;
-
+      if (tagError) throw tagError;
       const allTags = [...new Set((data || []).flatMap((p) => p.tags || []))];
       setTags(allTags.sort());
     } catch (err) {
@@ -123,7 +93,6 @@ export default function Blog() {
       } else {
         setLoadingMore(true);
       }
-
       setError('');
       const currentOffset = reset ? 0 : offset;
 
@@ -139,498 +108,275 @@ export default function Blog() {
         query = query.eq('category', selectedCategory);
       }
 
-      const { data, error } = await query;
-      if (error) throw error;
+      const { data, error: qError } = await query;
+      if (qError) throw qError;
 
       const newPosts = data || [];
-
-      if (reset) {
-        setPosts(newPosts);
-      } else {
-        setPosts((prev) => [...prev, ...newPosts]);
-      }
+      if (reset) setPosts(newPosts);
+      else setPosts((prev) => [...prev, ...newPosts]);
 
       setHasMore(newPosts.length === LIMIT);
       setOffset(currentOffset + LIMIT);
     } catch (err) {
       console.error('Failed to load blog posts:', err);
-      setError('Failed to load blog posts. Please try again later.');
+      setError('Could not load the journal right now. Please try again shortly.');
     } finally {
       setLoading(false);
       setLoadingMore(false);
     }
   };
 
+
+  useEffect(() => {
+    /* Data fetch on mount: the setters below are the external-system sync. */
+    /* eslint-disable react-hooks/set-state-in-effect */
+    loadCategories();
+    loadTags();
+    loadPosts(true);
+    /* eslint-enable react-hooks/set-state-in-effect */
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect, react-hooks/exhaustive-deps
+    loadPosts(true);
+  }, [selectedCategory]);
+
   const filteredPosts = posts.filter((post) => {
     const matchesCategory = selectedCategory ? post.category === selectedCategory : true;
     const matchesTag = selectedTag ? (post.tags || []).includes(selectedTag) : true;
-    const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          post.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
+    const q = searchQuery.toLowerCase();
+    const matchesSearch =
+      (post.title || '').toLowerCase().includes(q) || (post.excerpt || '').toLowerCase().includes(q);
     return matchesCategory && matchesTag && matchesSearch;
   });
 
+  const clearing = () => {
+    setSearchQuery('');
+    setSelectedCategory(null);
+    setSelectedTag(null);
+  };
+
+  const [featured, ...rest] = filteredPosts;
+
   return (
     <PageWrapper>
-      <section style={{ padding: 'clamp(48px, 6vw, 80px) 0 clamp(20px, 3vw, 32px)', background: '#fff' }}>
-        <div className="container-page" style={{ maxWidth: 840 }}>
-          <motion.div {...fadeUp(0)}>
-            <Eyebrow>Blog</Eyebrow>
-          </motion.div>
-          <motion.h1
-            {...fadeUp(0.05)}
-            className="h-display-2"
-            style={{
-              marginBottom: 24,
-            }}
-          >
-            Field notes on first-contact infrastructure.
-          </motion.h1>
-          <motion.p
-            {...fadeUp(0.1)}
-            className="lead-2"
-            style={{
-              maxWidth: 660,
-            }}
-          >
-            Weekly insights on how brokerages lose, recover, and convert inbound leads. The philosophy, the operators, the patterns that repeat.
-          </motion.p>
+      <section className="page-hero">
+        <div className="shell">
+          <div className="page-hero-grid">
+            <div>
+              <span className="eyebrow">Journal</span>
+              <h1 className="page-title">
+                Field notes on property <span className="em">presentation.</span>
+              </h1>
+            </div>
+            <div>
+              <p className="page-lede">
+                How professionals package, verify and publish property — and what the work behind a
+                convincing page actually looks like.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
-      <Section borderTop background="surface">
-        <div style={{ maxWidth: 1000, margin: '0 auto', padding: '0 clamp(16px, 5vw, 48px)' }}>
-          {/* Search Bar */}
-          <motion.div
-            {...fadeUp(0)}
-            style={{
-              maxWidth: 500,
-              margin: '0 auto clamp(24px, 4vw, 32px)',
-              position: 'relative',
-            }}
-          >
-            <div
-              style={{
-                position: 'absolute',
-                left: 16,
-                top: '50%',
-                transform: 'translateY(-50%)',
-                color: 'var(--ink-dim)',
-                display: 'flex',
-                alignItems: 'center',
-                pointerEvents: 'none',
-              }}
-            >
-              <Search size={18} />
+      <section style={{ paddingBottom: 'clamp(48px,6vw,88px)' }}>
+        <div className="shell">
+          {/* Controls */}
+          <div className="journal-bar">
+            <div className="journal-search">
+              <Search size={15} strokeWidth={1.6} color="var(--ink-dim)" />
+              <input
+                type="text"
+                placeholder="Search the journal"
+                value={searchQuery}
+                aria-label="Search articles"
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              {searchQuery && (
+                <button type="button" onClick={() => setSearchQuery('')} aria-label="Clear search">
+                  <X size={13} strokeWidth={1.8} />
+                </button>
+              )}
             </div>
-            <input
-              type="text"
-              placeholder="Search articles..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              style={{
-                width: '100%',
-                padding: '14px 16px 14px 44px',
-                borderRadius: 14,
-                border: '1.5px solid var(--line)',
-                fontSize: 15,
-                outline: 'none',
-                transition: 'all 0.2s',
-                fontFamily: 'inherit',
-                boxSizing: 'border-box',
-              }}
-              onFocus={(e) => (e.target.style.borderColor = 'var(--primary)')}
-              onBlur={(e) => (e.target.style.borderColor = 'var(--line)')}
-            />
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery('')}
-                style={{
-                  position: 'absolute',
-                  right: 12,
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  background: 'var(--line-strong)',
-                  border: 'none',
-                  borderRadius: 100,
-                  width: 24,
-                  height: 24,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: 'pointer',
-                  color: 'var(--ink-mid)',
-                }}
-              >
-                <X size={14} />
-              </button>
-            )}
-          </motion.div>
 
-          {/* Popular Tags */}
-          {tags.length > 0 && (
-            <motion.div
-              {...fadeUp(0.05)}
-              style={{
-                display: 'flex',
-                gap: 8,
-                flexWrap: 'wrap',
-                justifyContent: 'center',
-                marginBottom: 24,
-              }}
-            >
-              <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--ink-dim)', textTransform: 'uppercase', alignSelf: 'center', marginRight: 8 }}>Tags:</span>
-              {tags.slice(0, 10).map(tag => (
+            <div className="journal-filters">
+              <button
+                type="button"
+                className={`chip ${!selectedCategory ? 'is-on' : ''}`}
+                onClick={() => setSelectedCategory(null)}
+              >
+                All
+              </button>
+              {categories.map((cat) => (
                 <button
-                  key={tag}
-                  onClick={() => setSelectedTag(tag === selectedTag ? null : tag)}
-                  style={{
-                    padding: '4px 10px',
-                    borderRadius: 6,
-                    border: '1px solid var(--line)',
-                    background: selectedTag === tag ? 'var(--primary-pale)' : '#fff',
-                    color: selectedTag === tag ? 'var(--primary)' : 'var(--ink-mid)',
-                    fontSize: 12,
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                    transition: 'all 0.2s',
-                  }}
+                  key={cat}
+                  type="button"
+                  className={`chip ${selectedCategory === cat ? 'is-on' : ''}`}
+                  onClick={() => setSelectedCategory(cat)}
                 >
-                  #{tag}
+                  {cat}
                 </button>
               ))}
-            </motion.div>
-          )}
-
-          {/* Category Filter */}
-          <motion.div
-            {...fadeUp(0)}
-            style={{
-              display: 'flex',
-              gap: 'clamp(6px, 2vw, 12px)',
-              flexWrap: 'wrap',
-              marginBottom: 'clamp(32px, 6vw, 48px)',
-              justifyContent: 'center',
-            }}
-          >
-            <button
-              onClick={() => setSelectedCategory(null)}
-              style={{
-                padding: 'clamp(8px, 1.5vw, 12px) clamp(14px, 3vw, 20px)',
-                borderRadius: 100,
-                border: selectedCategory === null ? 'none' : '1.5px solid var(--line)',
-                background: selectedCategory === null ? 'var(--primary)' : '#fff',
-                color: selectedCategory === null ? '#fff' : 'var(--ink-mid)',
-                fontSize: 'clamp(12px, 1.2vw, 14px)',
-                fontWeight: 600,
-                cursor: 'pointer',
-                transition: 'all 0.2s',
-              }}
-            >
-              All posts
-            </button>
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
-                style={{
-                  padding: 'clamp(8px, 1.5vw, 12px) clamp(14px, 3vw, 20px)',
-                  borderRadius: 100,
-                  border: selectedCategory === cat ? 'none' : '1.5px solid var(--line)',
-                  background: selectedCategory === cat ? 'var(--primary)' : '#fff',
-                  color: selectedCategory === cat ? '#fff' : 'var(--ink-mid)',
-                  fontSize: 'clamp(12px, 1.2vw, 14px)',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  transition: 'all 0.2s',
-                }}
-              >
-                {cat}
-              </button>
-            ))}
-          </motion.div>
-
-          {selectedTag && (
-            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 32 }}>
-              <div style={{
-                background: 'var(--line-strong)',
-                padding: '6px 12px',
-                borderRadius: 8,
-                fontSize: 13,
-                fontWeight: 600,
-                color: 'var(--ink-mid)',
-                display: 'flex',
-                alignItems: 'center',
-                gap: 8
-              }}>
-                Filtered by tag: <strong>#{selectedTag}</strong>
-                <button
-                  onClick={() => setSelectedTag(null)}
-                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--ink-dim)', padding: 0, fontSize: 18 }}
-                >
-                  ×
-                </button>
-              </div>
             </div>
-          )}
+
+            {tags.length > 0 && (
+              <div className="journal-tags">
+                {tags.slice(0, 8).map((tag) => (
+                  <button
+                    key={tag}
+                    type="button"
+                    className={`chip chip-sm ${selectedTag === tag ? 'is-on' : ''}`}
+                    onClick={() => setSelectedTag(tag === selectedTag ? null : tag)}
+                  >
+                    #{tag}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
 
           {(searchQuery || selectedCategory || selectedTag) && !loading && (
-            <div style={{ textAlign: 'center', marginBottom: 32, fontSize: 14, color: 'var(--ink-dim)' }}>
-              Showing {filteredPosts.length} {filteredPosts.length === 1 ? 'article' : 'articles'}
-              {searchQuery && <> for "<strong>{searchQuery}</strong>"</>}
-              {selectedCategory && <> in <strong>{selectedCategory}</strong></>}
-              {selectedTag && <> tagged with <strong>#{selectedTag}</strong></>}
-              <button
-                onClick={() => {
-                  setSearchQuery('');
-                  setSelectedCategory(null);
-                  setSelectedTag(null);
-                }}
-                style={{ marginLeft: 12, color: 'var(--primary)', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600 }}
-              >
-                Clear all
+            <div className="journal-count">
+              <span>
+                {filteredPosts.length} {filteredPosts.length === 1 ? 'article' : 'articles'}
+                {searchQuery && <> for “{searchQuery}”</>}
+                {selectedTag && <> tagged #{selectedTag}</>}
+              </span>
+              <button type="button" onClick={clearing} className="journal-clear">
+                Clear filters
+                <X size={12} strokeWidth={2} />
               </button>
             </div>
           )}
 
-          {/* Loading State */}
           {loading ? (
-            <BlogSkeleton />
+            <Skeleton />
           ) : error ? (
-            <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--risk)' }}>
-              <p>{error}</p>
-              <button
-                onClick={() => loadPosts(true)}
-                style={{
-                  marginTop: 16,
-                  padding: '10px 20px',
-                  background: 'var(--primary)',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: 8,
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                }}
-              >
-                Try Again
+            <div className="journal-empty">
+              <p className="lead">{error}</p>
+              <button type="button" onClick={() => loadPosts(true)} className="btn-secondary">
+                Try again
               </button>
             </div>
           ) : filteredPosts.length === 0 ? (
-            <motion.div
-              {...fadeUp(0)}
-              style={{ textAlign: 'center', padding: '80px 20px', background: 'var(--surface)', borderRadius: 20 }}
-            >
-              <div style={{ fontSize: 48, marginBottom: 16 }}>🔍</div>
-              <h3 style={{ fontSize: 20, fontWeight: 700, color: 'var(--ink)', marginBottom: 8 }}>
-                No posts found
-              </h3>
-              <p style={{ fontSize: 16, color: 'var(--ink-mid)', maxWidth: 400, margin: '0 auto 24px' }}>
-                We couldn't find any articles matching "<strong>{searchQuery}</strong>"{selectedCategory ? ` in ${selectedCategory}` : ''}.
-              </p>
-              <button
-                onClick={() => {
-                  setSearchQuery('');
-                  setSelectedCategory(null);
-                }}
-                style={{
-                  padding: '12px 24px',
-                  background: 'var(--primary)',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: 10,
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                }}
-              >
+            <div className="journal-empty">
+              <span className="label-mono">Nothing here yet</span>
+              <h2 className="h-display-2" style={{ maxWidth: '18ch' }}>
+                No articles match that <span className="em">filter.</span>
+              </h2>
+              <button type="button" onClick={clearing} className="btn-secondary">
                 Clear filters
               </button>
-            </motion.div>
+            </div>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 24 }}>
-              {filteredPosts.map((post, idx) => {
-                const isFeatured = idx === 0 && !searchQuery && !selectedCategory;
-
-                return (
-                  <motion.article
-                    key={post.slug}
-                    {...fadeUp(idx * 0.05)}
-                    className="card"
-                    style={{
-                      padding: 0,
-                      height: '100%',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      overflow: 'hidden',
-                      gridColumn: isFeatured ? '1 / -1' : 'span 1',
-                      flexDirection: isFeatured ? (isDesktop ? 'row' : 'column') : 'column',
-                    }}
-                  >
-                    {post.featured_image_url && (
-                      <Link
-                        to={`/blog/${post.slug}`}
-                        style={{
-                          display: 'block',
-                          overflow: 'hidden',
-                          height: isFeatured ? (isDesktop ? 'auto' : 300) : 200,
-                          width: isFeatured && isDesktop ? '50%' : '100%',
-                          minHeight: isFeatured && isDesktop ? 400 : 'auto'
-                        }}
-                      >
-                        <img
-                          src={post.featured_image_url}
-                          alt={post.featured_image_alt || post.title}
-                          loading={isFeatured ? "eager" : "lazy"}
-                          style={{
-                            width: '100%',
-                            height: '100%',
-                            objectFit: 'cover',
-                            transition: 'transform 0.5s ease',
-                          }}
-                          onMouseEnter={(e) => (e.target.style.transform = 'scale(1.05)')}
-                          onMouseLeave={(e) => (e.target.style.transform = 'scale(1)')}
-                        />
-                      </Link>
-                    )}
-                    <div style={{
-                      padding: isFeatured ? 'clamp(32px, 5vw, 48px)' : '24px',
-                      flex: 1,
-                      display: 'flex',
-                      flexDirection: 'column',
-                      justifyContent: isFeatured ? 'center' : 'flex-start',
-                      width: isFeatured && isDesktop ? '50%' : '100%',
-                    }}>
-                      <span
-                        style={{
-                          fontFamily: 'var(--font-mono)',
-                          fontSize: 10,
-                          letterSpacing: '0.12em',
-                          textTransform: 'uppercase',
-                          color: 'var(--primary)',
-                          marginBottom: 12,
-                          display: 'inline-block',
-                          fontWeight: 600,
-                        }}
-                      >
-                        {isFeatured && <span style={{ marginRight: 8, background: 'var(--primary)', color: '#fff', padding: '2px 6px', borderRadius: 4 }}>Featured</span>}
-                        {post.category}
-                      </span>
-                      <Link
-                        to={`/blog/${post.slug}`}
-                        style={{
-                          fontSize: isFeatured ? 'clamp(24px, 3.5vw, 36px)' : 'clamp(18px, 2.2vw, 22px)',
-                          fontWeight: 800,
-                          color: 'var(--ink)',
-                          margin: '0 0 12px',
-                          lineHeight: 1.2,
-                          textDecoration: 'none',
-                        }}
-                      >
-                        {post.title}
-                      </Link>
-                      <p style={{
-                        fontSize: isFeatured ? 16 : 14.5,
-                        color: 'var(--ink-mid)',
-                        lineHeight: 1.6,
-                        margin: '0 0 24px',
-                        flex: isFeatured ? 'none' : 1
-                      }}>
-                        {post.excerpt}
-                      </p>
-                      <div style={{ display: 'flex', gap: 12, fontSize: 12, color: 'var(--ink-dim)', marginBottom: 24 }}>
-                        <span>{fmt(post.published_at)}</span>
-                        <span>·</span>
-                        <span>{post.read_minutes} min read</span>
-                      </div>
-
-                      {/* Card Tags */}
-                      {post.tags && post.tags.length > 0 && (
-                        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 20 }}>
-                          {post.tags.map(tag => (
-                            <button
-                              key={tag}
-                              onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                setSelectedTag(tag);
-                                window.scrollTo({ top: 400, behavior: 'smooth' });
-                              }}
-                              style={{
-                                background: 'var(--surface)',
-                                border: '1px solid var(--line)',
-                                borderRadius: 4,
-                                padding: '2px 6px',
-                                fontSize: 11,
-                                fontWeight: 600,
-                                color: 'var(--ink-mid)',
-                                cursor: 'pointer'
-                              }}
-                            >
-                              #{tag}
-                            </button>
-                          ))}
-                        </div>
-                      )}
-
-                      <Link
-                        to={`/blog/${post.slug}`}
-                        style={{
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: 6,
-                          color: 'var(--primary)',
-                          fontWeight: 700,
-                          fontSize: 14,
-                          textDecoration: 'none',
-                        }}
-                      >
-                        Read article →
-                      </Link>
+            <>
+              {/* Featured */}
+              {featured && (
+                <motion.article {...fadeUp(0)} className="journal-feature">
+                  {featured.featured_image_url && (
+                    <Link to={`/blog/${featured.slug}`} className="journal-feature-media">
+                      <img
+                        src={featured.featured_image_url}
+                        alt={featured.featured_image_alt || featured.title}
+                        loading="eager"
+                      />
+                    </Link>
+                  )}
+                  <div className="journal-feature-body">
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+                      <span className="label-mono-primary">Featured</span>
+                      <span className="label-mono">{featured.category}</span>
                     </div>
-                  </motion.article>
-                );
-              })}
-            </div>
-          )}
+                    <Link to={`/blog/${featured.slug}`}>
+                      <h2>{featured.title}</h2>
+                    </Link>
+                    <p>{featured.excerpt}</p>
+                    <div className="journal-meta">
+                      <span>{fmt(featured.published_at)}</span>
+                      <span>·</span>
+                      <span>{featured.read_minutes} min read</span>
+                    </div>
+                    <Link to={`/blog/${featured.slug}`} className="arrow-link" style={{ marginTop: 18 }}>
+                      Read the article
+                      <ArrowUpRight size={15} strokeWidth={1.6} />
+                    </Link>
+                  </div>
+                </motion.article>
+              )}
 
-          {/* Load More */}
-          {!loading && !error && hasMore && filteredPosts.length > 0 && (
-            <div style={{ display: 'flex', justifyContent: 'center', marginTop: 48 }}>
-              <button
-                onClick={() => loadPosts()}
-                disabled={loadingMore}
-                style={{
-                  padding: '14px 32px',
-                  borderRadius: 12,
-                  border: '1.5px solid var(--line)',
-                  background: '#fff',
-                  color: 'var(--ink)',
-                  fontSize: 15,
-                  fontWeight: 700,
-                  cursor: loadingMore ? 'wait' : 'pointer',
-                  transition: 'all 0.2s',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 10,
-                  opacity: loadingMore ? 0.7 : 1,
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.borderColor = 'var(--primary)';
-                  e.target.style.color = 'var(--primary)';
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.borderColor = 'var(--line)';
-                  e.target.style.color = 'var(--ink)';
-                }}
-              >
-                {loadingMore ? 'Loading...' : 'Load more articles'}
-              </button>
-            </div>
+              {/* Rest */}
+              {rest.length > 0 && (
+                <div className="blog-grid">
+                  {rest.map((post, idx) => (
+                    <Reveal key={post.slug} delay={idx * 0.04} as="article" className="blog-card">
+                      {post.featured_image_url && (
+                        <Link to={`/blog/${post.slug}`} className="blog-card-media">
+                          <img
+                            src={post.featured_image_url}
+                            alt={post.featured_image_alt || post.title}
+                            loading="lazy"
+                          />
+                        </Link>
+                      )}
+                      <div className="journal-meta">
+                        <span>{post.category}</span>
+                        <span>·</span>
+                        <span>{post.read_minutes} min</span>
+                      </div>
+                      <Link to={`/blog/${post.slug}`}>
+                        <h3>{post.title}</h3>
+                      </Link>
+                      <p className="blog-excerpt">{post.excerpt}</p>
+                      <div className="journal-meta" style={{ marginTop: 'auto', paddingTop: 12 }}>
+                        <span>{fmt(post.published_at)}</span>
+                      </div>
+                    </Reveal>
+                  ))}
+                </div>
+              )}
+
+              {hasMore && (
+                <div style={{ display: 'flex', justifyContent: 'center', marginTop: 40 }}>
+                  <button
+                    type="button"
+                    onClick={() => loadPosts()}
+                    disabled={loadingMore}
+                    className="btn-secondary"
+                  >
+                    {loadingMore ? 'Loading…' : 'Load more articles'}
+                  </button>
+                </div>
+              )}
+            </>
           )}
         </div>
-      </Section>
+      </section>
 
-      <Section borderTop background="surface">
-        <Newsletter source="blog_list" />
-      </Section>
+      <section className="dark-band">
+        <div className="shell">
+          <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(0,1fr)', gap: 'clamp(24px,5vw,80px)', alignItems: 'end' }} className="faq-teaser-grid">
+            <div>
+              <span className="label-mono" style={{ color: 'rgba(239,234,225,0.42)' }}>
+                Field notes
+              </span>
+              <h2 className="h-display-2" style={{ color: 'var(--paper)', marginTop: 14, maxWidth: '18ch' }}>
+                Occasionally, something <span className="em" style={{ color: 'var(--ember-bright)' }}>useful.</span>
+              </h2>
+            </div>
+            <div>
+              <p style={{ fontSize: 14.5, lineHeight: 1.6, color: 'rgba(239,234,225,0.55)', maxWidth: '42ch' }}>
+                Notes on property presentation, verified facts and publishing with control. No noise,
+                no sequences.
+              </p>
+              <Link to="/early-access" className="btn-primary" style={{ background: 'var(--paper)', color: 'var(--ink)', marginTop: 20 }}>
+                Request early access
+                <ArrowRight size={15} strokeWidth={1.6} />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
     </PageWrapper>
   );
 }

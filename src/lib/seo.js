@@ -3,9 +3,9 @@ import { useEffect } from 'react';
 const SITE = {
   name: 'ORVN Labs',
   url: 'https://orvnlabs.com',
-  defaultTitle: 'ORVN Labs — AI First-Touch Infrastructure for Real Estate Brokerages',
+  defaultTitle: 'LAREI — A better place to be seen',
   defaultDescription:
-    'ORVN Labs builds brokerage intelligence infrastructure. PAS answers, qualifies, routes, books, and logs inbound real estate leads before delay kills conversion.',
+    'LAREI is one professional home for your brand, your property portfolio and every deal you present. One verified record behind every page, deal sheet and summary you publish.',
 };
 
 const setMeta = (name, content, attr = 'name') => {
