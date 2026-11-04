@@ -1,0 +1,246 @@
+/* Content Renderer Styles - TipTap Editor Output */
+
+.content-renderer {
+  font-family: 'Inter', sans-serif;
+}
+
+/* Headings */
+.content-renderer h1,
+.content-renderer h2,
+.content-renderer h3,
+.content-renderer h4,
+.content-renderer h5,
+.content-renderer h6 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  margin-top: 28px;
+  margin-bottom: 14px;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+
+.content-renderer h1 {
+  font-size: 32px;
+  color: #0F172A;
+}
+
+.content-renderer h2 {
+  font-size: 26px;
+  color: #0F172A;
+  border-bottom: 2px solid #E5E8F0;
+  padding-bottom: 10px;
+}
+
+.content-renderer h3 {
+  font-size: 22px;
+  color: #1E293B;
+}
+
+.content-renderer h4 {
+  font-size: 18px;
+  color: #334155;
+}
+
+/* Paragraphs */
+.content-renderer p {
+  margin: 16px 0;
+  line-height: 1.8;
+}
+
+/* Emphasis */
+.content-renderer strong,
+.content-renderer b {
+  font-weight: 700;
+  color: #0F172A;
+}
+
+.content-renderer em,
+.content-renderer i {
+  font-style: italic;
+  color: #1E293B;
+}
+
+.content-renderer u {
+  text-decoration: underline;
+  text-decoration-color: #5B3FD4;
+  text-underline-offset: 3px;
+}
+
+.content-renderer s,
+.content-renderer del {
+  text-decoration: line-through;
+  color: #94A3B8;
+}
+
+/* Lists */
+.content-renderer ul,
+.content-renderer ol {
+  margin: 16px 0;
+  padding-left: 24px;
+}
+
+.content-renderer ul {
+  list-style-type: disc;
+}
+
+.content-renderer ol {
+  list-style-type: decimal;
+}
+
+.content-renderer li {
+  margin: 8px 0;
+  line-height: 1.8;
+}
+
+.content-renderer ul ul,
+.content-renderer ol ol,
+.content-renderer ul ol,
+.content-renderer ol ul {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+/* Blockquotes */
+.content-renderer blockquote {
+  border-left: 4px solid #5B3FD4;
+  padding: 16px 20px;
+  margin: 20px 0;
+  background: #F7F8FB;
+  border-radius: 6px;
+  font-style: italic;
+  color: #475569;
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.content-renderer blockquote p {
+  margin: 0;
+}
+
+.content-renderer blockquote strong {
+  color: #0F172A;
+  font-weight: 700;
+}
+
+/* Code */
+.content-renderer code {
+  background: #F1F3F9;
+  color: #DC2626;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+}
+
+.content-renderer pre {
+  background: #1E293B;
+  color: #E2E8F0;
+  padding: 16px;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 16px 0;
+  line-height: 1.5;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+}
+
+.content-renderer pre code {
+  background: none;
+  color: #E2E8F0;
+  padding: 0;
+  font-size: 13px;
+}
+
+/* Links */
+.content-renderer a {
+  color: #5B3FD4;
+  text-decoration: underline;
+  text-decoration-color: rgba(91, 63, 212, 0.3);
+  text-underline-offset: 3px;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+.content-renderer a:hover {
+  color: #4A30C0;
+  text-decoration-color: #5B3FD4;
+}
+
+/* Images */
+.content-renderer img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 20px 0;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.1);
+}
+
+/* Tables */
+.content-renderer table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  border: 1px solid #E5E8F0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.content-renderer table th {
+  background: #F7F8FB;
+  padding: 12px 14px;
+  text-align: left;
+  font-weight: 700;
+  color: #0F172A;
+  border-bottom: 2px solid #E5E8F0;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.content-renderer table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #F1F3F9;
+  color: #475569;
+}
+
+.content-renderer table tr:last-child td {
+  border-bottom: none;
+}
+
+.content-renderer table tbody tr:hover {
+  background: #F7F8FB;
+}
+
+/* Horizontal Rule */
+.content-renderer hr {
+  border: none;
+  border-top: 2px solid #E5E8F0;
+  margin: 28px 0;
+}
+
+/* Text Alignment */
+.content-renderer p.has-text-align-center {
+  text-align: center;
+}
+
+.content-renderer p.has-text-align-right {
+  text-align: right;
+}
+
+.content-renderer p.has-text-align-justify {
+  text-align: justify;
+}
+
+/* Highlights */
+.content-renderer mark {
+  background-color: #FEF3C7;
+  padding: 2px 4px;
+  border-radius: 2px;
+}
+
+/* Mixed Content */
+.content-renderer > *:first-child {
+  margin-top: 0;
+}
+
+.content-renderer > *:last-child {
+  margin-bottom: 0;
+}

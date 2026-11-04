@@ -1,0 +1,20 @@
+{
+  "short_name": "ORVN Labs",
+  "name": "ORVN Labs — Brokerage Intelligence Infrastructure",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/logo.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#5B3FD4",
+  "background_color": "#ffffff"
+}
