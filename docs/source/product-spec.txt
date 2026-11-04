@@ -1,0 +1,364 @@
+LAREI — Product & Developer Specification
+ORVN Labs | Developer handoff | Revision 1.0 | 21 October 2026Product name: LAREI (provisional)Release model: Private beta, invitation-controlledStatus: Build brief / proposed product requirements, not evidence of completed functionality
+Operating principle: One approved professional identity; one structured source of truth for each property; multiple consistent, publishable outputs. AI assists, but the user approves factual claims and publication.
+1. The product, the customer and the job
+Definition. LAREI is a real-estate professional-presence and deal-publishing platform. A wholesaler, real-estate agent, investor or property operator can create a branded public website, organize properties and project portfolios, prepare deal sheets and marketing copy from approved source facts, publish individual property pages, share links and understand observable engagement. The public website and the private workspace are two sides of the same structured information system.
+The underlying problem. Professionals often operate with a scattered profile, informal introductions, property notes, photos, spreadsheets, land records, listing details and outreach messages. Sharing a deal involves manual reconstruction. An interested investor may receive a vague message, unsupported claims, broken attachments and no dependable destination for the professional or the property. A generic website builder solves page layout, not the underlying property workflow. A generic AI writer generates text, not a governed property record.
+Who it is for / jobs to be done
+Audience
+Primary job
+What the first release must actually provide
+Wholesaler / dispositions operator
+Package an opportunity and present it to buyers without exposing confidential seller information
+Deal record, provenance review, marketing assets, deal link, inquiries, profile/active-deal portfolio
+Real-estate agent / broker-associated professional
+Present a credible business identity and approved listings
+Branded professional site, gallery, listing/portfolio presentation, correct attribution and contact route
+Investor
+Present owned assets, opportunities or completed projects
+Flexible project status, portfolio, investment-oriented factual summaries and private-by-default records
+Acquisitions / real-estate operator
+Present the business, standardize property information, share it consistently
+Business profile, repeatable page templates, one source of truth, team permissions and analytics
+Core user outcome: “I can go from notes and files to an accurate professional page and a buyer-readable property presentation, using my brand, without rebuilding materials every time.” The platform does not guarantee buyers, leads, closed transactions, valuation correctness, or regulatory approval.
+Experience objective: The user should feel competent, professionally represented, in control, and confident about what is public. A buyer should feel they can inspect the opportunity without hunting through unrelated links. Avoid childish AI theatrics, urgency tricks, fabricated authority or fake trust signals.
+2. Scope discipline: V1, later and excluded
+Priority
+In scope / out of scope
+Definition
+P0 — essential beta
+Controlled access and account recovery
+Invite-only beta; invited user gets a functioning account, workspace and private data boundaries
+P0 — essential beta
+Public professional page
+Branded AI-assisted page with profile, selected portfolio, business contact information and stable public URL
+P0 — essential beta
+Property record + intake
+Manual/text/file inputs; structured schema; source evidence; AI extraction; human review
+P0 — essential beta
+Publishable property page
+Gallery, facts, approved files, map/link, inquiry action, metadata, publication controls
+P0 — essential beta
+AI-generated approved materials
+Descriptions, deal summaries, captions, outreach text, consistent printable deal sheet
+P0 — essential beta
+Share, inquiry and event tracking
+Working URL, copy/open/share, public inquiry without buyer login, views/clicks/submissions
+P0 — essential beta
+Privacy, roles, recovery, errors
+Workspace isolation, private file handling, no-publication defaults and recoverable failures
+P1 — include if beta capacity permits
+Workspace invitations and lightweight team roles
+Owner and member; explicit edit and publish permission boundaries
+P1 — include if beta capacity permits
+AI style and context import
+Upload/paste approved business notes and writing samples; editable approved voice profile
+P1 — include if beta capacity permits
+Flexible portfolio labels and section ordering
+Multiple property categories and safe profile-section adjustments within curated templates
+P2 — later
+Verified parcel boundaries / full GIS
+GIS layers, flood/wetlands overlays, boundary provider integration and source freshness
+P2 — later
+Subdomains/custom domains, rich SEO
+Branded subdomain migration or custom DNS once routes and tenancy are stable
+P2 — later
+Direct ChatGPT sync, social auto-posting, CRM and marketplace
+Only after permissions, economics, customer validation and implementation are scoped
+Explicitly excluded from V1
+Autonomous underwriting, automatically verified ARV, title or zoning decisions, escrow, e-signatures, contract execution, paid lead sourcing
+Avoid competing with unvalidated enterprise platforms or creating false property authority
+Release cutline: If time is limited, ship one impeccable path: approved beta user → professional site draft → property intake → factual review → published property page → working share link → inquiry + analytics. Do not sacrifice tenant privacy or publishing accuracy to add secondary features.
+3. End-to-end journeys
+3.1 Professional profile to branded public page
+Approved beta user follows invitation, authenticates and creates a workspace; access request is not the same as an account.
+Onboarding collects display name, business type/role, company name (optional), service markets, positioning, services, contact route, logo/headshot and credentials only if legitimately held and supplied.
+User may paste a business description or upload an existing bio; AI drafts a bio and selects a curated layout based only on submitted facts.
+Review screen distinguishes factual details from generated wording. User changes the copy, selects public contact fields and chooses sections.
+Profile stays private until Publish Site. Once published, the site’s portfolio shows only property cards explicitly marked visible.
+Visitor sees branded site, portfolio, individual properties and contact/inquiry routes on mobile without an account.
+3.2 A property from messy notes to buyer-facing deal
+User selects New Property and chooses Paste notes, Fill form, Upload files or a combination.
+User can create a single property or a named multi-parcel package; each APN is retained as a string with leading zeros.
+AI extracts fields with source references. Conflicts appear in an explicit review list and unknowns remain unknown.
+User approves the factual record; private notes and supporting originals remain private unless individual items are shared.
+System drafts a page, plain-language deal summary and print-friendly deal sheet. User edits marketing language without altering approved factual fields.
+User previews as a visitor, clears publication requirements and publishes; the page can optionally appear on the professional portfolio.
+User shares the URL. Buyer views details and submits inquiry; property owner sees it in Inquiries and receives an optional notification.
+Updates to approved property fields refresh controlled outputs or mark existing manually edited copy as Needs review, preventing inconsistent price information.
+3.3 User imports voice / business context
+User opens Brand & AI Context and submits selected writing examples or a prepared summary exported/copied from another assistant.
+System extracts candidate preferences: target audience, markets, business services, tone, formatting, banned phrases and terminology.
+User sees proposed entries with editable fields and a Save approved context action. No private chat history is pulled automatically.
+Generation references the approved context but never overrides property-specific facts. User can revise, disable or delete it at any time.
+Other workspaces never inherit this user’s context.
+3.4 Buyer visits published site and property
+Visitor enters professional site → browses visible portfolio → opens a property card → views verified/user-supplied facts, media and general location → submits a question (no account required) → receives a confirmation. Analytics record the page view, card click and successful inquiry without assuming the visitor’s identity.
+4. Navigation, routes and information architecture
+Public marketing website (orvnlabs.com): Home / Product / How it works / Who it’s for / FAQ / Early access / Sign in / Contact / Privacy / Terms.
+Authenticated app (proposed app.orvnlabs.com, not yet live): Dashboard / My Website / Properties / Create Property / Content & AI / Inquiries / Analytics / Settings. Mobile navigation may collapse into a compact menu; Create Property must remain discoverable.
+Public user-site V1 route (recommended): larei.orvnlabs.com/{username} with properties at / {username}/deals/{property-slug} (actual route without the space). Later: username.orvnlabs.com and custom-domain support. These addresses are proposed, not existing deployed pages. The route decision may change without changing the content model.
+Routes and errors: duplicate/forbidden usernames rejected; old route redirects after safe rename (where enabled); protected unpublished property returns non-sensitive unavailable page; missing route returns 404; account authentication must not accidentally gate public published pages.
+5. Feature requirements (behavioral specifications)
+F01 — Beta access, authentication and roles (P0)
+Why: A private beta enables controlled learning and keeps unfinished app flows away from public users. User feeling: secure and expected, not blocked by random errors.
+Behavior: early-access requests enter a review queue; an admin approves/rejects, then issues expiring invitation. User accepts, signs in, resets password, signs out, and enters only authorized workspaces. Public visitor can view published pages without account. Workspace owner controls site/publication; member edits only with granted rights. Optional invitation administration can start as a simple internal tool, but must be documented.
+Microinteractions: Request early access; application success/failure; Invite sent (admin); invitation expired; Resend invitation; Sign in; Forgot password; Show/hide password; Sign out; access revoked; session expired with preserved unsaved content where feasible.
+Done when: non-approved users cannot access private workspaces; invitation cannot be replayed; password recovery succeeds; cross-account URL guessing reveals no private records.
+F02 — Professional profile and AI-generated website (P0)
+Why: Every operator needs a permanent credible destination, not only separate deal links. Feeling: my business looks established and accurately represented, even before I have many published deals.
+Inputs: name/company, role, service markets, headline, bio, valid public credentials, services, social links, contact preferences, optional logo/headshot, brand accent, cover media, selected projects, approved tone. Do not invent license numbers, transaction volume, assets owned, buyer network or testimonials.
+Required page sections: header with identity and nav; professional intro + primary contact CTA; business/about; operating markets and focus; portfolio with live/available/closed/showcase distinctions; optional services/process; professional links; contact/inquiry form; disclosures/footer. Empty optional sections do not show.
+Template: one premium responsive curated template in V1 with optional section order and a limited palette. AI drafts initial words and proposed section copy. Page sections remain edited through structured controls, not unrestricted prompt-driven HTML.
+Actions: Preview as visitor; Edit profile; Add section; Hide section; Change cover; Save draft; Publish Site; Unpublish Site; Copy site link; Open published site; Edit username (with conflicts and migration warning); Set property visibility on portfolio.
+Done when: approved profile becomes a stable public page; link shows correct brand/content on mobile; editing one workspace cannot alter another; hidden/private details never leak; portfolio reflects only explicitly visible published properties.
+F03 — AI brand context / voice (P1)
+Why: Generic AI copy damages differentiation; users want content to sound like their own professional writing. Feeling: the assistant understands the business yet does not speak for it without approval.
+Inputs: pasted professional summary, uploaded notes, selected writing samples, manually entered style rules. A prepared ChatGPT summary is a supported file/text import, not an automatic account sync. Prompt user to avoid uploading confidential client, seller or third-party personal data without rights.
+Process: extract candidate fields → categorize facts vs style → user approve, correct, exclude → save approved version → surface “Used in this draft” context → regenerate against current property facts → preview diff. The user can reset style or erase stored approved context and understand effects on future generated copy.
+Controls: Brand voice: Precise / Conversational / Formal (suggestions only); audience; first-person vs company voice; terms to use/avoid; approval toggle for profile facts; Save context; Clear imported source; Regenerate; Restore previous copy.
+Done when: user can inspect and remove every saved preference; style improves on curated examples without changing parcel IDs/prices or leaking other users’ data; if no context exists, copy is neutral and clearly editable.
+F04 — Property creation, intake and extraction (P0)
+Why: The real-estate task starts with disorganized information. Feeling: no need to memorize forms; nothing important is silently invented or lost.
+Input: pasted text; structured fields; supported PDF/DOCX/text and image uploads subject to explicitly displayed type/size limits; combined inputs. The app must not claim it read a file it failed to parse. Support property types: vacant land, residential house, multi-property package, generic project/showcase. Label unsupported specialized fields instead of forcing a universal form.
+Core field groups: record ID; user/project title; address, city/state/ZIP/county; APN(s) stored as strings; coordinates with quality; property type; lot size/unit; building size/beds/baths where relevant; asking price/currency; permitted status (available, pending, sold, showcase); ownership/authority representations as user statements only; utilities/access/zoning/flood/wetlands supplied facts; source notes; media; deal terms; public/private selectors; timestamps. Store parcel multiplicity and package-level price independently.
+Extraction: each value stores raw source, source type, extraction timestamp, confidence/ambiguity marker and user approval state. Example conflict: $45,000 in a note vs $50,000 in a file → Needs resolution. A coordinate generated from a street geocode is an approximate pin, not a boundary. Unknown remains unknown; a blank flood field cannot render “not in flood zone”.
+Buttons/states: Start from notes; Add files; Remove file; Retry upload; Build record; Extraction in progress; Partial extraction; Review conflicts; Accept this value; Replace value; Mark unknown; Save draft; Back without data loss.
+Done when: multi-source property survives a reload; APNs preserve leading zeros; contradictions never silently resolve; AI does not invent comps/ARV/deed/zoning; partial failure does not erase user’s note or previously confirmed fields.
+F05 — Property workspace, statuses and version consistency (P0)
+Why: Operators should edit once and republish consistently, not maintain separate spreadsheets, PDFs and pages. Feeling: orderly, predictable and reversible.
+Tabs: Overview (completion, status, next action); Details (approved structured fields); Files & Media (privacy per asset); Copy & Assets (AI suggestions and manual edits); Deal Sheet (print/PDF preview); Public Page (preview/publish/visibility); Activity (change log and inquiries for this property).
+Statuses: Draft → Needs review → Ready to publish → Published → Unpublished → Archived. Administrative workflow status (e.g., available/pending/closed) is a separate field from publication status to avoid treating a published listing as a signed contract.
+Key micro actions: Edit, Save, Cancel, Undo while editing, Duplicate as draft (never copy inquiries), Publish, Unpublish, Archive, Restore, Preview, Copy Link, Reorder photos, Choose cover photo, Mark supporting asset public/private, Hide address if allowed, Submit inquiry notification choice, Last saved timestamp. Changing factual fields triggers stale-copy warning if manually edited assets conflict. Published page versions should be auditable.
+Done when: all outward-facing outputs draw from the current approved record or explicitly state that they require regeneration; archive does not delete historical analytics; unpublish removes public detail access.
+F06 — Deal sheet and marketing generator (P0)
+Why: Buyer-readable materials are the economic output of the platform. Feeling: “I would send this to a serious counterparty.”
+Outputs: short headline; two-sentence summary; detailed property narrative; role-aware buyer email; concise social caption; printable one- or two-page deal sheet (browser print-to-PDF accepted in beta only if layout is production-quality); property-page copy. User may choose audience, channel and tone within approved business voice.
+Deal-sheet content: professional identity, property title/location, status/asking terms if publicly approved, hero photo, fact table (APN(s), lot/building specifics), map location reference, factual constraints/due diligence, approved supporting docs, contact CTA and independent-verification disclaimer. If asking price or ARV unknown, omit it or label appropriately rather than invent.
+Controls: Generate; Regenerate selected section; Edit copy; Restore; Copy text; Preview as buyer; Print/Export; Share. Generated marketing text does not alter facts. For vacant land, prioritize access, dimensions, zoning and lot use where supplied; for homes, use home-specific fields; never render blank labels as definitive negatives.
+Done when: copy, print and page reflect consistent parcel IDs/price; generated claims are traceable to approved facts; phone-size readable output and usable print layout; no phantom ROI claims.
+F07 — Location map (P0 basic / P2 GIS)
+Why: Buyers need context for where a property sits. Feeling: oriented, not misled.
+V1: embed a basic location map or render Open map external link when reliable address or coordinates exist. Mark pin as Approximate location if geocoded or otherwise uncertain. Map failure leaves address/text and a working fallback link; user can correct coordinate via a supported interface and must accept location precision label.
+Not V1: parcel polygons, reliable footage/frontage measurement, cadastral layers, flood/wetlands overlays, street-view panels, legal survey claims. Full GIS requires third-party licensing, official-source attribution, refresh policies, jurisdiction coverage and accuracy testing.
+Done when: correct general location, no invented polygon, no publicly exposed private addresses where hidden, usable fallback when map provider unavailable.
+F08 — Publishing, public property page and share panel (P0)
+Why: The user needs one dependable page per opportunity. Feeling: a publication step has deliberate control and a reliable outcome.
+Public property page: professional brand, title and general location, status, approved asking terms, responsive photo gallery, key facts, description, supporting files specifically marked public, approximate map/location link, explicit constraints and qualification language, inquiry CTA, portfolio navigation and legal footer. Buyer can open on mobile without sign-in.
+Publication prerequisites: reviewed title/location, appropriate contact route, rights to publish material, approved public fields and gallery fallbacks. Price optional (e.g., “Price on request” only if the user chooses it). Address privacy can use approximate location and area label, but do not fabricate a street address. All public file URLs require authorization by release state, not only by hiding UI links.
+Share button contract: published: Copy link (clipboard success), Open page, native share if supported, Download/print sheet. Draft: show Publish first and preview, never expose draft URL. Unpublished: show Page is not public and provide Republish only to authorized user. Failed clipboard: provide selectable link. No auto-sending to external buyers or platforms.
+Done when: authorized recipient can open exactly the intended public page; unpublish blocks all public access to its substantive content/files; link previews show appropriate title/image; cross-tenant leakage impossible.
+F09 — Inquiry capture and analytics (P0)
+Why: Publishing without follow-through creates attractive dead ends. Feeling: user can see whether somebody acted; buyer can reach an actual person.
+Inquiry: name, one reply method (email required in V1; phone optional), message, associated property/site ID, timestamp, consent/privacy disclosure, spam/rate limit controls. Confirmation must not claim the professional has seen the message. Owner sees inquiry list in app; optional transactional email only after reliable delivery is configured; mark read/archived only (no CRM pipeline).
+Analytics events: profile view; portfolio-card click; property view; public document click; primary CTA click; inquiry submit success; selected traffic referrer/UTM where supported. Display page views separately from approximate unique visitors; explain unique visitor limitations and bot filtering. User cannot identify anonymous persons from page views alone.
+Dashboard: site views, property views sorted by interest, link clicks, submitted inquiries, view-to-inquiry rate and selected time interval; export is P1. Distinguish page impressions from verified buyer interest and buyer identity. Log consent for analytics as required by actual jurisdiction/provider choices.
+Done when: two different property pages never mix events; bot tests flagged/filtered where feasible; anonymous visits remain anonymous; successful inquiries appear in correct workspace once; broken forms do not silently succeed.
+F10 — Settings, support and system behavior (P0)
+Settings: account identity, password/recovery, workspace ownership, public branding, approved AI context, contact preferences, member permissions if enabled, notifications, privacy explanation, sign out. Support: contact support with optional URL/issue category but no demand for seller-sensitive attachments.
+Resilience: autosave/unsaved-change warnings, upload progress, bounded retries, meaningful retry buttons, specific validation, 404/not available for private pages, accessible focus indicators, informative empty states. Avoid spinners that conceal errors. Make all important operations mobile-capable and keyboard accessible.
+Done when: actions are visible and reversible when safe; failed AI processing doesn’t delete manual input; a page cannot be published across a workspace boundary; published facts never depend on unrestricted generative HTML.
+6. Microcopy and button-level contract
+Screen / trigger
+Control text
+Expected result
+Error / empty state copy
+Marketing site, prospective user
+Request early access
+Opens controlled-access application form
+“We couldn’t submit your request. Check your connection and try again.”
+Beta admin approval
+Send invitation
+Issues account-specific invitation
+“Invitation could not be sent. Retry or contact support.”
+Dashboard / first use
+Create a property
+Opens intake methods
+“No properties yet. Create one to start building your portfolio.”
+Intake / notes complete
+Build property record
+Persists input and starts extraction
+“We saved your input, but couldn’t finish extraction. Review manually or retry.”
+AI field conflict
+Review differences
+Shows both sources and user choice
+“These sources disagree. Choose the correct value or leave it unknown.”
+Media upload
+Add photos or documents
+Shows per-file upload progress
+“That file could not be uploaded. Your other files are safe.”
+Profile editor
+Generate my page
+Drafts editable page from approved profile
+“We couldn’t generate copy. Your profile is saved; try again.”
+Public site editor
+Publish site
+Shows confirmation and live URL
+“Complete the required profile fields before publishing.”
+Property editor
+Preview as buyer
+Shows exactly public-visible items
+“Private notes and unpublished files are hidden from this preview.”
+Property editor
+Publish property
+Validates and publishes selected fields
+“Review the highlighted items to publish this property.”
+Published deal
+Share
+Opens copy/open/download actions
+“This property isn’t published yet. Publish before sharing a live link.”
+Published deal
+Copy link
+Copies stable public URL
+“Couldn’t copy automatically. Select and copy the link below.”
+Live public deal
+Ask about this property
+Opens inquiry form; submits property ID
+“We couldn’t send your inquiry. Nothing was submitted; please retry.”
+Owner’s analytics
+View engagement
+Displays measured events with dates
+“Not enough activity yet. Share a published link to begin collecting engagement.”
+AI brand context
+Save approved context
+Persists only user-approved profile facts
+“Review the highlighted context before saving.”
+User account
+Sign out
+Ends session and returns to marketing/sign in
+“Your draft contains unsaved changes. Save before leaving?”
+7. Data relationships and permissions
+Data entities: User; Workspace; WorkspaceMembership(role); BetaAccessRequest; Invitation; ProfessionalProfile; BrandContextVersion; WritingSample (private); PublicSite + SiteSection + UsernameRoute; Property; Parcel (0..N, exact APN string); PropertyFact (field/value/unit/source/provenance/approval); SourceFile (private/public grant); GeneratedAsset (generation source revision, edited flag); Publication (state, approved version, published fields); Inquiry (site/property key); AnalyticsEvent (site/property, event type, approximate attribution, timestamp); AuditLog.
+Invariant: every property and related object belongs to exactly one workspace. A user cannot use URL or ID manipulation to read or mutate another workspace. Public views are read-only projections of approved published versions, not raw private records. A document marked private remains unavailable even with its original object storage URL.
+Professional page vs property page: A professional page can exist with zero published properties. A published property need not automatically appear on the professional portfolio until the owner enables it. Unpublishing a property automatically removes it from public portfolio results; archived is a workspace state and should not silently erase historical engagement.
+Version control: log field edits and publication events; sources tied to field revisions; regenerate the affected asset or warn when data changed since copy was generated. A button labelled “Save” must not silently publish.
+8. Legal/trust considerations for real-estate professionals
+Authority & marketing rights: require users to attest they have rights to publish each property and media. Wholesalers must not implicitly represent assignment rights or ownership unless supported. Agents may need brokerage/license disclosures and required listing permissions by jurisdiction; capture manually, do not assert regulatory compliance automatically.
+Accuracy: labels for “supplied by operator”, “unverified”, “approximate”, and “independently verified” must have real source logic. No false closed sales, builder bids, ARV or title conclusions.
+Personal data: never automatically expose seller contact details, contracts, owner mailing addresses, personal IDs, private notes or AI training examples on published pages. No third-party private conversation imports without rights.
+Claims and proof: do not create fake testimonials, sales volumes, professional affiliations, licensing or ROI statistics.
+Visitor data: contact forms need privacy notice, anti-spam protection, consent where applicable and retention policy. Cross-border data processing, AI vendor handling and storage terms require actual implementation/legal review before final policies are published.
+Account removal and site takedown: document process, permission gates, retention and whether cached public previews may persist. Do not promise deletion windows without infrastructure support.
+9. Acceptance and negative tests — release gate
+ID
+Scenario
+Evidence of completion
+T01
+Waitlist applicant submits
+Request stored once; success email/confirmation only if implemented; no account auto-created
+T02
+Non-invited person attempts sign-in
+Cannot access beta; sensitive account-existence information not disclosed
+T03
+Owner builds site from profile
+Editable page generated; no fake credentials, clients or sales
+T04
+Profile has no deals
+Public page remains complete, without broken empty gallery
+T05
+Duplicate username
+Collision prevented; alternative offered; no cross-account alias
+T06
+User posts pasted notes
+Accurate fields extracted; original input retained
+T07
+APN with leading zeros
+Exact string preserved through record, sheet and public page
+T08
+Two sources conflict on price
+Conflict surfaced; no auto-confirmation
+T09
+Unknown zoning/ARV
+Not invented in marketing output or page
+T10
+One file upload fails
+Other files and record remain present; retry works
+T11
+User imports outside AI summary
+Context requires review; no direct account sync implied
+T12
+User edits writing style
+Generated prose changes; parcel fields/prices unchanged
+T13
+User tries to publish incomplete property
+Specific actionable missing fields shown; no accidental publish
+T14
+Authorized record published
+URL works without login on phone/desktop
+T15
+Private seller document selected
+Not visible or directly downloadable on public route
+T16
+User unpublishes property
+Public content inaccessible; portfolio card removed
+T17
+Share from draft
+Only preview or publish prompt; no live private link copied
+T18
+Map has approximate geocode
+Accurate approximation label; no parcel polygon/survey claim
+T19
+Buyer submits inquiry
+Correct workspace receives inquiry with property ID; confirmation accurate
+T20
+Two workspaces open same guessed property ID
+No cross-workspace read/edit/document access
+T21
+Analytics visit/click/inquiry
+Separate counts by page and period; no identity inferred from anonymous view
+T22
+Browser refresh during recoverable fault
+Saved work remains; actionable recovery shown
+T23
+Print or PDF export
+Buyer-readable, no clipped text, same facts as approved property
+T24
+Responsive + keyboard QA
+Core create/review/publish/share/inquire works on mobile and keyboard
+T25
+Property public page social link preview
+Approved title/hero image and description present; no private media
+10. Proposed beta success metrics (targets, not current measurements)
+Product usability: 5–10 representative professionals across the four roles can reach a draft professional page and one draft property from raw inputs without developer intervention. Proposed test target: at least 80% complete the entire first-use path after guided access; record time spent and failure steps rather than pretending the number is established.
+AI integrity: benchmark 20 varied sanitized test packets (missing data, multiple APNs, conflicts, maps, contracts, mixed photos). Zero invented critical monetary, ownership, regulatory or parcel facts should pass publication review; every contradictory critical value should be flagged. Track field-level correctness and uncertainty separately rather than one meaningless “AI accuracy” number.
+Publishing correctness: all tests T01–T25 pass; zero known unauthorized private-file disclosures; correct public/unpublished states across direct URLs and search crawlers; share link verified externally, not only from owner login.
+Customer value: ask beta users if they would use their professional URL in signatures and actual deal outreach; measure time to produce an acceptable page vs their current process (no time-savings claim before measuring). Track proportion publishing at least one profile and one property, and whether inquiry forms work end to end. Do not equate anonymous views with qualified buyers.
+Quality targets to validate with engineering: mobile-first layouts, target WCAG 2.2 AA on key journeys, responsive images, useful non-JS fallback where relevant, accessible forms; target p75 page LCP ≤2.5 seconds on representative devices if feasible and based on actual field measurement. These are engineering goals, not verified current performance.
+11. Suggested delivery sequence and definition of done
+Phase
+Engineering output
+Product-owner demonstration
+0 — decisions/design
+Route map, data model, high-fidelity static screens, public/private threat review
+Approve screen hierarchy, URL pattern, brand identity and publication rules
+1 — beta core
+Invite/auth, workspace, professional profile, curated public page template
+New invite → site draft → public profile works on mobile
+2 — property core
+Intake, source review, property workspace, files, map fallback
+Text + attachments → accurate record → corrected facts saved
+3 — publication
+Property-page template, copy/deal-sheet, publishing, share panel
+Published deal accessible anonymously; private file not exposed
+4 — feedback
+Inquiry list, notifications if supported, event analytics and feedback tooling
+Buyer inquiry appears in correct account; reliable metrics
+5 — beta QA
+25 test scenarios, security and accessibility review, analytics QA, copy audit
+Product owner signs off against this document; issues prioritized
+Definition of done for each feature: functional behavior + loading/empty/error states + permissions + mobile layout + automated or reproducible acceptance test + brief handover/demo video or annotated walkthrough. A designed screen by itself is not completion.
+12. Explicit decisions and dependencies for ORVN Labs
+Final product name and URL routing: LAREI remains provisional; choose path-based V1 route; reserve subdomain/custom-domain design without requiring it now.
+Existing PAS pages: live site currently markets PAS as brokerage first-touch infrastructure. Confirm whether PAS is discontinued, retained as a secondary product or archived. Default redesign recommendation: make LAREI the primary homepage narrative, keep any PAS material out of the hero and preserve valuable old links through redirects or an accurate archive. Do not claim PAS was never offered.
+Portfolio rights/status labels: clarify listing authorization and permitted professional claims in beta terms; user must identify property relationship where relevant.
+AI vendor and data processing: select provider after reviewing privacy, retention, costs, prompt isolation and evaluation; no direct ChatGPT account connection is promised.
+Public files and documents: define safe preview types, signed/private storage, approval and revocation.
+Map provider: choose dependable geocode/map service and confidence labeling; no GIS layers in V1.
+Support/contact and legal review: confirm actual support channel, real company entity/jurisdiction and accurate privacy/terms before accepting live accounts.
+Analytics consent and retention: define events, retention, cookie behavior, privacy/legal basis and dashboard accuracy.
+PDF/export method: browser-print PDF may satisfy beta if professional and reliable; specify before release.
+Pricing: no pricing tiers or enterprise SLAs should appear publicly until commercially decided.
+13. References and provenance
+Source baseline: Daniel’s pasted ORVN/LAREI planning conversation (latest approved direction: wider professional-site + portfolio + AI context model; provisional LAREI name; private beta; basic map V1). Features described in this document are proposed requirements, not live capability claims.
+Live website audit: https://www.orvnlabs.com/ — indexed homepage currently focused on PAS, first-touch, lead leakage calculator and brokerage pricing; content reviewed on 21 October 2026. Only public indexed content was available; a pixel-by-pixel visual audit was not possible.
+Product references (patterns, not feature commitments): https://investorfunnel.com/ and https://dealrun.ai/ — existing products advertise branded property pages, sales packages, analytics, and broader CRM/marketing functions. LAREI deliberately avoids copying their broad scope in V1. W3C accessibility reference: https://www.w3.org/TR/WCAG22/.
