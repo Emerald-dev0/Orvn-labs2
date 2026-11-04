@@ -103,12 +103,15 @@ export async function uploadMedia(_previous: ActionState, formData: FormData): P
       if (rendition) {
         width = rendition.width;
         height = rendition.height;
-        for (const variant of rendition.variants) {
-          const variantKey = variantKeyFor(key, variant.width);
-          const ok = await putObject(variantKey, variant.body, 'image/webp');
-          if (!ok) {
-            console.warn('[media] rendition not stored', { variantKey });
-          }
+        // Written together: three sequential round trips per photo is the difference between
+        // an upload that finishes and one that hits a server action timeout.
+        const writes = await Promise.allSettled(
+          rendition.variants.map((variant) =>
+            putObject(variantKeyFor(key, variant.width), variant.body, 'image/webp'),
+          ),
+        );
+        if (writes.some((write) => write.status === 'rejected' || write.value === false)) {
+          console.warn('[media] a rendition was not stored', { key });
         }
       }
     }
