@@ -82,15 +82,15 @@ const score = (input) => {
 
   const FIXES = {
     "Response time":
-      "Stand up a sub-5-minute response mechanism on every channel. PAS answers under 30 seconds, voice / SMS / chat, around the clock.",
+      "Stand up a sub-5-minute response mechanism on every channel, with an owner named for each one and coverage outside working hours.",
     "Contact rate":
-      "Most uncontacted leads are reachable on a different channel or at a different time. PAS works the lead across channels until contact is established or the lead opts out.",
+      "Most uncontacted leads are reachable on a different channel or at a different time. Work the lead across channels until contact is established or the lead opts out.",
     "Qualification depth":
-      "Replace inconsistent intake with a structured qualification flow: intent, budget, timeline, financing, location. PAS captures all five in writing on every lead.",
+      "Replace inconsistent intake with a structured qualification flow: intent, budget, timeline, financing, location. Capture all five in writing on every lead.",
     "Appointment booking":
-      "Stop ending qualified conversations without a booked next step. PAS books directly on the right agent's calendar with full context attached.",
+      "Stop ending qualified conversations without a booked next step. Book directly on the right agent's calendar with the full context attached.",
     "After-hours coverage":
-      "Inquiries after 7pm and before 9am are highest-intent and most likely to leak. PAS runs continuously and books for the next available agent slot.",
+      "Inquiries after 7pm and before 9am are highest-intent and most likely to leak. Cover them continuously and book the next available agent slot.",
   };
   const fix = FIXES[bottleneck.name];
 

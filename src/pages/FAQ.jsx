@@ -1,64 +1,190 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { SlArrowDown, SlArrowRight } from 'react-icons/sl';
+import { ArrowRight, ArrowUpRight, Mail } from 'lucide-react';
 import PageWrapper from '../components/PageWrapper';
+import PageHero from '../components/site/PageHero';
+import FaqAccordion from '../components/site/FaqAccordion';
 import { useDocumentMeta } from '../lib/seo';
 
-const FAQS = [
-  { q: 'What is ORVN Labs?', a: 'ORVN Labs is a real-estate technology business developing LAREI, a platform for professional websites, property presentations and the work required to prepare and publish them.' },
-  { q: 'What is LAREI?', a: 'LAREI is the provisional name of our product for real-estate professionals. It is being designed to connect a branded public profile, selected property portfolio, AI-assisted property records, shareable property pages and engagement insights.' },
-  { q: 'Who is LAREI for?', a: 'The initial focus is on wholesalers, real-estate agents, investors and acquisitions/dispositions operators who regularly present property or business information to others.' },
-  { q: 'Do I get my own website?', a: 'That is part of the planned beta experience. Approved users will be able to prepare a professional public page using their business profile and selected portfolio content. The supported URL format will be confirmed during the beta.' },
-  { q: 'Can every deal have its own page?', a: 'The planned core workflow provides an individual published property page connected to the user\u2019s professional identity. Each page has its own shareable URL and an inquiry route.' },
-  { q: 'Can I use my own domain?', a: 'Custom-domain support is being evaluated for a later phase and should not be assumed in the first private beta.' },
-  { q: 'Does AI build the entire website for me?', a: 'LAREI is designed to draft copy and arrange a focused professional page using approved information. Users review the facts, control public sections and publish intentionally. It is not intended to be an unrestricted website builder.' },
-  { q: 'Can I import my ChatGPT information?', a: 'The intended first approach is to paste relevant context or upload a prepared business summary or writing samples. Automatic access to an external AI account is not part of the confirmed initial scope.' },
-  { q: 'Will the AI learn how I write?', a: 'Users are intended to be able to save reviewed style preferences and business context for more consistent generated writing. Those preferences should remain visible, editable and private to the relevant workspace.' },
-  { q: 'Does LAREI verify property values or create an ARV?', a: 'No authoritative appraisal, automated underwriting or independently verified ARV is included in the initial scope. Professionals remain responsible for checking all material investment assumptions.' },
-  { q: 'Does the map show exact parcel boundaries?', a: 'Not in the initial release. Basic location mapping or a map link is planned. Parcel GIS and surveyed/legal boundary interpretations are separate future work.' },
-  { q: 'Can I hide my address or documents?', a: 'The planned publication process provides user control over what becomes public. The implemented settings and supported privacy options will be explained in the beta.' },
-  { q: 'Can I market other people\u2019s properties?', a: 'Users must have the legal authority and necessary permissions to publish property information and imagery, including any agent/brokerage disclosures required in their market. LAREI does not establish that authority for them.' },
-  { q: 'Does LAREI automatically find buyers or send campaigns?', a: 'No buyer-finding guarantee or mass distribution is part of the first release. It is designed to make approved property pages easy to share and inquiries easy to receive.' },
-  { q: 'Can I see exactly who clicks my link?', a: 'Analytics can show measurable page activity and tracked clicks. They do not automatically reveal the identity of anonymous visitors. Identifying contact information is collected only when visitors choose to submit it.' },
-  { q: 'Is LAREI a CRM?', a: 'No. The initial scope emphasizes presentation, publication and basic inquiry visibility rather than a full lead management, transaction or contract system.' },
-  { q: 'Can I use LAREI if I\u2019m not a wholesaler?', a: 'Yes. The proposed workflow is designed to adapt core presentation features for agents, investors and real-estate operators, with appropriate content choices and disclosures.' },
-  { q: 'Is it available now?', a: 'LAREI is being developed for a controlled private beta. Public sign-up may not yet be available. Interested professionals can request early access; approval is not guaranteed.' },
-  { q: 'How much does LAREI cost?', a: 'Pricing has not been announced. Any pricing, plan limits and beta terms will be communicated before a paid commitment is requested.' },
-  { q: 'How can I contact ORVN Labs?', a: 'Use the contact page or hello@orvnlabs.com if the address remains the confirmed support inbox. We respond to relevant product and early-access questions.' },
+const GROUPS = [
+  {
+    id: 'access',
+    title: 'Access and the beta',
+    items: [
+      {
+        q: 'How do I get in?',
+        a: 'Request access and a person reads it. Invitations go out in small cohorts so we can fix the workflow while it is still cheap to fix. There is no queue position to chase.',
+      },
+      {
+        q: 'What does it cost during the beta?',
+        a: 'Nothing. No card is taken and nothing is charged. When a paid plan arrives you will be told the price before anything changes, and you can leave with your data.',
+      },
+      {
+        q: 'How long until I hear back?',
+        a: 'Usually within a week. If we cannot offer a place yet, we say so rather than leaving the request open indefinitely.',
+      },
+      {
+        q: 'Do you take teams?',
+        a: 'Yes. Small agencies and developer sales teams are the second group we are inviting, and the Studio workspace is being built with them.',
+      },
+    ],
+  },
+  {
+    id: 'product',
+    title: 'The product',
+    items: [
+      {
+        q: 'What exactly do I get for one property?',
+        a: 'A property page on the web, a PDF deal sheet, a short buyer summary you can forward, and an A4 print sheet. All four are generated from the same record.',
+      },
+      {
+        q: 'Do I need to stop using the portals?',
+        a: 'No. Keep your portal listings. LAREI gives you a record and a page you control, and it can import from a portal rather than asking you to type everything again.',
+      },
+      {
+        q: 'Can I use my own branding?',
+        a: 'Yes. Your name, your colours, your contact details. The page should look like your business, not like a platform you rented.',
+      },
+      {
+        q: 'Does it work on a phone?',
+        a: 'Adding photographs and checking a record works well on a phone, which is where most inspections happen. Layout editing is easier on a larger screen.',
+      },
+    ],
+  },
+  {
+    id: 'facts',
+    title: 'Facts and accuracy',
+    items: [
+      {
+        q: 'What happens when a fact is wrong?',
+        a: 'Change it once in the record. Every output that used the figure is regenerated. The previous version stays in the history along with who changed it and when.',
+      },
+      {
+        q: 'Do you fill in missing information?',
+        a: 'No. Unknown values are shown as unknown. LAREI will not estimate a size, a service charge or a completion date to make a page look complete.',
+      },
+      {
+        q: 'Is there an automated valuation?',
+        a: 'No. We do not produce valuations, ARV figures or investment analysis. The price is yours to set and ours to keep consistent.',
+      },
+      {
+        q: 'Who writes the descriptions?',
+        a: 'You do, by default. If you ask for a draft, it is written only from facts already in the record, clearly marked as a draft, and it cannot publish without your approval.',
+      },
+    ],
+  },
+  {
+    id: 'privacy',
+    title: 'Privacy and publishing',
+    items: [
+      {
+        q: 'Who can see my drafts?',
+        a: 'Only your workspace. Drafts, private documents and unpublished outputs are not public and are not indexed by search engines.',
+      },
+      {
+        q: 'What do the analytics record?',
+        a: 'Page views, image attention, downloads and enquiry clicks. We do not identify anonymous visitors and we do not sell data to anybody.',
+      },
+      {
+        q: 'Do you use my photographs to train models?',
+        a: 'No. Your images are stored so we can render pages, sheets and printouts for you. They are not used for training and they are not resold.',
+      },
+      {
+        q: 'Can I delete a property?',
+        a: 'Yes. Deleting removes the record, the outputs and the files. You can also retire a listing, which takes the page offline and keeps the history.',
+      },
+    ],
+  },
+  {
+    id: 'commercial',
+    title: 'Commercial',
+    items: [
+      {
+        q: 'What will it cost after the beta?',
+        a: 'We have not announced pricing because the product is still changing. When it is decided, beta users hear first and nobody is moved onto a paid plan without agreeing to it.',
+      },
+      {
+        q: 'Which markets will it support?',
+        a: 'It is not built around one country. The interface is in English, prices can be set in any currency and addresses are free-form rather than a fixed list. Billing, when it starts, will depend on where you are.',
+      },
+      {
+        q: 'Do you offer support?',
+        a: 'During the beta you talk directly to the people building it. There is no ticket queue and no chatbot pretending to be a person.',
+      },
+      {
+        q: 'Who owns the content?',
+        a: 'You do. The facts, the photographs and the descriptions remain yours. We host and render them, and you can export or delete them.',
+      },
+    ],
+  },
 ];
 
 export default function FAQ() {
-  useDocumentMeta({ title: 'FAQ \u00b7 ORVN Labs', description: 'Accuracy, access, map, privacy and scope objections.', path: '/faq' });
-  const [open, setOpen] = useState(null);
+  useDocumentMeta({
+    title: 'Questions',
+    description:
+      'Straight answers about LAREI: beta access, what you get for a property, how facts are checked, privacy, analytics and pricing.',
+    path: '/faq',
+  });
+
   return (
     <PageWrapper>
-      <section className="section-y" style={{ background: 'var(--background)' }}>
-        <div className="container-page">
-          <div style={{ marginBottom: 48, maxWidth: 720 }}>
-            <span className="eyebrow" style={{ marginBottom: 16 }}>FAQ</span>
-            <h1 className="h-display" style={{ fontSize: 'clamp(36px, 5.5vw, 60px)', marginBottom: 16 }}>Questions, answered plainly.</h1>
-            <p className="lead">Accuracy, access, map, privacy and scope objections.</p>
-          </div>
-          <div style={{ maxWidth: 820 }}>
-            {FAQS.map((f, i) => (
-              <div key={f.q} style={{ borderBottom: '1px solid var(--line)' }}>
-                <button onClick={() => setOpen(open === i ? null : i)} style={{ width: '100%', textAlign: 'left', padding: '22px 0', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16 }}>
-                  <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 17, color: 'var(--ink)' }}>{f.q}</span>
-                  <SlArrowDown size={18} color="var(--ink-mid)" style={{ transform: open === i ? 'rotate(180deg)' : 'none', transition: 'transform .25s' }} />
-                </button>
-                <AnimatePresence>
-                  {open === i && (
-                    <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} style={{ overflow: 'hidden' }}>
-                      <p className="lead" style={{ fontSize: 16, paddingBottom: 22 }}>{f.a}</p>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+      <PageHero
+        eyebrow="Questions"
+        title={<>Everything people ask before signing up.</>}
+        lede="Written the way we would answer it on a call. If something is missing, ask and we will add it here rather than sending you a brochure."
+        actions={
+          <Link to="/contact" className="btn btn-secondary">
+            Ask a question
+            <ArrowUpRight strokeWidth={2} />
+          </Link>
+        }
+      />
+
+      <section className="faq-page section-y">
+        <div className="shell">
+          <div className="faq-layout">
+            <aside className="faq-side">
+              <p className="label-mono">Sections</p>
+              <nav className="faq-index">
+                {GROUPS.map((g) => (
+                  <a key={g.id} href={`#${g.id}`}>{g.title}</a>
+                ))}
+              </nav>
+
+              <div className="faq-help">
+                <Mail size={18} strokeWidth={1.9} />
+                <p>Still unsure about something? Write to a person, not a form robot.</p>
+                <Link to="/contact" className="arrow-link">
+                  Contact us
+                  <ArrowUpRight strokeWidth={2} />
+                </Link>
               </div>
-            ))}
+            </aside>
+
+            <div className="faq-groups">
+              {GROUPS.map((group, i) => (
+                <div id={group.id} className="faq-group" key={group.id}>
+                  <h2 className="faq-group-title">{group.title}</h2>
+                  <FaqAccordion items={group.items} initial={i === 0 ? 0 : -1} />
+                </div>
+              ))}
+            </div>
           </div>
-          <div style={{ marginTop: 40 }}>
-            <Link to="/early-access" className="btn-primary">Request early access</Link>
+        </div>
+      </section>
+
+      <section className="cta-band">
+        <div className="shell">
+          <div className="cta-band-inner on-dark">
+            <div>
+              <h2>Ready to put a property in?</h2>
+              <p>Beta access is free, reviewed by a person, and you keep everything you upload.</p>
+            </div>
+            <Link to="/early-access" className="btn btn-lime">
+              Request access
+              <ArrowRight strokeWidth={2.2} />
+            </Link>
           </div>
         </div>
       </section>

@@ -29,3 +29,9 @@ dist-ssr
 !README.md
 .vercel
 .env*
+
+# Next.js / Cloudflare
+.next
+.open-next
+.wrangler
+tsconfig.tsbuildinfo

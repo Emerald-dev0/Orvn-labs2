@@ -1,0 +1,173 @@
+import { betterAuth } from 'better-auth';
+import { drizzleAdapter } from 'better-auth/adapters/drizzle';
+import { nextCookies } from 'better-auth/next-js';
+import { magicLink } from 'better-auth/plugins';
+import { APIError } from 'better-auth/api';
+import { db } from './db';
+import * as schema from '../db/schema';
+import { sendEmail } from './email';
+import { signInLinkEmail } from './emails/sign-in-link';
+import { resetPasswordEmail } from './emails/reset-password';
+import { findUsableInvitation } from './invitations';
+import { serverEnv } from './env';
+
+/**
+ * Delivery failures are logged with the provider's code and surfaced to the user as one
+ * neutral sentence. The provider's wording, request id and status never reach the browser.
+ */
+async function deliver(message: Parameters<typeof sendEmail>[0]) {
+  try {
+    return await sendEmail(message);
+  } catch (error) {
+    const code = (error as { code?: string }).code ?? 'unknown';
+    const requestId = (error as { requestId?: string }).requestId;
+    console.error('[email] delivery failed', { code, requestId });
+    throw new Error('We could not send that email just now. Try again.');
+  }
+}
+
+/**
+ * Better Auth: users, sessions and invitations live in our Neon database.
+ *
+ * Access model:
+ * - The beta is invitation-only. Account creation — password or magic link — passes through
+ *   one gate below: a usable invitation for that exact address, or an address on the
+ *   operator allowlist. There is no open sign-up route to forget to disable.
+ * - Sessions are httpOnly, secure in production, same-site lax, and rotate their expiry on use.
+ * - The sign-in form always answers the same way, so the form cannot be used to enumerate
+ *   which addresses have accounts.
+ */
+const env = serverEnv();
+const isProd = env.NODE_ENV === 'production';
+
+const adminEmails = (env.ADMIN_EMAILS ?? '')
+  .split(',')
+  .map((value) => value.trim().toLowerCase())
+  .filter(Boolean);
+
+const trustedOrigins = Array.from(
+  new Set(
+    [
+      env.BETTER_AUTH_URL,
+      'http://localhost:5174',
+      'http://127.0.0.1:5174',
+      ...(process.env.EXTRA_TRUSTED_ORIGINS ?? '').split(',').map((v) => v.trim()),
+    ].filter((v): v is string => Boolean(v)),
+  ),
+);
+
+export const BETA_GATE_MESSAGE =
+  'This address does not have beta access yet. Request access at orvnlabs.com/early-access.';
+
+/**
+ * Checked per request rather than at import time, so `next build` can compile without a
+ * database or a secret while production still refuses to serve auth without one.
+ */
+export function assertAuthConfigured() {
+  if (!process.env.BETTER_AUTH_SECRET) {
+    throw new Error(
+      process.env.NODE_ENV === 'production'
+        ? 'BETTER_AUTH_SECRET is required in production.'
+        : 'BETTER_AUTH_SECRET is not set. Add it to apps/platform/.env.local.',
+    );
+  }
+  if (!process.env.DATABASE_URL) {
+    throw new Error('DATABASE_URL is not set. Auth needs the Neon connection string.');
+  }
+}
+
+export const auth = betterAuth({
+  appName: 'LAREI',
+  baseURL: env.BETTER_AUTH_URL ?? 'http://localhost:5174',
+  secret: env.BETTER_AUTH_SECRET ?? 'development-only-secret-not-for-deployment',
+  trustedOrigins,
+  database: drizzleAdapter(db, {
+    provider: 'pg',
+    schema: {
+      user: schema.user,
+      session: schema.session,
+      account: schema.account,
+      verification: schema.verification,
+    },
+  }),
+
+  emailAndPassword: {
+    enabled: true,
+    minPasswordLength: 10,
+    maxPasswordLength: 200,
+    // Invited users may set a password; nobody else can create an account (see the hook).
+    disableSignUp: false,
+    sendResetPassword: async ({ user, url }) => {
+      await deliver(resetPasswordEmail({ to: user.email, url }));
+    },
+  },
+
+  session: {
+    expiresIn: 60 * 60 * 24 * 30,
+    updateAge: 60 * 60 * 24,
+    freshAge: 60 * 60 * 24,
+    cookieCache: { enabled: true, maxAge: 60 * 5 },
+  },
+
+  advanced: {
+    useSecureCookies: isProd,
+    defaultCookieAttributes: {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: isProd,
+      path: '/',
+    },
+    ipAddress: {
+      ipAddressHeaders: ['cf-connecting-ip', 'x-forwarded-for'],
+    },
+  },
+
+  rateLimit: {
+    enabled: true,
+    window: 60,
+    max: 60,
+    customRules: {
+      '/sign-in/*': { window: 60 * 15, max: 10 },
+      '/sign-up/*': { window: 60 * 60, max: 5 },
+      '/request-password-reset': { window: 60 * 15, max: 5 },
+      '/send-magic-link': { window: 60 * 15, max: 5 },
+    },
+  },
+
+  /**
+   * The beta gate. Every way of creating a user funnels through here, including magic-link
+   * sign-in which would otherwise create an account on the spot.
+   */
+  databaseHooks: {
+    user: {
+      create: {
+        before: async (user) => {
+          const email = String(user.email ?? '').toLowerCase();
+          if (!email) return { data: user };
+          if (adminEmails.includes(email)) return { data: user };
+
+          const invitation = await findUsableInvitation(email);
+          if (!invitation) {
+            throw new APIError('FORBIDDEN', { message: BETA_GATE_MESSAGE });
+          }
+          return { data: user };
+        },
+      },
+    },
+  },
+
+  plugins: [
+    nextCookies(),
+    magicLink({
+      expiresIn: 60 * 10,
+      disableSignUp: false, // Account creation is governed by the hook above, not by the plugin.
+      sendMagicLink: async ({ email, url }) => {
+        await deliver(
+          signInLinkEmail({ to: email, url, expiresAt: new Date(Date.now() + 10 * 60 * 1000) }),
+        );
+      },
+    }),
+  ],
+});
+
+export type Session = typeof auth.$Infer.Session;

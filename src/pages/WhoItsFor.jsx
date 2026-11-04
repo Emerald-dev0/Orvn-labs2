@@ -1,64 +1,150 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { ArrowRight, ArrowUpRight, Check, Minus } from 'lucide-react';
 import PageWrapper from '../components/PageWrapper';
+import PageHero from '../components/site/PageHero';
+import { Reveal } from '../components/site/Reveal';
 import { useDocumentMeta } from '../lib/seo';
 
-const fadeUp = (delay = 0) => ({
-  initial: { opacity: 0, y: 24 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, margin: '-60px' },
-  transition: { duration: 0.7, ease: [0.23, 1, 0.32, 1], delay },
-});
+const ROLES = [
+  {
+    tint: 'sand',
+    name: 'Agents and brokers',
+    title: 'Look as good as the property does.',
+    body: 'You already have the photographs and the facts. LAREI turns them into a page you are happy to send, a deal sheet you can hand over, and an inspection sheet that matches both.',
+    gets: [
+      'A page per property, in your name',
+      'Deal sheets for serious buyers',
+      'Print sheets for site inspections',
+      'Enquiry buttons that come straight to you',
+    ],
+  },
+  {
+    tint: 'sky',
+    name: 'Developers',
+    title: 'Keep a whole scheme consistent.',
+    body: 'Twenty units, one story. Hold the scheme and every unit in one workspace so the brochure, the site office and the sales agent are always talking about the same numbers.',
+    gets: [
+      'Multiple units under one project',
+      'Shared facts across a scheme',
+      'Print-ready site packs',
+      'Updates pushed to every output',
+    ],
+  },
+  {
+    tint: 'blush',
+    name: 'Small agencies',
+    title: 'Make the newest hire sound senior.',
+    body: 'One record, one house style, one approval step. Everybody publishes from the same source, so the quality does not depend on who happened to answer the phone.',
+    gets: [
+      'Shared workspace and roles',
+      'Approval before publishing',
+      'Consistent branding across the team',
+      'A record that survives staff changes',
+    ],
+  },
+];
 
-const roles = [
-  { eyebrow: 'FOR WHOLESALERS', title: 'Give every deal a clear destination.', body: 'Move beyond scattered texts, documents and photo links. Present the opportunity\u2019s approved facts, terms, media and location context on one property page. Connect it to your professional profile and provide buyers an inquiry path.', matters: 'Speed of preparation, consistency, discretion, no misleading economics.' },
-  { eyebrow: 'FOR REAL-ESTATE AGENTS', title: 'Make your professional identity and listings work together.', body: 'Introduce your market focus and services, then display listings and projects you are authorized to market. Give clients a coherent professional site rather than a list of unrelated links.', matters: 'Branding, correct brokerage/license disclosures where required, permissions to market.' },
-  { eyebrow: 'FOR INVESTORS', title: 'Show the projects and opportunities behind your work.', body: 'Organize and present assets, selected investment opportunities or completed projects with the details you choose to make public. Use structured records rather than rewriting each showcase from scratch.', matters: 'Trustworthy facts, asset status, privacy and professional credibility.' },
-  { eyebrow: 'FOR ACQUISITIONS & DISPOSITION OPERATORS', title: 'Make the presentation process repeatable.', body: 'Give the team a consistent profile, approved property information and standardized shareable outputs. Keep publication deliberate and engagement visible.', matters: 'Operational consistency, access permissions, quality and measurable follow-through.' },
+const POOR_FIT = [
+  'You want automated valuations or investment analysis. LAREI does not model price.',
+  'You are looking for a CRM with pipelines, tasks and commission tracking.',
+  'You need a mass-distribution engine that pushes to hundreds of buyer lists.',
+  'You want a website builder for a general business rather than property.',
 ];
 
 export default function WhoItsFor() {
   useDocumentMeta({
-    title: 'Who LAREI Is For | Wholesalers, Agents, Investors & Operators',
-    description: 'LAREI is being shaped around a shared task: help people understand the professional behind an opportunity and the property being presented.',
+    title: "Who it's for",
+    description:
+      'LAREI is built for agents, brokers, developers and small agencies who need one consistent property record behind every page, sheet and printout they send.',
     path: '/who-its-for',
   });
 
   return (
     <PageWrapper>
-      <section className="section-y" style={{ background: 'var(--background)' }}>
-        <div className="container-page">
-          <motion.div {...fadeUp(0)} style={{ maxWidth: 760 }}>
-            <span className="eyebrow" style={{ marginBottom: 24 }}>LAREI \u00b7 WHO IT\u2019S FOR</span>
-            <h1 className="h-display" style={{ fontSize: 'clamp(38px, 6vw, 68px)', marginBottom: 24 }}>
-              Different real-estate roles. One need for a better presentation.
-            </h1>
-            <p className="lead" style={{ maxWidth: 620 }}>
-              LAREI is being shaped around a shared task: help people understand the professional behind an opportunity and the property being presented, without forcing each role into a generic template.
-            </p>
-          </motion.div>
+      <PageHero
+        eyebrow="Who it's for"
+        title={<>Made for the people who carry the deal.</>}
+        lede="Not everybody needs a property record. These are the people who do, and the ones who should probably use something else."
+        media={
+          <div className="hero-photo-card">
+            <img src="/images/prop-1.jpg" alt="A residential property photographed for a listing" />
+            <div className="hero-photo-chip glass">
+              <Check size={16} strokeWidth={2.6} />
+              <div>
+                <strong>Built with property people</strong>
+                <span>Agents, developers, small teams</span>
+              </div>
+            </div>
+          </div>
+        }
+      />
+
+      <section className="roles">
+        <div className="shell">
+          {ROLES.map((role, i) => (
+            <Reveal
+              key={role.name}
+              className={`role-block ${i % 2 === 1 ? 'is-reverse' : ''}`}
+            >
+              <div className={`role-block-panel tint-${role.tint}`}>
+                <span className="pill">{role.name}</span>
+                <h2 className="role-block-title">{role.title}</h2>
+                <p className="role-block-body">{role.body}</p>
+              </div>
+              <ul className="role-gets">
+                {role.gets.map((g) => (
+                  <li key={g}>
+                    <span className="list-check-icon"><Check size={12} strokeWidth={3} /></span>
+                    {g}
+                  </li>
+                ))}
+                <li className="role-gets-link">
+                  <Link to="/product" className="arrow-link">
+                    What you get
+                    <ArrowUpRight strokeWidth={2} />
+                  </Link>
+                </li>
+              </ul>
+            </Reveal>
+          ))}
         </div>
       </section>
 
-      <section className="section-y" style={{ background: 'var(--surface)', borderTop: '1px solid var(--line)' }}>
-        <div className="container-page">
-          <div style={{ display: 'grid', gap: 0 }}>
-            {roles.map((r, i) => (
-              <motion.div key={r.eyebrow} {...fadeUp(i * 0.05)} style={{ padding: '40px 0', borderBottom: '1px solid var(--line)', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 40 }}>
-                <div>
-                  <span className="eyebrow" style={{ marginBottom: 14 }}>{r.eyebrow}</span>
-                  <h2 className="h-section" style={{ fontSize: 'clamp(24px, 3vw, 34px)', marginBottom: 12 }}>{r.title}</h2>
-                </div>
-                <div>
-                  <p className="lead" style={{ fontSize: 16, marginBottom: 16 }}>{r.body}</p>
-                  <p className="label-mono" style={{ color: 'var(--ink-mid)' }}>What matters: {r.matters}</p>
-                </div>
-              </motion.div>
-            ))}
+      <section className="poor-fit section-y">
+        <div className="shell">
+          <div className="poor-fit-card">
+            <div>
+              <span className="eyebrow">Honest answer</span>
+              <h2 className="section-title">When LAREI is the wrong tool.</h2>
+              <p className="lead">
+                We would rather say this now than have you find out after a month of setting
+                things up.
+              </p>
+            </div>
+            <ul className="poor-fit-list">
+              {POOR_FIT.map((item) => (
+                <li key={item}>
+                  <Minus size={16} strokeWidth={2.4} />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
           </div>
-          <div style={{ marginTop: 40 }}>
-            <Link to="/early-access" className="btn-primary">Request access for your role</Link>
+        </div>
+      </section>
+
+      <section className="cta-band">
+        <div className="shell">
+          <div className="cta-band-inner on-dark">
+            <div>
+              <h2>If that sounds like your week, we should talk.</h2>
+              <p>Beta access is free and reviewed personally. Tell us what you are publishing today.</p>
+            </div>
+            <Link to="/early-access" className="btn btn-lime">
+              Request access
+              <ArrowRight strokeWidth={2.2} />
+            </Link>
           </div>
         </div>
       </section>

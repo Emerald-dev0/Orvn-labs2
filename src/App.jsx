@@ -2,9 +2,8 @@ import React, { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 
-import SmoothScroll from './components/SmoothScroll';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
+import Nav from './components/site/Nav';
+import Footer from './components/site/Footer';
 import ScrollToTop from './components/ScrollToTop';
 
 const Home = lazy(() => import('./pages/Home'));
@@ -13,6 +12,7 @@ const HowItWorks = lazy(() => import('./pages/HowItWorks'));
 const WhoItsFor = lazy(() => import('./pages/WhoItsFor'));
 const EarlyAccess = lazy(() => import('./pages/EarlyAccess'));
 const Contact = lazy(() => import('./pages/Contact'));
+const About = lazy(() => import('./pages/About'));
 const SignIn = lazy(() => import('./pages/SignIn'));
 const PAS = lazy(() => import('./pages/PAS'));
 // import Thesis from './pages/Thesis';
@@ -119,6 +119,7 @@ function AnimatedRoutes() {
         <Route path="/who-its-for" element={<WhoItsFor />} />
         <Route path="/early-access" element={<EarlyAccess />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/about" element={<About />} />
         <Route path="/sign-in" element={<SignIn />} />
         {/* Legacy routes from the previous site — redirect rather than break inbound links. */}
         <Route path="/why-orvn" element={<Navigate to="/" replace />} />
@@ -133,12 +134,13 @@ function AnimatedRoutes() {
 export default function App() {
   return (
     <BrowserRouter>
-      <SmoothScroll>
-        <ScrollToTop />
-        <Navbar />
-        <AnimatedRoutes />
-        <Footer />
-      </SmoothScroll>
+      <a className="skip-link" href="#main">
+        Skip to content
+      </a>
+      <ScrollToTop />
+      <Nav />
+      <AnimatedRoutes />
+      <Footer />
     </BrowserRouter>
   );
 }

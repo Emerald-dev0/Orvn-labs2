@@ -3,9 +3,9 @@ import { useEffect } from 'react';
 const SITE = {
   name: 'ORVN Labs',
   url: 'https://orvnlabs.com',
-  defaultTitle: 'ORVN Labs — AI First-Touch Infrastructure for Real Estate Brokerages',
+  defaultTitle: 'LAREI by ORVN Labs | Professional websites and property deal pages',
   defaultDescription:
-    'ORVN Labs builds brokerage intelligence infrastructure. PAS answers, qualifies, routes, books, and logs inbound real estate leads before delay kills conversion.',
+    'LAREI is being built for wholesalers, agents, investors and real-estate operators who want one professional home for their brand, property portfolio and deal presentations.',
 };
 
 const setMeta = (name, content, attr = 'name') => {
@@ -44,7 +44,7 @@ const setJsonLd = (data) => {
 
 export function useDocumentMeta({ title, description, path, image, type = 'website', canonical, schema } = {}) {
   useEffect(() => {
-    const finalTitle = title ? `${title} — ${SITE.name}` : SITE.defaultTitle;
+    const finalTitle = title ? `${title} · ${SITE.name}` : SITE.defaultTitle;
     const finalDesc = description || SITE.defaultDescription;
     const finalUrl = path ? `${SITE.url}${path}` : SITE.url;
     const finalImage = image || `${SITE.url}/og-default.png`;

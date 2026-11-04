@@ -1,0 +1,233 @@
+ORVN Labs — Website Redesign, UX Architecture & Complete Copy
+Developer / design handoff | Revision 1.0 | 21 October 2026Primary property: orvnlabs.comProduct: LAREI (provisional), by ORVN LabsLaunch status: Controlled early access / private beta; text must not imply features are already live
+Public message: A professional presence for the people behind real-estate deals—and a clearer way to prepare, publish and share property opportunities.
+1. Why the current site must change
+Verified public content (21 October 2026): The indexed ORVN Labs homepage currently presents PAS as an AI first-touch brokerage tool. It leads with “Control the first-contact layer before delay kills conversion,” lead-leakage diagnostics, PAS qualification/routing/booking, bespoke deployment pricing and early-access positioning for brokerage owners. This is not the LAREI product described in the supplied planning document. Source: https://www.orvnlabs.com/.
+Mismatch: Current visitors infer “AI inbound-lead response infrastructure for brokerages.” Future target visitors should understand “AI-assisted professional websites, property portfolios, deal packages, sharing and analytics for real-estate operators.” Both address real estate, but they have different jobs, interface examples, audiences and value proof.
+Recommended treatment: Replace the homepage narrative and main navigation with LAREI-led positioning. Inventory the current PAS pages, calculator links, resources and form URLs before changing them. Daniel must decide whether PAS becomes a clearly labelled secondary/legacy page, is archived or is taken down with redirects. Do not claim PAS never existed or delete a useful existing backlink blindly. Remove unsupported current revenue-recovery predictions and any implied performance guarantees from the new product marketing.
+Audit limitation: Search-visible live content was checked; the site’s source markup and pixel-accurate desktop/mobile layouts were not fully inspectable. Do not treat this brief as a completed technical/visual crawl.
+2. Brand architecture and premium design direction
+ORVN Labs: the technology company and trust layer. Primary website identity; avoid describing it as a brokerage, agency or proven large software vendor.
+LAREI: the working product name and primary current product direction. Use “LAREI, by ORVN Labs” where the distinction matters.
+Audience: established or ambitious wholesalers, licensed agents/brokerages where appropriate, investors, acquisition/disposition operators and their teams. Lead with practical professional value, not “AI for everyone”.
+Core differentiator (positioning, not an unproven competitive claim): one structured property record connects a professional’s site, portfolio, property pages, generated content and observable engagement.
+Emotional design target: calm competence, control, discretion, trust and quality. Premium does not mean inaccessible or theatrical. The site should feel suitable for a person who sends six-figure property opportunities and cares about accuracy.
+Recommended UI language: Editorial SaaS. Near-black #0A0A0F, warm white #F5F1EA, neutral slate #66717A, fine dividers #D8D8D5, and one measured accent such as muted teal #397D77 or warm brass #9A785A after visual testing. Pair one restrained humanist/geometric sans across headers and body (e.g., Inter/Manrope or equivalent), comfortable 16–18px body, large deliberate headlines, strong contrast, no excessive gradient/glass/card effects. Use coherent 8px spacing grid and generous section spacing.
+Photo/visual policy: Main hero must show a real app prototype or production screenshot spanning professional public site ↔ property workspace ↔ buyer-facing property page. Mark early prototypes “Product preview / in development.” Use realistic, clearly hypothetical sample properties instead of stock mansion photos. No fake trust badges, fabricated clients, fake adoption figures, false conversion metrics or testimonials. Respect original source material privacy in demos.
+Interactive quality: Buttons sized for touch, clear keyboard focus, adequate form labels, mobile navigation without horizontal overflow, lazy-loaded rich media, fast image delivery, reduced-motion preference and WCAG 2.2 AA as implementation goal. The focus should be credible content first, animation second.
+3. Information architecture and route map
+Route (proposed)
+Purpose
+Primary action
+/
+Main value proposition, product visual proof, audiences, process
+Request early access
+/product
+Connected capabilities: professional page, portfolios, deals, AI context, analytics
+View workflow / request access
+/how-it-works
+Explain first-user-to-buyer journey without jargon
+Request early access
+/who-its-for
+Role examples for wholesalers, agents, investors, operators
+Request early access
+/early-access
+Qualified private-beta request; no automatic account creation
+Submit request
+/faq
+Accuracy, access, map, privacy and scope objections
+Request early access
+/contact
+Real ORVN Labs contact channel and product inquiry
+Send message / email
+/sign-in (or app domain)
+Existing beta user login
+Sign in
+/privacy, /terms
+Actual reviewed legal disclosures
+Read policy
+/demo (optional)
+Actual interactive example once built
+Explore sample
+larei.orvnlabs.com/{slug} (proposed)
+Each user’s approved branded professional site
+View portfolio/contact
+larei.orvnlabs.com/{slug}/deals/{deal}
+Individual user-owned published property page
+Ask about property
+Top nav (desktop): ORVN Labs [mark] | Product | How it works | Who it’s for | FAQ | Sign in (text) | Request early access (primary). Footer: Product, Company, Contact, Privacy, Terms. Mobile: accessible menu with primary CTA always reachable; no excessive nested dropdowns.
+Site model: marketing site ≠ app workspace ≠ user’s public site. Link their brand tokens, but their access rules are different. The company website should never look like an account dashboard. Buyers visiting a professional’s site should never have to register.
+4. Homepage — complete proposed launch copy
+All copy in this section is proposed for the private-beta marketing site. No passage below should imply unshipped features are currently available.
+Header
+Logo: ORVN LabsNavigation: Product · How it works · Who it’s for · FAQUtility: Sign inPrimary button: Request early access
+Hero
+Eyebrow: LAREI · REAL ESTATE PUBLISHING & PROFESSIONAL PRESENCE
+H1: Your real estate business deserves a better place to be seen.
+Subheading: LAREI is being built for wholesalers, agents, investors and real-estate operators who want one professional home for their brand, property portfolio and deal presentations. Organize the details, prepare the materials, publish with control, and share a page people can actually use.
+Primary CTA: Request early accessSecondary CTA: Explore the productSupporting microcopy: Private beta · Applications reviewed individually
+Hero product composition: Left: editor with Professional website — Draft, Brand profile, and 3 property cards. Right: mobile-width public site preview with a prominent property card. Lower foreground: an individual property detail view with a map preview, key facts and “Ask about this property.” All sample values must be marked illustrative. Never display fake client names or live-looking numbers without a label.
+Credibility bridge
+Heading: Built around the work, not another collection of disconnected tools.
+Copy: Property information, professional identity and buyer-facing materials often sit in different places. That fragmentation costs attention. LAREI is designed to bring the presentation layer together, so what you share reflects a clear, approved record rather than another round of manual assembly.
+Feature 1 — professional site
+Eyebrow: YOUR PROFESSIONAL PRESENCE
+Heading: One address for your business. A clear view of your work.
+Body: Give people a direct destination to learn who you are, what markets you serve, how to contact you and which properties or projects you choose to show. Start with your details, review an AI-assisted page draft and make the site your own within a focused design system.
+UI labels shown in preview: My Website · Edit profile · Preview · Publish site · Copy public link.
+Feature 2 — connected portfolio
+Eyebrow: PROPERTY & PORTFOLIO
+Heading: Every property has its place.
+Body: Prepare a dedicated page for each published opportunity, with approved details, images, location context, supporting materials and an easy inquiry route. Keep the individual pages connected to your wider professional profile.
+Mini-features: Structured property records · Property pages · Selective portfolio visibility · Buyer inquiries.
+Feature 3 — responsible AI
+Eyebrow: AI THAT WORKS WITH YOUR FACTS
+Heading: Spend less time assembling. Keep control of what gets said.
+Body: Start from notes, documents and photos. LAREI is designed to organize what you supply, flag gaps for review and help draft property descriptions, deal sheets and outreach copy. Your approval comes before publication. Unknown facts are not marketing opportunities.
+Small note: AI assistance does not independently verify title, valuation, zoning, parcel boundaries or buyer economics.
+Feature 4 — brand voice
+Eyebrow: YOUR VOICE, NOT A GENERIC TEMPLATE
+Heading: Make your materials sound like your business.
+Body: Bring in approved business context and examples of how you communicate. Shape the tone, vocabulary and audience of your content without changing the underlying facts. You choose what the AI remembers for future drafts.
+Feature 5 — engagement
+Eyebrow: OBSERVABLE ACTIVITY
+Heading: Know what was viewed—and what prompted a response.
+Body: See engagement on published professional and property pages, tracked clicks and buyer inquiries in one workspace. Understand which opportunities are receiving attention without guessing who an anonymous visitor is.
+UI caption: Views are not verified buyers; inquiries identify only what the visitor voluntarily submits.
+How the system works
+Heading: From a working file to a professional place to share it.
+01 — Establish your presence. Tell LAREI about your role, market, business and style; review a draft of your public website.
+02 — Bring in the property. Paste notes, enter details and upload supported files. Review the structured record and resolve missing information.
+03 — Prepare the presentation. Edit generated descriptions, deal-sheet content and the individual property page.
+04 — Publish with control. Decide what is public, publish your site and property pages, then copy a link people can open without an account.
+05 — Follow the interest. Read buyer inquiries and examine measured page activity; revise and republish as needed.
+Role section
+Heading: Designed for the professionals moving the property.
+Wholesalers: Present off-market opportunities with consistent property information and a more professional buyer experience.
+Agents: Showcase authorized listings, services and professional identity from one branded destination.
+Investors: Present projects, owned properties or investment opportunities with appropriate factual context.
+Operators & teams: Standardize how the business and its properties appear when shared.
+Link: See who it’s for
+Trust block
+Heading: Your brand. Your review. Your publishing decision.
+Text: LAREI is designed to separate private workspace material from information you explicitly approve for public pages. AI assists with the draft; the user makes the factual and publication decisions. Maps show general location in the first release, not surveyed property boundaries.
+FAQ preview
+Q: Is LAREI a CRM? No. It focuses on professional presentation and property publishing, not a full relationship or transaction management system.
+Q: Can anybody access it? The first release is a controlled private beta. Requests are reviewed before invitations are issued.
+Q: Does LAREI verify real-estate facts automatically? Not in its initial scope. Users must verify property facts and approve public claims.
+Link: View all questions
+Closing CTA
+Heading: Make every property presentation reflect the business behind it.
+Body: We’re inviting a small set of real-estate operators to help test the first release of LAREI.
+Primary CTA: Request early accessSecondary: Already invited? Sign in
+Footer
+ORVN LabsSoftware for clearer real-estate presentation.Product · How it works · Who it’s for · FAQ · Early access · Contact · Privacy · TermsContact: hello@orvnlabs.com (currently published on site; confirm mailbox is monitored before launch)© {current year dynamically} ORVN Labs. Brand/product names and required company details subject to legal review.
+5. Product page — complete copy
+Meta title: LAREI by ORVN Labs | Professional Websites & Property Deal PagesMeta description: Explore LAREI, a real-estate platform in development for branded professional sites, property portfolios, AI-assisted deal packages and engagement insights.
+H1: One workspace for your professional presence and property presentations.
+Intro: Build a public destination that reflects your business. Keep each property organized behind the scenes, then choose what appears on its own shareable page. LAREI connects those steps instead of making you recreate the same information for every channel.
+Section: Your business, presented clearlyEstablish your profile, company identity, markets, services and contact preferences. Review an AI-assisted draft of your professional site, then publish when it is ready.
+Section: A portfolio connected to real recordsYour portfolio isn’t a collection of manually updated website cards. Select which approved properties appear on your public page; update the underlying record and keep the presentation aligned.
+Section: One property record, multiple useful outputsStart from notes, forms and supported files. Check extracted facts, resolve inconsistencies and prepare property-page copy, a shareable summary and print-friendly deal sheet without entering the same details repeatedly.
+Section: Content in your voiceAdd writing samples or a business context summary and approve the information LAREI should reuse. Shape the tone of property descriptions, captions and buyer messages. You can edit the result before it goes public.
+Section: Simple maps, accurately describedGive visitors a view of a property’s general location or an external map link where supported. The initial release does not claim surveyed boundaries or provide full GIS diligence.
+Section: Interest you can act onSee which pages receive views, which links are clicked and which published properties generate inquiries. Analytics measure observable behavior, not anonymous visitor identity.
+Section: Publishing stays deliberatePreview what buyers can see, hide sensitive information and control publication. Private files remain private unless explicitly approved.
+CTA block: Prepare deals with more consistency. Present your business with more clarity.Button: Request early access
+6. How it works page — complete copy
+Meta title: How LAREI Works | From Business Profile to Published PropertyH1: From fragmented information to a place people can actually review.
+Lead: LAREI connects your professional identity, property information, publishing and engagement in one workflow.
+Step 1 — Introduce your business. Tell us your role, markets, audience and preferred voice. Choose what belongs on your public professional page.
+Step 2 — Review your website draft. LAREI prepares an editable first version. Check names, qualifications, contact details and the projects you want shown before publishing.
+Step 3 — Bring in a property. Paste notes, fill in fields or attach supported documents and photographs. AI organizes supported facts into a reviewable record.
+Step 4 — Verify and prepare. Correct source conflicts, mark unknowns and choose what is safe to share. Generate a deal sheet and editable marketing description using that approved information.
+Step 5 — Publish the right pages. Give each approved property a dedicated URL and choose whether it appears in your public portfolio. Share one property or your broader professional site.
+Step 6 — Learn from engagement. See page activity and contact inquiries, then update the presentation while retaining control of the underlying record.
+Trust note: A generated description is not a property appraisal, title opinion, license verification or legal disclosure. The professional remains responsible for their representations.
+CTA: Request early access
+7. Who it’s for — complete copy
+Meta title: Who LAREI Is For | Wholesalers, Agents, Investors & OperatorsH1: Different real-estate roles. One need for a better presentation.
+Intro: LAREI is being shaped around a shared task: help people understand the professional behind an opportunity and the property being presented, without forcing each role into a generic template.
+For wholesalersHeadline: Give every deal a clear destination.Body: Move beyond scattered texts, documents and photo links. Present the opportunity’s approved facts, terms, media and location context on one property page. Connect it to your professional profile and provide buyers an inquiry path.What matters: Speed of preparation, consistency, discretion, no misleading economics.
+For real-estate agentsHeadline: Make your professional identity and listings work together.Body: Introduce your market focus and services, then display listings and projects you are authorized to market. Give clients a coherent professional site rather than a list of unrelated links.What matters: Branding, correct brokerage/license disclosures where required, permissions to market.
+For investorsHeadline: Show the projects and opportunities behind your work.Body: Organize and present assets, selected investment opportunities or completed projects with the details you choose to make public. Use structured records rather than rewriting each showcase from scratch.What matters: Trustworthy facts, asset status, privacy and professional credibility.
+For acquisitions and disposition operatorsHeadline: Make the presentation process repeatable.Body: Give the team a consistent profile, approved property information and standardized shareable outputs. Keep publication deliberate and engagement visible.What matters: Operational consistency, access permissions, quality and measurable follow-through.
+CTA: Request access for your role
+8. Early access — form copy and exact behavior
+Meta title: Request LAREI Early Access | ORVN LabsH1: Help shape a better way to present real-estate deals.
+Body: LAREI is in development and onboarding is controlled. We’re inviting professionals who actively package, present or market real-estate opportunities to test the workflow and tell us where it needs to improve. A request is not a guaranteed invitation.
+Field labels and helpers:Full name*Work email* — We’ll use this to contact you about your request.Company / business name — Optional if operating independently.Role* — Wholesaler; Agent; Investor; Acquisitions / dispositions; Other.Primary market(s)* — City/state or region.How many opportunities do you present in a typical month? — 0–2; 3–10; 11–30; 31+; Prefer not to say.How do you currently share properties?* — Short free-text answer.What’s the most frustrating part of that process?* — Short free-text answer.Website / professional profile — Optional URL.Consent note — By sending this request, you agree that ORVN Labs may contact you about LAREI early access and evaluate your request. See our Privacy Policy [link]. Adjust based on actual reviewed policy and consent needs.
+Button: Request early access
+Submitting state: Sending request…Success heading: Your request has been received.Success body: Thanks for your interest in LAREI. We’ll review the information you submitted. If there’s a suitable beta opening, we’ll contact you by email.Duplicate handling: We’ve already received a request for this email. If you need to update it, contact us. (Only show if safely verifiable without account enumeration.)Error: We couldn’t save your request. Check the highlighted fields and try again.No automatic account creation.
+9. Sign-in, recovery and onboarding copy
+Sign in H1: Welcome back to LAREI.Subhead: Access your workspace, public site drafts and property records.Labels: Email address · Password · Show password · Remember me (only if supported).Button: Sign inLink: Forgot password?Footer: Don’t have access? Request early access.Invalid credentials: We couldn’t sign you in with those details. Check your email and password or reset your password.Invitation required: LAREI is currently available by invitation. You can request access below.
+Password reset H1: Reset your password.Body: Enter your account email. If an account is associated with it, we’ll send recovery instructions.Button: Send reset instructionsSuccess: If that address has an account, recovery instructions are on the way.Expired link: This link has expired. Request a new reset link.
+Invitation acceptance H1: You’ve been invited to LAREI.Body: Complete your account setup to begin creating your professional site and property portfolio.Expired invitation: This invitation is no longer active. Contact the person who invited you or ORVN Labs support.
+Onboarding step 1 title: Start with your professional identity.Helper: Tell us how you work. You can edit this information later.Button: Continue
+Onboarding step 2 title: Decide what your visitors should see.Helper: We’ll prepare an editable public-page draft. Nothing is published yet.Button: Generate my page
+Onboarding step 3 title: Review your website draft.Helper: Confirm names, services, credentials and contact details before making anything public.Buttons: Edit details · Preview site · Save as draft · Publish site
+Next action: Add your first propertySkip action: Go to dashboard (my site remains a draft)
+10. Sample LAREI-generated public professional page: dynamic copy template
+This is a template, not a statement that a real customer or property exists. Fields in square brackets are supplied/approved by the professional.
+Top nav: [Business name] · About · Properties · Focus · Contact
+Hero eyebrow: [Role] · [Primary market]H1: [Professional name or company], focused on [approved market / specialty].Body: [Approved two-sentence introduction about services, audience and experience, without fabricated transaction claims.]Button: Explore propertiesSecondary: Contact [first name / business]
+About: Meet [approved professional name]. [Approved bio, business model, primary market and how clients/partners should work with them.]Operating areas: Working in [selected and approved markets].Portfolio header: Selected properties & projectsPortfolio empty state: No public properties have been added yet. Contact [name] to discuss current opportunities. (Optional; not a false inventory claim.)Property card: [Property title] · [City/state] · [Availability status] · [Price if approved] · View property.Contact header: Start a conversation.Contact body: Questions about a property or interested in working together? Send a message and identify the opportunity you’re referring to.Button: Send inquiryFooter: [Approved business identity] · [Required license/brokerage disclosure where applicable] · Powered by LAREI (if brand policy permits).
+11. Sample LAREI-generated public property page: dynamic copy template
+Site breadcrumb: [Professional] / Properties / [Property title]Status label: [Published opportunity status chosen by owner]H1: [Approved property title]Location: [Street/area only to selected visibility level], [City], [State]Terms: [Approved asking terms or “Price on request,” if selected]Primary CTA: Ask about this propertyGallery: [Approved images and alt descriptions]Facts: Property type [approved] · APN(s) [approved] · Lot/building size [approved] · [Other applicable fields].Description: [Editable, AI-assisted narrative derived from approved record and checked by operator.]Location section: Explore the area. [Map pin/general map link] [Approximate location note if needed.]Documents section: Available materials [only files marked public].Due diligence: [Approved facts and explicitly qualified unknowns; do not imply all inspections complete.]Inquiry form: Name · Email · Message · Send inquirySuccess: Your inquiry has been sent to [professional/business].Disclaimer: Property details were provided or approved by the publishing professional. Buyers should independently verify material facts, legal rights, measurements, zoning, access, environmental conditions, title and financial assumptions before relying on them.Footer: View [professional]’s portfolio · Contact · Privacy
+12. FAQ — complete proposed questions and answers
+What is ORVN Labs?ORVN Labs is a real-estate technology business developing LAREI, a platform for professional websites, property presentations and the work required to prepare and publish them.
+What is LAREI?LAREI is the provisional name of our product for real-estate professionals. It is being designed to connect a branded public profile, selected property portfolio, AI-assisted property records, shareable property pages and engagement insights.
+Who is LAREI for?The initial focus is on wholesalers, real-estate agents, investors and acquisitions/dispositions operators who regularly present property or business information to others.
+Do I get my own website?That is part of the planned beta experience. Approved users will be able to prepare a professional public page using their business profile and selected portfolio content. The supported URL format will be confirmed during the beta.
+Can every deal have its own page?The planned core workflow provides an individual published property page connected to the user’s professional identity. Each page has its own shareable URL and an inquiry route.
+Can I use my own domain?Custom-domain support is being evaluated for a later phase and should not be assumed in the first private beta.
+Does AI build the entire website for me?LAREI is designed to draft copy and arrange a focused professional page using approved information. Users review the facts, control public sections and publish intentionally. It is not intended to be an unrestricted website builder.
+Can I import my ChatGPT information?The intended first approach is to paste relevant context or upload a prepared business summary or writing samples. Automatic access to an external AI account is not part of the confirmed initial scope.
+Will the AI learn how I write?Users are intended to be able to save reviewed style preferences and business context for more consistent generated writing. Those preferences should remain visible, editable and private to the relevant workspace.
+Does LAREI verify property values or create an ARV?No authoritative appraisal, automated underwriting or independently verified ARV is included in the initial scope. Professionals remain responsible for checking all material investment assumptions.
+Does the map show exact parcel boundaries?Not in the initial release. Basic location mapping or a map link is planned. Parcel GIS and surveyed/legal boundary interpretations are separate future work.
+Can I hide my address or documents?The planned publication process provides user control over what becomes public. The implemented settings and supported privacy options will be explained in the beta.
+Can I market other people’s properties?Users must have the legal authority and necessary permissions to publish property information and imagery, including any agent/brokerage disclosures required in their market. LAREI does not establish that authority for them.
+Does LAREI automatically find buyers or send campaigns?No buyer-finding guarantee or mass distribution is part of the first release. It is designed to make approved property pages easy to share and inquiries easy to receive.
+Can I see exactly who clicks my link?Analytics can show measurable page activity and tracked clicks. They do not automatically reveal the identity of anonymous visitors. Identifying contact information is collected only when visitors choose to submit it.
+Is LAREI a CRM?No. The initial scope emphasizes presentation, publication and basic inquiry visibility rather than a full lead management, transaction or contract system.
+Can I use LAREI if I’m not a wholesaler?Yes. The proposed workflow is designed to adapt core presentation features for agents, investors and real-estate operators, with appropriate content choices and disclosures.
+Is it available now?LAREI is being developed for a controlled private beta. Public sign-up may not yet be available. Interested professionals can request early access; approval is not guaranteed.
+How much does LAREI cost?Pricing has not been announced. Any pricing, plan limits and beta terms will be communicated before a paid commitment is requested.
+How can I contact ORVN Labs?Use the contact page or hello@orvnlabs.com if the address remains the confirmed support inbox. We respond to relevant product and early-access questions.
+13. Contact, error, support and transactional copy
+Contact H1: Talk to ORVN Labs.Body: Questions about LAREI, early access or a potential use case? Tell us your role and what you’re trying to accomplish.Form: Name · Work email · Topic (Beta access / Product question / Support / Other) · Message · Send message.Success: Message received. If a response is needed, we’ll get back to you using the contact details provided.Failure: Your message wasn’t sent. Try again or email us directly.
+404 page H1: We couldn’t find that page.Body: The address may be incorrect, moved or no longer available.Buttons: Back to ORVN Labs · Visit product overview.
+Unpublished property page H1: This property page isn’t available.Body: It may have been unpublished or the link may no longer be active.Button: Return to the professional’s public profile (when that profile remains published).
+Generic error H1: Something went wrong.Body: Your information hasn’t been published or submitted unless you received a success confirmation. Please retry.Button: Try again.
+Access request confirmation email subject: We received your LAREI early-access requestBody: Thanks for your interest in LAREI. We’ve received your request and will review the details. Access is limited during the private beta, so this isn’t an invitation or confirmation of acceptance. — ORVN Labs. (Send only if transactional email is implemented.)
+Beta invitation email subject: Your invitation to LAREIBody: You’ve been invited to try LAREI. Use the secure invitation link to create your account. If you weren’t expecting an invitation, you can ignore this message. Link: [time-limited link]. — ORVN Labs.
+Property inquiry owner notification subject: New inquiry — [Property title]Body: Someone submitted an inquiry through your published property page. Open LAREI to read it and respond. Avoid placing sensitive visitor details in unencrypted notification content. Button: Open inquiry.
+14. Wireframes and build guidance (structural, not pixel designs)
+Homepage desktop reading order: nav → hero left copy/right live UI composition → problem → professional site → property page/deal sheet → AI review → voice/context → analytics → 5-step workflow → audience cards → trust → FAQ → CTA → footer. Use no more than one dominant action per viewport; avoid repeating same cards across sections. Mobile stacks copy above the prototype visual and keeps headline, CTA and trust note visible without excessive scrolling.
+Professional public page: slim nav → professional hero (name/role/market/contact) → about → service/markets → filterable approved portfolio → contact form → required disclosures/footer. Site can succeed with zero public properties; never show invented inventory.
+Property public page: breadcrumb & branding → photo-led hero, status, asking terms → facts grid → summary → location map/fallback → public files & caveats → inquiry form → footer. Mobile sticky inquiry CTA permitted if unobtrusive, accessible and user-selected.
+Authenticated dashboard: sidebar or compact mobile nav → Create Property CTA → My Site publish status → properties needing review → recent active properties → inquiries requiring response → light analytics. Secondary charts must not crowd the work queue.
+Designer deliverables: Figma equivalent responsive frames for marketing homepage, product, how-it-works, use cases, early access, sign in, professional page, property page, workspace dashboard, intake/review, empty/loading/error and share modal; mobile versions for the 5 critical screens. Component library with tokens, typography, buttons, inputs, tables, galleries, status chips and dialogs.
+15. Migration, SEO and launch checks
+Content migration: inventory old PAS landing routes, blog/resource links, lead leakage scorecard, full calculator, FAQ and signup flows. Decide per route: keep as secondary / archive with explanatory page / permanent redirect to nearest relevant page. Never redirect a research resource to an unrelated product just to simplify navigation. Keep access to historic legitimate records where needed.
+Content governance: Replace “flagship PAS” language on LAREI-led pages. Do not market live PAS behavior as LAREI features or silently transfer PAS pricing and claims. No fabricated customer results, brand partner logos, investor returns, pricing or product screenshots. Add “in development” language wherever beta functionality is shown before release.
+Search and previews: unique page titles, descriptions, favicon, OG image, social preview, sitemap, robots rules. Do not index private drafts, invitation links, AI context or private files. For public professional/property pages, indexability should be a deliberate beta decision (default privacy-conscious). Use canonical URLs after slug or domain migration. Ensure old orvnlabs.com URLs use an explicit redirect plan.
+Acceptance: a first-time visitor can identify target users and product in 5–10 seconds; no CTA to a dead signup flow; early-access data lands in review queue; mobile site reads professionally; live screenshots match delivered features; sign-in and invitation works; public site/property navigation follows approved routes; accessibility audit performed against WCAG 2.2 AA; no private details in SEO metadata or image previews; all published FAQ statements reflect current implementation.
+16. Measurement plan for redesign (proposed, not achieved results)
+Track useful marketing events: CTA click (hero and footer distinguished), Product page view, How-it-works depth, Early access form start, successful application, invitation approval, successful onboarding. Later correlate source campaigns with properly consented applications rather than claim page views equal qualified clients. During beta, assess application quality based on role and active workflow, not vanity signup volume. Gather qualitative feedback from prospective customers on whether the site looks credible enough to send to business partners.
+17. Final website implementation checklist
+☐ Product name and existing PAS treatment approved by Daniel.
+☐ New brand system, component library and mobile/desktop designs approved.
+☐ Every CTA opens an implemented route; early access is controlled.
+☐ Homepage, product, how-it-works, who-it’s-for, FAQ, contact and auth copy installed.
+☐ Professional public-site and individual-property templates match the app source of truth.
+☐ User consent, privacy, terms, support mailbox and legal disclosures validated against actual implementation.
+☐ Product screenshots labeled honestly as prototype vs live.
+☐ Mobile/tablet/desktop visual, keyboard and accessibility QA completed.
+☐ Analytics, inquiry and email delivery tested; no anonymous visitor identity claims.
+☐ Privacy/publication states tested including direct URL and cached preview behavior.
+☐ Performance, broken links, previews, redirects, SEO metadata and forms tested.
+☐ Release approved by product owner after demonstration; not accepted based on screenshots alone.
+18. Research and source notes
+This copy reflects the latest expanded LAREI direction in Daniel’s supplied 21 October planning document. The final product name remains provisional. The current ORVN Labs homepage’s PAS positioning was checked through indexed public website content on 21 October 2026: https://www.orvnlabs.com/. Reference examples for property presentation and marketing workflows: https://investorfunnel.com/ and https://dealrun.ai/. Accessibility reference: https://www.w3.org/TR/WCAG22/.
