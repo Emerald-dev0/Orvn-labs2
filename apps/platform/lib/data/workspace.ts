@@ -333,6 +333,8 @@ export async function getPropertyDetail(
         kind: item.kind,
         visibility: item.visibility,
         isCover: item.isCover,
+        width: item.width,
+        height: item.height,
       })),
       publication: latest
         ? {

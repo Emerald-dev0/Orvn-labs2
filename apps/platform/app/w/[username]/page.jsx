@@ -1,12 +1,9 @@
 import Link from 'next/link';
+import { SIZES, mediaUrl, srcSetFor } from '@/lib/images';
 import { notFound } from 'next/navigation';
 import { getPublicSite, listPortfolio } from '../../../lib/data/public-site';
 
 export const dynamic = 'force-dynamic';
-
-function mediaUrl(key) {
-  return key ? `/api/media/${key}` : null;
-}
 
 function initials(name) {
   return name
@@ -96,7 +93,13 @@ export default async function PublicSitePage({ params }) {
 
               {site.coverKey ? (
                 <div className="pub-hero-media" style={{ aspectRatio: '4 / 3' }}>
-                  <img src={mediaUrl(site.coverKey)} alt="" />
+                  <img
+                    src={mediaUrl(site.coverKey, { width: 1600 })}
+                    srcSet={srcSetFor(site.coverKey)}
+                    sizes={SIZES.fullBleed}
+                    alt=""
+                    fetchPriority="high"
+                  />
                 </div>
               ) : null}
             </div>
@@ -137,7 +140,14 @@ export default async function PublicSitePage({ params }) {
                 {portfolio.map((card) => (
                   <Link key={card.slug} href={`/w/${site.username}/p/${card.slug}`} className="pub-card">
                     {card.coverKey ? (
-                      <img src={mediaUrl(card.coverKey)} alt="" loading="lazy" />
+                      <img
+                        src={mediaUrl(card.coverKey, { width: 960 })}
+                        srcSet={srcSetFor(card.coverKey)}
+                        sizes={SIZES.galleryHalf}
+                        alt=""
+                        loading="lazy"
+                        decoding="async"
+                      />
                     ) : (
                       <div className="pub-card-empty">Photo on request</div>
                     )}

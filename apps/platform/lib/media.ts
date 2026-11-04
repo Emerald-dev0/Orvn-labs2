@@ -1,5 +1,5 @@
 import { and, eq } from 'drizzle-orm';
-import { withPublicDb } from './db/tenant';
+import { databaseConfigured, withPublicDb } from './db/tenant';
 import { properties, propertyMedia } from '../db/schema';
 
 /**
@@ -36,6 +36,10 @@ export function contentTypeFor(key: string): string | null {
 
 export async function authoriseMediaRequest(storageKey: string): Promise<MediaDecision> {
   if (!isWellFormedStorageKey(storageKey)) return { allowed: false, reason: 'not_found' };
+
+  // No database means nothing is published, so nothing is served. A preview build must not
+  // turn a storage misconfiguration into a public file host.
+  if (!databaseConfigured) return { allowed: false, reason: 'storage_unavailable' };
 
   const rows = await withPublicDb(async (tx) =>
     tx

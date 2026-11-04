@@ -7,6 +7,8 @@ import { withUserDb } from '../db/tenant';
 import { properties, propertyMedia } from '../../db/schema';
 import { recordAudit } from '../audit';
 import { deleteObject, putObject, storageConfigured, storageKeyFor } from '../storage';
+import { renderImageRenditions } from '../image-encoder';
+import { isImageKey, variantKeyFor, variantKeysFor } from '../images';
 import { uploadErrorMessage, validateUpload } from '../uploads';
 import { checkbox, propertyIdSchema, text } from '../validation/workspace';
 import type { ActionState } from './types';
@@ -64,7 +66,12 @@ export async function uploadMedia(_previous: ActionState, formData: FormData): P
   }
 
   const failures: string[] = [];
-  const stored: { key: string; visibility: 'public' | 'private' }[] = [];
+  const stored: {
+    key: string;
+    visibility: 'public' | 'private';
+    width: number | null;
+    height: number | null;
+  }[] = [];
 
   for (const file of files) {
     const buffer = new Uint8Array(await file.arrayBuffer());
@@ -80,13 +87,33 @@ export async function uploadMedia(_previous: ActionState, formData: FormData): P
     }
 
     const key = storageKeyFor(workspace.id, check.filename);
-    const written = await putObject(key, buffer.buffer as ArrayBuffer, check.type);
+    const body = buffer.buffer as ArrayBuffer;
+    const written = await putObject(key, body, check.type);
     if (!written) {
       failures.push(`${file.name}: storage refused the upload.`);
       continue;
     }
 
-    stored.push({ key, visibility: makePublic ? 'public' : 'private' });
+    // Renditions are made here, once, and stored beside the original. A failure costs the
+    // upload nothing: the original still serves, just at full weight.
+    let width: number | null = null;
+    let height: number | null = null;
+    if (isImageKey(key)) {
+      const rendition = await renderImageRenditions(body);
+      if (rendition) {
+        width = rendition.width;
+        height = rendition.height;
+        for (const variant of rendition.variants) {
+          const variantKey = variantKeyFor(key, variant.width);
+          const ok = await putObject(variantKey, variant.body, 'image/webp');
+          if (!ok) {
+            console.warn('[media] rendition not stored', { variantKey });
+          }
+        }
+      }
+    }
+
+    stored.push({ key, visibility: makePublic ? 'public' : 'private', width, height });
   }
 
   if (stored.length > 0) {
@@ -107,6 +134,8 @@ export async function uploadMedia(_previous: ActionState, formData: FormData): P
           sortOrder: order,
           isCover: false,
           visibility: item.visibility,
+          width: item.width,
+          height: item.height,
         });
       }
 
@@ -241,7 +270,9 @@ export async function removeMedia(_previous: ActionState, formData: FormData): P
 
   if (!key) return { status: 'error', message: 'That file is already gone.' };
 
-  void deleteObject(key).catch(() => undefined);
+  // The row is gone, so the route already refuses these: cleanup is housekeeping, not a
+  // security step, which is why it is not awaited.
+  void Promise.allSettled([key, ...variantKeysFor(key)].map((target) => deleteObject(target)));
 
   revalidatePath(`/properties/${propertyId}`);
   return { status: 'ok', message: 'Removed. The page can no longer serve it.' };

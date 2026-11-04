@@ -141,7 +141,22 @@ name the property or hint that a record exists.
 **Files** are never linked directly. `/api/media/[...key]` checks the key's shape, then the row:
 public visibility, published property, allowed content type (jpg/png/webp/avif/pdf — never svg,
 html or js). Anything else is a 404, and storage stays private behind a signed request that never
-reaches the browser.
+reaches the browser. With no database configured the gate refuses: a preview build is not a file
+host.
+
+**Renditions are derived, never addressed.** `?w=480|960|1600` selects a WebP made at upload and
+stored beside the original, but the width is resolved against the stored key *after*
+authorisation. A caller cannot name a variant the release check has not seen, and a guessed
+rendition key is a 404 like any other. Unknown widths are ignored rather than rejected.
+
+**Cache policy is revalidation, not expiry.** Media is served `private, no-cache` with a strong
+ETag, so a browser re-checks on every request and a withdrawal of publication takes effect on the
+next one. The earlier 60-second window is gone: correctness was worth one indexed row read.
+
+**Photo metadata is stripped at upload.** Renditions are re-encoded without EXIF, which removes
+GPS coordinates, device serials and capture times, and the orientation tag is baked into the
+pixels first so portraits stay upright. A listing photo should not carry the seller's
+whereabouts.
 
 **Metadata is derived from the same snapshot.** `generateMetadata` builds title, description and
 image from approved values only; the OG image renders the same fields. A private file cannot
@@ -204,7 +219,7 @@ debug log and it holds no message bodies.
 
 ## 11. What is tested, and what is not
 
-`npm test` — 78 tests, all green.
+`npm test` — 92 tests, all green.
 
 - **Snapshot boundary** (11): approval + public + non-empty; private media excluded; address
   gating; “on request” cannot leak an amount; missing price is not zero; leading-zero parcel
@@ -223,6 +238,9 @@ debug log and it holds no message bodies.
 - **Upload validation** (8): type comes from magic bytes, not the filename; HTML renamed to
   `.jpg` is refused; declared/actual mismatch is refused; empty and oversized files are refused;
   traversal fragments are stripped from stored names.
+- **Images** (14): rendition keys stay inside the shape the gate accepts, documents never get
+  renditions, a width is only honoured if we made it, `srcset` never promises an upscale, and the
+  encoder really does drop EXIF and bake in orientation (checked by decoding the output).
 - **Early access** (10): consent required, name and email validated, free text capped; the
   notification is replyable, idempotent per application, and carries every answer; applications
   are operator-only (RLS enabled, no policy, no grant to either application role).

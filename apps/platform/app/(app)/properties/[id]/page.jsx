@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import { mediaUrl } from '@/lib/images';
 import PropertyDetail from '../../../../src/app/views/PropertyDetail';
 import { loadAppContext } from '../../../../lib/app-context';
 import { getPropertyDetail } from '../../../../lib/data/workspace';
@@ -25,7 +26,10 @@ export default async function Page({ params, searchParams }) {
   return (
     <PropertyDetail
       id={property.id}
-      property={{ ...property, cover: property.cover ? `/api/media/${property.cover}` : null }}
+      property={{
+        ...property,
+        cover: mediaUrl(property.cover, { width: 960 }) ?? null,
+      }}
       initialTab={tab}
       live={context.workspace.role !== 'viewer'}
       publicPath={`/w/${context.workspace.username}/p/${property.slug}`}

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { SIZES, aspectRatio, mediaUrl, srcSetFor } from '@/lib/images';
 import { notFound } from 'next/navigation';
 import { after } from 'next/server';
 import { headers } from 'next/headers';
@@ -15,10 +16,6 @@ function humanise(key) {
     .replace(/[_-]+/g, ' ')
     .replace(/\b\w/g, (c) => c.toUpperCase())
     .replace(/\bApn\b/, 'APN');
-}
-
-function mediaUrl(key) {
-  return key ? `/api/media/${key}` : null;
 }
 
 export async function generateMetadata({ params }) {
@@ -120,7 +117,14 @@ export default async function PublicPropertyPage({ params }) {
           <div className="pub-wrap">
             <div className="pub-hero-media">
               {cover ? (
-                <img src={mediaUrl(cover)} alt={snapshot.title} />
+                <img
+                  src={mediaUrl(cover, { width: 960 })}
+                  srcSet={srcSetFor(cover)}
+                  sizes={SIZES.hero}
+                  alt={snapshot.title}
+                  fetchPriority="high"
+                  decoding="async"
+                />
               ) : (
                 <div className="pub-hero-empty">No photo published for this property</div>
               )}
@@ -190,7 +194,18 @@ export default async function PublicPropertyPage({ params }) {
               </div>
               <div className="pub-gallery">
                 {gallery.map((item) => (
-                  <img key={item.key} src={mediaUrl(item.key)} alt="" loading="lazy" />
+                  <img
+                    key={item.key}
+                    src={mediaUrl(item.key, { width: 960, sourceWidth: item.width })}
+                    srcSet={srcSetFor(item.key, { sourceWidth: item.width })}
+                    sizes={SIZES.galleryThird}
+                    width={item.width || undefined}
+                    height={item.height || undefined}
+                    style={{ aspectRatio: aspectRatio(item.width, item.height) }}
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                  />
                 ))}
               </div>
             </div>

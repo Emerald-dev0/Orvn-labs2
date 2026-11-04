@@ -1,5 +1,6 @@
 'use client';
 
+import { SIZES, THUMB_WIDTH, aspectRatio, mediaUrl, srcSetFor } from '../../../lib/images';
 import { useState } from 'react';
 import Link from 'next/link';
 import { Icon } from '../icons';
@@ -143,7 +144,17 @@ function Media({ property, live = false }) {
         <div className="ws-media-grid">
           {items.map((item) => (
             <div className="ws-media" key={item.id}>
-              <img src={`/api/media/${item.key}`} alt="" />
+              <img
+                src={mediaUrl(item.key, { width: THUMB_WIDTH, sourceWidth: item.width })}
+                srcSet={srcSetFor(item.key, { sourceWidth: item.width })}
+                sizes={SIZES.thumb}
+                width={item.width || undefined}
+                height={item.height || undefined}
+                style={{ aspectRatio: aspectRatio(item.width, item.height) }}
+                alt=""
+                loading="lazy"
+                decoding="async"
+              />
               <div className="ws-media-tags">
                 {item.isCover ? <span className="ws-media-tag">Cover</span> : null}
                 <span className={`ws-media-tag ${item.visibility === 'public' ? '' : 'is-private'}`}>

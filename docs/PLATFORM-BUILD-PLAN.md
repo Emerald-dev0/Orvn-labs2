@@ -36,6 +36,14 @@ buy. Revised for the stack agreed on 4 Nov: Next.js, Neon, Cloudflare Workers, G
   single-use tokens and are linked from the sign-in page.
 - **Uploads**: server-side validate-then-write to R2, per-file visibility, cover selection and
   removal; the media route still gates every read on release state.
+- **Image renditions**: every photo gets 480/960/1600 wide WebP versions at upload, made on the
+  server with sharp, stored beside the original in the same private bucket and served through the
+  same gate (`?w=`). EXIF is stripped and orientation baked in. Public pages emit `srcset`/`sizes`
+  and reserve the box from stored dimensions, so a phone downloads the 480px file instead of a
+  4 MB original. No vendor CDN, no second copy, and unpublishing still removes the files.
+  Deployment note: this needs a Node runtime with native binaries (Vercel, Fly, a container). A
+  Cloudflare Workers deployment would need Cloudflare Images instead — the seam is
+  `lib/image-encoder.ts`.
 - **CI**: `.github/workflows/ci.yml` typechecks, runs the unit suite, re-checks RLS coverage and
   builds on every push, with no secrets required.
 - **Wired**: `/properties`, `/properties/[id]` (with real publish/unpublish and uploads),

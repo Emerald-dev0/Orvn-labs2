@@ -9,7 +9,7 @@ const nextConfig = {
   reactStrictMode: true,
   turbopack: { root: here },
   poweredByHeader: false,
-  serverExternalPackages: ['ws'],
+  serverExternalPackages: ['ws', 'sharp'],
   async headers() {
     return [
       { source: '/:path*', headers: baselineHeaders },
