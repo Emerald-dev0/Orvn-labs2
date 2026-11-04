@@ -32,9 +32,12 @@ export default function Nav() {
   }, [location.pathname]);
 
   useEffect(() => {
+    const root = document.documentElement;
     document.body.style.overflow = open ? 'hidden' : '';
+    root.style.overflow = open ? 'hidden' : '';
     return () => {
       document.body.style.overflow = '';
+      root.style.overflow = '';
     };
   }, [open]);
 
