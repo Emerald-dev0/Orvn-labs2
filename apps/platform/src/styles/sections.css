@@ -2948,3 +2948,15 @@
   line-height: 1.5;
   margin: 0;
 }
+
+/* Inline form failure. Sits above the consent row, not in a toast. */
+.form-error {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--neg);
+  background: rgba(180, 69, 44, 0.08);
+  border: 1px solid rgba(180, 69, 44, 0.24);
+  border-radius: var(--r-sm);
+  padding: 10px 14px;
+}

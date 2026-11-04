@@ -27,6 +27,11 @@ buy. Revised for the stack agreed on 4 Nov: Next.js, Neon, Cloudflare Workers, G
   decisions, rights attestation, publish/unpublish/archive, inquiry status, site, invitations).
   Every action resolves the workspace and role from the session, validates with Zod, writes
   inside `withUserDb` and appends an audit entry.
+- **Early access**: the marketing form is wired. It validates, rate-limits, stores the request
+  once per address and emails it to `EARLY_ACCESS_INBOX` (default
+  `danieloyegoke001@gmail.com`) with reply-to set to the applicant. If the database is down the
+  request is still emailed and labelled unstored; if email fails the screen says so instead of
+  claiming success.
 - **Account recovery**: `/forgot-password` and `/reset-password` work against Better Auth's
   single-use tokens and are linked from the sign-in page.
 - **Uploads**: server-side validate-then-write to R2, per-file visibility, cover selection and

@@ -97,6 +97,7 @@ describe('row level security coverage', () => {
     'professional_profiles',
     'audit_events',
     'rate_limits',
+    'beta_applications',
   ];
 
   it('enables RLS on every table that holds workspace data', () => {
@@ -106,6 +107,12 @@ describe('row level security coverage', () => {
       );
       expect(schema, `${table} is not in the schema`).toContain(`'${table}'`);
     }
+  });
+
+  it('keeps beta applications operator-only: RLS on, no policy, no grant', () => {
+    expect(policies).toContain('alter table beta_applications enable row level security;');
+    expect(policies).not.toMatch(/create policy [a-z_]* on beta_applications/i);
+    expect(policies).not.toMatch(/grant [^;]*on beta_applications/i);
   });
 
   it('never grants the public role read access to inquiries, invitations or audit', () => {

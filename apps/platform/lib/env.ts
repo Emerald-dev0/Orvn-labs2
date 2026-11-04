@@ -24,6 +24,7 @@ const schema = z.object({
   ADMIN_EMAILS: optionalString,
 
   // Mail
+  EARLY_ACCESS_INBOX: optionalString,
   CALDER_API_KEY: optionalString,
   CALDER_API_URL: optionalString,
   MAIL_FROM: optionalString,

@@ -15,13 +15,18 @@ export const inviteAcceptSchema = z.object({
 });
 
 export const betaApplySchema = z.object({
-  name: z.string().trim().min(2).max(120),
+  name: z.string().trim().min(2, 'Tell us your name').max(120),
   email: emailField,
-  website: z.string().trim().max(200).optional().or(z.literal('')),
-  markets: z.string().trim().max(200).optional().or(z.literal('')),
+  company: z.string().trim().max(160).optional().or(z.literal('')),
   role: z.string().trim().max(80).optional().or(z.literal('')),
-  notes: z.string().trim().max(2000).optional().or(z.literal('')),
-  /** Honeypot. */
+  markets: z.string().trim().max(200).optional().or(z.literal('')),
+  volume: z.string().trim().max(40).optional().or(z.literal('')),
+  currentTools: z.string().trim().max(1000).optional().or(z.literal('')),
+  frustration: z.string().trim().max(1000).optional().or(z.literal('')),
+  website: z.string().trim().max(200).optional().or(z.literal('')),
+  /** Consent is a real checkbox, not a footnote. */
+  consent: z.literal('on', { message: 'Please agree to be contacted about the beta' }),
+  /** Honeypot. A person never sees this field. */
   company_url_confirm: z.literal('').optional(),
 });
 

@@ -10,6 +10,7 @@ code today, not what is planned. Where something is missing it says so.
 | Workspace records (drafts, facts, internal notes) | A competitor reads somebody's pipeline, or a seller's private data leaks |
 | Unpublished pages and private files | A deal is disclosed before the owner is ready |
 | Inquiries | A buyer's name, address and question become public, or land in the wrong business |
+| Beta applications | The waitlist leaks, or a request is lost |
 | Seller documents inside a record | Contract, ID or personal data exposure |
 | Beta membership | The private beta becomes an open sign-up |
 | Credentials | Everything above |
@@ -91,6 +92,8 @@ and all thirteen have RLS enabled with explicit policies.
 
 - `larei_app` — members read; `owner`/`editor` write; deletes restricted to owners; beta
   invitations (no workspace) are invisible to tenants entirely.
+- `beta_applications` has RLS enabled and **no** policy: it belongs to no workspace, so neither
+  application role can read or write it. Only the admin connection touches it.
 - `larei_public` — read-only over published projections: published properties, approved and
   public facts, public media, publications that are not withdrawn, published profiles. It can
   insert an inquiry (with consent, matching workspace, published property) and a view counter.
@@ -201,7 +204,7 @@ debug log and it holds no message bodies.
 
 ## 11. What is tested, and what is not
 
-`npm test` — 68 tests, all green.
+`npm test` — 78 tests, all green.
 
 - **Snapshot boundary** (11): approval + public + non-empty; private media excluded; address
   gating; “on request” cannot leak an amount; missing price is not zero; leading-zero parcel
@@ -220,6 +223,9 @@ debug log and it holds no message bodies.
 - **Upload validation** (8): type comes from magic bytes, not the filename; HTML renamed to
   `.jpg` is refused; declared/actual mismatch is refused; empty and oversized files are refused;
   traversal fragments are stripped from stored names.
+- **Early access** (10): consent required, name and email validated, free text capped; the
+  notification is replyable, idempotent per application, and carries every answer; applications
+  are operator-only (RLS enabled, no policy, no grant to either application role).
 - Existing email tests (4).
 
 Not covered yet, stated plainly:
