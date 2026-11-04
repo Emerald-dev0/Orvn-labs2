@@ -1,288 +1,354 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ArrowUpRight, Check, Minus } from 'lucide-react';
+import {
+  ArrowRight,
+  ArrowUpRight,
+  BadgeCheck,
+  Check,
+  CircleAlert,
+  FileSpreadsheet,
+  FileText,
+  Printer,
+  Send,
+} from 'lucide-react';
 import PageWrapper from '../components/PageWrapper';
+import PageHero from '../components/site/PageHero';
+import { Reveal } from '../components/site/Reveal';
 import { useDocumentMeta } from '../lib/seo';
-import ChapterHead from '../components/site/ChapterHead';
-import { Reveal, MaskedLines } from '../components/site/Reveal';
-import FaqAccordion from '../components/site/FaqAccordion';
 
-const CHAPTERS = [
+const OUTPUTS = [
   {
-    n: '01',
-    title: 'The professional behind the property.',
-    body: [
-      'Start with your role, markets, services, credentials and contact preferences. LAREI prepares an editable draft of your public profile — you check names, qualifications and contact details before anything is published.',
-      'The profile is not a template you fight with. It is a short, honest statement of what you do and where you do it, connected to everything else you publish.',
-    ],
-    points: ['Markets and territories', 'Services and specialisms', 'Contact and disclosure preferences', 'Review before publishing'],
+    icon: FileText,
+    title: 'Property page',
+    body: 'A public page with your photographs, the facts you approved and an enquiry button that comes to you.',
   },
   {
-    n: '02',
-    title: 'A portfolio, not a pile of links.',
-    body: [
-      'Your portfolio is a selection of approved records, not a set of manually updated website cards. Choose which properties appear publicly; update the underlying record and the presentation stays aligned.',
-    ],
-    points: ['Select what is public', 'Retire a listing without deleting it', 'One visual language across every property'],
+    icon: FileSpreadsheet,
+    title: 'Deal sheet',
+    body: 'One page for the buyer, the bank or the developer, with every figure taken from the record.',
   },
   {
-    n: '03',
-    title: 'One record, four useful outputs.',
-    body: [
-      'Bring in notes, forms or supported files. LAREI organises the facts it can support into a record you review: address, tenure, size, price, bedrooms, documents, sources.',
-      'From that record you generate a property page, a print-ready deal sheet, a short buyer summary and a print sheet — without entering the same details four times.',
-    ],
-    points: ['Source-aware fields', 'Conflicts surfaced, not smoothed', 'Unknowns marked as unknown', 'Outputs regenerate from the same facts'],
+    icon: Send,
+    title: 'Buyer summary',
+    body: 'A short overview you can forward on WhatsApp without losing the details that matter.',
   },
   {
-    n: '04',
-    title: 'Copy that sounds like you.',
-    body: [
-      'Add writing samples or a business context summary. Choose the tone you want. LAREI drafts descriptions, captions and buyer messages using approved information — every sentence editable before it goes public.',
-    ],
-    points: ['Saved voice preferences', 'Editable drafts', 'Private to your workspace'],
-  },
-  {
-    n: '05',
-    title: 'Location, described honestly.',
-    body: [
-      'Give visitors a general view of where a property sits, with a map or a map link. The first release does not claim surveyed boundaries or provide full GIS diligence.',
-    ],
-    points: ['General location context', 'No implied parcel survey', 'Clear language about precision'],
-  },
-  {
-    n: '06',
-    title: 'Interest you can act on.',
-    body: [
-      'See which pages are viewed, which links are clicked and which published properties generate inquiries. Analytics measure observable behaviour — not the identity of anonymous visitors.',
-    ],
-    points: ['Page activity', 'Tracked link clicks', 'Inquiry routes', 'No visitor de-anonymisation'],
-  },
-  {
-    n: '07',
-    title: 'Publication stays deliberate.',
-    body: [
-      'Preview exactly what buyers will see. Hide sensitive information. Separate private documents from public claims. Nothing leaves your workspace without an approval you performed.',
-    ],
-    points: ['Preview before publish', 'Private files stay private', 'Per-property publication control'],
+    icon: Printer,
+    title: 'Print sheet',
+    body: 'An A4 sheet for the site office and the inspection, laid out so nothing is cut off.',
   },
 ];
 
-const NOT = [
-  ['No appraisal or ARV', 'No authoritative valuation, automated underwriting or verified ARV is produced.'],
-  ['No parcel boundaries', 'Maps are location context, not surveyed or legal boundaries.'],
-  ['Not a CRM', 'LAREI presents and publishes. It does not manage pipelines, contracts or commissions.'],
-  ['No buyer-finding guarantee', 'No mass distribution and no promise of a buyer. A shareable page, not a campaign engine.'],
+const LIMITS = [
+  {
+    title: 'No valuation',
+    body: 'We do not estimate worth, produce an ARV or underwrite anything. You decide the price and we keep it consistent.',
+  },
+  {
+    title: 'No legal boundaries',
+    body: 'A map is location context. LAREI does not claim surveyed parcel boundaries or a title opinion.',
+  },
+  {
+    title: 'No buyer promises',
+    body: 'We do not run campaigns or guarantee demand. The page is a better front door, not a sales engine.',
+  },
+  {
+    title: 'No pipeline',
+    body: 'LAREI presents property. It is not a CRM, an accounting tool or a commission tracker.',
+  },
 ];
 
-const OUTPUTS_FAQ = [
-  {
-    q: 'Do I need design software to use the outputs?',
-    a: 'No. Property pages, deal sheets, buyer summaries and print sheets are generated from the same approved record. You can regenerate any of them after a fact changes.',
-  },
-  {
-    q: 'Can I edit generated copy?',
-    a: 'Yes. Every generated description, caption and message is editable before publication, and you choose whether it becomes public.',
-  },
-  {
-    q: 'What happens when a fact changes?',
-    a: 'You update the record and approve the change. Outputs generated afterwards use the approved figure; previously exported documents can be regenerated.',
-  },
-  {
-    q: 'Can I keep some documents private?',
-    a: 'Yes. Private files remain private unless explicitly approved for a public page or a shared summary.',
-  },
-];
+function RecordMock() {
+  return (
+    <div className="mock-frame">
+      <div className="app-window">
+        <div className="app-bar">
+          <span className="app-dots" aria-hidden="true"><i /><i /><i /></span>
+          <span className="app-url">larei.app/properties/adaora-house/record</span>
+        </div>
+        <div className="app-main">
+          <div className="mock-prop">
+            <img src="/images/prop-3.jpg" alt="" />
+            <div>
+              <p className="mock-prop-name">Adaora House</p>
+              <p className="mock-prop-addr">12 Ozumba Mbadiwe Avenue, Ikoyi</p>
+            </div>
+            <span className="mock-status">Live</span>
+          </div>
+          <div className="mock-facts">
+            {[
+              ['Asking price', '₦480,000,000', 'Taken from your brief, 2 days ago'],
+              ['Internal area', '620 m²', 'Survey plan uploaded'],
+              ['Bedrooms', '4', 'Confirmed by the developer'],
+              ['Tenure', 'Certificate of occupancy', 'Document attached'],
+            ].map(([k, v, note]) => (
+              <div className="mock-fact-record" key={k}>
+                <div>
+                  <p className="mock-fact-key">{k}</p>
+                  <p className="mock-fact-val">{v}</p>
+                </div>
+                <p className="mock-fact-note">{note}</p>
+                <span className="mock-fact-state is-ok"><Check size={10} strokeWidth={3} /> Checked</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ConflictMock() {
+  return (
+    <div className="mock-frame">
+      <div className="app-window">
+        <div className="app-bar">
+          <span className="app-dots" aria-hidden="true"><i /><i /><i /></span>
+          <span className="app-url">larei.app/properties/adaora-house/checks</span>
+        </div>
+        <div className="app-main">
+          <div className="mock-conflict">
+            <div className="mock-conflict-head">
+              <span className="mock-conflict-icon"><CircleAlert size={14} strokeWidth={2.4} /></span>
+              <p>Price does not match the portal</p>
+              <span className="mock-time">2h ago</span>
+            </div>
+            <div className="mock-conflict-rows">
+              <div><span>LAREI record</span><strong>₦480,000,000</strong><em>your source</em></div>
+              <div><span>PropertyPro</span><strong>₦465,000,000</strong><em>imported</em></div>
+            </div>
+            <div className="mock-conflict-actions">
+              <span className="mock-btn-dark">Use my figure</span>
+              <span className="mock-btn-light">Accept import</span>
+            </div>
+          </div>
+
+          <div className="mock-conflict" style={{ marginTop: 10 }}>
+            <div className="mock-conflict-head">
+              <span className="mock-conflict-icon is-ok"><BadgeCheck size={14} strokeWidth={2.4} /></span>
+              <p>Service charge confirmed</p>
+              <span className="mock-time">yesterday</span>
+            </div>
+            <p className="mock-resolved-note">Checked against the management agreement by A. Bello.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function InsightMock() {
+  const bars = [38, 62, 48, 78, 66, 92, 58];
+  return (
+    <div className="mock-frame">
+      <div className="app-window">
+        <div className="app-bar">
+          <span className="app-dots" aria-hidden="true"><i /><i /><i /></span>
+          <span className="app-url">larei.app/properties/adaora-house/insight</span>
+        </div>
+        <div className="app-main">
+          <div className="mock-insight-top">
+            <div>
+              <p className="mock-insight-num">1,284</p>
+              <span className="mock-insight-label">Page views, last 7 days</span>
+            </div>
+            <div>
+              <p className="mock-insight-num">37</p>
+              <span className="mock-insight-label">Enquiries this month</span>
+            </div>
+          </div>
+          <div className="mock-bars" aria-hidden="true">
+            {bars.map((h, i) => (
+              <span key={i} style={{ height: `${h}%` }} className={i === 5 ? 'is-peak' : ''} />
+            ))}
+          </div>
+          <div className="mock-facts" style={{ marginTop: 16 }}>
+            {[
+              ['Kitchen photograph', 'Most viewed image'],
+              ['Deal sheet', 'Downloaded 24 times'],
+              ['Enquiry button', '37 clicks'],
+            ].map(([k, v]) => (
+              <div className="mock-fact" key={k}>
+                <span className="mock-fact-key">{k}</span>
+                <span className="mock-fact-val">{v}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function Product() {
   useDocumentMeta({
-    title: 'Product — one record behind every property page',
+    title: 'Product',
     description:
-      'Explore LAREI: professional profiles, property records, verified facts, shareable property pages, print-ready deal sheets and engagement insight in one workspace.',
+      'One verified property record that becomes a property page, a deal sheet, a buyer summary and a print sheet. Checking, publishing and insight in one workspace.',
     path: '/product',
   });
 
   return (
     <PageWrapper>
-      <section className="page-hero">
-        <div className="shell">
-          <div className="page-hero-grid">
-            <div>
-              <span className="eyebrow">LAREI · Product</span>
-              <h1 className="page-title">
-                One workspace for your presence
-                <br />
-                and your <span className="em">properties.</span>
-              </h1>
-            </div>
-            <div>
-              <p className="page-lede">
-                Build a public destination that reflects the business behind it, keep each property
-                organised behind the scenes, and choose what appears on its own shareable page.
-              </p>
-              <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', marginTop: 24 }}>
-                <Link to="/early-access" className="btn-primary">
-                  Request early access
-                  <ArrowUpRight size={15} strokeWidth={1.6} />
-                </Link>
-                <Link to="/how-it-works" className="arrow-link">
-                  See how it works
-                  <ArrowRight size={15} strokeWidth={1.6} />
-                </Link>
+      <PageHero
+        eyebrow="The product"
+        title={<>The workspace behind the page.</>}
+        lede="LAREI keeps the facts, the photographs and the permissions for each property in one place. The page, the deal sheet, the summary and the printout are all made from that record, so they always agree."
+        actions={
+          <>
+            <Link to="/early-access" className="btn btn-primary">
+              Request beta access
+              <ArrowRight strokeWidth={2.2} />
+            </Link>
+            <Link to="/how-it-works" className="btn btn-secondary">
+              How it works
+            </Link>
+          </>
+        }
+        media={
+          <div className="hero-photo-card">
+            <img src="/images/interior-1.jpg" alt="A warm living room photographed for a property page" />
+            <div className="hero-photo-chip glass">
+              <BadgeCheck size={16} strokeWidth={2.2} />
+              <div>
+                <strong>Facts checked</strong>
+                <span>Before anything publishes</span>
               </div>
             </div>
           </div>
+        }
+      />
 
-          <Reveal delay={0.15}>
-            <div className="page-hero-meta">
-              <div>
-                <strong>One record</strong>
-                <span>Per property</span>
-              </div>
-              <div>
-                <strong>Four outputs</strong>
-                <span>Page · sheet · summary · print</span>
-              </div>
-              <div>
-                <strong>You approve</strong>
-                <span>Before anything is public</span>
-              </div>
-              <div>
-                <strong>Private beta</strong>
-                <span>Applications reviewed</span>
-              </div>
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* Chapters */}
-      <section style={{ paddingBottom: 'clamp(24px,3vw,40px)' }}>
-        <div className="shell">
-          {CHAPTERS.map((c) => (
-            <Reveal key={c.n} delay={0.02}>
-              <article className="ed-block">
-                <div className="ed-aside">
-                  <span className="ed-index">CHAPTER {c.n}</span>
-                  <h2 className="ed-title">{c.title}</h2>
-                </div>
-                <div className="ed-body">
-                  {c.body.map((p, pi) => (
-                    <p key={pi}>{p}</p>
-                  ))}
-                  <ul className="ed-points">
-                    {c.points.map((pt) => (
-                      <li key={pt}>{pt}</li>
-                    ))}
-                  </ul>
-                </div>
-              </article>
-            </Reveal>
-          ))}
-        </div>
-      </section>
-
-      {/* Outputs band */}
-      <section className="dark-band">
-        <div className="shell">
-          <div className="chapter-head on-dark" style={{ marginBottom: 0 }}>
-            <div className="chapter-meta">
-              <span className="chapter-index">
-                <i className="tick" style={{ background: 'var(--ember-bright)' }} />
-                Outputs
-              </span>
-              <span className="chapter-label">What leaves the workspace</span>
-            </div>
-          </div>
-          <div className="outputs-strip">
+      <section className="split">
+        <div className="split-copy">
+          <span className="eyebrow">The record</span>
+          <h2 className="split-title">Every line has a source behind it.</h2>
+          <p className="lead">
+            Price, size, tenure, bedrooms, service charge, the agent responsible. Each field keeps
+            the document or the person it came from, so you can answer a question six weeks later
+            without searching your phone.
+          </p>
+          <ul className="list-check">
             {[
-              ['Property page', 'Public URL · inquiry route'],
-              ['Deal sheet', 'A4 · print-ready'],
-              ['Buyer summary', 'Message-length text'],
-              ['Print sheet', 'A4 · viewing pack'],
-            ].map(([t, s], i) => (
-              <div key={t} className="output-tile">
-                <span className="label-mono" style={{ color: 'rgba(239,234,225,0.4)' }}>
-                  0{i + 1}
-                </span>
-                <strong>{t}</strong>
-                <span>{s}</span>
-              </div>
+              'Facts you typed, imported or confirmed',
+              'Unknowns marked as unknown, not filled in',
+              'Documents attached to the field they prove',
+              'A history of who changed what',
+            ].map((t) => (
+              <li key={t}>
+                <span className="list-check-icon"><Check size={12} strokeWidth={3} /></span>
+                {t}
+              </li>
             ))}
+          </ul>
+          <Link to="/early-access" className="arrow-link">
+            See it with your own listing
+            <ArrowUpRight strokeWidth={2} />
+          </Link>
+        </div>
+        <RecordMock />
+      </section>
+
+      <section className="split is-reverse">
+        <ConflictMock />
+        <div className="split-copy">
+          <span className="eyebrow">Checking</span>
+          <h2 className="split-title">When two sources disagree, you decide.</h2>
+          <p className="lead">
+            Property facts drift. A price changes on one portal and not another, a colleague measures
+            a room differently, a brochure is three years old. LAREI shows you the conflict and holds
+            publication until you settle it.
+          </p>
+          <ul className="list-check">
+            {[
+              'Conflicts surfaced with both sources',
+              'One click to keep your figure',
+              'Publishing blocked while a check is open',
+              'A dated trail of every decision',
+            ].map((t) => (
+              <li key={t}>
+                <span className="list-check-icon"><Check size={12} strokeWidth={3} /></span>
+                {t}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <section className="product-outputs section-y">
+        <div className="shell">
+          <div className="section-head">
+            <span className="eyebrow">Publishing</span>
+            <h2 className="section-title">Four outputs, one set of facts.</h2>
+            <p className="lead">
+              Choose what to send and who can see it. Each output has its own state, so a deal sheet
+              can go to a buyer before the public page exists.
+            </p>
+          </div>
+
+          <div className="outputs-grid">
+            {OUTPUTS.map((item, i) => {
+              const Icon = item.icon;
+              return (
+                <Reveal key={item.title} delay={0.05 * i} className="output-card">
+                  <span className="output-icon"><Icon size={20} strokeWidth={1.9} /></span>
+                  <h3 className="output-card-title">{item.title}</h3>
+                  <p className="output-card-body">{item.body}</p>
+                </Reveal>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* Honesty block */}
-      <section className="section-y" style={{ background: 'var(--paper)' }}>
+      <section className="split">
+        <div className="split-copy">
+          <span className="eyebrow">Insight</span>
+          <h2 className="split-title">Know which photograph people stopped on.</h2>
+          <p className="lead">
+            Views, image attention, downloads and enquiries, counted without identifying anybody.
+            Useful enough to change next week's shoot, private enough to keep.
+          </p>
+          <Link to="/legal/privacy" className="arrow-link">
+            How the analytics work
+            <ArrowUpRight strokeWidth={2} />
+          </Link>
+        </div>
+        <InsightMock />
+      </section>
+
+      <section className="limits section-y">
         <div className="shell">
-          <ChapterHead
-            index="What it is not"
-            label="Scope, stated plainly"
-            title={['Careful about', <>what it <span className="em">claims.</span></>]}
-            note="A product that presents property for a living should be precise about its own limits. Here is ours."
-          />
-          <div className="not-grid">
-            {NOT.map(([h, p], i) => (
-              <Reveal key={h} delay={i * 0.06} className="not-item">
-                <div style={{ display: 'flex', gap: 10, alignItems: 'baseline' }}>
-                  <Minus size={13} strokeWidth={1.8} color="var(--ember)" style={{ flexShrink: 0, transform: 'translateY(2px)' }} />
-                  <h3>{h}</h3>
-                </div>
-                <p>{p}</p>
+          <div className="section-head">
+            <span className="eyebrow">Limits</span>
+            <h2 className="section-title">What LAREI will not do.</h2>
+            <p className="lead">
+              A tool is defined by what it refuses. These are ours, written down so nobody is
+              surprised later.
+            </p>
+          </div>
+          <div className="limits-grid">
+            {LIMITS.map((limit, i) => (
+              <Reveal key={limit.title} delay={0.04 * i} className="limit-card">
+                <h3>{limit.title}</h3>
+                <p>{limit.body}</p>
               </Reveal>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="section-y-sm" style={{ background: 'var(--paper-deep)' }}>
+      <section className="cta-band">
         <div className="shell">
-          <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,0.8fr) minmax(0,1.2fr)', gap: 'clamp(24px,5vw,80px)' }} className="faq-teaser-grid">
+          <div className="cta-band-inner on-dark">
             <div>
-              <span className="eyebrow" style={{ marginBottom: 16 }}>Product questions</span>
-              <MaskedLines
-                as="h2"
-                className="h-display-2"
-                lines={['The practical', <>details.</>]}
-              />
-              <div style={{ marginTop: 22 }}>
-                <Link to="/faq" className="arrow-link">
-                  Everything else
-                  <ArrowRight size={15} strokeWidth={1.6} />
-                </Link>
-              </div>
+              <h2>Put one property in and judge for yourself.</h2>
+              <p>Beta access is free, reviewed by a person, and comes with a direct line to us.</p>
             </div>
-            <FaqAccordion items={OUTPUTS_FAQ} initial={null} />
-          </div>
-        </div>
-      </section>
-
-      <section style={{ background: 'var(--paper)', paddingBlock: 'clamp(48px,6vw,88px)' }}>
-        <div className="shell">
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              gap: 24,
-              flexWrap: 'wrap',
-              borderTop: '1px solid var(--ink)',
-              paddingTop: 24,
-            }}
-          >
-            <h2 className="h-display-2" style={{ maxWidth: '20ch' }}>
-              Ready to present property <span className="em">properly?</span>
-            </h2>
-            <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
-              <Link to="/early-access" className="btn-primary">
-                Request early access
-                <ArrowUpRight size={15} strokeWidth={1.6} />
-              </Link>
-              <Link to="/who-its-for" className="btn-secondary">
-                Who it’s for
-              </Link>
-            </div>
+            <Link to="/early-access" className="btn btn-lime">
+              Request access
+              <ArrowRight strokeWidth={2.2} />
+            </Link>
           </div>
         </div>
       </section>

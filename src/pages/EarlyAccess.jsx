@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Check, ArrowUpRight } from 'lucide-react';
+import { ArrowRight, Check, Mail } from 'lucide-react';
 import PageWrapper from '../components/PageWrapper';
-import { useDocumentMeta } from '../lib/seo';
+import PageHero from '../components/site/PageHero';
 import { Reveal } from '../components/site/Reveal';
+import { useDocumentMeta } from '../lib/seo';
 
-const ROLES = ['Wholesaler', 'Agent', 'Investor', 'Acquisitions / dispositions', 'Other'];
+const ROLES = ['Agent or broker', 'Developer', 'Small agency', 'Property manager', 'Other'];
 const VOLUMES = ['0–2', '3–10', '11–30', '31+', 'Prefer not to say'];
 
 export default function EarlyAccess() {
   useDocumentMeta({
-    title: 'Request early access',
-    description: 'Help shape a better way to present real-estate deals. LAREI is onboarding in small cohorts.',
+    title: 'Request beta access',
+    description:
+      'LAREI is onboarding in small cohorts. Tell us what you publish today and a person will read your request.',
     path: '/early-access',
   });
 
@@ -25,160 +27,110 @@ export default function EarlyAccess() {
 
   return (
     <PageWrapper>
-      <section className="page-hero">
-        <div className="shell">
-          <div className="page-hero-grid">
-            <div>
-              <span className="eyebrow">LAREI · Early access</span>
-              <h1 className="page-title">
-                Help shape a better way to present <span className="em">property.</span>
-              </h1>
-            </div>
-            <div>
-              <p className="page-lede">
-                Four minutes, six questions. We read every request and invite people in small
-                cohorts so the workflow can be corrected while it is still cheap to correct.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+      <PageHero
+        eyebrow="Early access"
+        title={<>Ask for a place in the beta.</>}
+        lede="Five minutes, a few questions. We read every request and invite people in small groups so the workflow can still be changed by the people using it."
+      />
 
-      <section style={{ paddingBottom: 'clamp(56px,7vw,104px)' }}>
+      <section className="form-page">
         <div className="shell">
           <div className="form-shell">
-            <aside className="form-aside">
-              <div className="side-note">
-                <span className="label-mono-primary">What happens next</span>
-                <p>
-                  A person reviews your request. If there is a suitable opening, you receive an
-                  email with a workspace invitation.
-                </p>
-                <p>
-                  A request is not a guaranteed invitation, and nothing is charged during the beta.
-                </p>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 4 }}>
-                  {['Reviewed individually', 'Invitations in cohorts', 'No payment during beta'].map((t) => (
-                    <span key={t} className="label-mono" style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-                      <Check size={11} strokeWidth={2.4} color="var(--ember)" />
-                      {t}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              <div style={{ borderTop: '1px solid var(--line)', paddingTop: 16 }}>
-                <span className="label-mono">Prefer email?</span>
-                <a href="mailto:hello@orvnlabs.com" className="arrow-link" style={{ marginTop: 10 }}>
-                  hello@orvnlabs.com
-                  <ArrowUpRight size={14} strokeWidth={1.6} />
-                </a>
-              </div>
-            </aside>
-
             <div>
               {status === 'success' ? (
-                <Reveal className="form-success">
-                  <span className="pill tag-ember">Received</span>
-                  <h2 className="h-display-2" style={{ maxWidth: '18ch' }}>
-                    Thank you. Your request is <span className="em">in review.</span>
-                  </h2>
-                  <p className="lead" style={{ fontSize: 15 }}>
-                    We review the information you submitted. If there is a suitable beta opening, we
-                    will contact you by email. No newsletter, no sequence.
+                <Reveal className="form-success-block">
+                  <span className="form-success-icon"><Check size={20} strokeWidth={2.6} /></span>
+                  <h2>Your request is in review.</h2>
+                  <p>
+                    A person reads it, and if there is a suitable place in the next cohort you will
+                    get an email with a workspace invitation. No newsletter and no follow-up sequence.
                   </p>
-                  <Link to="/" className="btn-secondary" style={{ marginTop: 10 }}>
+                  <Link to="/" className="btn btn-primary">
                     Back to the site
+                    <ArrowRight strokeWidth={2.2} />
                   </Link>
                 </Reveal>
               ) : (
                 <form onSubmit={onSubmit} className="form-grid">
                   <div className="field">
-                    <label className="field-label" htmlFor="name">
-                      Full name *
-                    </label>
+                    <label className="field-label" htmlFor="name">Full name</label>
                     <input id="name" required className="input" placeholder="Ada Okonkwo" />
                   </div>
                   <div className="field">
-                    <label className="field-label" htmlFor="email">
-                      Work email *
-                    </label>
+                    <label className="field-label" htmlFor="email">Work email</label>
                     <input id="email" required type="email" className="input" placeholder="you@business.com" />
                   </div>
                   <div className="field">
-                    <label className="field-label" htmlFor="company">
-                      Company / business
-                    </label>
+                    <label className="field-label" htmlFor="company">Company or business</label>
                     <input id="company" className="input" placeholder="Optional" />
                   </div>
                   <div className="field">
-                    <label className="field-label" htmlFor="role">
-                      Your role *
-                    </label>
+                    <label className="field-label" htmlFor="role">Your role</label>
                     <select id="role" required className="select" defaultValue="">
-                      <option value="" disabled>
-                        Select a role
-                      </option>
-                      {ROLES.map((r) => (
-                        <option key={r}>{r}</option>
-                      ))}
+                      <option value="" disabled>Select a role</option>
+                      {ROLES.map((r) => <option key={r}>{r}</option>)}
                     </select>
                   </div>
                   <div className="field">
-                    <label className="field-label" htmlFor="markets">
-                      Primary market(s) *
-                    </label>
-                    <input id="markets" required className="input" placeholder="Lagos · Abuja" />
+                    <label className="field-label" htmlFor="markets">Primary market</label>
+                    <input id="markets" required className="input" placeholder="Lagos, Abuja" />
                   </div>
                   <div className="field">
-                    <label className="field-label" htmlFor="volume">
-                      Opportunities presented monthly
-                    </label>
+                    <label className="field-label" htmlFor="volume">Properties presented monthly</label>
                     <select id="volume" className="select" defaultValue="">
-                      <option value="" disabled>
-                        Select a range
-                      </option>
-                      {VOLUMES.map((v) => (
-                        <option key={v}>{v}</option>
-                      ))}
+                      <option value="" disabled>Select a range</option>
+                      {VOLUMES.map((v) => <option key={v}>{v}</option>)}
                     </select>
                   </div>
                   <div className="field span-2">
-                    <label className="field-label" htmlFor="current">
-                      How do you currently share properties? *
-                    </label>
-                    <textarea id="current" required className="textarea" rows={3} placeholder="Links, PDFs, WhatsApp, a website, a deck…" />
+                    <label className="field-label" htmlFor="current">How do you share properties today?</label>
+                    <textarea id="current" required className="textarea" rows={3} placeholder="Links, PDFs, WhatsApp, a website, a deck." />
                   </div>
                   <div className="field span-2">
-                    <label className="field-label" htmlFor="frustration">
-                      What is the most frustrating part of that process? *
-                    </label>
-                    <textarea id="frustration" required className="textarea" rows={3} placeholder="Be specific — this is the part we are building against." />
+                    <label className="field-label" htmlFor="frustration">What is the most frustrating part of that?</label>
+                    <textarea id="frustration" required className="textarea" rows={3} placeholder="Be specific. This is the part we are building against." />
                   </div>
                   <div className="field span-2">
-                    <label className="field-label" htmlFor="site">
-                      Website / professional profile
-                    </label>
+                    <label className="field-label" htmlFor="site">Website or professional profile</label>
                     <input id="site" className="input" placeholder="Optional" />
                   </div>
 
-                  <div className="span-2" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 20, flexWrap: 'wrap', marginTop: 6 }}>
-                    <p style={{ fontSize: 12, color: 'var(--ink-dim)', maxWidth: '46ch', lineHeight: 1.5 }}>
-                      By sending this request you agree that ORVN Labs may contact you about LAREI
-                      early access and evaluate your request. See our{' '}
-                      <Link to="/legal/privacy" style={{ color: 'var(--ember-ink)', textDecoration: 'underline', textUnderlineOffset: 2 }}>
-                        Privacy Policy
-                      </Link>
-                      .
+                  <div className="form-foot span-2">
+                    <p className="form-legal">
+                      By sending this you agree that ORVN Labs may contact you about LAREI early
+                      access. See our <Link to="/legal/privacy">Privacy Policy</Link>.
                     </p>
-                    <button type="submit" className="btn-primary" disabled={status === 'sending'}>
-                      {status === 'sending' ? 'Sending…' : 'Request early access'}
-                      <ArrowUpRight size={15} strokeWidth={1.6} />
+                    <button type="submit" className="btn btn-primary" disabled={status === 'sending'}>
+                      {status === 'sending' ? 'Sending' : 'Request access'}
+                      <ArrowRight strokeWidth={2.2} />
                     </button>
                   </div>
                 </form>
               )}
             </div>
+
+            <aside className="form-aside">
+              <h3>What happens next</h3>
+              <p>
+                A person reads your request. If there is a suitable place in the next cohort, you
+                receive an email with a workspace invitation.
+              </p>
+              <p>A request is not a guaranteed invitation, and nothing is charged during the beta.</p>
+
+              <ul className="form-aside-list">
+                {['Reviewed individually', 'Invitations in small cohorts', 'No payment during beta'].map((t) => (
+                  <li key={t}><Check size={12} strokeWidth={3} />{t}</li>
+                ))}
+              </ul>
+
+              <div className="form-aside-contact">
+                <p>Prefer email?</p>
+                <a href="mailto:hello@orvnlabs.com" className="arrow-link">
+                  <Mail size={15} strokeWidth={2} />
+                  hello@orvnlabs.com
+                </a>
+              </div>
+            </aside>
           </div>
         </div>
       </section>

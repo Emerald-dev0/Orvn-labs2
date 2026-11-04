@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Search, X, ArrowUpRight, ArrowRight } from 'lucide-react';
 
 import PageWrapper from '../components/PageWrapper';
+import PageHero from '../components/site/PageHero';
 import { Reveal } from '../components/site/Reveal';
 import { useDocumentMeta } from '../lib/seo';
 import { supabase, getAllCategories } from '../lib/supabase';
@@ -161,24 +162,11 @@ export default function Blog() {
 
   return (
     <PageWrapper>
-      <section className="page-hero">
-        <div className="shell">
-          <div className="page-hero-grid">
-            <div>
-              <span className="eyebrow">Journal</span>
-              <h1 className="page-title">
-                Field notes on property <span className="em">presentation.</span>
-              </h1>
-            </div>
-            <div>
-              <p className="page-lede">
-                How professionals package, verify and publish property — and what the work behind a
-                convincing page actually looks like.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+      <PageHero
+        eyebrow="Journal"
+        title={<>Field notes on property presentation.</>}
+        lede="How professionals package, check and publish property, and what the work behind a convincing page actually looks like."
+      />
 
       <section style={{ paddingBottom: 'clamp(48px,6vw,88px)' }}>
         <div className="shell">

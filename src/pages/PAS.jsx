@@ -1,149 +1,133 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowUpRight, ArrowRight, Phone, MessagesSquare, Route, CalendarCheck, Database, Filter } from 'lucide-react';
+import {
+  ArrowRight,
+  ArrowUpRight,
+  Check,
+  Clock,
+  MessageSquare,
+  ShieldCheck,
+  UserRound,
+} from 'lucide-react';
 import PageWrapper from '../components/PageWrapper';
+import PageHero from '../components/site/PageHero';
+import { Reveal } from '../components/site/Reveal';
 import { useDocumentMeta } from '../lib/seo';
-import { Reveal, MaskedLines, Counter } from '../components/site/Reveal';
-import { PAS_LINKS } from '../lib/pas';
 
-const MOVEMENTS = [
-  { n: '01', t: 'Inquiry', d: 'A lead arrives — web form, phone call, listing inquiry, paid ad click.', icon: Phone },
-  { n: '02', t: 'Answer', d: 'Responds in seconds on the same channel: voice, SMS or chat.', icon: MessagesSquare },
-  { n: '03', t: 'Qualify', d: 'Intent, urgency, budget, timeline and financing, captured in writing.', icon: Filter },
-  { n: '04', t: 'Route', d: 'Best-fit agent by territory, price band, specialty and capacity.', icon: Route },
-  { n: '05', t: 'Book', d: 'An appointment on the agent’s calendar with the full context attached.', icon: CalendarCheck },
-  { n: '06', t: 'Log', d: 'Status reflects what actually happened. The CRM stays clean.', icon: Database },
+const FEATURES = [
+  {
+    icon: Clock,
+    title: 'It answers in seconds',
+    body: 'A property enquiry arrives and gets a real answer immediately, with the price, the size and the viewing arrangements already filled in.',
+  },
+  {
+    icon: ShieldCheck,
+    title: 'It only says what is true',
+    body: 'Answers are drawn from the record you approved. If a figure is missing, PAS says it is being confirmed rather than guessing.',
+  },
+  {
+    icon: UserRound,
+    title: 'It hands over properly',
+    body: 'When somebody is ready to talk, PAS passes the conversation to you with the property, the question and the contact details attached.',
+  },
 ];
 
-const SPECS = [
-  ['Category', 'First-contact infrastructure'],
-  ['Channels', 'Voice · SMS · web chat'],
-  ['Deployment', 'Brokerage-level'],
-  ['Record', 'Your CRM remains the system of record'],
-  ['Hours', '24/7, including after-hours intent'],
+const SPEC = [
+  ['Channels', 'Web form, WhatsApp link, portal enquiry'],
+  ['First response', 'Within seconds, any hour'],
+  ['Sources', 'Your approved property record only'],
+  ['Handover', 'To a named person, with context'],
+  ['Availability', 'Included in the beta'],
 ];
 
-const NOT = [
-  ['Not a CRM', 'PAS sits before and around your CRM. It does not replace the system of record.'],
-  ['Not an agent replacement', 'PAS protects intent before agents enter. Agents still close trust.'],
-  ['Not a lead-gen promise', 'PAS answers what arrives. It does not manufacture demand.'],
+const LIMITS = [
+  'Not a CRM. PAS handles the first exchange, not the pipeline.',
+  'No mass messaging, cold outreach or purchased lists.',
+  'No invented answers when a fact is missing.',
+  'No pretending to be a person when it is not.',
 ];
+
+function ChatMock() {
+  return (
+    <div className="chat-mock">
+      <div className="chat-head">
+        <span className="chat-avatar"><MessageSquare size={15} strokeWidth={2} /></span>
+        <div>
+          <strong>Adaora House enquiry</strong>
+          <span>Ikoyi, Lagos</span>
+        </div>
+        <span className="chat-live">Replied in 6s</span>
+      </div>
+
+      <div className="chat-body">
+        <div className="chat-bubble is-them">
+          Is the Ikoyi house still available? What is the service charge?
+        </div>
+        <div className="chat-bubble is-us">
+          Yes, it is available. The asking price is ₦480,000,000 and the service charge is
+          ₦4,200,000 per year. There are four bedrooms and the internal area is 620 m².
+        </div>
+        <div className="chat-bubble is-them">Can I see it this weekend?</div>
+        <div className="chat-bubble is-us">
+          Saturday morning is possible. I have passed this to Ada, who handles viewings, and she
+          will confirm a time today.
+        </div>
+      </div>
+
+      <div className="chat-foot">
+        <Check size={13} strokeWidth={3} />
+        Answered from the approved record. Ada has been notified.
+      </div>
+    </div>
+  );
+}
 
 export default function PAS() {
   useDocumentMeta({
-    title: 'PAS — first-contact infrastructure for real estate',
+    title: 'PAS',
     description:
-      'PAS answers, qualifies, routes, books and logs inbound real-estate leads in the gap between inquiry and appointment. A second product from ORVN Labs.',
+      'PAS answers property enquiries within seconds using the same verified record, then hands the conversation to a person.',
     path: '/pas',
   });
 
   return (
     <PageWrapper>
-      <div className="pas">
-        {/* Hero */}
-        <section className="pas-hero">
+      <div className="pas on-dark">
+        <PageHero
+          dark
+          eyebrow="PAS, the second product"
+          title={<>The first reply still wins.</>}
+          lede="PAS answers property enquiries the moment they arrive, using facts from the same verified record. It is deliberately narrow: it handles first contact, then hands the conversation to a person."
+          actions={
+            <>
+              <Link to="/contact" className="btn btn-lime">
+                Ask about PAS
+                <ArrowRight strokeWidth={2.2} />
+              </Link>
+              <Link to="/product" className="btn btn-glass">
+                See LAREI first
+              </Link>
+            </>
+          }
+          media={<ChatMock />}
+        />
+
+        <section className="pas-features">
           <div className="shell">
-            <div className="pas-hero-grid">
-              <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
-                  <span className="label-mono" style={{ color: 'rgba(239,234,225,0.5)' }}>
-                    ORVN Labs · Second product
-                  </span>
-                  <span className="hero-status" style={{ background: 'transparent', borderColor: 'rgba(239,234,225,0.24)', color: 'rgba(239,234,225,0.7)' }}>
-                    <i />
-                    Operating in production
-                  </span>
-                </div>
-                <h1 className="pas-title" aria-label="The first reply wins.">
-                  The first reply
-                  <br />
-                  <span className="em" style={{ color: 'var(--ember-bright)' }}>wins.</span>
-                </h1>
-                <p className="pas-lede">
-                  PAS is first-contact infrastructure for brokerages. It answers, qualifies, routes,
-                  books and logs inbound leads inside the gap where most deals quietly die — the
-                  minutes between an inquiry and a human response.
-                </p>
-                <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginTop: 30 }}>
-                  <a href={`mailto:hello@orvnlabs.com?subject=PAS%20deployment`} className="btn-primary" style={{ background: 'var(--paper)', color: 'var(--ink)' }}>
-                    Talk about deployment
-                    <ArrowUpRight size={15} strokeWidth={1.6} />
-                  </a>
-                  <a
-                    href={PAS_LINKS.login}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn-secondary"
-                    style={{ color: 'var(--paper)', borderColor: 'rgba(239,234,225,0.32)' }}
-                  >
-                    Sign in to PAS
-                  </a>
-                </div>
-              </div>
-
-              <div className="pas-spec-card">
-                <span className="label-mono" style={{ color: 'rgba(239,234,225,0.45)' }}>
-                  System brief
-                </span>
-                <div className="pas-spec-list">
-                  {SPECS.map(([k, v]) => (
-                    <div key={k}>
-                      <span>{k}</span>
-                      <b>{v}</b>
-                    </div>
-                  ))}
-                </div>
-              </div>
+            <div className="section-head">
+              <span className="eyebrow on-dark">What it does</span>
+              <h2 className="section-title" style={{ color: 'var(--white)' }}>
+                Three things, done properly.
+              </h2>
             </div>
-
-            <div className="pas-stats">
-              {[
-                { v: 24, s: '/7', k: 'Coverage, including after hours' },
-                { v: 6, s: '', k: 'Movements: inquiry to log' },
-                { v: 0, s: '', k: 'Leads left unanswered by silence' },
-              ].map((st) => (
-                <div key={st.k}>
-                  <span className="v">
-                    <Counter to={st.v} duration={1.8} />
-                    {st.s}
-                  </span>
-                  <span className="k">{st.k}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Movements */}
-        <section className="pas-movements">
-          <div className="shell">
-            <div className="chapter-head on-dark">
-              <div className="chapter-meta">
-                <span className="chapter-index">
-                  <i className="tick" style={{ background: 'var(--ember-bright)' }} />
-                  Six movements
-                </span>
-                <span className="chapter-label">What happens between inquiry and appointment</span>
-              </div>
-              <MaskedLines
-                as="h2"
-                className="chapter-title on-dark"
-                lines={['Detect. Decide. Act.', <>Nothing <span className="em" style={{ color: 'var(--ember-bright)' }}>unlogged.</span></>]}
-              />
-            </div>
-
-            <div className="movement-list">
-              {MOVEMENTS.map((m, i) => {
-                const Icon = m.icon;
+            <div className="pas-feature-grid">
+              {FEATURES.map((f, i) => {
+                const Icon = f.icon;
                 return (
-                  <Reveal key={m.n} delay={i * 0.04} className="movement">
-                    <span className="mv-n">{m.n}</span>
-                    <span className="mv-icon">
-                      <Icon size={17} strokeWidth={1.5} />
-                    </span>
-                    <h3>{m.t}</h3>
-                    <p>{m.d}</p>
-                    <span className="mv-phase">{i < 2 ? 'Detect' : i < 4 ? 'Decide' : 'Act'}</span>
+                  <Reveal key={f.title} delay={0.05 * i} className="pas-feature">
+                    <span className="pas-feature-icon"><Icon size={20} strokeWidth={1.9} /></span>
+                    <h3>{f.title}</h3>
+                    <p>{f.body}</p>
                   </Reveal>
                 );
               })}
@@ -151,36 +135,59 @@ export default function PAS() {
           </div>
         </section>
 
-        {/* Not block */}
-        <section className="pas-not">
+        <section className="pas-spec section-y">
           <div className="shell">
-            <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,0.8fr) minmax(0,1.2fr)', gap: 'clamp(24px,5vw,80px)' }} className="faq-teaser-grid">
+            <div className="pas-spec-grid">
               <div>
-                <span className="label-mono" style={{ color: 'rgba(239,234,225,0.45)' }}>
-                  Boundaries
-                </span>
-                <h2 className="h-display-2" style={{ color: 'var(--paper)', marginTop: 16, maxWidth: '16ch' }}>
-                  What PAS is <span className="em" style={{ color: 'var(--ember-bright)' }}>not.</span>
+                <span className="eyebrow on-dark">The short version</span>
+                <h2 className="section-title" style={{ color: 'var(--white)', marginTop: 14 }}>
+                  Narrow on purpose.
                 </h2>
+                <p className="lead" style={{ marginTop: 14 }}>
+                  PAS is not a platform. It is one job done well: making certain that the first
+                  reply a buyer gets is accurate, quick and in your name.
+                </p>
+                <Link to="/contact" className="arrow-link" style={{ marginTop: 22 }}>
+                  Talk through a use case
+                  <ArrowUpRight strokeWidth={2} />
+                </Link>
               </div>
-              <div>
-                {NOT.map(([h, p]) => (
-                  <div key={h} className="pas-not-row">
-                    <h3>{h}</h3>
-                    <p>{p}</p>
-                  </div>
-                ))}
-                <div style={{ marginTop: 26, display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-                  <Link to="/" className="btn-primary" style={{ background: 'var(--paper)', color: 'var(--ink)' }}>
-                    LAREI — the publishing platform
-                    <ArrowRight size={15} strokeWidth={1.6} />
-                  </Link>
-                  <Link to="/contact" className="arrow-link" style={{ color: 'var(--paper)', borderColor: 'rgba(239,234,225,0.4)' }}>
-                    Ask about PAS
-                    <ArrowUpRight size={15} strokeWidth={1.6} />
-                  </Link>
+
+              <div className="pas-spec-card">
+                <p className="pas-spec-title">Specification</p>
+                <div className="pas-spec-list">
+                  {SPEC.map(([k, v]) => (
+                    <div key={k}>
+                      <span>{k}</span>
+                      <strong>{v}</strong>
+                    </div>
+                  ))}
                 </div>
               </div>
+            </div>
+
+            <div className="pas-limits">
+              {LIMITS.map((l) => (
+                <div key={l} className="pas-limit">
+                  <span aria-hidden="true">·</span>
+                  {l}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="cta-band">
+          <div className="shell">
+            <div className="cta-band-inner on-dark" style={{ background: 'var(--pine-2)' }}>
+              <div>
+                <h2>PAS comes with the beta.</h2>
+                <p>If you are trying LAREI, you can turn on first-contact replies as well.</p>
+              </div>
+              <Link to="/early-access" className="btn btn-lime">
+                Request access
+                <ArrowRight strokeWidth={2.2} />
+              </Link>
             </div>
           </div>
         </section>

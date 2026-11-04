@@ -26,8 +26,6 @@ export default function Nav() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  useEffect(() => setOpen(false), [pathname]);
-
   useEffect(() => {
     const root = document.documentElement;
     document.body.style.overflow = open ? 'hidden' : '';

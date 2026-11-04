@@ -1,199 +1,298 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ArrowUpRight } from 'lucide-react';
+import {
+  ArrowRight,
+  Camera,
+  Check,
+  CircleAlert,
+  FileText,
+  RefreshCw,
+  ScanEye,
+  Send,
+} from 'lucide-react';
 import PageWrapper from '../components/PageWrapper';
-import { useDocumentMeta } from '../lib/seo';
-import ChapterHead from '../components/site/ChapterHead';
-import { Reveal, MaskedLines } from '../components/site/Reveal';
+import PageHero from '../components/site/PageHero';
+import { Reveal } from '../components/site/Reveal';
 import FaqAccordion from '../components/site/FaqAccordion';
+import { useDocumentMeta } from '../lib/seo';
 
 const STEPS = [
   {
-    n: '01',
-    title: 'Introduce the business.',
-    body: 'Tell us your role, your markets, your audience and the voice you want to be read in. Choose what belongs on your public professional page. Nothing here is guesswork — you supply it, you approve it.',
-    out: 'Profile draft',
+    icon: Camera,
+    label: 'Step one',
+    title: 'Put the property in.',
+    body: 'Add the address, the price, the figures and your photographs. If the listing already exists on a portal, import it and fix what is wrong instead of typing it all again.',
+    points: ['Address and location', 'Price and key figures', 'Photographs and floor plans', 'Your role and contact details'],
+    visual: 'add',
   },
   {
-    n: '02',
-    title: 'Review the draft.',
-    body: 'LAREI prepares an editable first version of your public page. Check names, qualifications, contact details and the projects you want shown before publishing. Edit anything that sounds unlike you.',
-    out: 'Public profile',
+    icon: ScanEye,
+    label: 'Step two',
+    title: 'Check it once.',
+    body: 'LAREI lists the facts it can support and flags the ones that disagree with another source. You confirm each figure. Publication stays blocked until the open questions are closed.',
+    points: ['Conflicts shown side by side', 'Unknown values left blank', 'Every decision dated', 'Nothing published by accident'],
+    visual: 'check',
   },
   {
-    n: '03',
-    title: 'Bring in a property.',
-    body: 'Paste notes, fill in fields, or attach supported documents and photographs. AI organises the supported facts into a reviewable record — with the source of each fact kept alongside it.',
-    out: 'Property record',
+    icon: Send,
+    label: 'Step three',
+    title: 'Publish what you need.',
+    body: 'Turn on the property page, send a deal sheet, share a buyer summary or print the inspection sheet. Each output has its own state, so you control who sees what.',
+    points: ['Page, sheet, summary, printout', 'Preview before publishing', 'Private documents stay private', 'Update one, update all'],
+    visual: 'publish',
   },
   {
-    n: '04',
-    title: 'Verify and prepare.',
-    body: 'Correct conflicts between sources, mark unknowns as unknown, and choose what is safe to share. Then generate the deal sheet and marketing description from the approved information only.',
-    out: 'Deal sheet',
-  },
-  {
-    n: '05',
-    title: 'Publish the right pages.',
-    body: 'Give each approved property a dedicated URL. Decide whether it appears in your public portfolio. Share one property, or the broader professional site — both work without a login wall for the buyer.',
-    out: 'Property page',
-  },
-  {
-    n: '06',
-    title: 'Learn from engagement.',
-    body: 'See page activity, tracked link clicks and inquiries. Update the presentation while the underlying record stays intact. What was observed is what gets reported — anonymous visitors stay anonymous.',
-    out: 'Insight',
+    icon: RefreshCw,
+    label: 'Step four',
+    title: 'Change it once, everywhere.',
+    body: 'When the price moves or a unit sells, edit the record. Every output that used that figure is regenerated, and the old versions are kept in the history.',
+    points: ['One edit, all outputs', 'Version history', 'Retire a listing without deleting it', 'No stale brochures in circulation'],
+    visual: 'update',
   },
 ];
 
-const RESPONSIBILITY = [
-  ['You', ['Hold authority to market the property', 'Check facts before approving', 'Choose what is public', 'Decide the price you present']],
-  ['LAREI', ['Organise supported facts', 'Surface conflicts and unknowns', 'Draft copy in your voice', 'Publish only what you approved']],
+const NEEDS = [
+  {
+    title: 'The facts you already have',
+    body: 'Price, size, tenure, bedrooms, service charge. If a figure is missing, leave it blank. The product is built to handle not knowing.',
+  },
+  {
+    title: 'Photographs worth showing',
+    body: 'Phone photographs are fine. LAREI crops and lays them out, and tells you when an image is too small to print well.',
+  },
+  {
+    title: 'Twenty minutes',
+    body: 'That is the realistic time for a property you know well. The second one is quicker because your details and house style are already saved.',
+  },
 ];
+
+const FAQS = [
+  {
+    q: 'Do I have to move my listings off the portals?',
+    a: 'No. Keep them where they are. LAREI gives you a record and a page you control, and it will import from a portal rather than asking you to start again.',
+  },
+  {
+    q: 'What if I do not have all the information?',
+    a: 'Leave it blank. A missing field is shown as missing rather than guessed, and you can publish without it. LAREI will not invent a measurement or a service charge.',
+  },
+  {
+    q: 'Can I publish something before the whole property is ready?',
+    a: 'Yes. A deal sheet can go to a buyer while the public page is still in draft, and a print sheet can exist before either. Each output is switched on separately.',
+  },
+  {
+    q: 'What happens when a price changes?',
+    a: 'You change it once in the record. Every output that carries the price is regenerated, and the previous version stays in the history so you can see what was sent and when.',
+  },
+];
+
+function Visual({ kind }) {
+  if (kind === 'add') {
+    return (
+      <div className="flow-visual">
+        <div className="flow-card">
+          <p className="flow-card-kicker">New property</p>
+          <div className="flow-field"><span>Address</span><strong>12 Ozumba Mbadiwe Avenue, Ikoyi</strong></div>
+          <div className="flow-field"><span>Asking price</span><strong>₦480,000,000</strong></div>
+          <div className="flow-field"><span>Bedrooms</span><strong>4</strong></div>
+          <div className="flow-dropzone">
+            <Camera size={16} strokeWidth={2} />
+            <span>6 photographs added</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (kind === 'check') {
+    return (
+      <div className="flow-visual">
+        <div className="flow-card">
+          <div className="flow-check-row is-open">
+            <CircleAlert size={14} strokeWidth={2.4} />
+            <div>
+              <strong>Price disagrees with the portal</strong>
+              <span>₦480,000,000 against ₦465,000,000</span>
+            </div>
+          </div>
+          <div className="flow-check-row is-ok">
+            <Check size={14} strokeWidth={3} />
+            <div>
+              <strong>Internal area confirmed</strong>
+              <span>620 m², survey plan attached</span>
+            </div>
+          </div>
+          <div className="flow-check-row is-ok">
+            <Check size={14} strokeWidth={3} />
+            <div>
+              <strong>Tenure confirmed</strong>
+              <span>Certificate of occupancy</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (kind === 'publish') {
+    return (
+      <div className="flow-visual">
+        <div className="flow-card">
+          {[
+            ['Property page', 'Live on the web', true],
+            ['Deal sheet', 'Sent to 2 buyers', true],
+            ['Buyer summary', 'Draft', false],
+            ['Print sheet', 'Draft', false],
+          ].map(([name, meta, on]) => (
+            <div className="flow-publish-row" key={name}>
+              <FileText size={15} strokeWidth={1.9} />
+              <div>
+                <strong>{name}</strong>
+                <span>{meta}</span>
+              </div>
+              <span className={`mock-toggle ${on ? 'is-on' : ''}`} aria-hidden="true"><span /></span>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flow-visual">
+      <div className="flow-card">
+        <div className="flow-update">
+          <span className="flow-update-dot" />
+          <div>
+            <strong>Price changed to ₦475,000,000</strong>
+            <span>Today, 09:14 by Ada Okonkwo</span>
+          </div>
+        </div>
+        <div className="flow-update-list">
+          {['Property page regenerated', 'Deal sheet regenerated', 'Buyer summary updated', 'Previous versions kept'].map((t) => (
+            <div key={t}>
+              <Check size={12} strokeWidth={3} />
+              {t}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function HowItWorks() {
   useDocumentMeta({
-    title: 'How it works — from notes to a published property',
+    title: 'How it works',
     description:
-      'How LAREI connects a professional profile, a verified property record, published property pages, deal sheets and engagement — without re-typing the same facts.',
+      'Add a property, check the facts once, publish the page, the deal sheet, the buyer summary and the print sheet, then keep everything current from one record.',
     path: '/how-it-works',
   });
 
   return (
     <PageWrapper>
-      <section className="page-hero">
-        <div className="shell">
-          <div className="page-hero-grid">
-            <div>
-              <span className="eyebrow">LAREI · Workflow</span>
-              <h1 className="page-title">
-                From a set of notes to a published property.
-              </h1>
-            </div>
-            <div>
-              <p className="page-lede">
-                Six steps, one record. The work you do at step three is never repeated at step five,
-                six or ten.
-              </p>
-              <div style={{ marginTop: 22 }}>
-                <Link to="/early-access" className="arrow-link">
-                  Apply for the beta
-                  <ArrowUpRight size={15} strokeWidth={1.6} />
-                </Link>
+      <PageHero
+        eyebrow="How it works"
+        title={<>From a set of notes to a published property.</>}
+        lede="Four steps, in the order you already work. About twenty minutes for a property you know well, and less for the next one because your details and house style are saved."
+        actions={
+          <>
+            <Link to="/early-access" className="btn btn-primary">
+              Request beta access
+              <ArrowRight strokeWidth={2.2} />
+            </Link>
+            <Link to="/product" className="btn btn-secondary">
+              See the product
+            </Link>
+          </>
+        }
+        media={
+          <div className="hero-photo-card">
+            <img src="/images/prop-2.jpg" alt="A photographed living space used in a sample listing" />
+            <div className="hero-photo-chip glass">
+              <FileText size={16} strokeWidth={2.2} />
+              <div>
+                <strong>One record</strong>
+                <span>Page, sheet, summary, printout</span>
               </div>
             </div>
           </div>
+        }
+      />
+
+      <section className="flow">
+        <div className="shell">
+          {STEPS.map((step, i) => {
+            const Icon = step.icon;
+            return (
+              <Reveal
+                key={step.title}
+                className={`flow-item ${i % 2 === 1 ? 'is-reverse' : ''}`}
+              >
+                <div className="flow-copy">
+                  <span className="flow-icon"><Icon size={20} strokeWidth={1.9} /></span>
+                  <p className="flow-label">{step.label}</p>
+                  <h2 className="flow-title">{step.title}</h2>
+                  <p className="lead">{step.body}</p>
+                  <ul className="list-check">
+                    {step.points.map((p) => (
+                      <li key={p}>
+                        <span className="list-check-icon"><Check size={12} strokeWidth={3} /></span>
+                        {p}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <Visual kind={step.visual} />
+              </Reveal>
+            );
+          })}
         </div>
       </section>
 
-      <section style={{ paddingBottom: 'clamp(40px,5vw,72px)' }}>
+      <section className="needs section-y">
         <div className="shell">
-          <div className="steps">
-            {STEPS.map((s, i) => (
-              <Reveal key={s.n} delay={i * 0.03}>
-                <div className="step">
-                  <span className="step-n">{s.n}</span>
-                  <h3>{s.title}</h3>
-                  <div>
-                    <p>{s.body}</p>
-                    <span className="step-out">
-                      Produces <b>{s.out}</b>
-                    </span>
-                  </div>
-                </div>
+          <div className="section-head">
+            <span className="eyebrow">Before you start</span>
+            <h2 className="section-title">What you actually need.</h2>
+          </div>
+          <div className="needs-grid">
+            {NEEDS.map((need, i) => (
+              <Reveal key={need.title} delay={0.05 * i} className="need-card">
+                <h3>{need.title}</h3>
+                <p>{need.body}</p>
               </Reveal>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="dark-band">
+      <section className="page-faq section-y">
         <div className="shell">
-          <div className="chapter-head on-dark" style={{ marginBottom: 0 }}>
-            <div className="chapter-meta">
-              <span className="chapter-index">
-                <i className="tick" style={{ background: 'var(--ember-bright)' }} />
-                Division of labour
-              </span>
-              <span className="chapter-label">Who does what</span>
+          <div className="page-faq-grid">
+            <div className="page-faq-aside">
+              <span className="eyebrow">Questions</span>
+              <h2 className="section-title">The practical ones.</h2>
+              <p className="lead">
+                Anything else, write to us and a person will answer.
+              </p>
+              <Link to="/contact" className="btn btn-secondary">Ask a question</Link>
             </div>
+            <FaqAccordion items={FAQS} initial={0} />
           </div>
-          <div className="resp-grid">
-            {RESPONSIBILITY.map(([who, items], i) => (
-              <div key={who} className="resp-col">
-                <h3 className={i === 0 ? '' : 'is-larei'}>{who}</h3>
-                <ul>
-                  {items.map((it) => (
-                    <li key={it}>{it}</li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-          <p className="label-mono" style={{ color: 'rgba(239,234,225,0.4)', marginTop: 24, maxWidth: '62ch' }}>
-            LAREI does not establish authority to market a property, and does not replace professional
-            verification of any material fact.
-          </p>
         </div>
       </section>
 
-      <section className="section-y" style={{ background: 'var(--paper)' }}>
+      <section className="cta-band">
         <div className="shell">
-          <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,0.8fr) minmax(0,1.2fr)', gap: 'clamp(24px,5vw,80px)' }} className="faq-teaser-grid">
+          <div className="cta-band-inner on-dark">
             <div>
-              <ChapterHead
-                index="Questions"
-                label="Before you apply"
-                title={['The workflow,', <>honestly <span className="em">described.</span></>]}
-              />
-              <Link to="/faq" className="arrow-link">
-                All questions
-                <ArrowRight size={15} strokeWidth={1.6} />
-              </Link>
+              <h2>See whether it fits how you already work.</h2>
+              <p>Tell us about one property and we will show you the record, the page and the deal sheet.</p>
             </div>
-            <FaqAccordion
-              initial={null}
-              items={[
-                {
-                  q: 'How long does a property take to prepare?',
-                  a: 'It depends on how much source material you have and how many conflicts need resolving. The first property is always the slowest; later properties reuse your profile, voice preferences and output formats.',
-                },
-                {
-                  q: 'What file types can I start from?',
-                  a: 'Notes, form fields, photographs and supported documents. The exact list of supported uploads will be confirmed with beta users before the first release.',
-                },
-                {
-                  q: 'Can I edit what the AI writes?',
-                  a: 'Yes. Generated descriptions, captions and messages are drafts in your voice. You edit them, and you choose whether they are published.',
-                },
-                {
-                  q: 'What happens to a published property after it closes?',
-                  a: 'You can retire it from the public portfolio without deleting the record — the history and the documents stay in your workspace.',
-                },
-              ]}
-            />
-          </div>
-        </div>
-      </section>
-
-      <section style={{ background: 'var(--paper-deep)', paddingBlock: 'clamp(40px,5vw,72px)' }}>
-        <div className="shell">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 24, flexWrap: 'wrap' }}>
-            <MaskedLines
-              as="h2"
-              className="h-display-2"
-              lines={['Step one is', <>an <span className="em">application.</span></>]}
-              style={{ maxWidth: '18ch' }}
-            />
-            <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
-              <Link to="/early-access" className="btn-primary">
-                Request early access
-                <ArrowUpRight size={15} strokeWidth={1.6} />
-              </Link>
-              <Link to="/product" className="btn-secondary">
-                Product overview
-              </Link>
-            </div>
+            <Link to="/early-access" className="btn btn-lime">
+              Request access
+              <ArrowRight strokeWidth={2.2} />
+            </Link>
           </div>
         </div>
       </section>

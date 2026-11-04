@@ -323,7 +323,11 @@
   .tick { color: var(--lime-ink); font-weight: 700; }
 
   /* ───────────────────────── Buttons ───────────────────────── */
-  .btn {
+  .btn,
+  .btn-primary,
+  .btn-secondary,
+  .btn-lime,
+  .btn-glass {
     display: inline-flex;
     align-items: center;
     justify-content: center;
