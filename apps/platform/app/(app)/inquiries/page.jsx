@@ -1,4 +1,8 @@
 import Inquiries from '../../../src/app/views/Inquiries';
+import { loadAppContext } from '../../../lib/app-context';
+import { listInquiryCards } from '../../../lib/data/workspace';
+
+export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: 'Inquiries',
@@ -6,6 +10,13 @@ export const metadata = {
 };
 
 export default async function Page({ searchParams }) {
-  const sp = await searchParams;
-  return <Inquiries empty={sp?.state === 'empty'} />;
+  const params = await searchParams;
+  const context = await loadAppContext();
+
+  if (context.demo) {
+    return <Inquiries empty={params?.state === 'empty'} />;
+  }
+
+  const items = await listInquiryCards(context.viewer.userId, context.workspace.id);
+  return <Inquiries empty={params?.state === 'empty'} items={items} />;
 }

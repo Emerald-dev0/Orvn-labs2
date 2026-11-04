@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { Icon } from '../icons';
 import { PageHead, Card, StatusPill, Tabs, FactRow, EmptyState } from '../ui';
+import PublishBar from '../PublishBar';
 import { properties, activity } from '../data';
 
 const TABS = [
@@ -356,9 +357,9 @@ function ActivityTab({ property }) {
   );
 }
 
-export default function PropertyDetail({ id, initialTab = 'overview' }) {
+export default function PropertyDetail({ id, property: provided = null, initialTab = 'overview', live = false, publicPath = null }) {
   const [tab, setTab] = useState(initialTab);
-  const property = properties.find((p) => p.id === id);
+  const property = provided ?? properties.find((p) => p.id === id);
 
   if (!property) {
     return (
@@ -394,16 +395,25 @@ export default function PropertyDetail({ id, initialTab = 'overview' }) {
             {property.place} · {property.type} · {property.price}
           </p>
         </div>
-        <div style={{ display: 'flex', gap: 8 }}>
-          <button type="button" className="ws-btn is-quiet">
-            <Icon name="view" size={16} />
-            Preview
-          </button>
-          <button type="button" className="ws-btn is-dark" disabled>
-            <Icon name="upload" size={16} />
-            Publish
-          </button>
-        </div>
+        {live ? (
+          <PublishBar
+            propertyId={property.id}
+            status={property.status}
+            blockers={property.blockers ?? []}
+            publicPath={property.status === 'published' ? publicPath : null}
+          />
+        ) : (
+          <div style={{ display: 'flex', gap: 8 }}>
+            <button type="button" className="ws-btn is-quiet">
+              <Icon name="view" size={16} />
+              Preview
+            </button>
+            <button type="button" className="ws-btn is-dark" disabled>
+              <Icon name="upload" size={16} />
+              Publish
+            </button>
+          </div>
+        )}
       </div>
 
       <div style={{ marginBottom: 14 }}>

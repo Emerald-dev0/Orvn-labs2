@@ -196,7 +196,7 @@ debug log and it holds no message bodies.
 
 ## 11. What is tested, and what is not
 
-`npm test` — 43 tests, all green.
+`npm test` — 60 tests, all green.
 
 - **Snapshot boundary** (11): approval + public + non-empty; private media excluded; address
   gating; “on request” cannot leak an amount; missing price is not zero; leading-zero parcel
@@ -209,6 +209,9 @@ debug log and it holds no message bodies.
   inquiries, invitations, audit or memberships; inquiries are insert-only for a visitor;
   consent and publication are required by the policy; snapshots are immutable and analytics
   append-only.
+- **Workspace layer** (17): money formatting never invents an amount, relative time, record
+  completeness, label humanising, property update schema (uuid ids, money precision, location
+  precision default), creation schema, and that the member form cannot mint an owner.
 - Existing email tests (4).
 
 Not covered yet, stated plainly:
@@ -250,9 +253,13 @@ Incident responses that exist today:
 
 ## 13. Gaps, in the order they matter
 
-1. **The workspace UI still reads fixtures.** The backend exists; `/dashboard`, `/properties` and
-   the editor are not wired to it yet. That is the next slice, and it is where publish/unpublish
-   buttons start writing real snapshots.
+1. **The workspace is half-wired.** `lib/data/workspace.ts` and `lib/actions/*` now cover
+   creating a property, editing it, recording facts and decisions, attesting rights,
+   publish/unpublish/archive, inquiry status, the professional profile and member invitations.
+   `/properties`, `/properties/[id]`, `/properties/new`, `/inquiries` and `/dashboard` read from
+   the database and call those actions. `/website`, `/analytics` and `/settings` still render the
+   sample workspace. Without `DATABASE_URL` the whole app falls back to that sample workspace
+   behind a visible "Preview build" banner, so the preview is never mistaken for live data.
 2. **No live policy test.** A Neon branch plus a test that runs as `larei_app` and asserts
    cross-tenant reads return zero rows would turn the static checks into proof.
 3. **Better Auth rate limiting is per-isolate.** Move to the Postgres limiter or Workers rate

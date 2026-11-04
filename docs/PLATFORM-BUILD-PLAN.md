@@ -22,9 +22,15 @@ buy. Revised for the stack agreed on 4 Nov: Next.js, Neon, Cloudflare Workers, G
   an immutable publication snapshot, with generated OG metadata and an `og:image` route.
   Media is served only through `/api/media/[...key]`, which checks release state first.
   With no database configured these routes 404 — nothing published means nothing to show.
-- **Still fixtures**: `/dashboard`, `/properties`, the record editor, website, inquiries and
-  analytics. Wiring them to the backend is the next slice; the UI already names what is not
-  live rather than faking it.
+- **Workspace backend**: `lib/data/workspace.ts` (tenant-scoped read models for records,
+  inquiries, overview, analytics, profile, members) and `lib/actions/*` (create, edit, facts and
+  decisions, rights attestation, publish/unpublish/archive, inquiry status, site, invitations).
+  Every action resolves the workspace and role from the session, validates with Zod, writes
+  inside `withUserDb` and appends an audit entry.
+- **Wired**: `/properties`, `/properties/[id]` (with real publish/unpublish), `/properties/new`,
+  `/inquiries`, `/dashboard`. **Still sample data**: `/website`, `/analytics`, `/settings`.
+  With no `DATABASE_URL` the whole app shows the sample workspace behind a "Preview build"
+  banner rather than pretending to be live.
 
 ## 2. Build first: the publishing spine
 

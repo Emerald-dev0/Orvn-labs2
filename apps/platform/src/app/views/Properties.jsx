@@ -14,13 +14,13 @@ const FILTERS = [
   { id: 'archived', label: 'Archived' },
 ];
 
-export default function Properties({ empty = false }) {
+export default function Properties({ empty = false, items = properties }) {
   const [filter, setFilter] = useState('all');
   const [query, setQuery] = useState('');
 
   const rows = useMemo(() => {
     if (empty) return [];
-    return properties.filter((p) => {
+    return items.filter((p) => {
       const matchesFilter = filter === 'all' || p.status === filter;
       const matchesQuery =
         !query || `${p.title} ${p.place}`.toLowerCase().includes(query.toLowerCase());
