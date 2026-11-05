@@ -1564,17 +1564,358 @@
 .signin-form { background: var(--white); border: 1px solid var(--line); border-radius: var(--r-xl); padding: clamp(24px, 3.4vw, 40px); box-shadow: var(--sh-2); display: grid; gap: 16px; }
 .signin-aside { background: var(--bone-2); border-radius: var(--r-xl); padding: clamp(22px, 3vw, 34px); }
 
-/* ── 404 ──────────────────────────────────────────────────────────── */
-.notfound { padding-top: calc(var(--nav-h) + clamp(32px, 4vw, 64px)); padding-bottom: clamp(48px, 6vw, 88px); }
-.notfound-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 10px; }
-.notfound-path { font-size: 13px; color: var(--muted-2); max-width: 50vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.notfound-num { font-family: var(--font-display); font-size: clamp(110px, 26vw, 300px); line-height: 0.82; letter-spacing: -0.05em; color: var(--ink); }
-.notfound-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: clamp(20px, 4vw, 60px); align-items: end; margin-top: clamp(18px, 2.5vw, 32px); }
-.notfound-h { font-size: clamp(24px, 3vw, 40px); letter-spacing: -0.03em; }
-.notfound-list { display: grid; }
-.notfound-link { display: grid; grid-template-columns: 40px minmax(0, 1fr) auto 20px; gap: 12px; align-items: center; padding: 15px 0; border-bottom: 1px solid var(--line); }
-.notfound-link:hover { color: var(--lime-ink); }
-.notfound-link-label { font-size: 16px; font-weight: 500; }
+/* ── 404 ──────────────────────────────────────────────────────────────
+   A property that is not on the register. Three house-number plates, the middle one an
+   empty surveyed plot. The ground is a survey grid; the page is also a working index.
+   ------------------------------------------------------------------------ */
+
+.lost {
+  position: relative;
+  overflow: hidden;
+  padding-top: calc(var(--nav-h) + clamp(24px, 3.6vw, 48px));
+  padding-bottom: clamp(36px, 5vw, 68px);
+  background:
+    radial-gradient(120% 90% at 92% -10%, rgba(201, 242, 110, 0.28), transparent 58%),
+    radial-gradient(80% 60% at -10% 10%, rgba(220, 233, 246, 0.5), transparent 60%),
+    repeating-linear-gradient(0deg, rgba(16, 22, 19, 0.045) 0 1px, transparent 1px 52px),
+    repeating-linear-gradient(90deg, rgba(16, 22, 19, 0.045) 0 1px, transparent 1px 52px),
+    var(--bone);
+}
+
+.lost-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.lost-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 14px 7px 12px;
+  border-radius: var(--r-pill);
+  background: var(--pine);
+  color: var(--lime);
+  font-size: 12.5px;
+  letter-spacing: 0.01em;
+}
+
+.lost-path {
+  max-width: 52vw;
+  padding: 7px 13px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line-2);
+  background: rgba(255, 253, 248, 0.6);
+  color: var(--muted);
+  font-size: 12.5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- Hero: copy left, plates right ---- */
+
+.lost-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+  gap: clamp(24px, 4vw, 64px);
+  align-items: center;
+  margin-top: clamp(20px, 3vw, 40px);
+}
+
+.lost-title {
+  font-family: var(--font-display);
+  font-size: clamp(38px, 6.2vw, 92px);
+  line-height: 0.94;
+  letter-spacing: -0.045em;
+  color: var(--ink);
+}
+
+.lost-lede {
+  margin-top: 18px;
+  max-width: 48ch;
+  font-size: clamp(15px, 1.4vw, 17px);
+  line-height: 1.62;
+  color: var(--muted);
+}
+
+.lost-actions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin-top: 26px;
+}
+
+.lost-mail {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-color: var(--line-2);
+  transition: text-decoration-color 0.18s ease, color 0.18s ease;
+}
+
+.lost-mail:hover { color: var(--lime-ink); text-decoration-color: var(--lime-2); }
+
+.lost-plates {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 1.2vw, 16px);
+  perspective: 900px;
+}
+
+.lost-plate {
+  width: clamp(80px, 10.5vw, 128px);
+  aspect-ratio: 4 / 5;
+  display: grid;
+  place-items: center;
+  border-radius: clamp(18px, 2vw, 26px);
+  background: var(--white);
+  border: 1px solid var(--line);
+  box-shadow: var(--sh-3);
+  font-family: var(--font-display);
+  font-size: clamp(40px, 6vw, 74px);
+  line-height: 1;
+  letter-spacing: -0.05em;
+  color: var(--ink);
+  animation: lost-rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+.lost-plate:nth-child(1) { transform: rotate(-3.5deg) translateY(2%); animation-delay: 0.04s; }
+.lost-plate:nth-child(2) { transform: rotate(1deg) translateY(-4%); animation-delay: 0.12s; }
+.lost-plate:nth-child(3) { transform: rotate(3.5deg) translateY(2%); animation-delay: 0.2s; }
+
+/* The missing one. A surveyed plot with nothing built on it. */
+.lost-plate.is-plot {
+  background: transparent;
+  border: 1.5px dashed rgba(16, 22, 19, 0.32);
+  box-shadow: none;
+}
+
+.lost-plot {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 56%;
+  aspect-ratio: 1;
+  border-radius: 14px;
+  border: 1.5px dashed var(--lime-2);
+  animation: lost-survey 18s linear infinite;
+}
+
+.lost-plot::after {
+  content: '';
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--lime-2);
+  box-shadow: 0 0 0 6px rgba(182, 231, 84, 0.26);
+}
+
+@keyframes lost-rise {
+  from { opacity: 0; transform: translateY(18px) rotate(0deg); }
+}
+
+@keyframes lost-survey {
+  to { transform: rotate(360deg); }
+}
+
+/* ---- The index ---- */
+
+.lost-finder {
+  margin-top: clamp(30px, 4.5vw, 64px);
+  padding: clamp(20px, 3vw, 36px);
+  border-radius: clamp(22px, 2.6vw, 34px);
+  background: rgba(255, 253, 248, 0.86);
+  border: 1px solid var(--line);
+  box-shadow: var(--sh-2);
+  backdrop-filter: blur(8px);
+}
+
+.lost-finder-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 320px);
+  gap: clamp(14px, 2.4vw, 32px);
+  align-items: end;
+}
+
+.lost-finder-title {
+  font-size: clamp(20px, 2.4vw, 28px);
+  letter-spacing: -0.028em;
+}
+
+.lost-finder-note {
+  margin-top: 6px;
+  font-size: 13.5px;
+  color: var(--muted);
+}
+
+.lost-field { display: block; }
+
+.lost-field-label {
+  display: block;
+  margin-bottom: 7px;
+  font-size: 12px;
+  color: var(--muted-2);
+}
+
+.lost-field-inner {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0 14px;
+  height: 46px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line-2);
+  background: var(--white);
+  color: var(--muted);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.lost-field-inner:focus-within {
+  border-color: var(--ink);
+  box-shadow: 0 0 0 4px rgba(201, 242, 110, 0.34);
+}
+
+.lost-field-inner input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 14px;
+  color: var(--ink);
+}
+
+.lost-field-inner input::placeholder { color: var(--muted-2); }
+
+.lost-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: clamp(16px, 2.2vw, 26px);
+}
+
+.lost-row {
+  display: grid;
+  grid-template-columns: 26px 38px minmax(0, 1fr) 30px;
+  gap: 12px;
+  align-items: center;
+  padding: 13px 14px;
+  border-radius: var(--r-md);
+  border: 1px solid transparent;
+  transition: background 0.16s ease, border-color 0.16s ease, transform 0.16s ease;
+}
+
+.lost-row:hover {
+  background: var(--lime-pale);
+  border-color: rgba(182, 231, 84, 0.7);
+  transform: translateX(2px);
+}
+
+.lost-row-index {
+  font-size: 11.5px;
+  color: var(--muted-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.lost-row-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: var(--bone-2);
+  color: var(--ink);
+}
+
+.lost-row:hover .lost-row-icon { background: var(--white); }
+
+.lost-row-body { display: grid; gap: 2px; min-width: 0; }
+.lost-row-body strong { font-size: 14.5px; font-weight: 600; letter-spacing: -0.01em; }
+.lost-row-body span {
+  font-size: 12.5px;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lost-row-go {
+  display: grid;
+  place-items: center;
+  color: var(--muted-2);
+  opacity: 0;
+  transform: translate(-4px, 4px);
+  transition: opacity 0.16s ease, transform 0.16s ease, color 0.16s ease;
+}
+
+.lost-row:hover .lost-row-go { opacity: 1; transform: none; color: var(--lime-ink); }
+
+.lost-none {
+  min-height: 0;
+  margin-top: 14px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.lost-none:empty { margin-top: 0; }
+
+/* ---- Closing band ---- */
+
+.lost-foot { padding-block: clamp(32px, 4.5vw, 60px); }
+
+.lost-foot-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: clamp(18px, 3vw, 40px);
+  align-items: end;
+}
+
+.lost-foot-title {
+  margin-top: 12px;
+  font-size: clamp(24px, 3.2vw, 40px);
+  letter-spacing: -0.032em;
+  color: var(--white);
+}
+
+.lost-foot-body {
+  margin-top: 10px;
+  max-width: 56ch;
+  font-size: 14.5px;
+  line-height: 1.62;
+  color: rgba(255, 253, 248, 0.62);
+}
+
+@media (max-width: 900px) {
+  .lost-hero { grid-template-columns: 1fr; gap: 26px; }
+  .lost-plates { justify-content: flex-start; }
+  .lost-finder-head { grid-template-columns: 1fr; align-items: start; }
+  .lost-list { grid-template-columns: 1fr; }
+  .lost-foot-inner { grid-template-columns: 1fr; align-items: start; }
+}
+
+@media (max-width: 620px) {
+  .lost-path { max-width: 100%; }
+  .lost-title { font-size: clamp(34px, 11vw, 52px); }
+  .lost-row { grid-template-columns: 22px 34px minmax(0, 1fr); }
+  .lost-row-go { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lost-plate, .lost-plot { animation: none; }
+  .lost-row, .lost-row-go { transition: none; }
+}
 
 /* ── Blog post / markdown ─────────────────────────────────────────── */
 .post-body, .article-body { max-width: 720px; font-size: 16.5px; line-height: 1.75; }
@@ -1599,14 +1940,12 @@
   .journal-feature { grid-template-columns: 1fr; }
   .legal-shell { grid-template-columns: 1fr; }
   .legal-nav { position: static; display: flex; flex-wrap: wrap; }
-  .signin-shell, .notfound-grid { grid-template-columns: 1fr; }
+  .signin-shell { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 760px) {
   .fit-grid, .role-grid, .blog-grid { grid-template-columns: 1fr; }
   .form-grid { grid-template-columns: 1fr; }
-  .notfound-link { grid-template-columns: 32px minmax(0, 1fr) 20px; }
-  .notfound-link .label-mono:nth-of-type(2) { display: none; }
 }
 
 /* =========================================================================
