@@ -1565,8 +1565,10 @@
 .signin-aside { background: var(--bone-2); border-radius: var(--r-xl); padding: clamp(22px, 3vw, 34px); }
 
 /* ── 404 ──────────────────────────────────────────────────────────────
-   A property that is not on the register. Three house-number plates, the middle one an
-   empty surveyed plot. The ground is a survey grid; the page is also a working index.
+   A property that is not on the register. Two cast house-number plates and, between them, an
+   empty surveyed plot: hatched ground, a perimeter drawn around nothing, a marker in the
+   middle, and a registry stamp laid over the corner. The ground is a survey grid. The page is
+   also a working index of every page that does exist.
    ------------------------------------------------------------------------ */
 
 .lost {
@@ -1665,6 +1667,7 @@
 .lost-mail:hover { color: var(--lime-ink); text-decoration-color: var(--lime-2); }
 
 .lost-plates {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1686,6 +1689,7 @@
   line-height: 1;
   letter-spacing: -0.05em;
   color: var(--ink);
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s ease;
   animation: lost-rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) backwards;
 }
 
@@ -1693,39 +1697,98 @@
 .lost-plate:nth-child(2) { transform: rotate(1deg) translateY(-4%); animation-delay: 0.12s; }
 .lost-plate:nth-child(3) { transform: rotate(3.5deg) translateY(2%); animation-delay: 0.2s; }
 
-/* The missing one. A surveyed plot with nothing built on it. */
+/* The missing one. Hatched ground, a perimeter being walked around nothing, one marker. */
 .lost-plate.is-plot {
-  background: transparent;
-  border: 1.5px dashed rgba(16, 22, 19, 0.32);
-  box-shadow: none;
-}
-
-.lost-plot {
   position: relative;
-  display: grid;
-  place-items: center;
-  width: 56%;
-  aspect-ratio: 1;
-  border-radius: 14px;
-  border: 1.5px dashed var(--lime-2);
-  animation: lost-survey 18s linear infinite;
+  overflow: hidden;
+  background: rgba(255, 253, 248, 0.62);
+  border: 1.5px dashed rgba(16, 22, 19, 0.3);
+  box-shadow: none;
+  color: rgba(16, 22, 19, 0.26);
 }
 
-.lost-plot::after {
-  content: '';
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: var(--lime-2);
-  box-shadow: 0 0 0 6px rgba(182, 231, 84, 0.26);
+.lost-survey { width: 76%; height: 76%; overflow: visible; }
+
+.lost-survey-hatch { opacity: 0.55; }
+
+.lost-survey-frame {
+  fill: none;
+  stroke: var(--ink);
+  stroke-opacity: 0.3;
+  stroke-width: 1.6;
+  stroke-dasharray: 6 5;
+  stroke-linecap: round;
 }
+
+.lost-survey-ticks path {
+  fill: none;
+  stroke: var(--ink);
+  stroke-opacity: 0.42;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+
+.lost-survey-marker {
+  fill: var(--lime-2);
+  stroke: var(--white);
+  stroke-width: 1.6;
+  transform-origin: 50px 50px;
+  filter: drop-shadow(0 0 6px rgba(182, 231, 84, 0.75));
+  animation: lost-marker 3.8s ease-in-out infinite;
+}
+
+.lost-plot-note {
+  position: absolute;
+  bottom: 7px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10.5px;
+  letter-spacing: 0.01em;
+  color: var(--muted-2);
+  white-space: nowrap;
+}
+
+/* The registry stamp, laid over the plates the way a rejected application gets one. */
+.lost-stamp {
+  position: absolute;
+  right: clamp(-18px, -1.4vw, -8px);
+  bottom: clamp(-18px, -1.6vw, -10px);
+  width: clamp(72px, 8.2vw, 104px);
+  height: auto;
+  transform: rotate(-9deg);
+  color: var(--lime-ink);
+  opacity: 0.9;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+.lost-stamp-ring { fill: none; stroke: currentColor; stroke-width: 1.4; }
+.lost-stamp-ring.is-inner { stroke-width: 1.1; stroke-opacity: 0.5; }
+.lost-stamp-char {
+  font-family: var(--font-body);
+  font-size: 8.6px;
+  font-weight: 600;
+  fill: currentColor;
+}
+.lost-stamp-mark {
+  font-family: var(--font-display);
+  font-size: 17px;
+  letter-spacing: -0.02em;
+  fill: currentColor;
+}
+
+/* Straighten the plates when the pointer arrives: the only motion on the page that reacts. */
+.lost-plates:hover .lost-plate:nth-child(1) { transform: rotate(-1.5deg) translateY(0); }
+.lost-plates:hover .lost-plate:nth-child(2) { transform: rotate(0.5deg) translateY(-1.5%); }
+.lost-plates:hover .lost-plate:nth-child(3) { transform: rotate(1.5deg) translateY(0); }
 
 @keyframes lost-rise {
   from { opacity: 0; transform: translateY(18px) rotate(0deg); }
 }
 
-@keyframes lost-survey {
-  to { transform: rotate(360deg); }
+@keyframes lost-marker {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.14); }
 }
 
 /* ---- The index ---- */
@@ -1797,6 +1860,37 @@
 }
 
 .lost-field-inner input::placeholder { color: var(--muted-2); }
+.lost-field-inner input::-webkit-search-cancel-button { display: none; }
+
+.lost-kbd {
+  display: inline-grid;
+  place-items: center;
+  min-width: 21px;
+  height: 21px;
+  padding: 0 5px;
+  border-radius: 6px;
+  border: 1px solid var(--line-2);
+  background: var(--white);
+  font-family: var(--font-body);
+  font-size: 11.5px;
+  line-height: 1;
+  color: var(--muted);
+}
+
+.lost-clear {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--bone-2);
+  color: var(--ink);
+  cursor: pointer;
+  transition: background 0.16s ease;
+}
+
+.lost-clear:hover { background: var(--lime-pale); }
 
 .lost-list {
   display: grid;
@@ -1908,12 +2002,14 @@
 @media (max-width: 620px) {
   .lost-path { max-width: 100%; }
   .lost-title { font-size: clamp(34px, 11vw, 52px); }
+  .lost-stamp { width: 64px; right: -10px; bottom: -12px; }
   .lost-row { grid-template-columns: 22px 34px minmax(0, 1fr); }
   .lost-row-go { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .lost-plate, .lost-plot { animation: none; }
+  .lost-plate, .lost-survey-marker { animation: none; }
+  .lost-plate { transition: none; }
   .lost-row, .lost-row-go { transition: none; }
 }
 
