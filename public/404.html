@@ -1,0 +1,778 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0e1512" />
+    <title>Not on the register | ORVN Labs</title>
+    <meta
+      name="description"
+      content="That address is not listed here. Search every page, or go back to the beginning."
+    />
+    <meta name="robots" content="noindex, follow" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/logo.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Figtree:wght@400;500;600&display=swap"
+    />
+
+    <!--
+      Standalone 404 for the marketing site.
+
+      It is one file on purpose: a not-found page must not depend on the bundle that failed
+      to find a route. The design is the one from the platform build — two cast house-number
+      plates, an empty surveyed plot between them, and a registry stamp over the corner.
+      The list underneath is a real index, filterable with the field or the `/` key.
+    -->
+    <style>
+      :root {
+        --bone: #f5f2eb;
+        --bone-2: #ece7dc;
+        --white: #fffdf8;
+        --pine: #0e1512;
+        --ink: #101613;
+        --muted: #55605a;
+        --muted-2: #7d8781;
+        --lime: #c9f26e;
+        --lime-2: #b6e754;
+        --lime-pale: #f0fbd8;
+        --lime-ink: #22380c;
+        --line: rgba(16, 22, 19, 0.09);
+        --line-2: rgba(16, 22, 19, 0.16);
+        --display: 'Bricolage Grotesque', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+        --body: 'Figtree', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+        --sh-2: 0 12px 28px -14px rgba(16, 22, 19, 0.2);
+        --sh-3: 0 30px 64px -28px rgba(16, 22, 19, 0.3);
+      }
+
+      *,
+      *::before,
+      *::after { box-sizing: border-box; }
+
+      html { -webkit-text-size-adjust: 100%; }
+
+      body {
+        margin: 0;
+        background: var(--bone);
+        color: var(--ink);
+        font-family: var(--body);
+        font-size: 16px;
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      a { color: inherit; text-decoration: none; }
+
+      .shell {
+        width: min(1240px, 100% - clamp(32px, 6vw, 96px));
+        margin-inline: auto;
+      }
+
+      /* ---- top strip ---- */
+
+      .bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: clamp(18px, 2.4vw, 30px) 0 0;
+      }
+
+      .wordmark {
+        font-family: var(--display);
+        font-weight: 700;
+        font-size: 15px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      .bar-link {
+        font-size: 13.5px;
+        color: var(--muted);
+        border-bottom: 1px solid var(--line-2);
+        padding-bottom: 2px;
+      }
+
+      .bar-link:hover { color: var(--ink); border-color: var(--ink); }
+
+      /* ---- the page ---- */
+
+      .lost {
+        position: relative;
+        overflow: hidden;
+        padding-bottom: clamp(36px, 5vw, 68px);
+        background:
+          radial-gradient(120% 90% at 92% -10%, rgba(201, 242, 110, 0.28), transparent 58%),
+          radial-gradient(80% 60% at -10% 10%, rgba(220, 233, 246, 0.5), transparent 60%),
+          repeating-linear-gradient(0deg, rgba(16, 22, 19, 0.045) 0 1px, transparent 1px 52px),
+          repeating-linear-gradient(90deg, rgba(16, 22, 19, 0.045) 0 1px, transparent 1px 52px),
+          var(--bone);
+      }
+
+      .lost-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        flex-wrap: wrap;
+        padding-top: clamp(18px, 2.6vw, 34px);
+      }
+
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 7px 14px 7px 12px;
+        border-radius: 999px;
+        background: var(--pine);
+        color: var(--lime);
+        font-size: 12.5px;
+      }
+
+      .tag svg { flex: none; }
+
+      .path {
+        max-width: 52vw;
+        padding: 7px 13px;
+        border-radius: 999px;
+        border: 1px solid var(--line-2);
+        background: rgba(255, 253, 248, 0.6);
+        color: var(--muted);
+        font-size: 12.5px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+        gap: clamp(24px, 4vw, 64px);
+        align-items: center;
+        margin-top: clamp(20px, 3vw, 40px);
+      }
+
+      h1 {
+        margin: 0;
+        font-family: var(--display);
+        font-size: clamp(38px, 6.2vw, 92px);
+        line-height: 0.94;
+        letter-spacing: -0.045em;
+        font-weight: 600;
+      }
+
+      .lede {
+        margin: 18px 0 0;
+        max-width: 48ch;
+        font-size: clamp(15px, 1.4vw, 17px);
+        line-height: 1.62;
+        color: var(--muted);
+      }
+
+      .actions {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        flex-wrap: wrap;
+        margin-top: 26px;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        height: 48px;
+        padding: 0 22px;
+        border-radius: 999px;
+        background: var(--pine);
+        color: var(--white);
+        font-size: 14.5px;
+        font-weight: 500;
+        transition: transform 0.18s ease, background 0.18s ease;
+      }
+
+      .btn:hover { background: #16211c; transform: translateY(-1px); }
+
+      .mail {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        color: var(--ink);
+        border-bottom: 1px solid var(--line-2);
+        padding-bottom: 2px;
+      }
+
+      .mail:hover { color: var(--lime-ink); border-color: var(--lime-2); }
+
+      /* ---- plates ---- */
+
+      .plates {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: clamp(8px, 1.2vw, 16px);
+      }
+
+      .plate {
+        width: clamp(80px, 10.5vw, 128px);
+        aspect-ratio: 4 / 5;
+        display: grid;
+        place-items: center;
+        border-radius: clamp(18px, 2vw, 26px);
+        background: var(--white);
+        border: 1px solid var(--line);
+        box-shadow: var(--sh-3);
+        font-family: var(--display);
+        font-size: clamp(40px, 6vw, 74px);
+        line-height: 1;
+        letter-spacing: -0.05em;
+        color: var(--ink);
+        transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+        animation: rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+      }
+
+      .plate:nth-child(1) { transform: rotate(-3.5deg) translateY(2%); animation-delay: 0.04s; }
+      .plate:nth-child(2) { transform: rotate(1deg) translateY(-4%); animation-delay: 0.12s; }
+      .plate:nth-child(3) { transform: rotate(3.5deg) translateY(2%); animation-delay: 0.2s; }
+
+      .plate.is-plot {
+        position: relative;
+        overflow: hidden;
+        background: rgba(255, 253, 248, 0.62);
+        border: 1.5px dashed rgba(16, 22, 19, 0.3);
+        box-shadow: none;
+        color: rgba(16, 22, 19, 0.26);
+      }
+
+      .survey { width: 76%; height: 76%; overflow: visible; }
+
+      .survey-hatch { opacity: 0.55; }
+
+      .survey-frame {
+        fill: none;
+        stroke: var(--ink);
+        stroke-opacity: 0.3;
+        stroke-width: 1.6;
+        stroke-dasharray: 6 5;
+        stroke-linecap: round;
+      }
+
+      .survey-ticks path {
+        fill: none;
+        stroke: var(--ink);
+        stroke-opacity: 0.42;
+        stroke-width: 1.6;
+        stroke-linecap: round;
+      }
+
+      .survey-marker {
+        fill: var(--lime-2);
+        stroke: var(--white);
+        stroke-width: 1.6;
+        transform-origin: 50px 50px;
+        filter: drop-shadow(0 0 6px rgba(182, 231, 84, 0.75));
+        animation: marker 3.8s ease-in-out infinite;
+      }
+
+      .plot-note {
+        position: absolute;
+        bottom: 7px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 10.5px;
+        color: var(--muted-2);
+        white-space: nowrap;
+      }
+
+      .stamp {
+        position: absolute;
+        right: clamp(-18px, -1.4vw, -8px);
+        bottom: clamp(-18px, -1.6vw, -10px);
+        width: clamp(72px, 8.2vw, 104px);
+        height: auto;
+        transform: rotate(-9deg);
+        color: var(--lime-ink);
+        opacity: 0.9;
+        mix-blend-mode: multiply;
+        pointer-events: none;
+      }
+
+      .stamp-ring { fill: none; stroke: currentColor; stroke-width: 1.4; }
+      .stamp-ring.is-inner { stroke-width: 1.1; stroke-opacity: 0.5; }
+      .stamp-char { font-family: var(--body); font-size: 8.6px; font-weight: 600; fill: currentColor; }
+      .stamp-mark { font-family: var(--display); font-size: 17px; letter-spacing: -0.02em; fill: currentColor; }
+
+      .plates:hover .plate:nth-child(1) { transform: rotate(-1.5deg) translateY(0); }
+      .plates:hover .plate:nth-child(2) { transform: rotate(0.5deg) translateY(-1.5%); }
+      .plates:hover .plate:nth-child(3) { transform: rotate(1.5deg) translateY(0); }
+
+      @keyframes rise { from { opacity: 0; transform: translateY(18px) rotate(0deg); } }
+      @keyframes marker { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.14); } }
+
+      /* ---- the register ---- */
+
+      .finder {
+        margin-top: clamp(30px, 4.5vw, 64px);
+        padding: clamp(20px, 3vw, 36px);
+        border-radius: clamp(22px, 2.6vw, 34px);
+        background: rgba(255, 253, 248, 0.86);
+        border: 1px solid var(--line);
+        box-shadow: var(--sh-2);
+        backdrop-filter: blur(8px);
+      }
+
+      .finder-head {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 320px);
+        gap: clamp(14px, 2.4vw, 32px);
+        align-items: end;
+      }
+
+      h2 {
+        margin: 0;
+        font-family: var(--display);
+        font-size: clamp(20px, 2.4vw, 28px);
+        letter-spacing: -0.028em;
+        font-weight: 600;
+      }
+
+      .finder-note { margin: 6px 0 0; font-size: 13.5px; color: var(--muted); }
+
+      .field-label { display: block; margin-bottom: 7px; font-size: 12px; color: var(--muted-2); }
+
+      .field {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        padding: 0 14px;
+        height: 46px;
+        border-radius: 999px;
+        border: 1px solid var(--line-2);
+        background: var(--white);
+        color: var(--muted);
+        transition: border-color 0.18s ease, box-shadow 0.18s ease;
+      }
+
+      .field:focus-within {
+        border-color: var(--ink);
+        box-shadow: 0 0 0 4px rgba(201, 242, 110, 0.34);
+      }
+
+      .field svg { flex: none; }
+
+      .field input {
+        flex: 1;
+        min-width: 0;
+        border: 0;
+        outline: 0;
+        background: transparent;
+        font: inherit;
+        font-size: 14px;
+        color: var(--ink);
+      }
+
+      .field input::placeholder { color: var(--muted-2); }
+
+      .kbd {
+        display: inline-grid;
+        place-items: center;
+        min-width: 21px;
+        height: 21px;
+        padding: 0 5px;
+        border-radius: 6px;
+        border: 1px solid var(--line-2);
+        background: var(--white);
+        font-size: 11.5px;
+        line-height: 1;
+        color: var(--muted);
+      }
+
+      .list {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        margin-top: clamp(16px, 2.2vw, 26px);
+      }
+
+      .row {
+        display: grid;
+        grid-template-columns: 26px 38px minmax(0, 1fr) 30px;
+        gap: 12px;
+        align-items: center;
+        padding: 13px 14px;
+        border-radius: 20px;
+        border: 1px solid transparent;
+        transition: background 0.16s ease, border-color 0.16s ease, transform 0.16s ease;
+      }
+
+      .row:hover {
+        background: var(--lime-pale);
+        border-color: rgba(182, 231, 84, 0.7);
+        transform: translateX(2px);
+      }
+
+      .row-index { font-size: 11.5px; color: var(--muted-2); }
+      .row-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 12px;
+        display: grid;
+        place-items: center;
+        background: var(--bone-2);
+        color: var(--ink);
+      }
+      .row:hover .row-icon { background: var(--white); }
+      .row-body { display: grid; gap: 2px; min-width: 0; }
+      .row-body strong { font-size: 14.5px; font-weight: 600; letter-spacing: -0.01em; }
+      .row-body span {
+        font-size: 12.5px;
+        color: var(--muted);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .row-go {
+        display: grid;
+        place-items: center;
+        color: var(--muted-2);
+        opacity: 0;
+        transform: translate(-4px, 4px);
+        transition: opacity 0.16s ease, transform 0.16s ease, color 0.16s ease;
+      }
+      .row:hover .row-go { opacity: 1; transform: none; color: var(--lime-ink); }
+
+      .none { margin: 14px 0 0; font-size: 13.5px; line-height: 1.6; color: var(--muted); }
+      .none:empty { margin: 0; }
+
+      /* ---- closing band ---- */
+
+      .foot {
+        background: var(--pine);
+        color: var(--white);
+        padding: clamp(32px, 4.5vw, 60px) 0;
+      }
+
+      .foot-inner {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: clamp(18px, 3vw, 40px);
+        align-items: end;
+      }
+
+      .eyebrow {
+        display: inline-block;
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: rgba(255, 253, 248, 0.1);
+        font-size: 12px;
+        color: var(--white);
+      }
+
+      .foot h2 {
+        margin: 12px 0 0;
+        font-size: clamp(24px, 3.2vw, 40px);
+        letter-spacing: -0.032em;
+        color: var(--white);
+      }
+
+      .foot p {
+        margin: 10px 0 0;
+        max-width: 56ch;
+        font-size: 14.5px;
+        line-height: 1.62;
+        color: rgba(255, 253, 248, 0.62);
+      }
+
+      .btn-lime { background: var(--lime); color: var(--lime-ink); }
+      .btn-lime:hover { background: var(--lime-2); }
+
+      .legal {
+        padding: 18px 0 26px;
+        font-size: 12.5px;
+        color: var(--muted-2);
+        background: var(--pine);
+      }
+
+      .legal-inner {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        justify-content: space-between;
+        border-top: 1px solid rgba(255, 253, 248, 0.14);
+        padding-top: 18px;
+      }
+
+      .legal a { color: rgba(255, 253, 248, 0.7); }
+      .legal a:hover { color: var(--lime); }
+
+      @media (max-width: 900px) {
+        .hero { grid-template-columns: 1fr; gap: 26px; }
+        .plates { justify-content: flex-start; }
+        .finder-head { grid-template-columns: 1fr; align-items: start; }
+        .list { grid-template-columns: 1fr; }
+        .foot-inner { grid-template-columns: 1fr; align-items: start; }
+      }
+
+      @media (max-width: 620px) {
+        .path { max-width: 100%; }
+        h1 { font-size: clamp(34px, 11vw, 52px); }
+        .row { grid-template-columns: 22px 34px minmax(0, 1fr); }
+        .row-go { display: none; }
+        .stamp { width: 64px; right: -10px; bottom: -12px; }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .plate, .survey-marker { animation: none; }
+        .plate, .row, .row-go { transition: none; }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="shell bar">
+      <a class="wordmark" href="/">ORVN Labs</a>
+      <a class="bar-link" href="/">Back to the site</a>
+    </div>
+
+    <main class="lost">
+      <div class="shell">
+        <div class="lost-head">
+          <span class="tag">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11Z" />
+              <circle cx="12" cy="10" r="2.6" />
+            </svg>
+            404 · not on the register
+          </span>
+          <span class="path" id="path" title=""></span>
+        </div>
+
+        <div class="hero">
+          <div>
+            <h1>This address<br />is not listed.</h1>
+            <p class="lede">
+              No page is built at this URL. The link may be old, the page may have been retired, or
+              a published listing may have been withdrawn along with its address. Nothing is broken
+              on your side.
+            </p>
+
+            <div class="actions">
+              <a class="btn" href="/">
+                Back to the beginning
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+              </a>
+              <a class="mail" href="mailto:hello@orvnlabs.com">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3" /><path d="m4 8 8 5 8-5" /></svg>
+                hello@orvnlabs.com
+              </a>
+            </div>
+          </div>
+
+          <div class="plates" aria-hidden="true">
+            <span class="plate">4</span>
+            <span class="plate is-plot">
+              <svg class="survey" viewBox="0 0 100 100" role="presentation" focusable="false">
+                <defs>
+                  <pattern id="hatch" width="7" height="7" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+                    <line x1="0" y1="0" x2="0" y2="7" stroke="currentColor" stroke-width="1" />
+                  </pattern>
+                </defs>
+                <rect class="survey-hatch" x="10" y="10" width="80" height="80" rx="8" fill="url(#hatch)" />
+                <rect class="survey-frame" x="10" y="10" width="80" height="80" rx="8" />
+                <g class="survey-ticks">
+                  <path d="M10 26 V10 H26" />
+                  <path d="M74 10 H90 V26" />
+                  <path d="M90 74 V90 H74" />
+                  <path d="M26 90 H10 V74" />
+                </g>
+                <circle class="survey-marker" cx="50" cy="50" r="4.6" />
+              </svg>
+              <span class="plot-note">empty plot</span>
+            </span>
+            <span class="plate">4</span>
+
+            <svg class="stamp" viewBox="0 0 120 120" role="presentation" focusable="false" id="stamp">
+              <circle class="stamp-ring" cx="60" cy="60" r="55" />
+              <circle class="stamp-ring is-inner" cx="60" cy="60" r="32" />
+              <text class="stamp-mark" x="60" y="65.5" text-anchor="middle">404</text>
+            </svg>
+          </div>
+        </div>
+
+        <div class="finder">
+          <div class="finder-head">
+            <div>
+              <h2>Every page that does exist.</h2>
+              <p class="finder-note">
+                Nine of them. Type to narrow the list, or press <span class="kbd">/</span> to search.
+              </p>
+            </div>
+
+            <label>
+              <span class="field-label">Search pages</span>
+              <span class="field">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.4-3.4" /></svg>
+                <input
+                  id="q"
+                  type="search"
+                  placeholder="Early access, pricing, how it works"
+                  autocomplete="off"
+                  spellcheck="false"
+                />
+                <span class="kbd" id="kbd">/</span>
+              </span>
+            </label>
+          </div>
+
+          <nav class="list" id="list" aria-label="Every page on this site"></nav>
+          <p class="none" id="none" aria-live="polite"></p>
+        </div>
+      </div>
+    </main>
+
+    <section class="foot">
+      <div class="shell foot-inner">
+        <div>
+          <span class="eyebrow">If you were following a link</span>
+          <h2>Ask for the current one.</h2>
+          <p>
+            A listing that has been withdrawn stays withdrawn. Whoever sent you that link can share
+            a live page instead, and it will open normally.
+          </p>
+        </div>
+        <a class="btn btn-lime" href="/early-access">
+          Request early access
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg>
+        </a>
+      </div>
+    </section>
+
+    <footer class="legal">
+      <div class="shell legal-inner">
+        <span>© <span id="year">2026</span> ORVN Labs. LAREI is a product of ORVN Labs.</span>
+        <span><a href="/legal/privacy">Privacy</a> · <a href="/legal/terms">Terms</a> · <a href="mailto:hello@orvnlabs.com">hello@orvnlabs.com</a></span>
+      </div>
+    </footer>
+
+    <script>
+      (function () {
+        var PAGES = [
+          ['/', 'Home', 'What ORVN Labs is building'],
+          ['/product', 'Product', 'Websites, portfolios and published pages'],
+          ['/how-it-works', 'How it works', 'First record to published page'],
+          ['/who-its-for', 'Who it is for', 'Agents, wholesalers, investors and their teams'],
+          ['/early-access', 'Early access', 'Ask for a place in the beta'],
+          ['/faq', 'Questions', 'The practical ones, answered plainly'],
+          ['/blog', 'Journal', 'Notes from building this'],
+          ['/about', 'About', 'The company behind the product'],
+          ['/contact', 'Contact', 'One inbox, read by the people building it'],
+        ];
+
+        var GLYPHS = {
+          '/': '<path d="M4 11 12 4l8 7v8a1 1 0 0 1-1 1h-4v-6h-6v6H5a1 1 0 0 1-1-1z"/>',
+          '/product': '<rect x="4" y="4" width="16" height="16" rx="3"/><path d="M4 9h16"/>',
+          '/how-it-works': '<path d="m12 3 9 5-9 5-9-5 9-5Z"/><path d="m3 13 9 5 9-5"/>',
+          '/who-its-for': '<circle cx="12" cy="8" r="3.4"/><path d="M5 20a7 7 0 0 1 14 0"/>',
+          '/early-access': '<circle cx="12" cy="9" r="5"/><path d="m8.5 13.5-1 7 4.5-2.5 4.5 2.5-1-7"/>',
+          '/faq': '<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.6 2.6 0 1 1 3.4 2.5v1.4"/><path d="M12.9 17h.01"/>',
+          '/blog': '<path d="M5 4h11l3 3v13H5z"/><path d="M8 9h8M8 13h8M8 17h5"/>',
+          '/about': '<path d="M4 20V8l8-4 8 4v12"/><path d="M9 20v-6h6v6"/>',
+          '/contact': '<rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 8 8 5 8-5"/>',
+        };
+
+        var path = document.getElementById('path');
+        if (path) {
+          path.textContent = location.pathname + location.search;
+          path.title = location.pathname;
+        }
+
+        var year = document.getElementById('year');
+        if (year) year.textContent = new Date().getFullYear();
+
+        // The ring on the stamp is set one character at a time: textPath is the obvious way to
+        // do this and the one way to end up with an empty circle on a browser that ignores it.
+        var stamp = document.getElementById('stamp');
+        if (stamp) {
+          var ring = 'NOT ON THE REGISTER · ORVN LABS ·';
+          var step = 360 / ring.length;
+          for (var i = 0; i < ring.length; i += 1) {
+            var ch = ring[i];
+            if (ch === ' ') continue;
+            var t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            t.setAttribute('class', 'stamp-char');
+            t.setAttribute('x', '60');
+            t.setAttribute('y', '17');
+            t.setAttribute('text-anchor', 'middle');
+            t.setAttribute('transform', 'rotate(' + (-90 + step * i).toFixed(2) + ' 60 60)');
+            t.textContent = ch;
+            stamp.appendChild(t);
+          }
+        }
+
+        var list = document.getElementById('list');
+        var none = document.getElementById('none');
+        var q = document.getElementById('q');
+        var kbd = document.getElementById('kbd');
+
+        function render(needle) {
+          list.innerHTML = '';
+          var shown = 0;
+
+          PAGES.forEach(function (page) {
+            var haystack = (page[1] + ' ' + page[2] + ' ' + page[0]).toLowerCase();
+            if (needle && haystack.indexOf(needle) === -1) return;
+            shown += 1;
+
+            var a = document.createElement('a');
+            a.className = 'row';
+            a.href = page[0];
+            a.innerHTML =
+              '<span class="row-index">' + String(shown).padStart(2, '0') + '</span>' +
+              '<span class="row-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+              (GLYPHS[page[0]] || '') +
+              '</svg></span>' +
+              '<span class="row-body"><strong>' + page[1] + '</strong><span>' + page[2] + '</span></span>' +
+              '<span class="row-go"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></span>';
+            list.appendChild(a);
+          });
+
+          none.textContent = shown
+            ? ''
+            : 'Nothing on the register matches “' + needle + '”. Try a shorter word, or write to hello@orvnlabs.com and a person will point you at it.';
+        }
+
+        if (q) {
+          q.addEventListener('input', function () {
+            var value = q.value.trim().toLowerCase();
+            if (kbd) kbd.style.display = value ? 'none' : '';
+            render(value);
+          });
+
+          q.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') {
+              q.value = '';
+              if (kbd) kbd.style.display = '';
+              render('');
+            }
+          });
+        }
+
+        document.addEventListener('keydown', function (event) {
+          if (event.key !== '/' || event.metaKey || event.ctrlKey || event.altKey) return;
+          var tag = (event.target && event.target.tagName || '').toLowerCase();
+          if (tag === 'input' || tag === 'textarea' || (event.target && event.target.isContentEditable)) return;
+          event.preventDefault();
+          if (q) q.focus();
+        });
+
+        render('');
+      })();
+    </script>
+  </body>
+</html>
