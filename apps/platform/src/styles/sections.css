@@ -1565,123 +1565,123 @@
 .signin-aside { background: var(--bone-2); border-radius: var(--r-xl); padding: clamp(22px, 3vw, 34px); }
 
 /* ── 404 ──────────────────────────────────────────────────────────────
-   A house nobody ever came back to, drawn in pine ink on cream. The drawing runs full width of
-   the shell and does almost all of the talking; the copy is a card over its empty left third.
+   A house nobody came back to, drawn in pine ink on cream. The drawing is the page: full
+   bleed, behind the navigation, with no frame and no card on top of it. The number is type,
+   set into the empty ground at the left; the words sit under it.
    ------------------------------------------------------------------------ */
 
-.lost {
-  padding-top: calc(var(--nav-h) + clamp(16px, 2.4vw, 30px));
-  padding-bottom: clamp(34px, 4.6vw, 64px);
-  background: var(--bone);
-}
-
-.lost-scene {
+.lost-hero {
   position: relative;
-  margin: 0;
-  overflow: hidden;
-  border-radius: clamp(20px, 2.6vw, 34px);
-  border: 1px solid var(--line);
-  background: #f4ecd9;
-  box-shadow: var(--sh-3);
-}
-
-.lost-house {
-  display: block;
-  width: 100%;
-  height: auto;
-  aspect-ratio: 16 / 9;
-  object-fit: cover;
-  object-position: 62% 50%;
-}
-
-.lost-path {
-  position: absolute;
-  top: clamp(12px, 1.5vw, 20px);
-  right: clamp(12px, 1.5vw, 20px);
-  max-width: min(60%, 44ch);
-  padding: 7px 13px;
-  border-radius: var(--r-pill);
-  background: rgba(255, 253, 248, 0.82);
-  border: 1px solid rgba(16, 22, 19, 0.07);
-  box-shadow: var(--sh-1);
-  backdrop-filter: blur(8px);
-  font-size: 12px;
-  letter-spacing: -0.01em;
-  color: var(--muted);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* ---- The card, set in the empty ground at the left of the drawing ---- */
-
-.lost-card {
-  position: absolute;
-  left: clamp(14px, 2.2vw, 30px);
-  bottom: clamp(14px, 2.2vw, 30px);
-  width: min(408px, 34%);
-  display: grid;
-  gap: 10px;
-  padding: clamp(18px, 1.9vw, 26px);
-  border-radius: clamp(16px, 1.8vw, 22px);
-  background: rgba(255, 253, 248, 0.95);
-  border: 1px solid rgba(16, 22, 19, 0.09);
-  box-shadow: 0 30px 60px -34px rgba(28, 20, 4, 0.5), 0 2px 6px rgba(28, 20, 4, 0.05);
-  backdrop-filter: blur(10px) saturate(1.1);
-  animation: lost-card-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-.lost-pill {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 6px;
-  width: fit-content;
-  padding: 5px 11px 5px 9px;
-  border-radius: var(--r-pill);
-  background: var(--lime-pale);
-  color: var(--lime-ink);
-  font-size: 11.5px;
-  font-weight: 600;
-  letter-spacing: 0.01em;
+  min-height: clamp(600px, 92svh, 920px);
+  overflow: hidden;
+  isolation: isolate;
+  background: #f4ecd9;
+}
+
+.lost-hero-img {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 48%;
+}
+
+/* The drawing's left third is bare ground. This melts the edge of it into the page so the type
+   sits on paper rather than on top of ink, and it stops short of the house. */
+
+.lost-hero-veil {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(
+    120% 92% at 10% 56%,
+    rgba(244, 236, 217, 0.94) 0%,
+    rgba(244, 236, 217, 0.72) 42%,
+    rgba(244, 236, 217, 0) 70%
+  );
+}
+
+.lost-hero-inner {
+  position: relative;
+  width: 100%;
+  padding-block: calc(var(--nav-h) + clamp(40px, 6vw, 88px)) clamp(44px, 6vw, 88px);
+}
+
+.lost-hero-copy {
+  width: min(560px, 54%);
+  animation: lost-rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes lost-rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+
+.lost-asked {
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.lost-asked-path {
+  color: var(--ink);
+  border-bottom: 1px solid var(--lime-2);
+  padding-bottom: 1px;
+  overflow-wrap: anywhere;
 }
 
 .lost-num {
+  display: flex;
+  align-items: baseline;
+  margin: clamp(10px, 1.4vw, 18px) 0 0;
   font-family: var(--font-display);
-  font-size: clamp(46px, 5.4vw, 68px);
+  font-size: clamp(96px, 14vw, 196px);
   font-weight: 700;
-  line-height: 0.82;
-  letter-spacing: -0.055em;
-  color: var(--ink);
+  line-height: 0.76;
+  letter-spacing: -0.06em;
+  color: var(--pine);
+  user-select: none;
+}
+
+/* The zero is empty. That is the joke, and the one bit of drawing in the type. */
+
+.lost-num-hollow {
+  color: transparent;
+  -webkit-text-stroke: clamp(1.6px, 0.14vw, 2.6px) var(--pine);
 }
 
 .lost-title {
-  margin: 0;
+  margin: clamp(22px, 2.6vw, 34px) 0 0;
   font-family: var(--font-display);
-  font-size: clamp(22px, 2.2vw, 30px);
-  line-height: 1.08;
-  letter-spacing: -0.03em;
+  font-size: clamp(24px, 2.5vw, 34px);
+  line-height: 1.06;
+  letter-spacing: -0.032em;
   color: var(--ink);
   text-wrap: balance;
 }
 
 .lost-lede {
-  margin: 0;
-  max-width: 34ch;
-  font-size: 13.5px;
-  line-height: 1.6;
+  margin: 12px 0 0;
+  max-width: 42ch;
+  font-size: 14.5px;
+  line-height: 1.62;
   color: var(--muted);
 }
 
 .lost-actions {
   display: flex;
   align-items: center;
-  gap: 8px 16px;
+  gap: 10px 20px;
   flex-wrap: wrap;
-  margin-top: 4px;
+  margin-top: clamp(22px, 2.6vw, 30px);
 }
 
 .lost-mail {
-  font-size: 13px;
+  font-size: 13.5px;
   font-weight: 500;
   color: var(--ink-2);
   text-decoration: underline;
@@ -1694,103 +1694,87 @@
 
 /* ---- Every page that does exist ---- */
 
-.lost-register {
+.lost-index {
+  border-top: 1px solid var(--line);
+  background: var(--bone);
+  padding-block: clamp(20px, 2.6vw, 30px);
+}
+
+.lost-index-inner {
   display: flex;
   align-items: center;
-  gap: clamp(10px, 1.6vw, 20px);
+  gap: 10px clamp(16px, 2.4vw, 30px);
   flex-wrap: wrap;
-  margin-top: clamp(14px, 1.9vw, 22px);
 }
 
-.lost-register-label { font-size: 12.5px; color: var(--muted-2); }
+.lost-index-label { font-size: 12.5px; color: var(--muted-2); }
 
-.lost-chips { display: flex; flex-wrap: wrap; gap: 7px; }
-
-.lost-chip {
-  display: inline-flex;
+.lost-index-links {
+  display: flex;
   align-items: center;
-  gap: 7px;
-  padding: 8px 14px 8px 12px;
-  border-radius: var(--r-pill);
-  border: 1px solid var(--line-2);
-  background: var(--white);
-  color: var(--ink-2);
-  font-size: 13px;
+  gap: 6px clamp(14px, 1.8vw, 24px);
+  flex-wrap: wrap;
+}
+
+.lost-index-link {
+  position: relative;
+  font-size: 13.5px;
   font-weight: 500;
-  transition: transform 0.18s ease, background-color 0.18s ease, border-color 0.18s ease,
-    color 0.18s ease, box-shadow 0.18s ease;
+  color: var(--ink-2);
+  padding-left: 12px;
+  transition: color 0.18s ease;
 }
 
-.lost-chip:hover {
-  transform: translateY(-1px);
-  background: var(--lime-pale);
-  border-color: transparent;
-  color: var(--lime-ink);
-  box-shadow: var(--sh-1);
+.lost-index-link::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--lime-2);
+  transform: translateY(-50%);
 }
 
-/* ---- Closing band ---- */
+.lost-index-link:hover { color: var(--lime-ink); }
 
-.lost-foot { padding-block: clamp(26px, 3.4vw, 44px); }
-
-.lost-foot-inner {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: clamp(16px, 3vw, 40px);
-  align-items: center;
+@media (max-width: 1200px) {
+  .lost-hero-copy { width: min(520px, 58%); }
 }
 
-.lost-foot-line {
-  margin: 0;
-  max-width: 60ch;
-  font-size: clamp(14.5px, 1.5vw, 17px);
-  line-height: 1.55;
-  color: rgba(255, 253, 248, 0.72);
-}
+/* Below this the drawing cannot hold type on its left side, so it becomes a band at the top
+   and the words sit under it on paper. */
 
-@keyframes lost-card-in {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: none; }
-}
-
-@media (max-width: 1180px) {
-  .lost-card { width: min(384px, 40%); }
-}
-
-/* Below 1080 the drawing cannot hold a card without covering the house, so the card moves
-   under it, inside the same panel, and the picture keeps its full width. */
-
-@media (max-width: 1080px) {
-  .lost-card {
-    position: static;
-    width: auto;
-    margin: -18px clamp(12px, 3.4vw, 20px) clamp(12px, 3.4vw, 20px);
+@media (max-width: 1024px) {
+  .lost-hero {
+    display: block;
+    min-height: 0;
+    padding-top: calc(var(--nav-h) + 10px);
   }
-  .lost-path { font-size: 11px; max-width: 58%; }
-  .lost-lede { max-width: none; }
-  .lost-num { font-size: clamp(40px, 8vw, 60px); }
+  .lost-hero-img {
+    position: relative;
+    inset: auto;
+    height: auto;
+    aspect-ratio: 16 / 10;
+    object-position: 76% 50%;
+  }
+  .lost-hero-veil { display: none; }
+  .lost-hero-inner { padding-block: clamp(24px, 4vw, 40px) clamp(32px, 5vw, 48px); }
+  .lost-hero-copy { width: 100%; }
+  .lost-num { font-size: clamp(84px, 17vw, 140px); }
 }
 
-@media (max-width: 900px) {
-  .lost-foot-inner { grid-template-columns: 1fr; align-items: start; }
-}
-
-@media (max-width: 720px) {
-  .lost-house { aspect-ratio: 4 / 3; object-position: 76% 50%; }
-}
-
-@media (max-width: 560px) {
+@media (max-width: 640px) {
+  .lost-hero-img { aspect-ratio: 4 / 3; object-position: 82% 50%; }
   .lost-actions { gap: 12px; }
   .lost-actions .btn { width: 100%; justify-content: center; }
-  .lost-register { gap: 8px; }
-  .lost-chip { padding: 8px 12px; }
-  .lost-house { aspect-ratio: 5 / 4; object-position: 80% 50%; }
+  .lost-index-inner { gap: 10px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .lost-card { animation: none; }
-  .lost-chip { transition: none; }
-  .lost-chip:hover { transform: none; }
+  .lost-hero-copy { animation: none; }
+  .lost-index-link { transition: none; }
 }
 
 /* ── Blog post / markdown ─────────────────────────────────────────── */
