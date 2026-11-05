@@ -9,10 +9,6 @@ import { useDocumentMeta } from '../../lib/seo';
 const LEGAL_LINKS = [
   { label: 'Privacy policy', to: '/legal/privacy' },
   { label: 'Terms of use', to: '/legal/terms' },
-  { label: 'AI disclosure', to: '/legal/ai-disclosure' },
-  { label: 'Data retention', to: '/legal/data-retention' },
-  { label: 'Acceptable use', to: '/legal/acceptable-use' },
-  { label: 'Fair housing', to: '/legal/fair-housing' },
 ];
 
 // Shared shell for legal pages. Pass a `sections` array of { heading, body } where body is JSX.
