@@ -1565,452 +1565,207 @@
 .signin-aside { background: var(--bone-2); border-radius: var(--r-xl); padding: clamp(22px, 3vw, 34px); }
 
 /* ── 404 ──────────────────────────────────────────────────────────────
-   A property that is not on the register. Two cast house-number plates and, between them, an
-   empty surveyed plot: hatched ground, a perimeter drawn around nothing, a marker in the
-   middle, and a registry stamp laid over the corner. The ground is a survey grid. The page is
-   also a working index of every page that does exist.
+   A house that is not on the register. The page is one drawing: two boarded windows, a door
+   still shut, a survey stake in the yard and a 404 board on the lawn. The copy is a card laid
+   over the picture instead of the other way round, because the drawing is the point.
    ------------------------------------------------------------------------ */
 
 .lost {
-  position: relative;
-  overflow: hidden;
-  padding-top: calc(var(--nav-h) + clamp(24px, 3.6vw, 48px));
-  padding-bottom: clamp(36px, 5vw, 68px);
-  background:
-    radial-gradient(120% 90% at 92% -10%, rgba(201, 242, 110, 0.28), transparent 58%),
-    radial-gradient(80% 60% at -10% 10%, rgba(220, 233, 246, 0.5), transparent 60%),
-    repeating-linear-gradient(0deg, rgba(16, 22, 19, 0.045) 0 1px, transparent 1px 52px),
-    repeating-linear-gradient(90deg, rgba(16, 22, 19, 0.045) 0 1px, transparent 1px 52px),
-    var(--bone);
+  padding-top: calc(var(--nav-h) + clamp(16px, 2.4vw, 30px));
+  padding-bottom: clamp(34px, 4.6vw, 64px);
+  background: var(--bone);
 }
 
-.lost-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  flex-wrap: wrap;
+.lost-scene {
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+  border-radius: clamp(20px, 2.6vw, 34px);
+  border: 1px solid var(--line);
+  background: #f8f5ef;
+  box-shadow: var(--sh-3);
+}
+
+.lost-house { display: block; width: 100%; height: auto; }
+
+.lost-path {
+  position: absolute;
+  top: clamp(12px, 1.5vw, 20px);
+  right: clamp(12px, 1.5vw, 20px);
+  max-width: min(60%, 44ch);
+  padding: 7px 13px;
+  border-radius: var(--r-pill);
+  background: rgba(255, 253, 248, 0.78);
+  border: 1px solid rgba(16, 22, 19, 0.07);
+  box-shadow: var(--sh-1);
+  backdrop-filter: blur(8px);
+  font-size: 12px;
+  letter-spacing: -0.01em;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---- The card laid over the picture ---- */
+
+.lost-card {
+  position: absolute;
+  left: clamp(14px, 2.2vw, 30px);
+  bottom: clamp(14px, 2.2vw, 30px);
+  width: min(430px, 36%);
+  display: grid;
+  gap: 11px;
+  padding: clamp(18px, 2vw, 26px);
+  border-radius: clamp(16px, 1.8vw, 24px);
+  background: rgba(255, 253, 248, 0.87);
+  border: 1px solid rgba(255, 253, 248, 0.92);
+  box-shadow: 0 24px 54px -30px rgba(6, 12, 9, 0.55);
+  backdrop-filter: blur(16px) saturate(1.15);
+  animation: lost-card-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .lost-tag {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  padding: 7px 14px 7px 12px;
+  gap: 6px;
+  width: fit-content;
+  padding: 5px 11px 5px 9px;
   border-radius: var(--r-pill);
-  background: var(--pine);
-  color: var(--lime);
-  font-size: 12.5px;
-  letter-spacing: 0.01em;
-}
-
-.lost-path {
-  max-width: 52vw;
-  padding: 7px 13px;
-  border-radius: var(--r-pill);
-  border: 1px solid var(--line-2);
-  background: rgba(255, 253, 248, 0.6);
-  color: var(--muted);
-  font-size: 12.5px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-variant-numeric: tabular-nums;
-}
-
-/* ---- Hero: copy left, plates right ---- */
-
-.lost-hero {
-  display: grid;
-  grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
-  gap: clamp(24px, 4vw, 64px);
-  align-items: center;
-  margin-top: clamp(20px, 3vw, 40px);
+  background: var(--lime-pale);
+  color: var(--lime-ink);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
 }
 
 .lost-title {
+  margin: 0;
   font-family: var(--font-display);
-  font-size: clamp(38px, 6.2vw, 92px);
-  line-height: 0.94;
-  letter-spacing: -0.045em;
+  font-size: clamp(27px, 3.2vw, 42px);
+  line-height: 1.02;
+  letter-spacing: -0.035em;
   color: var(--ink);
+  text-wrap: balance;
 }
 
 .lost-lede {
-  margin-top: 18px;
-  max-width: 48ch;
-  font-size: clamp(15px, 1.4vw, 17px);
-  line-height: 1.62;
+  margin: 0;
+  max-width: 38ch;
+  font-size: 14px;
+  line-height: 1.6;
   color: var(--muted);
 }
 
 .lost-actions {
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: 8px 18px;
   flex-wrap: wrap;
-  margin-top: 26px;
+  margin-top: 3px;
 }
 
 .lost-mail {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  color: var(--ink);
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--ink-2);
   text-decoration: underline;
-  text-underline-offset: 4px;
   text-decoration-color: var(--line-2);
-  transition: text-decoration-color 0.18s ease, color 0.18s ease;
+  text-underline-offset: 3px;
+  transition: color 0.2s ease, text-decoration-color 0.2s ease;
 }
 
 .lost-mail:hover { color: var(--lime-ink); text-decoration-color: var(--lime-2); }
 
-.lost-plates {
-  position: relative;
+/* ---- Every page that does exist ---- */
+
+.lost-register {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: clamp(8px, 1.2vw, 16px);
-  perspective: 900px;
+  gap: clamp(10px, 1.6vw, 20px);
+  flex-wrap: wrap;
+  margin-top: clamp(14px, 1.9vw, 22px);
 }
 
-.lost-plate {
-  width: clamp(80px, 10.5vw, 128px);
-  aspect-ratio: 4 / 5;
-  display: grid;
-  place-items: center;
-  border-radius: clamp(18px, 2vw, 26px);
-  background: var(--white);
-  border: 1px solid var(--line);
-  box-shadow: var(--sh-3);
-  font-family: var(--font-display);
-  font-size: clamp(40px, 6vw, 74px);
-  line-height: 1;
-  letter-spacing: -0.05em;
-  color: var(--ink);
-  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s ease;
-  animation: lost-rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) backwards;
-}
+.lost-register-label { font-size: 12.5px; color: var(--muted-2); }
 
-.lost-plate:nth-child(1) { transform: rotate(-3.5deg) translateY(2%); animation-delay: 0.04s; }
-.lost-plate:nth-child(2) { transform: rotate(1deg) translateY(-4%); animation-delay: 0.12s; }
-.lost-plate:nth-child(3) { transform: rotate(3.5deg) translateY(2%); animation-delay: 0.2s; }
+.lost-chips { display: flex; flex-wrap: wrap; gap: 7px; }
 
-/* The missing one. Hatched ground, a perimeter being walked around nothing, one marker. */
-.lost-plate.is-plot {
-  position: relative;
-  overflow: hidden;
-  background: rgba(255, 253, 248, 0.62);
-  border: 1.5px dashed rgba(16, 22, 19, 0.3);
-  box-shadow: none;
-  color: rgba(16, 22, 19, 0.26);
-}
-
-.lost-survey { width: 76%; height: 76%; overflow: visible; }
-
-.lost-survey-hatch { opacity: 0.55; }
-
-.lost-survey-frame {
-  fill: none;
-  stroke: var(--ink);
-  stroke-opacity: 0.3;
-  stroke-width: 1.6;
-  stroke-dasharray: 6 5;
-  stroke-linecap: round;
-}
-
-.lost-survey-ticks path {
-  fill: none;
-  stroke: var(--ink);
-  stroke-opacity: 0.42;
-  stroke-width: 1.6;
-  stroke-linecap: round;
-}
-
-.lost-survey-marker {
-  fill: var(--lime-2);
-  stroke: var(--white);
-  stroke-width: 1.6;
-  transform-origin: 50px 50px;
-  filter: drop-shadow(0 0 6px rgba(182, 231, 84, 0.75));
-  animation: lost-marker 3.8s ease-in-out infinite;
-}
-
-.lost-plot-note {
-  position: absolute;
-  bottom: 7px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 10.5px;
-  letter-spacing: 0.01em;
-  color: var(--muted-2);
-  white-space: nowrap;
-}
-
-/* The registry stamp, laid over the plates the way a rejected application gets one. */
-.lost-stamp {
-  position: absolute;
-  right: clamp(-18px, -1.4vw, -8px);
-  bottom: clamp(-18px, -1.6vw, -10px);
-  width: clamp(72px, 8.2vw, 104px);
-  height: auto;
-  transform: rotate(-9deg);
-  color: var(--lime-ink);
-  opacity: 0.9;
-  mix-blend-mode: multiply;
-  pointer-events: none;
-}
-
-.lost-stamp-ring { fill: none; stroke: currentColor; stroke-width: 1.4; }
-.lost-stamp-ring.is-inner { stroke-width: 1.1; stroke-opacity: 0.5; }
-.lost-stamp-char {
-  font-family: var(--font-body);
-  font-size: 8.6px;
-  font-weight: 600;
-  fill: currentColor;
-}
-.lost-stamp-mark {
-  font-family: var(--font-display);
-  font-size: 17px;
-  letter-spacing: -0.02em;
-  fill: currentColor;
-}
-
-/* Straighten the plates when the pointer arrives: the only motion on the page that reacts. */
-.lost-plates:hover .lost-plate:nth-child(1) { transform: rotate(-1.5deg) translateY(0); }
-.lost-plates:hover .lost-plate:nth-child(2) { transform: rotate(0.5deg) translateY(-1.5%); }
-.lost-plates:hover .lost-plate:nth-child(3) { transform: rotate(1.5deg) translateY(0); }
-
-@keyframes lost-rise {
-  from { opacity: 0; transform: translateY(18px) rotate(0deg); }
-}
-
-@keyframes lost-marker {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.14); }
-}
-
-/* ---- The index ---- */
-
-.lost-finder {
-  margin-top: clamp(30px, 4.5vw, 64px);
-  padding: clamp(20px, 3vw, 36px);
-  border-radius: clamp(22px, 2.6vw, 34px);
-  background: rgba(255, 253, 248, 0.86);
-  border: 1px solid var(--line);
-  box-shadow: var(--sh-2);
-  backdrop-filter: blur(8px);
-}
-
-.lost-finder-head {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 320px);
-  gap: clamp(14px, 2.4vw, 32px);
-  align-items: end;
-}
-
-.lost-finder-title {
-  font-size: clamp(20px, 2.4vw, 28px);
-  letter-spacing: -0.028em;
-}
-
-.lost-finder-note {
-  margin-top: 6px;
-  font-size: 13.5px;
-  color: var(--muted);
-}
-
-.lost-field { display: block; }
-
-.lost-field-label {
-  display: block;
-  margin-bottom: 7px;
-  font-size: 12px;
-  color: var(--muted-2);
-}
-
-.lost-field-inner {
-  display: flex;
+.lost-chip {
+  display: inline-flex;
   align-items: center;
-  gap: 9px;
-  padding: 0 14px;
-  height: 46px;
+  gap: 7px;
+  padding: 8px 14px 8px 12px;
   border-radius: var(--r-pill);
   border: 1px solid var(--line-2);
   background: var(--white);
-  color: var(--muted);
-  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+  color: var(--ink-2);
+  font-size: 13px;
+  font-weight: 500;
+  transition: transform 0.18s ease, background-color 0.18s ease, border-color 0.18s ease,
+    color 0.18s ease, box-shadow 0.18s ease;
 }
 
-.lost-field-inner:focus-within {
-  border-color: var(--ink);
-  box-shadow: 0 0 0 4px rgba(201, 242, 110, 0.34);
-}
-
-.lost-field-inner input {
-  flex: 1;
-  min-width: 0;
-  border: 0;
-  outline: 0;
-  background: transparent;
-  font: inherit;
-  font-size: 14px;
-  color: var(--ink);
-}
-
-.lost-field-inner input::placeholder { color: var(--muted-2); }
-.lost-field-inner input::-webkit-search-cancel-button { display: none; }
-
-.lost-kbd {
-  display: inline-grid;
-  place-items: center;
-  min-width: 21px;
-  height: 21px;
-  padding: 0 5px;
-  border-radius: 6px;
-  border: 1px solid var(--line-2);
-  background: var(--white);
-  font-family: var(--font-body);
-  font-size: 11.5px;
-  line-height: 1;
-  color: var(--muted);
-}
-
-.lost-clear {
-  display: grid;
-  place-items: center;
-  width: 22px;
-  height: 22px;
-  border: 0;
-  border-radius: 50%;
-  background: var(--bone-2);
-  color: var(--ink);
-  cursor: pointer;
-  transition: background 0.16s ease;
-}
-
-.lost-clear:hover { background: var(--lime-pale); }
-
-.lost-list {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
-  margin-top: clamp(16px, 2.2vw, 26px);
-}
-
-.lost-row {
-  display: grid;
-  grid-template-columns: 26px 38px minmax(0, 1fr) 30px;
-  gap: 12px;
-  align-items: center;
-  padding: 13px 14px;
-  border-radius: var(--r-md);
-  border: 1px solid transparent;
-  transition: background 0.16s ease, border-color 0.16s ease, transform 0.16s ease;
-}
-
-.lost-row:hover {
+.lost-chip:hover {
+  transform: translateY(-1px);
   background: var(--lime-pale);
-  border-color: rgba(182, 231, 84, 0.7);
-  transform: translateX(2px);
+  border-color: transparent;
+  color: var(--lime-ink);
+  box-shadow: var(--sh-1);
 }
-
-.lost-row-index {
-  font-size: 11.5px;
-  color: var(--muted-2);
-  font-variant-numeric: tabular-nums;
-}
-
-.lost-row-icon {
-  width: 38px;
-  height: 38px;
-  border-radius: 12px;
-  display: grid;
-  place-items: center;
-  background: var(--bone-2);
-  color: var(--ink);
-}
-
-.lost-row:hover .lost-row-icon { background: var(--white); }
-
-.lost-row-body { display: grid; gap: 2px; min-width: 0; }
-.lost-row-body strong { font-size: 14.5px; font-weight: 600; letter-spacing: -0.01em; }
-.lost-row-body span {
-  font-size: 12.5px;
-  color: var(--muted);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.lost-row-go {
-  display: grid;
-  place-items: center;
-  color: var(--muted-2);
-  opacity: 0;
-  transform: translate(-4px, 4px);
-  transition: opacity 0.16s ease, transform 0.16s ease, color 0.16s ease;
-}
-
-.lost-row:hover .lost-row-go { opacity: 1; transform: none; color: var(--lime-ink); }
-
-.lost-none {
-  min-height: 0;
-  margin-top: 14px;
-  font-size: 13.5px;
-  line-height: 1.6;
-  color: var(--muted);
-}
-
-.lost-none:empty { margin-top: 0; }
 
 /* ---- Closing band ---- */
 
-.lost-foot { padding-block: clamp(32px, 4.5vw, 60px); }
+.lost-foot { padding-block: clamp(26px, 3.4vw, 44px); }
 
 .lost-foot-inner {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  gap: clamp(18px, 3vw, 40px);
-  align-items: end;
+  gap: clamp(16px, 3vw, 40px);
+  align-items: center;
 }
 
-.lost-foot-title {
-  margin-top: 12px;
-  font-size: clamp(24px, 3.2vw, 40px);
-  letter-spacing: -0.032em;
-  color: var(--white);
+.lost-foot-line {
+  margin: 0;
+  max-width: 60ch;
+  font-size: clamp(14.5px, 1.5vw, 17px);
+  line-height: 1.55;
+  color: rgba(255, 253, 248, 0.72);
 }
 
-.lost-foot-body {
-  margin-top: 10px;
-  max-width: 56ch;
-  font-size: 14.5px;
-  line-height: 1.62;
-  color: rgba(255, 253, 248, 0.62);
+@keyframes lost-card-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
 }
 
 @media (max-width: 900px) {
-  .lost-hero { grid-template-columns: 1fr; gap: 26px; }
-  .lost-plates { justify-content: flex-start; }
-  .lost-finder-head { grid-template-columns: 1fr; align-items: start; }
-  .lost-list { grid-template-columns: 1fr; }
   .lost-foot-inner { grid-template-columns: 1fr; align-items: start; }
 }
 
-@media (max-width: 620px) {
-  .lost-path { max-width: 100%; }
-  .lost-title { font-size: clamp(34px, 11vw, 52px); }
-  .lost-stamp { width: 64px; right: -10px; bottom: -12px; }
-  .lost-row { grid-template-columns: 22px 34px minmax(0, 1fr); }
-  .lost-row-go { display: none; }
+/* On a phone the picture keeps the full width and the card sits under it, inside the same
+   panel, so nothing is squeezed into a corner. */
+
+@media (max-width: 1080px) {
+  .lost-card {
+    position: static;
+    width: auto;
+    margin: -16px clamp(12px, 3.4vw, 18px) clamp(12px, 3.4vw, 18px);
+  }
+  .lost-path { font-size: 11px; max-width: 58%; }
+  .lost-lede { max-width: none; }
+}
+
+@media (max-width: 560px) {
+  .lost-actions { gap: 12px; }
+  .lost-actions .btn { width: 100%; justify-content: center; }
+  .lost-register { gap: 8px; }
+  .lost-chip { padding: 8px 12px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .lost-plate, .lost-survey-marker { animation: none; }
-  .lost-plate { transition: none; }
-  .lost-row, .lost-row-go { transition: none; }
+  .lost-card { animation: none; }
+  .lost-chip { transition: none; }
+  .lost-chip:hover { transform: none; }
 }
 
 /* ── Blog post / markdown ─────────────────────────────────────────── */
