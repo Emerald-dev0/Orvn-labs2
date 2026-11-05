@@ -73,7 +73,7 @@ export default function Footer() {
         <div className="footer-bottom">
           <p>© {new Date().getFullYear()} ORVN Labs. LAREI is a product of ORVN Labs.</p>
           <div className="footer-bottom-links">
-            <Link href="/blog">Journal</Link>
+            <Link href="/faq">Questions</Link>
             <a href="mailto:hello@orvnlabs.com">hello@orvnlabs.com</a>
           </div>
         </div>
