@@ -17,6 +17,7 @@ import {
   Cancel01Icon,
   CheckmarkBadge01Icon,
   CheckmarkCircle02Icon,
+  ViewOffIcon,
   Clock01Icon,
   Copy01Icon,
   DashboardSquare02Icon,
@@ -52,7 +53,7 @@ import {
   Wallet01Icon,
   Logout01Icon,
   HelpCircleIcon,
-} from '@hugeicons/core-free-icons';
+  } from '@hugeicons/core-free-icons';
 
 /**
  * One icon module for the product surface. Hugeicons free set, stroke drawn to match the
@@ -80,6 +81,7 @@ const ICONS = {
   arrowDown: ArrowDown01Icon,
 
   check: Tick02Icon,
+  eyeOff: ViewOffIcon,
   checkCircle: CheckmarkCircle02Icon,
   badge: CheckmarkBadge01Icon,
   alert: Alert02Icon,

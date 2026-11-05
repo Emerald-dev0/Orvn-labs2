@@ -27,7 +27,7 @@ export default function About() {
   useDocumentMeta({
     title: 'About ORVN Labs',
     description:
-      'ORVN Labs builds software for how real estate gets presented. LAREI is its current product, in private beta. PAS, an earlier product, is archived.',
+      'ORVN Labs builds software for how real estate gets presented. LAREI is its current product, in private beta.',
     path: '/about',
   });
 
@@ -56,14 +56,15 @@ export default function About() {
             </Reveal>
 
             <Reveal delay={0.08} className="about-card">
-              <span className="eyebrow">Earlier product</span>
-              <h2>PAS</h2>
+              <span className="eyebrow">The beta</span>
+              <h2>Who gets in</h2>
               <p>
-                First-contact response for brokerages, offered before LAREI. No longer actively
-                developed and not part of the LAREI beta. The page stays online for old links.
+                Invitation only, in small cohorts, so the workflow can still be changed by the
+                people using it. Nothing is charged during the beta. Requests are reviewed by a
+                person, not a queue.
               </p>
-              <Link href="/pas" className="arrow-link">
-                PAS (archived)
+              <Link href="/early-access" className="arrow-link">
+                Request access
                 <ArrowUpRight strokeWidth={2} />
               </Link>
             </Reveal>

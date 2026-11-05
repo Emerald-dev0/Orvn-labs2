@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+defaults:
+  run:
+    working-directory: apps/platform
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: apps/platform/package-lock.json
+
+      - run: npm ci
+
+      # Typecheck first: it is the cheapest signal and fails fastest.
+      - run: npx tsc --noEmit
+
+      - run: npx vitest run
+
+      # The build needs no secrets: environment parsing is lazy, and missing production
+      # configuration is reported at runtime by /api/health rather than at compile time.
+      - run: npm run build
+        env:
+          NEXT_TELEMETRY_DISABLED: 1
+
+  policies:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Every tenant table must have RLS in the policy file, and the public role must not be
+      # able to read inquiries, invitations or audit entries. This runs without a database.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: apps/platform/package-lock.json
+
+      - run: npm ci
+        working-directory: apps/platform
+
+      - run: npx vitest run test/security.test.ts
+        working-directory: apps/platform

@@ -9,7 +9,18 @@ const nextConfig = {
   reactStrictMode: true,
   turbopack: { root: here },
   poweredByHeader: false,
-  serverExternalPackages: ['ws'],
+  serverExternalPackages: ['ws', 'sharp'],
+  // Retired pages. The archived product page and the policies that only described it are
+  // gone; old links land on something that still answers rather than a 404.
+  async redirects() {
+    return [
+      { source: '/pas', destination: '/about', permanent: true },
+      { source: '/legal/ai-disclosure', destination: '/legal/privacy', permanent: true },
+      { source: '/legal/data-retention', destination: '/legal/privacy', permanent: true },
+      { source: '/legal/acceptable-use', destination: '/legal/terms', permanent: true },
+      { source: '/legal/fair-housing', destination: '/legal/terms', permanent: true },
+    ];
+  },
   async headers() {
     return [
       { source: '/:path*', headers: baselineHeaders },

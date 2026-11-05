@@ -323,3 +323,34 @@ export const auditEvents = pgTable(
   },
   (t) => [index('audit_events_workspace_idx').on(t.workspaceId, t.createdAt)],
 );
+
+/* ── Beta access requests ──────────────────────────────────────────────── */
+
+/**
+ * Waitlist applications. Operator data, not tenant data: no workspace owns a row, so no
+ * tenant role can read them. They are readable only over the admin connection.
+ *
+ * One row per email. A resubmission is accepted and ignored rather than creating a second
+ * application, which keeps the inbox honest and stops the form from being an existence oracle.
+ */
+export const betaApplications = pgTable(
+  'beta_applications',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    name: text('name').notNull(),
+    email: text('email').notNull(),
+    company: text('company'),
+    role: text('role'),
+    markets: text('markets'),
+    volume: text('volume'),
+    currentTools: text('current_tools'),
+    frustration: text('frustration'),
+    website: text('website'),
+    consent: boolean('consent').notNull().default(false),
+    status: text('status').notNull().default('new'),
+    source: text('source'),
+    ipHash: text('ip_hash'),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [uniqueIndex('beta_applications_email_key').on(t.email)],
+);

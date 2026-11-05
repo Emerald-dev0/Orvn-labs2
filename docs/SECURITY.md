@@ -10,6 +10,7 @@ code today, not what is planned. Where something is missing it says so.
 | Workspace records (drafts, facts, internal notes) | A competitor reads somebody's pipeline, or a seller's private data leaks |
 | Unpublished pages and private files | A deal is disclosed before the owner is ready |
 | Inquiries | A buyer's name, address and question become public, or land in the wrong business |
+| Beta applications | The waitlist leaks, or a request is lost |
 | Seller documents inside a record | Contract, ID or personal data exposure |
 | Beta membership | The private beta becomes an open sign-up |
 | Credentials | Everything above |
@@ -63,6 +64,11 @@ daily rotation, five-minute cookie cache. Signing out revokes the session row.
 account; the magic-link call swallows a beta-gate rejection and returns the same sentence. The
 invite page shows a masked address (`d•••@example.com`), never the full one.
 
+**Account recovery.** `/forgot-password` requests a single-use link (one hour) and `/reset-password`
+consumes it. The request form answers identically whether or not the address exists. A password
+change invalidates the other sessions on the account, which is the only safe behaviour when the
+reason for resetting might be a compromise.
+
 **Rate limits** on auth endpoints (Better Auth, per route) plus the application limiter below.
 Caveat: Better Auth's limiter is in-memory, so on Workers it is per-isolate. The
 application-level limiter is the one that holds.
@@ -86,6 +92,8 @@ and all thirteen have RLS enabled with explicit policies.
 
 - `larei_app` — members read; `owner`/`editor` write; deletes restricted to owners; beta
   invitations (no workspace) are invisible to tenants entirely.
+- `beta_applications` has RLS enabled and **no** policy: it belongs to no workspace, so neither
+  application role can read or write it. Only the admin connection touches it.
 - `larei_public` — read-only over published projections: published properties, approved and
   public facts, public media, publications that are not withdrawn, published profiles. It can
   insert an inquiry (with consent, matching workspace, published property) and a view counter.
@@ -133,7 +141,22 @@ name the property or hint that a record exists.
 **Files** are never linked directly. `/api/media/[...key]` checks the key's shape, then the row:
 public visibility, published property, allowed content type (jpg/png/webp/avif/pdf — never svg,
 html or js). Anything else is a 404, and storage stays private behind a signed request that never
-reaches the browser.
+reaches the browser. With no database configured the gate refuses: a preview build is not a file
+host.
+
+**Renditions are derived, never addressed.** `?w=480|960|1600` selects a WebP made at upload and
+stored beside the original, but the width is resolved against the stored key *after*
+authorisation. A caller cannot name a variant the release check has not seen, and a guessed
+rendition key is a 404 like any other. Unknown widths are ignored rather than rejected.
+
+**Cache policy is revalidation, not expiry.** Media is served `private, no-cache` with a strong
+ETag, so a browser re-checks on every request and a withdrawal of publication takes effect on the
+next one. The earlier 60-second window is gone: correctness was worth one indexed row read.
+
+**Photo metadata is stripped at upload.** Renditions are re-encoded without EXIF, which removes
+GPS coordinates, device serials and capture times, and the orientation tag is baked into the
+pixels first so portraits stay upright. A listing photo should not carry the seller's
+whereabouts.
 
 **Metadata is derived from the same snapshot.** `generateMetadata` builds title, description and
 image from approved values only; the OG image renders the same fields. A private file cannot
@@ -196,7 +219,7 @@ debug log and it holds no message bodies.
 
 ## 11. What is tested, and what is not
 
-`npm test` — 43 tests, all green.
+`npm test` — 92 tests, all green.
 
 - **Snapshot boundary** (11): approval + public + non-empty; private media excluded; address
   gating; “on request” cannot leak an amount; missing price is not zero; leading-zero parcel
@@ -209,6 +232,18 @@ debug log and it holds no message bodies.
   inquiries, invitations, audit or memberships; inquiries are insert-only for a visitor;
   consent and publication are required by the policy; snapshots are immutable and analytics
   append-only.
+- **Workspace layer** (17): money formatting never invents an amount, relative time, record
+  completeness, label humanising, property update schema (uuid ids, money precision, location
+  precision default), creation schema, and that the member form cannot mint an owner.
+- **Upload validation** (8): type comes from magic bytes, not the filename; HTML renamed to
+  `.jpg` is refused; declared/actual mismatch is refused; empty and oversized files are refused;
+  traversal fragments are stripped from stored names.
+- **Images** (14): rendition keys stay inside the shape the gate accepts, documents never get
+  renditions, a width is only honoured if we made it, `srcset` never promises an upscale, and the
+  encoder really does drop EXIF and bake in orientation (checked by decoding the output).
+- **Early access** (10): consent required, name and email validated, free text capped; the
+  notification is replyable, idempotent per application, and carries every answer; applications
+  are operator-only (RLS enabled, no policy, no grant to either application role).
 - Existing email tests (4).
 
 Not covered yet, stated plainly:
@@ -250,15 +285,24 @@ Incident responses that exist today:
 
 ## 13. Gaps, in the order they matter
 
-1. **The workspace UI still reads fixtures.** The backend exists; `/dashboard`, `/properties` and
-   the editor are not wired to it yet. That is the next slice, and it is where publish/unpublish
-   buttons start writing real snapshots.
+1. **The workspace is half-wired.** `lib/data/workspace.ts` and `lib/actions/*` now cover
+   creating a property, editing it, recording facts and decisions, attesting rights,
+   publish/unpublish/archive, inquiry status, the professional profile and member invitations.
+   `/properties`, `/properties/[id]`, `/properties/new`, `/inquiries` and `/dashboard` read from
+   the database and call those actions. `/website`, `/analytics` and `/settings` still render the
+   sample workspace. Without `DATABASE_URL` the whole app falls back to that sample workspace
+   behind a visible "Preview build" banner, so the preview is never mistaken for live data.
 2. **No live policy test.** A Neon branch plus a test that runs as `larei_app` and asserts
    cross-tenant reads return zero rows would turn the static checks into proof.
 3. **Better Auth rate limiting is per-isolate.** Move to the Postgres limiter or Workers rate
    limiting before the beta opens.
-4. **No upload pipeline.** R2 credentials, signed uploads, size/type limits and per-file
-   visibility are designed but not built.
-5. **No admin surface.** Beta invitations are a script.
+4. **Uploads are server-side only.** `uploadMedia` validates bytes, writes to R2 and records a
+   row; files start private and `setCoverMedia` / `setMediaVisibility` / `removeMedia` follow the
+   same rules. Still missing: image resizing and thumbnails, HEIC acceptance, per-workspace
+   storage quota, and a background sweep for objects whose rows were deleted mid-failure.
+5. **No admin surface.** Beta invitations are a script; there is no UI for the waitlist or for
+   revoking a member, and `revokeMember` is a stub that says so rather than pretending.
 6. **No CSP reporting.** `report-uri` plus a collector would tell us what breaks rather than
    waiting for a user to say the page is blank.
+7. **No integration tests against a live database.** CI now typechecks, runs the unit suite,
+   re-checks policy coverage and builds on every push, but nothing in CI opens a connection.

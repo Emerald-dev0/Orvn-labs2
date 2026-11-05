@@ -1,8 +1,10 @@
 import NotFound from '../src/views/NotFound';
 
 export const metadata = {
-  title: 'Page not found',
-  description: 'That page does not exist. Here is the way back.',
+  title: 'Not on the register',
+  description:
+    'That address is not listed here. Search every page, or go back to the beginning.',
+  robots: { index: false, follow: true },
 };
 
 export default function NotFoundRoute() {

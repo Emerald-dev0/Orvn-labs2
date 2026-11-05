@@ -5,9 +5,9 @@ import { Icon } from '../icons';
 import { PageHead, Card, EmptyState } from '../ui';
 import { inquiries } from '../data';
 
-export default function Inquiries({ empty = false }) {
-  const [selectedId, setSelectedId] = useState(inquiries[0]?.id);
-  const items = empty ? [] : inquiries;
+export default function Inquiries({ empty = false, items: provided = inquiries }) {
+  const [selectedId, setSelectedId] = useState(provided[0]?.id);
+  const items = empty ? [] : provided;
   const selected = items.find((i) => i.id === selectedId) ?? items[0];
 
   if (empty) {

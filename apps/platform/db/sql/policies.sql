@@ -424,3 +424,13 @@ revoke all on function app_inspect_invitation(text, text) from public;
 grant execute on function app_accept_invitation(text, text, text, text, text) to larei_app;
 grant execute on function app_create_workspace(text, text) to larei_app;
 grant execute on function app_inspect_invitation(text, text) to larei_app;
+
+-- ---------------------------------------------------------------------------
+-- Beta applications
+--
+-- Operator data. No tenant owns a row, so neither application role gets a policy: RLS is
+-- enabled and denies everything by default. Applications are read and written only over the
+-- admin connection, which is the table owner and therefore bypasses these policies.
+-- ---------------------------------------------------------------------------
+
+alter table beta_applications enable row level security;

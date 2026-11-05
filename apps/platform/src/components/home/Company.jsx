@@ -17,11 +17,6 @@ const FACTS = [
     d: 'Private beta. Applications reviewed individually.',
   },
   {
-    k: 'Earlier product',
-    v: 'PAS',
-    d: 'Archived, and kept online for old links.',
-  },
-  {
     k: 'Contact',
     v: 'hello@orvnlabs.com',
     d: 'One inbox, read by the people building it.',
@@ -51,9 +46,8 @@ export default function Company() {
             </Reveal>
             <Reveal delay={0.14}>
               <p className="company-note">
-                PAS, our earlier product for first-contact response, is archived. Screens and
-                listings on this site are illustrative, and anything still in development is
-                labelled as such.
+                Screens and listings on this site are illustrative, and anything still in
+                development is labelled as such.
               </p>
             </Reveal>
 
@@ -62,9 +56,6 @@ export default function Company() {
                 <Link href="/about" className="btn btn-lime btn-sm">
                   More about ORVN Labs
                   <ArrowUpRight strokeWidth={2} />
-                </Link>
-                <Link href="/pas" className="company-link">
-                  PAS archive note
                 </Link>
               </div>
             </Reveal>

@@ -11,7 +11,7 @@ const NAV = [
   { href: '/dashboard', label: 'Overview', icon: 'dashboard' },
   { href: '/properties', label: 'Properties', icon: 'properties' },
   { href: '/website', label: 'My website', icon: 'website' },
-  { href: '/inquiries', label: 'Inquiries', icon: 'inquiries', badge: 2 },
+  { href: '/inquiries', label: 'Inquiries', icon: 'inquiries', badgeKey: 'inquiries' },
   { href: '/analytics', label: 'Analytics', icon: 'analytics' },
   { href: '/settings', label: 'Settings', icon: 'settings' },
 ];
@@ -32,7 +32,7 @@ function Brand() {
   );
 }
 
-export default function AppShell({ children }) {
+export default function AppShell({ children, workspace: ws = workspace, unread = 0, demo = false }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
@@ -62,7 +62,9 @@ export default function AppShell({ children }) {
         >
           <Icon name={item.icon} size={19} strokeWidth={1.6} />
           <span>{item.label}</span>
-          {item.badge ? <span className="ws-nav-badge">{item.badge}</span> : null}
+          {item.badgeKey === 'inquiries' && unread > 0 ? (
+            <span className="ws-nav-badge">{unread}</span>
+          ) : null}
         </Link>
       ))}
     </nav>
@@ -76,8 +78,8 @@ export default function AppShell({ children }) {
           <button type="button" className="ws-switcher" aria-label="Switch workspace">
             <span className="ws-switcher-initial">N</span>
             <span className="ws-switcher-text">
-              <strong>{workspace.name}</strong>
-              <em>{workspace.handle}</em>
+              <strong>{ws.name}</strong>
+              <em>{ws.handle}</em>
             </span>
             <Icon name="arrowDown" size={15} strokeWidth={2} />
           </button>
@@ -94,10 +96,10 @@ export default function AppShell({ children }) {
             View public site
           </Link>
           <div className="ws-account">
-            <Avatar initials={workspace.owner.initials} />
+            <Avatar initials={ws.owner.initials} />
             <span className="ws-account-text">
-              <strong>{workspace.owner.name}</strong>
-              <em>{workspace.plan}</em>
+              <strong>{ws.owner.name}</strong>
+              <em>{ws.plan}</em>
             </span>
             <button type="button" className="ws-icon-btn" aria-label="Account menu">
               <Icon name="more" size={18} strokeWidth={1.8} />
@@ -147,6 +149,15 @@ export default function AppShell({ children }) {
         </header>
 
         <main className="ws-main" id="main">
+          {demo ? (
+            <div className="ws-demo-banner" role="status">
+              <strong>Preview build</strong>
+              <span>
+                Sample data. No database is connected, so nothing here is saved and nothing is
+                published.
+              </span>
+            </div>
+          ) : null}
           {children}
         </main>
       </div>

@@ -1,31 +1,18 @@
-"use client";
+'use client';
 
-import React, { useState } from 'react';
+import React, { useActionState } from 'react';
 import Link from 'next/link';
 import { ArrowRight, Check, Mail } from 'lucide-react';
 import PageWrapper from '../components/PageWrapper';
 import PageHero from '../components/site/PageHero';
 import { Reveal } from '../components/site/Reveal';
-import { useDocumentMeta } from '../lib/seo';
+import { requestEarlyAccess } from '../../app/(site)/early-access/actions';
 
 const ROLES = ['Agent or broker', 'Developer', 'Small agency', 'Property manager', 'Other'];
 const VOLUMES = ['0–2', '3–10', '11–30', '31+', 'Prefer not to say'];
 
 export default function EarlyAccess() {
-  useDocumentMeta({
-    title: 'Request beta access',
-    description:
-      'LAREI is onboarding in small cohorts. Tell us what you publish today and a person will read your request.',
-    path: '/early-access',
-  });
-
-  const [status, setStatus] = useState('idle');
-
-  const onSubmit = (e) => {
-    e.preventDefault();
-    setStatus('sending');
-    setTimeout(() => setStatus('success'), 700);
-  };
+  const [state, formAction, pending] = useActionState(requestEarlyAccess, { status: 'idle' });
 
   return (
     <PageWrapper>
@@ -39,13 +26,13 @@ export default function EarlyAccess() {
         <div className="shell">
           <div className="form-shell">
             <div>
-              {status === 'success' ? (
+              {state.status === 'sent' ? (
                 <Reveal className="form-success-block">
                   <span className="form-success-icon"><Check size={20} strokeWidth={2.6} /></span>
                   <h2>Your request is in review.</h2>
                   <p>
-                    A person reads it, and if there is a suitable place in the next cohort you will
-                    get an email with a workspace invitation. No newsletter and no follow-up sequence.
+                    A person reads it. If there is a suitable place in the next cohort, you will get
+                    an email with a workspace invitation. No newsletter and no follow-up sequence.
                   </p>
                   <Link href="/" className="btn btn-primary">
                     Back to the site
@@ -53,57 +40,71 @@ export default function EarlyAccess() {
                   </Link>
                 </Reveal>
               ) : (
-                <form onSubmit={onSubmit} className="form-grid">
+                <form action={formAction} className="form-grid">
                   <div className="field">
                     <label className="field-label" htmlFor="name">Full name</label>
-                    <input id="name" required className="input" placeholder="Ada Okonkwo" />
+                    <input id="name" name="name" required minLength={2} maxLength={120} className="input" placeholder="Ada Okonkwo" autoComplete="name" />
                   </div>
                   <div className="field">
                     <label className="field-label" htmlFor="email">Work email</label>
-                    <input id="email" required type="email" className="input" placeholder="you@business.com" />
+                    <input id="email" name="email" required type="email" maxLength={254} className="input" placeholder="you@business.com" autoComplete="email" />
                   </div>
                   <div className="field">
                     <label className="field-label" htmlFor="company">Company or business</label>
-                    <input id="company" className="input" placeholder="Optional" />
+                    <input id="company" name="company" maxLength={160} className="input" placeholder="Optional" autoComplete="organization" />
                   </div>
                   <div className="field">
                     <label className="field-label" htmlFor="role">Your role</label>
-                    <select id="role" required className="select" defaultValue="">
+                    <select id="role" name="role" required className="select" defaultValue="">
                       <option value="" disabled>Select a role</option>
-                      {ROLES.map((r) => <option key={r}>{r}</option>)}
+                      {ROLES.map((role) => <option key={role} value={role}>{role}</option>)}
                     </select>
                   </div>
                   <div className="field">
                     <label className="field-label" htmlFor="markets">Primary market</label>
-                    <input id="markets" required className="input" placeholder="City or region" />
+                    <input id="markets" name="markets" required maxLength={200} className="input" placeholder="City or region" />
                   </div>
                   <div className="field">
                     <label className="field-label" htmlFor="volume">Properties presented monthly</label>
-                    <select id="volume" className="select" defaultValue="">
+                    <select id="volume" name="volume" className="select" defaultValue="">
                       <option value="" disabled>Select a range</option>
-                      {VOLUMES.map((v) => <option key={v}>{v}</option>)}
+                      {VOLUMES.map((volume) => <option key={volume} value={volume}>{volume}</option>)}
                     </select>
                   </div>
                   <div className="field span-2">
                     <label className="field-label" htmlFor="current">How do you share properties today?</label>
-                    <textarea id="current" required className="textarea" rows={3} placeholder="Links, PDFs, WhatsApp, a website, a deck." />
+                    <textarea id="current" name="current" required maxLength={1000} className="textarea" rows={3} placeholder="Links, PDFs, WhatsApp, a website, a deck." />
                   </div>
                   <div className="field span-2">
                     <label className="field-label" htmlFor="frustration">What is the most frustrating part of that?</label>
-                    <textarea id="frustration" required className="textarea" rows={3} placeholder="Be specific. This is the part we are building against." />
+                    <textarea id="frustration" name="frustration" required maxLength={1000} className="textarea" rows={3} placeholder="Be specific. This is the part we are building against." />
                   </div>
                   <div className="field span-2">
                     <label className="field-label" htmlFor="site">Website or professional profile</label>
-                    <input id="site" className="input" placeholder="Optional" />
+                    <input id="site" name="site" maxLength={200} className="input" placeholder="Optional" />
                   </div>
 
+                  {/* Honeypot: a real person never fills this in. */}
+                  <div className="field span-2" aria-hidden="true" style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, overflow: 'hidden' }}>
+                    <label htmlFor="company_url_confirm">Company URL</label>
+                    <input id="company_url_confirm" name="company_url_confirm" type="text" tabIndex={-1} autoComplete="off" />
+                  </div>
+
+                  {state.status === 'error' ? (
+                    <p className="form-error span-2" role="alert">{state.message}</p>
+                  ) : null}
+
                   <div className="form-foot span-2">
-                    <p className="form-legal">
-                      By sending this you agree that ORVN Labs may contact you about LAREI early
-                      access. See our <Link href="/legal/privacy">Privacy Policy</Link>.
-                    </p>
-                    <button type="submit" className="btn btn-primary" disabled={status === 'sending'}>
-                      {status === 'sending' ? 'Sending' : 'Request access'}
+                    <label className="form-legal" htmlFor="consent" style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+                      <input id="consent" name="consent" type="checkbox" required style={{ marginTop: 3 }} />
+                      <span>
+                        I agree that ORVN Labs may contact me about LAREI early access. See our{' '}
+                        <Link href="/legal/privacy">Privacy Policy</Link>. Nothing else is done with
+                        these details.
+                      </span>
+                    </label>
+                    <button type="submit" className="btn btn-primary" disabled={pending}>
+                      {pending ? 'Sending' : 'Request access'}
                       <ArrowRight strokeWidth={2.2} />
                     </button>
                   </div>
@@ -120,8 +121,8 @@ export default function EarlyAccess() {
               <p>A request is not a guaranteed invitation, and nothing is charged during the beta.</p>
 
               <ul className="form-aside-list">
-                {['Reviewed individually', 'Invitations in small cohorts', 'No payment during beta'].map((t) => (
-                  <li key={t}><Check size={12} strokeWidth={3} />{t}</li>
+                {['Reviewed individually', 'Invitations in small cohorts', 'No payment during beta'].map((item) => (
+                  <li key={item}><Check size={12} strokeWidth={3} />{item}</li>
                 ))}
               </ul>
 

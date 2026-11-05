@@ -62,6 +62,50 @@ export async function fetchObject(key: string): Promise<Response | null> {
   return response.ok ? response : null;
 }
 
+/** Uploads go server-side: the browser never holds a write credential. */
+export async function putObject(
+  key: string,
+  body: ArrayBuffer,
+  contentType: string,
+): Promise<boolean> {
+  const creds = credentials();
+  if (!creds) return false;
+
+  const url = new URL(
+    `https://${creds.accountId}.r2.cloudflarestorage.com/${creds.bucket}/${encodeURI(key)}`,
+  );
+
+  const signed = await getClient().sign(
+    new Request(url.toString(), {
+      method: 'PUT',
+      body,
+      headers: { 'Content-Type': contentType, 'Content-Length': String(body.byteLength) },
+    }),
+    { aws: { signQuery: true } },
+  );
+
+  const response = await fetch(signed.url, {
+    method: 'PUT',
+    body,
+    headers: { 'Content-Type': contentType },
+  });
+  return response.ok;
+}
+
+export async function deleteObject(key: string): Promise<boolean> {
+  const creds = credentials();
+  if (!creds) return false;
+
+  const url = new URL(
+    `https://${creds.accountId}.r2.cloudflarestorage.com/${creds.bucket}/${encodeURI(key)}`,
+  );
+  const signed = await getClient().sign(new Request(url.toString(), { method: 'DELETE' }), {
+    aws: { signQuery: true },
+  });
+  const response = await fetch(signed.url, { method: 'DELETE' });
+  return response.ok || response.status === 404;
+}
+
 export function storageKeyFor(workspaceId: string, filename: string): string {
   const safe = filename
     .toLowerCase()

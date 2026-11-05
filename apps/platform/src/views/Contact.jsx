@@ -12,7 +12,6 @@ const TOPICS = [
   'Beta access',
   'A property I want to publish',
   'Teams and agencies',
-  'PAS',
   'Something else',
 ];
 

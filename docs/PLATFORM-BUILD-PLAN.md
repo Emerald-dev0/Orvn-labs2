@@ -22,9 +22,34 @@ buy. Revised for the stack agreed on 4 Nov: Next.js, Neon, Cloudflare Workers, G
   an immutable publication snapshot, with generated OG metadata and an `og:image` route.
   Media is served only through `/api/media/[...key]`, which checks release state first.
   With no database configured these routes 404 — nothing published means nothing to show.
-- **Still fixtures**: `/dashboard`, `/properties`, the record editor, website, inquiries and
-  analytics. Wiring them to the backend is the next slice; the UI already names what is not
-  live rather than faking it.
+- **Workspace backend**: `lib/data/workspace.ts` (tenant-scoped read models for records,
+  inquiries, overview, analytics, profile, members) and `lib/actions/*` (create, edit, facts and
+  decisions, rights attestation, publish/unpublish/archive, inquiry status, site, invitations).
+  Every action resolves the workspace and role from the session, validates with Zod, writes
+  inside `withUserDb` and appends an audit entry.
+- **Early access**: the marketing form is wired. It validates, rate-limits, stores the request
+  once per address and emails it to `EARLY_ACCESS_INBOX` (default
+  `danieloyegoke001@gmail.com`) with reply-to set to the applicant. If the database is down the
+  request is still emailed and labelled unstored; if email fails the screen says so instead of
+  claiming success.
+- **Account recovery**: `/forgot-password` and `/reset-password` work against Better Auth's
+  single-use tokens and are linked from the sign-in page.
+- **Uploads**: server-side validate-then-write to R2, per-file visibility, cover selection and
+  removal; the media route still gates every read on release state.
+- **Image renditions**: every photo gets 480/960/1600 wide WebP versions at upload, made on the
+  server with sharp, stored beside the original in the same private bucket and served through the
+  same gate (`?w=`). EXIF is stripped and orientation baked in. Public pages emit `srcset`/`sizes`
+  and reserve the box from stored dimensions, so a phone downloads the 480px file instead of a
+  4 MB original. No vendor CDN, no second copy, and unpublishing still removes the files.
+  Deployment note: this needs a Node runtime with native binaries (Vercel, Fly, a container). A
+  Cloudflare Workers deployment would need Cloudflare Images instead — the seam is
+  `lib/image-encoder.ts`.
+- **CI**: `.github/workflows/ci.yml` typechecks, runs the unit suite, re-checks RLS coverage and
+  builds on every push, with no secrets required.
+- **Wired**: `/properties`, `/properties/[id]` (with real publish/unpublish and uploads),
+  `/properties/new`, `/inquiries`, `/dashboard`. **Still sample data**: `/website`, `/analytics`, `/settings`.
+  With no `DATABASE_URL` the whole app shows the sample workspace behind a "Preview build"
+  banner rather than pretending to be live.
 
 ## 2. Build first: the publishing spine
 

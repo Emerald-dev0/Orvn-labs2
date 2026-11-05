@@ -1,9 +1,12 @@
 'use client';
 
+import { SIZES, THUMB_WIDTH, aspectRatio, mediaUrl, srcSetFor } from '../../../lib/images';
 import { useState } from 'react';
 import Link from 'next/link';
 import { Icon } from '../icons';
 import { PageHead, Card, StatusPill, Tabs, FactRow, EmptyState } from '../ui';
+import PublishBar from '../PublishBar';
+import MediaUploader from '../MediaUploader';
 import { properties, activity } from '../data';
 
 const TABS = [
@@ -116,31 +119,82 @@ function Details({ property }) {
   );
 }
 
-function Media({ property }) {
-  const shots = ['/images/interior-1.jpg', '/images/prop-2.jpg', '/images/prop-4.jpg', '/images/prop-5.jpg'];
+function Media({ property, live = false }) {
+  const items = Array.isArray(property.media) ? property.media : [];
+
   return (
     <Card>
       <div className="ws-section-head">
         <h2>Photos</h2>
         <span className="ws-small ws-muted">Visibility is per file</span>
       </div>
-      <div className="ws-media-grid">
-        {shots.map((src, i) => (
-          <div className="ws-media" key={src}>
-            <img src={src} alt="" />
-            <div className="ws-media-tags">
-              {i === 0 ? <span className="ws-media-tag">Cover</span> : null}
-              <span className={`ws-media-tag ${i === 3 ? 'is-private' : ''}`}>
-                {i === 3 ? 'Private' : 'Public'}
-              </span>
+
+      {live && items.length === 0 ? (
+        <div className="ws-empty" style={{ padding: '28px 20px' }}>
+          <Icon name="image" size={22} />
+          <strong>No files yet</strong>
+          <p className="ws-small ws-muted">
+            A page can be published without photos, but one good cover is worth more than five
+            average ones.
+          </p>
+        </div>
+      ) : null}
+
+      {live && items.length > 0 ? (
+        <div className="ws-media-grid">
+          {items.map((item) => (
+            <div className="ws-media" key={item.id}>
+              <img
+                src={mediaUrl(item.key, { width: THUMB_WIDTH, sourceWidth: item.width })}
+                srcSet={srcSetFor(item.key, { sourceWidth: item.width })}
+                sizes={SIZES.thumb}
+                width={item.width || undefined}
+                height={item.height || undefined}
+                style={{ aspectRatio: aspectRatio(item.width, item.height) }}
+                alt=""
+                loading="lazy"
+                decoding="async"
+              />
+              <div className="ws-media-tags">
+                {item.isCover ? <span className="ws-media-tag">Cover</span> : null}
+                <span className={`ws-media-tag ${item.visibility === 'public' ? '' : 'is-private'}`}>
+                  {item.visibility === 'public' ? 'Public' : 'Private'}
+                </span>
+              </div>
             </div>
-          </div>
-        ))}
-        <button type="button" className="ws-media-add">
+          ))}
+        </div>
+      ) : null}
+
+      {!live ? (
+        <div className="ws-media-grid">
+          {['/images/interior-1.jpg', '/images/prop-2.jpg', '/images/prop-4.jpg', '/images/prop-5.jpg'].map(
+            (src, index) => (
+              <div className="ws-media" key={src}>
+                <img src={src} alt="" />
+                <div className="ws-media-tags">
+                  {index === 0 ? <span className="ws-media-tag">Cover</span> : null}
+                  <span className={`ws-media-tag ${index === 3 ? 'is-private' : ''}`}>
+                    {index === 3 ? 'Private' : 'Public'}
+                  </span>
+                </div>
+              </div>
+            ),
+          )}
+        </div>
+      ) : null}
+
+      {live ? (
+        <div style={{ marginTop: 14 }}>
+          <MediaUploader propertyId={property.id} />
+        </div>
+      ) : (
+        <button type="button" className="ws-media-add" style={{ marginTop: 12 }}>
           <Icon name="upload" size={18} strokeWidth={1.6} />
           Add files
         </button>
-      </div>
+      )}
+
       <p className="ws-small ws-muted" style={{ marginTop: 12 }}>
         Private files are never served on the public page, even if someone guesses the address.
       </p>
@@ -356,9 +410,9 @@ function ActivityTab({ property }) {
   );
 }
 
-export default function PropertyDetail({ id, initialTab = 'overview' }) {
+export default function PropertyDetail({ id, property: provided = null, initialTab = 'overview', live = false, publicPath = null }) {
   const [tab, setTab] = useState(initialTab);
-  const property = properties.find((p) => p.id === id);
+  const property = provided ?? properties.find((p) => p.id === id);
 
   if (!property) {
     return (
@@ -394,16 +448,25 @@ export default function PropertyDetail({ id, initialTab = 'overview' }) {
             {property.place} · {property.type} · {property.price}
           </p>
         </div>
-        <div style={{ display: 'flex', gap: 8 }}>
-          <button type="button" className="ws-btn is-quiet">
-            <Icon name="view" size={16} />
-            Preview
-          </button>
-          <button type="button" className="ws-btn is-dark" disabled>
-            <Icon name="upload" size={16} />
-            Publish
-          </button>
-        </div>
+        {live ? (
+          <PublishBar
+            propertyId={property.id}
+            status={property.status}
+            blockers={property.blockers ?? []}
+            publicPath={property.status === 'published' ? publicPath : null}
+          />
+        ) : (
+          <div style={{ display: 'flex', gap: 8 }}>
+            <button type="button" className="ws-btn is-quiet">
+              <Icon name="view" size={16} />
+              Preview
+            </button>
+            <button type="button" className="ws-btn is-dark" disabled>
+              <Icon name="upload" size={16} />
+              Publish
+            </button>
+          </div>
+        )}
       </div>
 
       <div style={{ marginBottom: 14 }}>
@@ -412,7 +475,7 @@ export default function PropertyDetail({ id, initialTab = 'overview' }) {
 
       {tab === 'overview' ? <Overview property={property} /> : null}
       {tab === 'details' ? <Details property={property} /> : null}
-      {tab === 'media' ? <Media property={property} /> : null}
+      {tab === 'media' ? <Media property={property} live={live} /> : null}
       {tab === 'copy' ? <CopyAssets property={property} /> : null}
       {tab === 'sheet' ? <DealSheet property={property} /> : null}
       {tab === 'public' ? <PublicPage property={property} /> : null}

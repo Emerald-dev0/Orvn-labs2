@@ -14,8 +14,9 @@ function CreateButton() {
   );
 }
 
-export default function Dashboard({ empty = false }) {
-  const waiting = properties.filter((p) => p.status === 'needs_review' || p.status === 'draft');
+export default function Dashboard({ empty = false, data = { stats, properties, inquiries, activity } }) {
+  const { stats: statCards, properties: propertyRows, inquiries: inquiryRows, activity: activityRows } = data;
+  const waiting = propertyRows.filter((p) => p.status === 'needs_review' || p.status === 'draft');
 
   if (empty) {
     return (
@@ -45,7 +46,7 @@ export default function Dashboard({ empty = false }) {
       />
 
       <div className="ws-grid is-4" style={{ marginBottom: 14 }}>
-        {stats.map((s) => (
+        {statCards.map((s) => (
           <StatCard key={s.label} {...s} />
         ))}
       </div>
@@ -58,7 +59,7 @@ export default function Dashboard({ empty = false }) {
           </div>
 
           <div className="ws-list">
-            {properties.slice(0, 3).map((p) => (
+            {propertyRows.slice(0, 3).map((p) => (
               <Link key={p.id} href={`/properties/${p.id}`} className="ws-row" style={{ textDecoration: 'none' }}>
                 <img src={p.cover} alt="" className="ws-row-thumb" />
                 <div>
@@ -105,7 +106,7 @@ export default function Dashboard({ empty = false }) {
               <h2>Recent activity</h2>
             </div>
             <div className="ws-stack" style={{ gap: 11 }}>
-              {activity.slice(0, 4).map((a) => (
+              {activityRows.slice(0, 4).map((a) => (
                 <div key={a.id} style={{ display: 'flex', gap: 10 }}>
                   <span
                     style={{
@@ -133,9 +134,9 @@ export default function Dashboard({ empty = false }) {
             </div>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
               <strong style={{ fontFamily: 'var(--font-display)', fontSize: 30, letterSpacing: '-0.03em' }}>
-                {inquiries.filter((i) => i.status === 'new').length}
+                {inquiryRows.filter((i) => i.status === 'new').length}
               </strong>
-              <span className="ws-small ws-muted">unread · {inquiries.length} total</span>
+              <span className="ws-small ws-muted">unread · {inquiryRows.length} total</span>
             </div>
             <p className="ws-small ws-muted" style={{ marginTop: 6 }}>
               Anonymous visitors stay anonymous. An inquiry is the only place a buyer identifies themselves.
