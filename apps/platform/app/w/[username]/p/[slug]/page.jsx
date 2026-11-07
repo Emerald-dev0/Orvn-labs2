@@ -7,6 +7,7 @@ import { getPublishedProperty } from '../../../../../lib/data/public-site';
 import { formatPrice, locationLabel } from '../../../../../lib/publication/snapshot';
 import { isLikelyBot, recordPropertyView, visitorHash } from '../../../../../lib/analytics';
 import { randomToken } from '../../../../../lib/crypto';
+import { isIndexable, visibilityOf } from '../../../../../lib/publication/visibility';
 import InquiryForm from './InquiryForm';
 import CopySummary from './CopySummary';
 
@@ -43,7 +44,9 @@ export async function generateMetadata({ params }) {
     description,
     alternates: { canonical: `/w/${site.username}/p/${snapshot.slug}` },
     // Link-only pages are unlisted, not confidential: keep them out of indexes, keep the page open.
-    robots: listed ? { index: true, follow: true } : { index: false, follow: true },
+    robots: isIndexable(visibilityOf({ publicationStatus: 'published', showOnPortfolio: listed }))
+      ? { index: true, follow: true }
+      : { index: false, follow: true },
     openGraph: {
       type: 'article',
       title,

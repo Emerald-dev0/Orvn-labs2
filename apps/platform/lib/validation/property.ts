@@ -38,6 +38,8 @@ export function publicationBlockers(input: {
   rightsAttestedAt?: Date | null;
   publicMediaCount: number;
   locationPrecision?: string | null;
+  /** Public facts nobody has approved or rejected. A page must not carry an unreviewed claim. */
+  unreviewedPublicFactCount?: number;
 }): string[] {
   const blockers: string[] = [];
   if (!input.title || input.title.trim().length < 3) blockers.push('Add a title.');
@@ -53,6 +55,12 @@ export function publicationBlockers(input: {
   }
   if (input.publicMediaCount === 0) {
     blockers.push('Mark at least one photo as public, or publish without photos.');
+  }
+  const pending = input.unreviewedPublicFactCount ?? 0;
+  if (pending > 0) {
+    blockers.push(
+      `Approve or reject ${pending} public ${pending === 1 ? 'fact' : 'facts'} before publishing.`,
+    );
   }
   return blockers;
 }

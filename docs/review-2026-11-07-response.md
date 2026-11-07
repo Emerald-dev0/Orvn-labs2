@@ -153,18 +153,15 @@ Stated plainly so nothing here is mistaken for finished.
   Vite build, complete with a `/pas` link that no longer exists in this codebase. None of this
   review is on your domain until that project is pointed at `apps/platform`. This blocks live
   acceptance checks.
-- **P0-06 / P0-07 in the workspace UI.** Public property pages already open without registration
-  and inquiries route to the publisher (verified in code and by the route behaviour). Link-only is
-  now implemented as a real state at the data and metadata level: a published page that is not on
-  the portfolio is excluded from the portfolio and served `noindex, follow`, so it is unlisted, not
-  confidential. What is **missing** is the control in the property editor that lets an owner choose
-  private / link-only / public, and the acceptance tests for revoked links and document access.
-  That is workspace work, not copy, and I have not pretended otherwise in the FAQ.
+- **P0-06 / P0-07 in the workspace UI.** Built after this section was first written: the property
+  editor now has a real three-state control, and revoked links and file release are covered by
+  tests. See §10.
 - **Binary PDF download.** The deal sheet is print-first HTML: your browser's print dialog saves it
   as PDF. There is no server-side PDF file to download, and the copy says so rather than promising a
   `.pdf` link.
-- **AI review controls.** The product screens show approval state per fact, and no AI path can
-  publish. The end-to-end AI drafting flow is not built yet.
+- **AI review controls.** Built after this section was first written: drafting runs from approved
+  public facts, the diff and per-fact approve/reject controls are in the property editor, and
+  nothing is saved until a person accepts it. See §10.
 - **Mobile/tablet/keyboard/responsive audit** of the new hero. Built responsively (breakpoints at
   960px and 560px, reduced-motion respected) but not verified on hardware from here.
 
@@ -209,5 +206,63 @@ needs a database (`DATABASE_URL`), which is not configured in this environment, 
 `404` here exactly as they would for an unpublished property. That check is outstanding until the
 database is connected.
 
-**Still not built:** the owner-facing control to choose private / link-only / public, and the AI
-drafting flow.
+**Superseded by §10:** both items listed here as not built were built afterwards.
+
+## 10. P0-07 and the drafting flow
+
+### Visibility is one decision, not three buttons
+
+`lib/publication/visibility.ts` holds the whole rule in one pure module, and every surface reads it:
+the public page, its metadata, the portfolio listing and the file boundary.
+
+| State | Page | In search | On the portfolio | Files released |
+| --- | --- | --- | --- | --- |
+| Private | not found | no | no | no |
+| Link only | open, no account | no (`noindex`) | no | yes |
+| Public | open, no account | yes | yes | yes |
+
+It is derived, never stored twice: `visibilityOf({publicationStatus, showOnPortfolio})` returns
+`private` unless the record is published, then splits on the portfolio flag. That is why a withdrawn
+page cannot linger — the state that serves the page is the state that decides it.
+
+**The control** (`src/app/VisibilityControl.jsx`, action `setVisibilityAction`): three options in one
+form on the property's overview, each stating its own limit. Choosing *link only* runs the full
+publication check, writes the snapshot and sets `showOnPortfolio = false` in the same transaction;
+choosing *private* withdraws the publication. If a prerequisite is missing the blockers come back
+and nothing is written. Every change is audited as `property.visibility.changed` with `from` and
+`to`, and revalidates the workspace, the portfolio and the public page.
+
+**Files follow the page.** `authoriseMediaRequest` now asks `filesReleased` instead of reading the
+publication status itself, so a photo or PDF is released only while the page it belongs to exists.
+
+**Metadata.** Only a public page is indexable. A link-only page keeps `robots: noindex, follow`,
+which is the honest expression of "unlisted, not confidential".
+
+### Drafting, with the review attached to it
+
+`lib/ai/draft.ts` is pure and holds the contract; `lib/ai/groq.ts` is the only network call;
+`lib/actions/drafting.ts` is the only place that touches the database.
+
+- **Input:** approved, public, non-empty facts, plus the title, type, approximate location and the
+  already-computed price label. The current description is deliberately not sent: a model that can
+  read it will smooth over a claim nobody approved.
+- **Output:** cleaned (fences, wrapping quotes, headings, bullets and emphasis removed; capped at 900
+  characters on a sentence boundary), then checked. Every number in the draft must already exist in
+  an approved fact or in the record's own fields, and a draft may not mention a price when the
+  record shows none. Anything else is reported to the reviewer, not silently trimmed.
+- **Review:** the panel lists every fact with Approve and Reject (the existing per-fact decision,
+  reused), shows the draft as a word-level diff against the current description, and lets the text be
+  edited before acceptance. Accepting re-validates against the facts inside the transaction.
+- **Gate:** a draft exists only between generation and acceptance, in one component's state, so
+  nothing unreviewed can reach a page. Publication is additionally blocked while any public fact is
+  unreviewed: `publicationBlockers` now returns *"Approve or reject N public facts before
+  publishing."*
+- **Failure:** without `GROQ_API_KEY` the panel says drafting is not switched on for this workspace
+  and writes nothing. It never falls back to template text presented as a model draft.
+
+**Verified:** `npx tsc --noEmit` clean · `npm run build` clean · `npm test` **139 passed** (11 files),
+including 14 visibility tests and 23 drafting tests (state machine, revoked and reissued links, file
+release, fact selection, blockers, prompt contents, cleaning, number and price checks, diff
+reconstruction). **Not verified:** the database round-trip for either action, because `DATABASE_URL`
+is not configured here, and the live model call, because no key is present. Both are honest gaps, not
+passes.

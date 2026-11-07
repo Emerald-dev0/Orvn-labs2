@@ -16,8 +16,10 @@ import {
   propertyIdSchema,
   text,
   updatePropertySchema,
+  visibilitySchema,
 } from '../validation/workspace';
 import { PublicationError, publishProperty, unpublishProperty } from '../publication/publish';
+import { targetFor, visibilityCopy, visibilityOf, type Visibility } from '../publication/visibility';
 import type { ActionState } from './types';
 
 /**
@@ -383,6 +385,98 @@ export async function unpublishPropertyAction(
   revalidatePath('/properties');
   revalidatePath(`/w/${workspace.username}`);
   return { status: 'ok', message: 'Unpublished. The page and its files are no longer public.' };
+}
+
+/**
+ * The visibility control.
+ *
+ * One action for the three states, because the states are one decision, not three buttons that
+ * can contradict each other. It writes the publication (open, rewrite or close) and the portfolio
+ * flag in the same transaction, so a page can never end up published-but-marked-private.
+ *
+ * A move to link-only or public runs the full publication check. If a prerequisite is missing the
+ * action returns the blockers and nothing is written: the state does not drift halfway.
+ */
+export async function setVisibilityAction(
+  _previous: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  const { viewer, workspace } = await requireEditor();
+  const parsed = visibilitySchema.safeParse({
+    propertyId: text(formData, 'propertyId'),
+    visibility: text(formData, 'visibility'),
+  });
+  if (!parsed.success) return { status: 'error', message: 'Unknown property or visibility.' };
+
+  const requested = parsed.data.visibility as Visibility;
+  const target = targetFor(requested);
+
+  try {
+    await withUserDb(viewer.userId, async (tx) => {
+      const [row] = await tx
+        .select({
+          publicationStatus: properties.publicationStatus,
+          showOnPortfolio: properties.showOnPortfolio,
+        })
+        .from(properties)
+        .where(and(eq(properties.id, parsed.data.propertyId), eq(properties.workspaceId, workspace.id)))
+        .limit(1);
+
+      if (!row) throw new PublicationError(['That property is not in this workspace.']);
+
+      const before = visibilityOf(row);
+
+      if (target.publish) {
+        // Re-publishing rewrites the snapshot, which is the point: a link-only page must carry the
+        // approved facts as they are now, not the ones that were approved last time.
+        if (row.publicationStatus !== 'published') {
+          await publishProperty(tx, {
+            propertyId: parsed.data.propertyId,
+            workspaceId: workspace.id,
+            actorId: viewer.userId,
+          });
+        }
+        await tx
+          .update(properties)
+          .set({ showOnPortfolio: target.showOnPortfolio, updatedAt: new Date() })
+          .where(and(eq(properties.id, parsed.data.propertyId), eq(properties.workspaceId, workspace.id)));
+      } else if (row.publicationStatus === 'published') {
+        await unpublishProperty(tx, {
+          propertyId: parsed.data.propertyId,
+          workspaceId: workspace.id,
+          actorId: viewer.userId,
+        });
+      }
+
+      if (before !== requested) {
+        await recordAudit(
+          {
+            workspaceId: workspace.id,
+            actorId: viewer.userId,
+            action: 'property.visibility.changed',
+            targetType: 'property',
+            targetId: parsed.data.propertyId,
+            metadata: { from: before, to: requested },
+          },
+          tx,
+        );
+      }
+    });
+  } catch (error) {
+    if (error instanceof PublicationError) {
+      return { status: 'error', message: error.message, blockers: error.blockers };
+    }
+    console.error('[visibility] failed', { message: (error as Error).message });
+    return { status: 'error', message: 'That change did not save. The property is unchanged.' };
+  }
+
+  revalidatePath(`/properties/${parsed.data.propertyId}`);
+  revalidatePath('/properties');
+  revalidatePath(`/w/${workspace.username}`);
+  revalidatePath(`/w/${workspace.username}/p`);
+
+  const copy = visibilityCopy(requested);
+  return { status: 'ok', message: `Now ${copy.label.toLowerCase()}: ${copy.summary.toLowerCase()}.` };
 }
 
 export async function archivePropertyAction(

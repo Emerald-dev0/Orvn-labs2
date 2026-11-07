@@ -721,3 +721,97 @@
   .ws-tab { padding: 7px 12px; font-size: 13px; }
   .ws-chart { height: 140px; }
 }
+
+/* --- Visibility control: three states, one decision -------------------------------- */
+.ws-visibility-option {
+  display: grid;
+  gap: 4px;
+  width: 100%;
+  text-align: left;
+  padding: 12px 14px;
+  border: 1px solid var(--line-2);
+  border-radius: 14px;
+  background: var(--white);
+  cursor: pointer;
+  transition: border-color 0.16s ease, background 0.16s ease, transform 0.16s ease;
+}
+.ws-visibility-option:hover:not(:disabled) { border-color: var(--ink); transform: translateY(-1px); }
+.ws-visibility-option:focus-visible { outline: 2px solid var(--lime-2); outline-offset: 2px; }
+.ws-visibility-option:disabled { cursor: default; }
+.ws-visibility-option.is-current {
+  border-color: var(--lime-2);
+  background: var(--lime-pale);
+  cursor: default;
+}
+.ws-visibility-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.ws-visibility-head strong { font-size: 13.5px; letter-spacing: -0.01em; }
+.ws-visibility-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  border: 1px solid var(--line-3, var(--line-2));
+  background: transparent;
+  flex: none;
+}
+.ws-visibility-option.is-current .ws-visibility-dot { background: var(--lime-ink); border-color: var(--lime-ink); }
+.ws-visibility-tag {
+  margin-left: auto;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  color: var(--lime-ink);
+  background: rgba(201, 242, 110, 0.55);
+  border-radius: 999px;
+  padding: 2px 8px;
+}
+
+/* --- Draft diff -------------------------------------------------------------------- */
+.ws-diff {
+  background: var(--bone);
+  border-radius: 14px;
+  padding: 16px;
+  font-size: 14.5px;
+  line-height: 1.75;
+  color: var(--ink-2);
+}
+.ws-diff-token.is-added {
+  background: rgba(201, 242, 110, 0.5);
+  border-radius: 4px;
+  padding: 1px 2px;
+  color: var(--lime-ink);
+}
+.ws-diff-token.is-removed {
+  color: var(--muted);
+  text-decoration: line-through;
+  text-decoration-color: rgba(168, 113, 43, 0.6);
+}
+
+/* --- Fact review rows -------------------------------------------------------------- */
+.ws-fact-review {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--line-2);
+  border-radius: 12px;
+  background: var(--white);
+  flex-wrap: wrap;
+}
+.ws-fact-review.is-used { border-color: rgba(201, 242, 110, 0.9); background: var(--lime-pale); }
+
+.ws-input {
+  font: inherit;
+  font-size: 14px;
+  color: var(--ink);
+  background: var(--white);
+  border: 1px solid var(--line-2);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+.ws-input:focus-visible { outline: 2px solid var(--lime-2); outline-offset: 1px; border-color: var(--ink); }
+
+@media (max-width: 640px) {
+  .ws-fact-review { flex-direction: column; align-items: stretch; }
+  .ws-fact-review form { justify-content: flex-end; }
+  .ws-diff { padding: 12px; font-size: 14px; }
+}
