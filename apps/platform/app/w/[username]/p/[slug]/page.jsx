@@ -8,6 +8,7 @@ import { formatPrice, locationLabel } from '../../../../../lib/publication/snaps
 import { isLikelyBot, recordPropertyView, visitorHash } from '../../../../../lib/analytics';
 import { randomToken } from '../../../../../lib/crypto';
 import InquiryForm from './InquiryForm';
+import CopySummary from './CopySummary';
 
 export const dynamic = 'force-dynamic';
 
@@ -158,6 +159,19 @@ export default async function PublicPropertyPage({ params }) {
                     Email {site.businessName}
                   </a>
                 ) : null}
+
+                <div className="pub-take">
+                  <a
+                    className="pub-take-link"
+                    href={`/w/${site.username}/p/${snapshot.slug}/sheet`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Deal sheet
+                    <span>print or save as PDF</span>
+                  </a>
+                  <CopySummary summaryUrl={`/w/${site.username}/p/${snapshot.slug}/summary`} />
+                </div>
               </div>
             </div>
           </div>

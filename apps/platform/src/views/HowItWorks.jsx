@@ -79,7 +79,7 @@ const FAQS = [
   },
   {
     q: 'Can I publish something before the whole property is ready?',
-    a: 'The page and its share link ship first. The deal sheet, the buyer summary and the print sheet are built from the same record and arrive with the export work, so you can send a sheet to one buyer while the public page is still a draft.',
+    a: 'Yes. The page, the printable deal sheet and the buyer summary all come from the same approved record, so you can send the sheet to one buyer while the page stays a draft.',
   },
   {
     q: 'What happens when a price changes?',

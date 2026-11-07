@@ -27,6 +27,8 @@ dist-ssr
 # Documentation
 *.md
 !README.md
+# Written product docs belong in the repo; scratch notes do not.
+!docs/*.md
 .vercel
 .env*
 

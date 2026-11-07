@@ -27,7 +27,7 @@ const GROUPS = [
       },
       {
         q: 'What does one property actually produce?',
-        a: 'A structured record with the source of each fact, an editable description, a deal sheet layout and a published page with a share link. PDF export and the print sheet are not released yet; where they appear in screens they are labelled as planned.',
+        a: 'A structured record with the source of each fact, an editable description, a published page with a share link, a printable deal sheet (one A4 page, saved as PDF from the print dialog) and a plain-text buyer summary you can paste into a message.',
       },
       {
         q: 'Do I have to stop using portals or WhatsApp?',

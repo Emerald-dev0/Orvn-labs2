@@ -121,9 +121,9 @@ function PublishPanel() {
     <div className="mock-publish">
       {[
         ['Property page', 'shared link', 'Live', true],
-        ['Deal sheet', 'in build, not released', 'Planned', false],
-        ['Buyer summary', 'in build, not released', 'Planned', false],
-        ['Print sheet', 'in build, not released', 'Planned', false],
+        ['Deal sheet', 'print or save as PDF', 'Live', true],
+        ['Buyer summary', 'copy as plain text', 'Live', true],
+        ['Portfolio card', 'listed on your profile', 'Live', true],
       ].map(([name, meta, state, on]) => (
         <div className="mock-publish-row" key={name}>
           <span className={`mock-toggle ${on ? 'is-on' : ''}`} aria-hidden="true">

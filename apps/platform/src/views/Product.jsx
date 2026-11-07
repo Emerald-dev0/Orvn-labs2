@@ -186,7 +186,7 @@ export default function Product() {
   useDocumentMeta({
     title: 'Product',
     description:
-      'One property record that becomes a property page you publish and share. Deal sheets, buyer summaries and print export are in build and labelled as such.',
+      'One property record that becomes a published page, a printable deal sheet and a buyer summary you can paste into a message.',
     path: '/product',
   });
 
@@ -195,7 +195,7 @@ export default function Product() {
       <PageHero
         eyebrow="The product"
         title={<>The workspace behind the page.</>}
-        lede="The platform keeps the facts, the photographs and the permissions for each property in one place. The published page comes from that record today; the deal sheet, buyer summary and print sheet are in build."
+        lede="The platform keeps the facts, the photographs and the permissions for each property in one place. The published page, the printable deal sheet and the buyer summary are all made from that record, so they agree."
         actions={
           <>
             <Link href="/early-access" className="btn btn-primary">
