@@ -10,7 +10,7 @@ export function SiteEditorMock() {
       <div className="app-window">
         <div className="app-bar">
           <span className="app-dots" aria-hidden="true"><i /><i /><i /></span>
-          <span className="app-url">larei.app/my-website</span>
+          <span className="app-url">app.orvnlabs.com/my-website</span>
         </div>
         <div className="app-main">
           <div className="site-editor-head">
@@ -110,7 +110,7 @@ export function StatsMock() {
       <div className="app-window">
         <div className="app-bar">
           <span className="app-dots" aria-hidden="true"><i /><i /><i /></span>
-          <span className="app-url">larei.app/analytics</span>
+          <span className="app-url">app.orvnlabs.com/analytics</span>
         </div>
         <div className="app-main">
           <div className="mock-insight-top">
@@ -142,8 +142,8 @@ export function StatsMock() {
           </div>
           <p className="mock-insight-foot">
             <ArrowRight size={12} strokeWidth={2.4} />
-            Views are not verified buyers; inquiries identify only what the visitor voluntarily
-            submits.
+            Illustrative figures, not customer results. Views are not verified buyers, and an
+            inquiry identifies only what the visitor chooses to submit.
           </p>
         </div>
       </div>

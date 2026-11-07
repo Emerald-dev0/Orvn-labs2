@@ -94,13 +94,13 @@ export async function getPublicSite(username: string): Promise<PublicSite | null
 export async function getPublishedProperty(
   username: string,
   slug: string,
-): Promise<{ snapshot: PublicationSnapshot; site: PublicSite } | null> {
+): Promise<{ snapshot: PublicationSnapshot; site: PublicSite; listed: boolean } | null> {
   const site = await getPublicSite(username);
   if (!site) return null;
 
   return withPublicDb(async (tx) => {
     const rows = await tx
-      .select({ snapshot: propertyPublications.snapshot })
+      .select({ snapshot: propertyPublications.snapshot, listed: properties.showOnPortfolio })
       .from(properties)
       .innerJoin(propertyPublications, eq(propertyPublications.propertyId, properties.id))
       .where(
@@ -114,9 +114,12 @@ export async function getPublishedProperty(
       .orderBy(desc(propertyPublications.version))
       .limit(1);
 
-    const snapshot = rows[0]?.snapshot as unknown as PublicationSnapshot | undefined;
+    const row = rows[0];
+    const snapshot = row?.snapshot as unknown as PublicationSnapshot | undefined;
     if (!snapshot) return null;
-    return { snapshot, site };
+    // A published page that is not on the portfolio is link-only: reachable, unlisted, and kept
+    // out of search indexes. It is not confidential and must never be described as such.
+    return { snapshot, site, listed: row.listed };
   });
 }
 

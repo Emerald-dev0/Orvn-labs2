@@ -36,7 +36,7 @@ export default function Trust() {
             </Reveal>
             <Reveal delay={0.1}>
               <p className="lead">
-                LAREI is designed to separate private workspace material from information you
+                The platform is designed to separate private workspace material from information you
                 explicitly approve for public pages. AI assists with the draft; the user makes the
                 factual and publication decisions. Maps show general location in the first release,
                 not surveyed property boundaries.

@@ -29,7 +29,7 @@ export default function Dashboard({ empty = false, data = { stats, properties, i
         <EmptyState
           icon="properties"
           title="Start with one property"
-          body="Paste your notes, drop a brochure, or fill the form by hand. LAREI builds the record first, then the page, and waits for you to approve the facts."
+          body="Paste your notes, drop a brochure, or fill the form by hand. The platform builds the record first, then the page, and waits for you to approve the facts."
           action={{ href: '/properties/new', label: 'Create your first property' }}
           secondary={{ href: '/how-it-works', label: 'See how it works' }}
         />

@@ -2444,10 +2444,13 @@
 }
 
 /* Five steps */
-.steps-grid.is-five { grid-template-columns: repeat(5, minmax(0, 1fr)); }
-.steps-grid.is-five .step-card { padding: clamp(18px, 1.8vw, 24px); }
+.steps-grid.is-five,
+.steps-grid.is-four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.steps-grid.is-five .step-card,
+.steps-grid.is-four .step-card { padding: clamp(18px, 1.8vw, 24px); }
 .step-number { display: block; font-size: 12px; font-weight: 600; color: var(--muted-2); margin-bottom: 14px; }
-.steps-grid.is-five .step-title { margin-top: 0; font-size: 18px; }
+.steps-grid.is-five .step-title,
+.steps-grid.is-four .step-title { margin-top: 0; font-size: 18px; }
 
 /* Four roles */
 .audience-grid.is-four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
@@ -2576,7 +2579,8 @@
 .footer-bottom-links a:hover { color: var(--lime); }
 
 @media (max-width: 1180px) {
-  .steps-grid.is-five { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .steps-grid.is-five,
+  .steps-grid.is-four { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .audience-grid.is-four { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
@@ -3008,4 +3012,244 @@
   color: var(--neg);
   line-height: 1.5;
   margin: 0;
+}
+
+/* =========================================================================
+   Hero — product flow (v3)
+   The evidence is the flow: record → deal sheet → page. Property imagery is context,
+   inside the last panel, not the explanation.
+   ========================================================================= */
+
+.flow-hero {
+  background: var(--bone);
+  padding-top: calc(var(--nav-h) + clamp(26px, 3.6vw, 56px));
+  padding-bottom: clamp(38px, 5vw, 76px);
+}
+
+.flow-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.04fr) minmax(0, 0.96fr);
+  gap: clamp(28px, 4vw, 64px);
+  align-items: center;
+}
+
+.flow-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.flow-kicker::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--lime-2);
+}
+
+.flow-title {
+  margin-top: 18px;
+  font-family: var(--font-display);
+  font-size: clamp(36px, 5.2vw, 66px);
+  line-height: 0.98;
+  letter-spacing: -0.04em;
+  color: var(--ink);
+  max-width: 16ch;
+  text-wrap: balance;
+}
+
+.flow-sub {
+  margin-top: 20px;
+  max-width: 46ch;
+  font-size: clamp(15px, 1.45vw, 17.5px);
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.flow-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 28px;
+}
+
+.flow-note {
+  margin-top: 20px;
+  max-width: 44ch;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--muted-2);
+}
+
+/* ---- The stage ---- */
+
+.flow-stage {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: clamp(18px, 2vw, 26px);
+  box-shadow: var(--sh-3);
+  padding: clamp(14px, 1.6vw, 20px);
+}
+
+.flow-stage-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.flow-stage-title { font-size: 12.5px; font-weight: 600; color: var(--ink-2); }
+
+.flow-stage-tag {
+  flex: none;
+  padding: 4px 9px;
+  border-radius: var(--r-pill);
+  background: var(--lime-pale);
+  color: var(--lime-ink);
+  font-size: 10.5px;
+  font-weight: 600;
+}
+
+.flow-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.flow-panel {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr);
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--bone);
+}
+
+.flow-panel-num {
+  display: grid;
+  place-items: center;
+  height: 22px;
+  border-radius: 7px;
+  background: var(--lime-pale);
+  color: var(--lime-ink);
+  font-size: 10.5px;
+  font-weight: 700;
+}
+
+.flow-panel-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.flow-panel-title { font-size: 13px; font-weight: 600; color: var(--ink); }
+.flow-panel-meta { font-size: 10.5px; color: var(--muted-2); }
+
+.flow-fact {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 5px 0;
+  border-top: 1px dashed var(--line-2);
+  font-size: 11.5px;
+  color: var(--ink-2);
+}
+
+.flow-fact em {
+  font-style: normal;
+  font-size: 10.5px;
+  color: var(--muted-2);
+  white-space: nowrap;
+}
+
+.flow-fact.is-gap span { color: var(--warn); }
+
+.flow-sheet {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--white);
+}
+
+.flow-sheet-icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--lime-pale);
+  color: var(--lime-ink);
+}
+
+.flow-sheet p { font-size: 12px; font-weight: 600; color: var(--ink); }
+.flow-sheet span { font-size: 10.5px; color: var(--muted-2); }
+.flow-sheet-check { margin-left: auto; color: var(--pos); }
+
+.flow-page { display: flex; align-items: center; gap: 10px; }
+
+.flow-page-thumb {
+  width: 58px;
+  height: 42px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex: none;
+}
+
+.flow-page-info p { font-size: 12px; font-weight: 600; color: var(--ink); }
+.flow-page-info span {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 10.5px;
+  color: var(--muted-2);
+}
+
+.flow-page-actions { display: flex; gap: 6px; margin-top: 10px; }
+
+.flow-page-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line-2);
+  font-size: 10.5px;
+  font-weight: 500;
+  color: var(--ink-2);
+}
+
+.flow-page-btn.is-primary {
+  background: var(--ink);
+  border-color: transparent;
+  color: var(--white);
+}
+
+@media (max-width: 960px) {
+  .flow-hero-grid { grid-template-columns: 1fr; gap: 30px; }
+  .flow-title { max-width: 20ch; }
+}
+
+@media (max-width: 560px) {
+  .flow-actions .btn { width: 100%; justify-content: center; }
+  .flow-panel { grid-template-columns: 22px minmax(0, 1fr); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flow-hero-copy, .flow-stage { animation: none; }
 }

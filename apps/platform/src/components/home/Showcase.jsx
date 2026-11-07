@@ -26,7 +26,7 @@ const TABS = [
     id: 'check',
     label: 'Checking',
     title: 'Disagreements get caught, not published.',
-    body: 'When a portal, a brochure and a colleague say three different things about the same flat, LAREI shows you the conflict and asks you to settle it.',
+    body: 'When a portal, a brochure and a colleague say three different things about the same flat, the record shows you the conflict and asks you to settle it.',
   },
   {
     id: 'publish',
@@ -95,7 +95,7 @@ function CheckPanel() {
           <span className="mock-time">2h ago</span>
         </div>
         <div className="mock-conflict-rows">
-          <div><span>LAREI record</span><strong>$480,000</strong><em>your source</em></div>
+          <div><span>Record</span><strong>$480,000</strong><em>your source</em></div>
           <div><span>Portal import</span><strong>$465,000</strong><em>imported</em></div>
         </div>
         <div className="mock-conflict-actions">
@@ -120,10 +120,10 @@ function PublishPanel() {
   return (
     <div className="mock-publish">
       {[
-        ['Property page', 'larei.page/adaora-house', 'Live', true],
-        ['Deal sheet', 'adaora-house-deal.pdf', 'Sent', true],
-        ['Buyer summary', 'Shared with 3 buyers', 'Draft', false],
-        ['Print sheet', 'A4, print ready', 'Draft', false],
+        ['Property page', 'shared link', 'Live', true],
+        ['Deal sheet', 'in build, not released', 'Planned', false],
+        ['Buyer summary', 'in build, not released', 'Planned', false],
+        ['Print sheet', 'in build, not released', 'Planned', false],
       ].map(([name, meta, state, on]) => (
         <div className="mock-publish-row" key={name}>
           <span className={`mock-toggle ${on ? 'is-on' : ''}`} aria-hidden="true">
@@ -189,7 +189,7 @@ export default function Showcase() {
               Spend less time assembling. Keep control of what gets said.
             </h2>
             <p className="lead">
-              Start from notes, documents and photos. LAREI organizes what you supply, flags gaps for
+              Start from notes, documents and photos. The platform organizes what you supply, flags gaps for
               review and helps draft property descriptions, deal sheets and outreach copy. Your
               approval comes before publication.
             </p>
@@ -221,7 +221,7 @@ export default function Showcase() {
                 <span className="app-dots" aria-hidden="true">
                   <i /><i /><i />
                 </span>
-                <span className="app-url">larei.app/properties/adaora-house</span>
+                <span className="app-url">app.orvnlabs.com/properties/adaora-house</span>
               </div>
 
               <div className="app-shell">

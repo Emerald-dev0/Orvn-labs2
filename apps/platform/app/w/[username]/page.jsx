@@ -24,7 +24,7 @@ export async function generateMetadata({ params }) {
   const description =
     site.headline ??
     site.bio?.slice(0, 180) ??
-    `${site.businessName} publishes property records and deal pages with LAREI.`;
+    `${site.businessName} publishes property records and deal pages with ORVN Labs.`;
 
   return {
     title: { absolute: title },
@@ -211,7 +211,7 @@ export default async function PublicSitePage({ params }) {
             verified.
           </span>
           <span>
-            Published with LAREI · <Link href="/">ORVN Labs</Link>
+            Published with ORVN Labs
           </span>
         </div>
       </footer>

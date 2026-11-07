@@ -139,7 +139,7 @@ export default function SignIn({ next = '/dashboard' }) {
               </div>
 
               <p className="signin-note">
-                Access is by invitation during the private beta. If you have not received one,{' '}
+                Access is by invitation during early access. If you have not received one,{' '}
                 <Link href="/early-access">request access</Link>.
               </p>
             </div>

@@ -19,7 +19,7 @@ const PRINCIPLES = [
   },
   {
     title: 'You talk to the builders',
-    body: 'During the beta there is no ticket queue and no chatbot pretending to be a person. Messages reach the people working on the product.',
+    body: 'During early access there is no ticket queue and no chatbot pretending to be a person. Messages reach the people working on the product.',
   },
 ];
 
@@ -27,7 +27,7 @@ export default function About() {
   useDocumentMeta({
     title: 'About ORVN Labs',
     description:
-      'ORVN Labs builds software for how real estate gets presented. LAREI is its current product, in private beta.',
+      'ORVN Labs builds software for how real estate gets presented. The platform is in development; early access is by request.',
     path: '/about',
   });
 
@@ -36,7 +36,7 @@ export default function About() {
       <PageHero
         eyebrow="Company"
         title={<>A small company building tools for how property gets presented.</>}
-        lede="ORVN Labs makes software for real estate. LAREI is the product we are building now. This page explains what that means, what is live, and what is not."
+        lede="ORVN Labs makes software for real estate. The platform is what we are building now. This page explains what that means, what is live, and what is not."
       />
 
       <section className="about">
@@ -44,24 +44,25 @@ export default function About() {
           <div className="about-grid">
             <Reveal className="about-card">
               <span className="eyebrow">Current product</span>
-              <h2>LAREI</h2>
+              <h2>The platform</h2>
               <p>
-                A workspace for professional websites, property portfolios and published property
-                pages, with AI-assisted drafts that stay under your review. In private beta.
+                A workspace for a property record, the presentations built from it and the pages
+                published against your profile. AI-assisted drafts stay under your review. In
+                development.
               </p>
               <Link href="/product" className="arrow-link">
-                Explore LAREI
+                Explore the product
                 <ArrowUpRight strokeWidth={2} />
               </Link>
             </Reveal>
 
             <Reveal delay={0.08} className="about-card">
-              <span className="eyebrow">The beta</span>
+              <span className="eyebrow">Early access</span>
               <h2>Who gets in</h2>
               <p>
                 Invitation only, in small cohorts, so the workflow can still be changed by the
-                people using it. Nothing is charged during the beta. Requests are reviewed by a
-                person, not a queue.
+                people using it. Nothing is charged during early access. Requests are reviewed by
+                a person, not a queue.
               </p>
               <Link href="/early-access" className="arrow-link">
                 Request access
@@ -90,7 +91,7 @@ export default function About() {
               <span className="eyebrow">Contact</span>
               <h2 className="about-title">One inbox, read by a person.</h2>
               <p className="lead">
-                Questions about LAREI, the beta, or something you read here: write to us.
+                Questions about the platform, early access, or something you read here: write to us.
               </p>
             </div>
             <div className="about-contact-actions">

@@ -29,7 +29,7 @@ export async function generateMetadata({ params }) {
     };
   }
 
-  const { snapshot, site } = data;
+  const { snapshot, site, listed } = data;
   const place = [snapshot.place.city, snapshot.place.region].filter(Boolean).join(', ');
   const title = `${snapshot.title}${place ? ` — ${place}` : ''}`;
   const description =
@@ -41,7 +41,8 @@ export async function generateMetadata({ params }) {
     title: { absolute: `${title} · ${site.businessName}` },
     description,
     alternates: { canonical: `/w/${site.username}/p/${snapshot.slug}` },
-    robots: { index: true, follow: true },
+    // Link-only pages are unlisted, not confidential: keep them out of indexes, keep the page open.
+    robots: listed ? { index: true, follow: true } : { index: false, follow: true },
     openGraph: {
       type: 'article',
       title,
@@ -233,7 +234,7 @@ export default async function PublicPropertyPage({ params }) {
             Unpublishing removes this page and its files.
           </span>
           <span>
-            <Link href={`/w/${site.username}`}>{site.businessName}</Link> · Published with LAREI ·{' '}
+            <Link href={`/w/${site.username}`}>{site.businessName}</Link> · Published with ORVN Labs ·{' '}
             <Link href="/">ORVN Labs</Link>
           </span>
         </div>

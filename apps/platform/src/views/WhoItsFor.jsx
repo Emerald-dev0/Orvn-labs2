@@ -13,7 +13,7 @@ const ROLES = [
     tint: 'sand',
     name: 'Agents and brokers',
     title: 'Look as good as the property does.',
-    body: 'You already have the photographs and the facts. LAREI turns them into a page you are happy to send, a deal sheet you can hand over, and an inspection sheet that matches both.',
+    body: 'You already have the photographs and the facts. The platform turns them into a page you are happy to send, a deal sheet you can hand over, and an inspection sheet that matches both.',
     gets: [
       'A page per property, in your name',
       'Deal sheets for serious buyers',
@@ -48,7 +48,7 @@ const ROLES = [
 ];
 
 const POOR_FIT = [
-  'You want automated valuations or investment analysis. LAREI does not model price.',
+  'You want automated valuations or investment analysis. The platform does not model price.',
   'You are looking for a CRM with pipelines, tasks and commission tracking.',
   'You need a mass-distribution engine that pushes to hundreds of buyer lists.',
   'You want a website builder for a general business rather than property.',
@@ -58,7 +58,7 @@ export default function WhoItsFor() {
   useDocumentMeta({
     title: "Who it's for",
     description:
-      'LAREI is built for agents, brokers, developers and small agencies who need one consistent property record behind every page, sheet and printout they send.',
+      'The platform is built for wholesalers and small disposition teams first, with agents, brokers and developers supported by the same record behind every page, sheet and printout they send.',
     path: '/who-its-for',
   });
 
@@ -118,7 +118,7 @@ export default function WhoItsFor() {
           <div className="poor-fit-card">
             <div>
               <span className="eyebrow">Honest answer</span>
-              <h2 className="section-title">When LAREI is the wrong tool.</h2>
+              <h2 className="section-title">When this is the wrong tool.</h2>
               <p className="lead">
                 We would rather say this now than have you find out after a month of setting
                 things up.

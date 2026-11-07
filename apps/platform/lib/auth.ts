@@ -77,7 +77,7 @@ export function assertAuthConfigured() {
 }
 
 export const auth = betterAuth({
-  appName: 'LAREI',
+  appName: 'ORVN Labs',
   baseURL: env.BETTER_AUTH_URL ?? 'http://localhost:5174',
   secret: env.BETTER_AUTH_SECRET ?? 'development-only-secret-not-for-deployment',
   trustedOrigins,

@@ -29,9 +29,9 @@ export default async function InvitePage({ params }) {
       <header className="invite-bar">
         <Link href="/" className="invite-brand">
           <span className="invite-mark" aria-hidden="true">L</span>
-          LAREI
+          ORVN Labs
         </Link>
-        <span className="invite-tag">Private beta</span>
+        <span className="invite-tag">Early access</span>
       </header>
       <main id="main" className="invite-main">
         <div className="invite-card">{children}</div>
@@ -75,7 +75,7 @@ export default async function InvitePage({ params }) {
     return shell(
       <>
         <span className="invite-eyebrow">Invitation</span>
-        <h1 className="invite-title">You are invited to LAREI</h1>
+        <h1 className="invite-title">You are invited to the workspace</h1>
         <p className="invite-lede">
           This link was issued to <strong>{invitation.maskedEmail}</strong>. Sign in with that
           address to open{' '}

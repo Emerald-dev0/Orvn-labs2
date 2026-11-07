@@ -7,16 +7,20 @@ import { Plus } from 'lucide-react';
 
 const QUESTIONS = [
   {
-    q: 'Is LAREI a CRM?',
-    a: 'No. It focuses on professional presentation and property publishing, not a full relationship or transaction management system.',
+    q: 'What does it actually do?',
+    a: 'It keeps one record per property and turns it into a presentation: an editable description, a deal sheet layout and a property page you can publish and send as a link.',
   },
   {
-    q: 'Can anybody access it?',
-    a: 'The first release is a controlled private beta. Requests are reviewed before invitations are issued.',
+    q: 'Who is it for?',
+    a: 'Wholesalers and small disposition teams first, with agents, investors and developers supported by the same record. It is not built around one country.',
   },
   {
-    q: 'Does LAREI verify real-estate facts automatically?',
-    a: 'Not in its initial scope. Users must verify property facts and approve public claims.',
+    q: 'Is it a CRM?',
+    a: 'No. It prepares and publishes property information and stores the inquiries a page receives. Pipelines, commissions and accounting are out of scope.',
+  },
+  {
+    q: 'Can the AI check my facts?',
+    a: 'No. It helps with wording only. Every fact keeps the source you gave it, disagreements are shown to you, and nothing publishes until you approve it.',
   },
 ];
 
@@ -31,7 +35,7 @@ export default function Faq() {
             <span className="eyebrow">Questions</span>
             <h2 className="faq-home-title">A few things worth knowing first.</h2>
             <p className="lead">
-              Plain answers, including the ones about what LAREI does not do.
+              Plain answers, including the ones about what the platform does not do.
             </p>
             <Link href="/faq" className="arrow-link">View all questions</Link>
           </div>

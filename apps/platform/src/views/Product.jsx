@@ -48,7 +48,7 @@ const LIMITS = [
   },
   {
     title: 'No legal boundaries',
-    body: 'A map is location context. LAREI does not claim surveyed parcel boundaries or a title opinion.',
+    body: 'A map is location context. The platform does not claim surveyed parcel boundaries or a title opinion.',
   },
   {
     title: 'No buyer promises',
@@ -56,7 +56,7 @@ const LIMITS = [
   },
   {
     title: 'No pipeline',
-    body: 'LAREI presents property. It is not a CRM, an accounting tool or a commission tracker.',
+    body: 'The platform presents property. It is not a CRM, an accounting tool or a commission tracker.',
   },
 ];
 
@@ -66,7 +66,7 @@ function RecordMock() {
       <div className="app-window">
         <div className="app-bar">
           <span className="app-dots" aria-hidden="true"><i /><i /><i /></span>
-          <span className="app-url">larei.app/properties/adaora-house/record</span>
+          <span className="app-url">app.orvnlabs.com/properties/adaora-house/record</span>
         </div>
         <div className="app-main">
           <div className="mock-prop">
@@ -106,7 +106,7 @@ function ConflictMock() {
       <div className="app-window">
         <div className="app-bar">
           <span className="app-dots" aria-hidden="true"><i /><i /><i /></span>
-          <span className="app-url">larei.app/properties/adaora-house/checks</span>
+          <span className="app-url">app.orvnlabs.com/properties/adaora-house/checks</span>
         </div>
         <div className="app-main">
           <div className="mock-conflict">
@@ -116,7 +116,7 @@ function ConflictMock() {
               <span className="mock-time">2h ago</span>
             </div>
             <div className="mock-conflict-rows">
-              <div><span>LAREI record</span><strong>$480,000</strong><em>your source</em></div>
+              <div><span>Record</span><strong>$480,000</strong><em>your source</em></div>
               <div><span>Portal import</span><strong>$465,000</strong><em>imported</em></div>
             </div>
             <div className="mock-conflict-actions">
@@ -146,7 +146,7 @@ function InsightMock() {
       <div className="app-window">
         <div className="app-bar">
           <span className="app-dots" aria-hidden="true"><i /><i /><i /></span>
-          <span className="app-url">larei.app/properties/adaora-house/insight</span>
+          <span className="app-url">app.orvnlabs.com/properties/adaora-house/insight</span>
         </div>
         <div className="app-main">
           <div className="mock-insight-top">
@@ -186,7 +186,7 @@ export default function Product() {
   useDocumentMeta({
     title: 'Product',
     description:
-      'One verified property record that becomes a property page, a deal sheet, a buyer summary and a print sheet. Checking, publishing and insight in one workspace.',
+      'One property record that becomes a property page you publish and share. Deal sheets, buyer summaries and print export are in build and labelled as such.',
     path: '/product',
   });
 
@@ -195,11 +195,11 @@ export default function Product() {
       <PageHero
         eyebrow="The product"
         title={<>The workspace behind the page.</>}
-        lede="LAREI keeps the facts, the photographs and the permissions for each property in one place. The page, the deal sheet, the summary and the printout are all made from that record, so they always agree."
+        lede="The platform keeps the facts, the photographs and the permissions for each property in one place. The published page comes from that record today; the deal sheet, buyer summary and print sheet are in build."
         actions={
           <>
             <Link href="/early-access" className="btn btn-primary">
-              Request beta access
+              Request early access
               <ArrowRight strokeWidth={2.2} />
             </Link>
             <Link href="/how-it-works" className="btn btn-secondary">
@@ -258,7 +258,7 @@ export default function Product() {
           <h2 className="split-title">When two sources disagree, you decide.</h2>
           <p className="lead">
             Property facts drift. A price changes on one portal and not another, a colleague measures
-            a room differently, a brochure is three years old. LAREI shows you the conflict and holds
+            a room differently, a brochure is three years old. The record shows you the conflict and holds
             publication until you settle it.
           </p>
           <ul className="list-check">
@@ -323,7 +323,7 @@ export default function Product() {
         <div className="shell">
           <div className="section-head">
             <span className="eyebrow">Limits</span>
-            <h2 className="section-title">What LAREI will not do.</h2>
+            <h2 className="section-title">What the platform will not do.</h2>
             <p className="lead">
               A tool is defined by what it refuses. These are ours, written down so nobody is
               surprised later.

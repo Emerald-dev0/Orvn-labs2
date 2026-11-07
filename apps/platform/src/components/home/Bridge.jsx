@@ -15,7 +15,7 @@ export default function Bridge() {
         <Reveal delay={0.08}>
           <p className="bridge-body">
             Property information, professional identity and buyer-facing materials often sit in
-            different places. That fragmentation costs attention. LAREI is designed to bring the
+            different places. That fragmentation costs attention. The platform is designed to bring the
             presentation layer together, so what you share reflects a clear, approved record rather
             than another round of manual assembly.
           </p>

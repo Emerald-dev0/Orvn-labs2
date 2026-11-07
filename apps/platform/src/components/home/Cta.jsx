@@ -1,20 +1,17 @@
 "use client";
 
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
-import { ArrowRight, Check } from 'lucide-react';
+import { ArrowRight, Check, Mail } from 'lucide-react';
 
+/**
+ * The closing call to action.
+ *
+ * This used to be a form that accepted an address and printed a success message without sending
+ * anything anywhere. It is now a link to the real application, which validates, stores, emails the
+ * team and states what happens next.
+ */
 export default function Cta() {
-  const [email, setEmail] = useState('');
-  const [sent, setSent] = useState(false);
-
-  const submit = (e) => {
-    e.preventDefault();
-    if (!email) return;
-    setSent(true);
-    setEmail('');
-  };
-
   return (
     <section className="cta-home">
       <div className="shell">
@@ -23,38 +20,40 @@ export default function Cta() {
           <div className="cta-scrim" aria-hidden="true" />
 
           <div className="cta-card glass">
-            <h2 className="cta-title">Make every property presentation reflect the business behind it.</h2>
+            <h2 className="cta-title">
+              One property record. The presentation, the page and the share link come from it.
+            </h2>
             <p className="cta-body">
-              We&rsquo;re inviting a small set of real-estate operators to help test the first release
-              of LAREI.
+              We are inviting a small number of operators to work through the first release with
+              us. Tell us what you present today and we will answer by email.
             </p>
 
-            {sent ? (
-              <p className="cta-sent">
-                <Check size={17} strokeWidth={2.6} />
-                Your request has been received. We will review it and reply by email.
-              </p>
-            ) : (
-              <form className="cta-form" onSubmit={submit}>
-                <input
-                  type="email"
-                  className="cta-input"
-                  placeholder="Your work email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  aria-label="Your work email"
-                  required
-                />
-                <button type="submit" className="btn btn-lime cta-submit">
-                  Request early access
-                  <ArrowRight strokeWidth={2.2} />
-                </button>
-              </form>
-            )}
+            <div className="cta-actions">
+              <Link href="/early-access" className="btn btn-lime cta-submit">
+                Request early access
+                <ArrowRight strokeWidth={2.2} />
+              </Link>
+              <a href="mailto:hello@orvnlabs.com" className="cta-mail">
+                <Mail size={15} strokeWidth={2} />
+                hello@orvnlabs.com
+              </a>
+            </div>
+
+            <ul className="cta-points">
+              {[
+                'Read by a person, not an autoresponder',
+                'No card, nothing charged during early access',
+                'Nothing published without you approving it',
+              ].map((point) => (
+                <li key={point}>
+                  <Check size={12} strokeWidth={3} />
+                  {point}
+                </li>
+              ))}
+            </ul>
 
             <p className="cta-note">
-              Already invited? <Link href="/sign-in">Sign in</Link>. Applications are reviewed
-              individually.
+              Already invited? <Link href="/sign-in">Sign in</Link>.
             </p>
           </div>
         </div>

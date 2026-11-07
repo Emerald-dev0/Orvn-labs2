@@ -7,27 +7,27 @@ import '../src/styles/sections.css';
 export const metadata = {
   metadataBase: new URL('https://orvnlabs.com'),
   title: {
-    default: 'LAREI by ORVN Labs | Professional websites and property deal pages',
+    default: 'ORVN Labs | Property presentations you can share',
     template: '%s · ORVN Labs',
   },
   description:
-    'LAREI is being built for wholesalers, agents, investors and real-estate operators who want one professional home for their brand, property portfolio and deal presentations.',
+    'ORVN Labs is building a platform that turns property details into presentations you can share: organise a property, prepare an editable deal sheet and publish a professional page linked to your profile.',
   applicationName: 'ORVN Labs',
   icons: { icon: '/favicon.svg' },
   manifest: '/manifest.json',
   openGraph: {
     type: 'website',
     siteName: 'ORVN Labs',
-    title: 'LAREI by ORVN Labs | Professional websites and property deal pages',
+    title: 'ORVN Labs | Property presentations you can share',
     description:
-      'One professional home for your brand, property portfolio and deal presentations. LAREI is in private beta.',
+      'Organise a property, prepare an editable deal sheet, and publish a professional page linked to your profile. In development; early access is by request.',
     url: '/',
     images: [{ url: '/logo.png', width: 1200, height: 630, alt: 'ORVN Labs' }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'LAREI by ORVN Labs',
-    description: 'Professional websites, property portfolios and shareable property pages.',
+    title: 'ORVN Labs',
+    description: 'Property records, deal sheets and shareable property pages from ORVN Labs.',
     images: ['/logo.png'],
   },
 };
