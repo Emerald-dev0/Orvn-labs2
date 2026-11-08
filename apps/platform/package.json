@@ -15,6 +15,7 @@
     "db:status": "node scripts/db-status.mjs",
     "invite": "node scripts/invite.mjs",
     "email:preview": "tsx scripts/preview-emails.tsx",
+    "mail:test": "tsx scripts/mail-test.ts",
     "dns:check": "node scripts/check-dns.mjs"
   },
   "dependencies": {

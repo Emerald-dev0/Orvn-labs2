@@ -61,9 +61,25 @@ Cloudflare's, not a mailbox count.
 
 ## 3. Sanity test before you trust it
 
-Send from a personal address to `hello@orvnlabs.com`, and confirm it lands in the destination inbox.
-Then send from Gmail *as* `hello@` back to the personal address and read the headers. What you see
-there decides §4.
+**Inbound** cannot be tested by a script — it needs a real message from outside. Send one from your
+phone to `hello@orvnlabs.com` and check the destination inbox. If it does not arrive within a minute,
+the destination address was never confirmed (§1, step 1): unconfirmed destinations reject mail rather
+than holding it, and the sender sees a bounce.
+
+**Outbound** can be, and should be before an applicant hits it:
+
+```
+cd apps/platform
+npm run mail:test -- --dry        # are the key, MAIL_FROM and inbox set?
+npm run mail:test                 # send one real message to EARLY_ACCESS_INBOX
+```
+
+It goes through the same `sendEmail()` seam the site uses, so a pass means the key is valid, the
+sender identity is verified and the network is fine. Failures come back named: an unverified identity
+reports `sender_not_verified`, a bad key reports `unauthorized`, with the request id to quote.
+
+Then send from Gmail *as* `hello@` to a personal address and read the headers. What you see there
+decides §4.
 
 ## 4. Outbound — Gmail, Send mail as
 
@@ -105,7 +121,7 @@ nothing arrived".
 ## 6. Order that keeps mail flowing
 
 1. Turn on Email Routing, confirm the destination, add the three addresses.
-2. Send in and out; read the headers.
+2. Send in (`npm run mail:test` verifies the way out; a message from your phone verifies the way in).
 3. Delete the Google and Resend DKIM records.
 4. Configure Gmail *Send mail as* (A now, B before buyer mail).
 5. Merge SPF into one record covering Cloudflare, the relay if any, and Calder.

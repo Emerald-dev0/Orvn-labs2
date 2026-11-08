@@ -188,6 +188,7 @@ bucket.
 [ ] Calder API key pasted, orvnlabs.com added as a sending domain, hello@ as a sender identity
 [ ] Cloudflare Email Routing on, destination confirmed, three custom addresses added
 [ ] Gmail Send mail as configured (Path A now, Path B before any buyer conversation)
+[ ] npm run mail:test -- --dry shows nothing missing, then npm run mail:test sends one
 [ ] EARLY_ACCESS_INBOX switched from Gmail to early@orvnlabs.com
 [ ] npm run dns:check -- --expect cloudflare passes
 ```

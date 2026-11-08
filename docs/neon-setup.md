@@ -105,9 +105,9 @@ tables that do not exist yet; run it again after migrating and the grants land.
 ok    connected          neondb_owner on neondb · Postgres 17.2
 ok    role orrei_app     nologin, assumable by neondb_owner
 ok    role orrei_public  nologin, assumable by neondb_owner
-ok    migrations         3 applied
-ok    tables             14 in public, 14 with row level security
-ok    policies           22 defined
+ok    migrations         5 applied
+ok    tables             18 in public, 14 with row level security
+ok    policies           35 defined
 ok    early access       0 applications stored
 ```
 
@@ -119,6 +119,7 @@ Anything marked `MISS` prints the command that fixes it:
 | `… cannot assume it` | policies ran as a *different* role than the one you connect with | use one Neon user for both URLs, re-run `npm run db:policies` |
 | `no drizzle journal` | migrations never ran | `npm run db:migrate` |
 | `none in public` | migrations ran, on another branch or database | check the string points at the same project and branch |
+| tables more than RLS tables | expected — the Better Auth tables (`user`, `session`, `account`, `verification`) carry no tenant data, so they have no policies | nothing to fix |
 | `authentication failed` | truncated password, or a role without login | re-copy from Neon → Connect |
 | `hostname does not resolve` | the string got cut when pasting | re-copy the whole line |
 | `direct client connection to the pooler` | a migration ran against the pooled host | put the direct string in `DATABASE_URL_ADMIN` |

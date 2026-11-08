@@ -48,10 +48,9 @@ const nextConfig = {
       // Pricing is not published, deliberately. Send price questions to the questions page.
       { source: '/pricing', destination: '/faq', permanent: true },
 
-      // Old auth entry points and the frozen admin surface.
+      // Old auth entry point. /admin is deliberately absent: it is a live route now, gated by
+      // ADMIN_EMAILS in lib/admin-guard.ts, and a redirect here would shadow the queue entirely.
       { source: '/login', destination: '/sign-in', permanent: true },
-      { source: '/admin/:path*', destination: '/sign-in', permanent: true },
-      { source: '/admin', destination: '/sign-in', permanent: true },
     ];
   },
 

@@ -3015,98 +3015,228 @@
 }
 
 /* =========================================================================
-   Hero — product flow (v3)
-   The evidence is the flow: record → deal sheet → page. Property imagery is context,
-   inside the last panel, not the explanation.
+   Hero — one claim, one piece of evidence
+   Pine ground against the bone page below, so the page opens with contrast
+   instead of a quiet sheet of text. Display type carries the claim; the two
+   cards on the right carry the before and the after. Lime appears once, as a
+   stroke under the words that sting.
    ========================================================================= */
 
-.flow-hero {
-  background: var(--bone);
-  padding-top: calc(var(--nav-h) + clamp(26px, 3.6vw, 56px));
-  padding-bottom: clamp(38px, 5vw, 76px);
+.hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--pine);
+  color: var(--white);
+  padding-top: calc(var(--nav-h) + clamp(30px, 4.4vw, 72px));
+  padding-bottom: clamp(52px, 6.4vw, 100px);
 }
 
-.flow-hero-grid {
+/* A soft lime bloom behind the copy — light, not decoration. */
+.hero-glow {
+  position: absolute;
+  top: -34%;
+  right: -12%;
+  width: min(860px, 88vw);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%, rgba(201, 242, 110, 0.17), rgba(201, 242, 110, 0) 62%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.hero-grid {
+  position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1.04fr) minmax(0, 0.96fr);
-  gap: clamp(28px, 4vw, 64px);
+  grid-template-columns: minmax(0, 1.06fr) minmax(0, 0.94fr);
+  gap: clamp(34px, 4.6vw, 76px);
   align-items: center;
 }
 
-.flow-kicker {
+/* ---- Copy ---- */
+
+.hero-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 12.5px;
+  letter-spacing: 0.01em;
+  color: rgba(255, 253, 248, 0.66);
+}
+
+.hero-kicker-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--lime);
+  box-shadow: 0 0 0 4px rgba(201, 242, 110, 0.15);
+}
+
+.hero-title {
+  margin-top: 20px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(40px, 5.7vw, 78px);
+  line-height: 0.95;
+  letter-spacing: -0.045em;
+  color: var(--white);
+  text-wrap: balance;
+  max-width: 15ch;
+}
+
+/* The one accent: a lime stroke under "forwarded PDF". */
+.hero-title em {
+  font-style: normal;
+  background-image: linear-gradient(var(--lime), var(--lime));
+  background-repeat: no-repeat;
+  background-size: 100% 0.115em;
+  background-position: 0 97%;
+}
+
+.hero-sub {
+  margin-top: 22px;
+  max-width: 47ch;
+  font-size: clamp(15.5px, 1.5vw, 18px);
+  line-height: 1.62;
+  color: rgba(255, 253, 248, 0.75);
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 30px;
+}
+
+/* The site's primary button is pine-on-bone; on pine it inverts. */
+.hero .btn.btn-primary {
+  background: var(--lime);
+  color: var(--lime-ink);
+  box-shadow: 0 20px 44px -20px rgba(201, 242, 110, 0.6);
+}
+
+.hero .btn.btn-primary:hover {
+  background: var(--lime-2);
+  box-shadow: 0 24px 50px -20px rgba(201, 242, 110, 0.7);
+}
+
+.hero-ghost {
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  padding: 13px 20px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line-on-dark-2);
+  color: var(--white);
+  font-size: 14.5px;
+  font-weight: 600;
+  transition: background 0.3s var(--ease), border-color 0.3s var(--ease);
+}
+
+.hero-ghost:hover {
+  background: rgba(255, 253, 248, 0.08);
+  border-color: rgba(255, 253, 248, 0.4);
+}
+
+.hero-note {
+  margin-top: 22px;
+  max-width: 45ch;
   font-size: 12.5px;
-  color: var(--muted);
+  line-height: 1.65;
+  color: rgba(255, 253, 248, 0.48);
 }
 
-.flow-kicker::before {
-  content: '';
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--lime-2);
+/* ---- The evidence ---- */
+
+.hero-proof {
+  display: grid;
+  justify-items: stretch;
+  gap: 0;
 }
 
-.flow-title {
-  margin-top: 18px;
-  font-family: var(--font-display);
-  font-size: clamp(36px, 5.2vw, 66px);
-  line-height: 0.98;
-  letter-spacing: -0.04em;
-  color: var(--ink);
-  max-width: 16ch;
-  text-wrap: balance;
+.proof-card {
+  border-radius: var(--r-lg);
+  will-change: transform;
 }
 
-.flow-sub {
-  margin-top: 20px;
-  max-width: 46ch;
-  font-size: clamp(15px, 1.45vw, 17.5px);
-  line-height: 1.6;
-  color: var(--muted);
+.proof-label {
+  display: block;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: rgba(255, 253, 248, 0.44);
 }
 
-.flow-actions {
+.proof-label.is-dark { color: var(--muted-2); }
+
+/* Before: what a buyer receives right now. */
+.proof-today {
+  padding: 18px 18px 16px;
+  background: rgba(255, 253, 248, 0.055);
+  border: 1px solid var(--line-on-dark);
+  backdrop-filter: blur(4px);
+}
+
+.proof-note {
+  margin-top: 11px;
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: rgba(255, 253, 248, 0.9);
+}
+
+.proof-attachments {
   display: flex;
-  align-items: center;
-  gap: 10px;
   flex-wrap: wrap;
-  margin-top: 28px;
+  gap: 7px;
+  margin-top: 13px;
 }
 
-.flow-note {
-  margin-top: 20px;
-  max-width: 44ch;
-  font-size: 12.5px;
-  line-height: 1.6;
-  color: var(--muted-2);
+.proof-attach {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: var(--r-pill);
+  background: rgba(255, 253, 248, 0.07);
+  border: 1px solid var(--line-on-dark);
+  font-size: 11.5px;
+  color: rgba(255, 253, 248, 0.72);
 }
 
-/* ---- The stage ---- */
+.proof-arrow {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  margin: -13px auto;
+  border-radius: 50%;
+  background: var(--lime);
+  color: var(--lime-ink);
+  box-shadow: 0 14px 30px -14px rgba(0, 0, 0, 0.75);
+  position: relative;
+  z-index: 2;
+}
 
-.flow-stage {
+/* After: the same property, published. */
+.proof-orrei {
+  overflow: hidden;
   background: var(--white);
-  border: 1px solid var(--line);
-  border-radius: clamp(18px, 2vw, 26px);
-  box-shadow: var(--sh-3);
-  padding: clamp(14px, 1.6vw, 20px);
+  color: var(--ink);
+  box-shadow: var(--sh-4);
 }
 
-.flow-stage-head {
+.proof-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  padding-bottom: 12px;
-  margin-bottom: 12px;
+  padding: 14px 16px;
   border-bottom: 1px solid var(--line);
 }
 
-.flow-stage-title { font-size: 12.5px; font-weight: 600; color: var(--ink-2); }
-
-.flow-stage-tag {
+.proof-tag {
   flex: none;
   padding: 4px 9px;
   border-radius: var(--r-pill);
@@ -3116,140 +3246,125 @@
   font-weight: 600;
 }
 
-.flow-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  gap: 10px;
-}
+.proof-photo-wrap { position: relative; }
 
-.flow-panel {
-  display: grid;
-  grid-template-columns: 26px minmax(0, 1fr);
-  gap: 12px;
-  padding: 12px;
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  background: var(--bone);
-}
-
-.flow-panel-num {
-  display: grid;
-  place-items: center;
-  height: 22px;
-  border-radius: 7px;
-  background: var(--lime-pale);
-  color: var(--lime-ink);
-  font-size: 10.5px;
-  font-weight: 700;
-}
-
-.flow-panel-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 8px;
-}
-
-.flow-panel-title { font-size: 13px; font-weight: 600; color: var(--ink); }
-.flow-panel-meta { font-size: 10.5px; color: var(--muted-2); }
-
-.flow-fact {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 5px 0;
-  border-top: 1px dashed var(--line-2);
-  font-size: 11.5px;
-  color: var(--ink-2);
-}
-
-.flow-fact em {
-  font-style: normal;
-  font-size: 10.5px;
-  color: var(--muted-2);
-  white-space: nowrap;
-}
-
-.flow-fact.is-gap span { color: var(--warn); }
-
-.flow-sheet {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  background: var(--white);
-}
-
-.flow-sheet-icon {
-  flex: none;
-  display: grid;
-  place-items: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 8px;
-  background: var(--lime-pale);
-  color: var(--lime-ink);
-}
-
-.flow-sheet p { font-size: 12px; font-weight: 600; color: var(--ink); }
-.flow-sheet span { font-size: 10.5px; color: var(--muted-2); }
-.flow-sheet-check { margin-left: auto; color: var(--pos); }
-
-.flow-page { display: flex; align-items: center; gap: 10px; }
-
-.flow-page-thumb {
-  width: 58px;
-  height: 42px;
+.proof-photo {
+  display: block;
+  width: 100%;
+  height: clamp(132px, 16vw, 186px);
   object-fit: cover;
-  border-radius: 8px;
-  flex: none;
 }
 
-.flow-page-info p { font-size: 12px; font-weight: 600; color: var(--ink); }
-.flow-page-info span {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  font-size: 10.5px;
-  color: var(--muted-2);
-}
-
-.flow-page-actions { display: flex; gap: 6px; margin-top: 10px; }
-
-.flow-page-btn {
+.proof-photo-chip {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 5px 10px;
+  padding: 5px 9px;
+  border-radius: var(--r-pill);
+  background: rgba(255, 253, 248, 0.93);
+  color: var(--ink);
+  font-size: 10.5px;
+  font-weight: 600;
+}
+
+.proof-body { padding: 16px; }
+
+.proof-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+}
+
+.proof-facts {
+  margin-top: 4px;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.proof-sheet {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background: var(--bone);
+}
+
+.proof-sheet-icon {
+  display: grid;
+  place-items: center;
+  width: 27px;
+  height: 27px;
+  flex: none;
+  border-radius: 8px;
+  background: var(--lime-pale);
+  color: var(--lime-ink);
+}
+
+.proof-sheet-text { min-width: 0; }
+.proof-sheet-text strong {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.proof-sheet-text span {
+  display: block;
+  margin-top: 1px;
+  font-size: 10.5px;
+  color: var(--muted-2);
+}
+
+.proof-sheet-check { margin-left: auto; color: var(--pos); flex: none; }
+
+.proof-page-actions { display: flex; gap: 6px; margin-top: 12px; }
+
+.proof-page-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 11px;
   border-radius: var(--r-pill);
   border: 1px solid var(--line-2);
-  font-size: 10.5px;
-  font-weight: 500;
+  font-size: 11px;
+  font-weight: 600;
   color: var(--ink-2);
 }
 
-.flow-page-btn.is-primary {
+.proof-page-btn.is-primary {
   background: var(--ink);
   border-color: transparent;
   color: var(--white);
 }
 
+/* ---- Responsive ---- */
+
 @media (max-width: 960px) {
-  .flow-hero-grid { grid-template-columns: 1fr; gap: 30px; }
-  .flow-title { max-width: 20ch; }
+  .hero-grid {
+    grid-template-columns: 1fr;
+    gap: clamp(34px, 6vw, 48px);
+  }
+
+  .hero-title { max-width: 18ch; }
+
+  .proof-today { transform: none !important; }
+  .hero-proof { max-width: 520px; }
 }
 
 @media (max-width: 560px) {
-  .flow-actions .btn { width: 100%; justify-content: center; }
-  .flow-panel { grid-template-columns: 22px minmax(0, 1fr); }
+  .hero-actions .btn,
+  .hero-ghost { width: 100%; justify-content: center; }
+
+  .proof-head { flex-direction: column; align-items: flex-start; gap: 8px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .flow-hero-copy, .flow-stage { animation: none; }
+  .proof-today { transform: none; }
 }
