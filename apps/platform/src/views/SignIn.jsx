@@ -14,7 +14,9 @@ import { authClient } from '../../lib/auth-client';
 export default function SignIn({ next = '/dashboard' }) {
   const [mode, setMode] = useState('link');
   const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
   const [password, setPassword] = useState('');
+  const [confirm, setConfirm] = useState('');
   const [status, setStatus] = useState('idle');
   const [message, setMessage] = useState('');
 
@@ -28,6 +30,46 @@ export default function SignIn({ next = '/dashboard' }) {
       // Deliberately swallowed: the answer must not differ for an uninvited address.
     }
     setStatus('sent');
+  }
+
+  /**
+   * Account creation for an operator or invitee, who chooses their own password.
+   *
+   * Deliberately not a shared default: a known starting password on a public sign-in page is the
+   * single most abused door in an admin panel, and "change it later" is a promise people break.
+   * The beta gate still decides who may create one — everybody else is refused.
+   */
+  async function createAccount(event) {
+    event.preventDefault();
+    setMessage('');
+
+    if (password.length < 10) {
+      setStatus('error');
+      setMessage('Use at least 10 characters. Three or four words is easier to remember than a puzzle.');
+      return;
+    }
+    if (password !== confirm) {
+      setStatus('error');
+      setMessage('Those two passwords are not the same.');
+      return;
+    }
+
+    setStatus('pending');
+    try {
+      const result = await authClient.signUp.email({ email, password, name: name || email });
+      if (result?.error) throw new Error(result.error.message ?? 'rejected');
+      window.location.assign(next);
+    } catch (error) {
+      const detail = String(error?.message ?? '');
+      setStatus('error');
+      setMessage(
+        /exist/i.test(detail)
+          ? 'An account already uses that address. Sign in with your password instead.'
+          : /invit|forbidden|beta/i.test(detail)
+            ? 'That address is not on the beta list yet. Request access and we will add it.'
+            : 'We could not create the account just now. Try again, or use a sign-in link.',
+      );
+    }
   }
 
   async function signInWithPassword(event) {
@@ -51,10 +93,16 @@ export default function SignIn({ next = '/dashboard' }) {
           <div className="signin-card">
             <div className="signin-main">
               <Logo />
-              <span className="eyebrow" style={{ marginTop: 24 }}>Sign in</span>
-              <h1 className="signin-title">Welcome back.</h1>
+              <span className="eyebrow" style={{ marginTop: 24 }}>
+                {mode === 'create' ? 'Create account' : 'Sign in'}
+              </span>
+              <h1 className="signin-title">
+                {mode === 'create' ? 'Set your password.' : 'Welcome back.'}
+              </h1>
               <p className="lead">
-                Your records, drafts and published pages, exactly where you left them.
+                {mode === 'create'
+                  ? 'For operators and invited testers. If your address is on the list, this creates your account.'
+                  : 'Your records, drafts and published pages, exactly where you left them.'}
               </p>
 
               {status === 'sent' ? (
@@ -68,6 +116,67 @@ export default function SignIn({ next = '/dashboard' }) {
                     </p>
                   </div>
                 </div>
+              ) : mode === 'create' ? (
+                <form className="signin-form" onSubmit={createAccount}>
+                  <div className="field">
+                    <label className="field-label" htmlFor="si-name">Your name</label>
+                    <input
+                      id="si-name"
+                      type="text"
+                      className="input"
+                      placeholder="Daniel"
+                      autoComplete="name"
+                      value={name}
+                      onChange={(event) => setName(event.target.value)}
+                    />
+                  </div>
+                  <div className="field">
+                    <label className="field-label" htmlFor="si-email-c">Email address</label>
+                    <input
+                      id="si-email-c"
+                      type="email"
+                      required
+                      className="input"
+                      placeholder="you@business.com"
+                      autoComplete="email"
+                      value={email}
+                      onChange={(event) => setEmail(event.target.value)}
+                    />
+                  </div>
+                  <div className="field">
+                    <label className="field-label" htmlFor="si-pass-c">Password</label>
+                    <input
+                      id="si-pass-c"
+                      type="password"
+                      required
+                      minLength={10}
+                      className="input"
+                      placeholder="At least 10 characters"
+                      autoComplete="new-password"
+                      value={password}
+                      onChange={(event) => setPassword(event.target.value)}
+                    />
+                  </div>
+                  <div className="field">
+                    <label className="field-label" htmlFor="si-pass-c2">Repeat it</label>
+                    <input
+                      id="si-pass-c2"
+                      type="password"
+                      required
+                      minLength={10}
+                      className="input"
+                      placeholder="The same, once more"
+                      autoComplete="new-password"
+                      value={confirm}
+                      onChange={(event) => setConfirm(event.target.value)}
+                    />
+                  </div>
+                  <button type="submit" className="btn btn-primary btn-block" disabled={status === 'pending'}>
+                    {status === 'pending' ? 'Creating…' : 'Create my account'}
+                    <ArrowRight strokeWidth={2.2} />
+                  </button>
+                  {message ? <p className="field-error" role="alert">{message}</p> : null}
+                </form>
               ) : mode === 'link' ? (
                 <form className="signin-form" onSubmit={sendLink}>
                   <div className="field">
@@ -125,21 +234,30 @@ export default function SignIn({ next = '/dashboard' }) {
               )}
 
               <div className="signin-switch">
-                {mode === 'link' ? (
-                  <button type="button" onClick={() => { setMode('password'); setStatus('idle'); }}>
-                    Use a password instead
+                {mode === 'create' ? (
+                  <button type="button" onClick={() => { setMode('password'); setStatus('idle'); setMessage(''); }}>
+                    I already have a password
                   </button>
                 ) : (
-                  <button type="button" onClick={() => { setMode('link'); setStatus('idle'); }}>
+                  <button type="button" onClick={() => { setMode('link'); setStatus('idle'); setMessage(''); }}>
                     Email me a link instead
                   </button>
                 )}
+                {mode !== 'create' ? (
+                  <>
+                    <span aria-hidden="true">·</span>
+                    <button type="button" onClick={() => { setMode('create'); setStatus('idle'); setMessage(''); }}>
+                      Create your password
+                    </button>
+                  </>
+                ) : null}
                 <span aria-hidden="true">·</span>
                 <Link href="/forgot-password">Forgot password</Link>
               </div>
 
               <p className="signin-note">
-                Access is by invitation during early access. If you have not received one,{' '}
+                Access is by invitation during early access, and every operator creates their own
+                password — there is no shared one. If you are not on the list,{' '}
                 <Link href="/early-access">request access</Link>.
               </p>
             </div>

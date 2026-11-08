@@ -79,29 +79,53 @@ reason to wait for that to use the queue.
 
 Anyone not on this list gets a **404** on `/admin`, not a 403. Changing the list is a redeploy.
 
-## 3a. Signing in — there is no default password
+## 3a. Signing in — every operator sets their own password
 
-Nothing is seeded and nothing is printed in a document. The account is created once, by you:
+There is no default password, and no shared one. Each person creates their own account the first
+time they sign in:
+
+1. Open `/sign-in` → **Create your password**.
+2. Name, the address on `ADMIN_EMAILS`, and a password of at least 10 characters, twice.
+3. That is the account. Sign in with it from then on.
+
+The beta gate decides who may create one: an address on `ADMIN_EMAILS`, or one holding a usable
+invitation. Everybody else is refused with the same sentence, so the form cannot be used to find out
+who has an account.
+
+**More than one admin** is a comma-separated list, and each person creates their own password:
 
 ```
+ADMIN_EMAILS=daniel@orvnlabs.com,ops@orvnlabs.com
+```
+
+Everyone on the list sees the same queue, because the queue is the database, not a mailbox.
+
+### Creating an account without the form
+
+```bash
 cd apps/platform
 npm run admin:create -- --email you@example.com
 ```
 
-It generates a long password, creates the account and prints the password **once** — copy it into a
-password manager before you close the terminal. Pass `--password '…'` to choose your own (10
-characters minimum).
+Same gate, no browser: generates a long password and prints it once. Useful for a headless or CI
+account, or when the sign-in page is not reachable yet.
 
-The address must be in `ADMIN_EMAILS`, or the beta gate refuses the sign-up. If it is missing, the
-script says so and prints the line to add.
+### Why not one default password everyone changes later
 
-Two other ways in, both requiring Calder to be working:
+A known starting password on a public URL is the most-exploited door in an admin panel, and "change
+it on first login" is a promise people break. It also destroys the answer to "who did this?" —
+two people on one account cannot be told apart in the audit trail. Self-service creation costs one
+extra field on a form and avoids both.
 
-- **Magic link** — the "Email me a link" tab on `/sign-in`. One use, ten minutes.
+### The other two ways in
+
+Both send mail through Calder, so they work only once the sender identity is verified:
+
+- **Magic link** — the "Email me a link" tab. One use, ten minutes.
 - **Forgot password** — sends a reset link to an existing account.
 
 Locally, with no `DATABASE_URL`, there is no sign-in at all: the site runs in demo mode and the
-queue is not reachable. That is the honest behaviour, not a broken password.
+queue is not reachable. That is the honest behaviour, not a wrong password.
 
 ## 4. Calder: sender identity and sending domain
 
