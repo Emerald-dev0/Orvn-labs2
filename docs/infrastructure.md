@@ -13,7 +13,7 @@ have to click yourself marked **you**.
 | MongoDB? | No | It would remove the security boundary this product is built on (see §2) |
 | Does Cloudflare cover the database? | No | D1 is SQLite; Hyperdrive is a connector to Postgres, not a database |
 | Cloudflare's job | DNS, TLS, R2 (files), optionally WAF | Nameservers are already moved; R2 is in the stack |
-| Mail host | **Zoho Mail**, free tier | Replaces Google Workspace; five mailboxes, no IMAP. See §4.1 and `mail-cutover.md` |
+| Mail host | **Cloudflare Email Routing** (receives) + **Gmail Send mail as** (replies) | Replaces Google Workspace; no mailboxes. See §4.1 |
 | Where the app runs | Vercel | Cloudflare DNS points at it, DNS-only |
 
 ---
@@ -139,28 +139,32 @@ Three systems, three jobs. The one that trips people up is that **receiving and 
 | Saying who may speak for the domain | **DMARC** | `_dmarc` |
 | DNS | **Cloudflare** | everything above |
 
-### 4.1 The mailbox host: Zoho Mail
+### 4.1 What replaced Google Workspace
 
-Decided 4 November 2026 — **Zoho Mail**, on the free tier: five mailboxes, 5 GB each, one domain.
-It gives what Cloudflare Email Routing cannot, a mailbox you can *send* from as
-`hello@orvnlabs.com`, which is the address printed on every page, deal sheet and buyer summary.
+Decided 4 November 2026 — no mailbox host at all, three systems doing three jobs:
 
-Constraints to plan around: **no IMAP/POP** on the free tier, so everyone reads mail in
-`mail.zoho.com` or the Zoho app; and a **sixth user moves the account onto a paid plan**, so aliases
-and groups come before new mailboxes.
+| Job | System |
+| --- | --- |
+| Receiving `hello@`, `early@`, `daniel@` | **Cloudflare Email Routing** — free, and it owns the MX now |
+| Replying as `hello@` | **Gmail, Send mail as** — either unauthenticated ("Send through Gmail", caps DMARC at `p=none`) or via a relay's SMTP (authenticated, aligns) |
+| The product's mail | **Calder** — unaffected by any of the above |
 
-The full cutover, the records, and who gets access to what: **[mail-cutover.md](mail-cutover.md)**.
-The rest of this section is the short version for anyone reading the deployment plan end to end.
+The distinction worth holding on to: **Email Routing is receive-only.** It has no mailbox and no SMTP,
+so "can I reply as `hello@`" is answered by Gmail, not Cloudflare. That is the trade being made here —
+zero cost and no mailboxes, in exchange for tying identity to a Google account.
+
+Values, in the order you can obtain them: **[env-setup.md](env-setup.md)**. Cutover and access:
+**[mail-cutover.md](mail-cutover.md)**.
 
 ### 4.2 The cutover, in an order that loses no mail
 
 The full sequence, with the records, the tests after each step and a rollback, is in
 **[mail-cutover.md](mail-cutover.md)**. The two rules that decide whether mail is lost:
 
-1. **Lower the MX TTL to 300 and wait an hour** before switching. Old TTLs keep senders pointed at
-   Google after the switch, and those messages bounce.
-2. **Publish Zoho's DKIM and send a test in both directions *before* deleting the Google records.**
-   Deleting first turns a misconfiguration into an outage.
+1. **Confirm the Cloudflare destination address before enabling routing.** An unconfirmed destination
+   rejects mail, and the sender sees a bounce, not a queue.
+2. **Send a test in both directions before deleting the Google records.** Deleting first turns a
+   misconfiguration into an outage.
 
 ### 4.3 Calder: add the sending domain
 
@@ -177,18 +181,18 @@ never resolves to Calder's target, so verification sits at "pending" forever.
 Set the **sender identity** to `hello@orvnlabs.com` with display name `ORREI`. A From that is not a
 verified identity is the classic "the API returned 200, nothing arrived".
 
-This is independent of the mailbox host: Calder does not need MX, and Zoho does not need to be the
-signer for the app's mail.
+This is independent of the receiving setup: Calder does not need MX, and Cloudflare Email Routing
+does not need to be the signer for the app's mail.
 
 ### 4.4 SPF, once
 
 One SPF record per domain, and there is currently **none**:
 
 ```
-orvnlabs.com   TXT   "v=spf1 include:zoho.com include:<calder's include> ~all"
+orvnlabs.com   TXT   "v=spf1 include:_spf.mx.cloudflare.net include:<relay, if Gmail sends via one> include:<calder> ~all"
 ```
 
-Two rules. Include the mailbox host even though it only sends your replies — replies are your mail,
+Two rules. Include the receiving host even though it does not send the product's mail — replies are your mail,
 and dropping the include fails SPF the first time somebody answers a client. And if Calder sends with
 a return-path on its own bounce domain, the Calder include is belt-and-braces rather than required;
 add it anyway while the total stays well under the ten-lookup limit.
@@ -212,7 +216,7 @@ There is already a record: `v=DMARC1; p=none; rua=mailto:danieloye@orvnlabs.com`
 cd apps/platform
 npm run dns:check
 npm run dns:check -- --domain example.com
-npm run dns:check -- --expect zoho    # fails unless the mail host is Zoho
+npm run dns:check -- --expect cloudflare   # fails unless routing is live
 ```
 
 It asks public resolvers over DNS-over-HTTPS for nameservers, apex and `www`, the mail host, SPF,
@@ -235,8 +239,8 @@ ok    DKIM google    present
 ok    DKIM resend    stale, not used by this product
 ```
 
-So the work is: create the new mailbox host, publish its DKIM, switch MX, add SPF, repoint DMARC
-reporting, add the Calder sending domain, delete the Google and Resend keys.
+So the work is: enable Cloudflare Email Routing, confirm the destination, add SPF, configure Gmail
+replies, repoint DMARC reporting, add the Calder sending domain, delete the Google and Resend keys.
 
 ### 4.7 Environment
 
@@ -244,7 +248,7 @@ reporting, add the Calder sending domain, delete the Google and Resend keys.
 CALDER_API_KEY=...            # the key for project proj_dd2355404c90
 CALDER_API_URL=https://api.calder.click/v1
 MAIL_FROM="ORREI <hello@orvnlabs.com>"   # must match the verified sender identity
-EARLY_ACCESS_INBOX=...        # an address that will still receive mail after the cutover
+EARLY_ACCESS_INBOX=...        # early@orvnlabs.com, once routing forwards it
 ```
 
 ## 5. The email design system
@@ -291,7 +295,8 @@ npm run email:preview     # writes public/preview-emails/*.html, gitignored
 1. Neon project → `DATABASE_URL`, `DATABASE_URL_ADMIN`.
 2. `npm run db:migrate && npm run db:policies`.
 3. Cloudflare nameservers → A/CNAME (DNS-only) → Vercel domains → certificate active.
-4. New mailbox host: DKIM published → MX switched → test mail in and out → Google records removed.
+4. Cloudflare Email Routing: destination confirmed → addresses added → test in and out → Google
+   records removed → Gmail replies configured.
 5. Calder sending domain `orvnlabs.com` added → DKIM published (proxy off) → combined SPF → verified.
 6. Send a real invitation → check inbox placement and headers → repoint DMARC reporting → tighten
    the policy once the reports are clean.
