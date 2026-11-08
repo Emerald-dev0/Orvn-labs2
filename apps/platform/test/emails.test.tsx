@@ -122,6 +122,34 @@ describe('inquiry notification', () => {
   });
 });
 
+describe('early-access notification', () => {
+  it('links to the record in the queue, not just to an inbox', async () => {
+    const message = await betaApplicationEmail({
+      id: 'app_1',
+      name: 'Ada Okonkwo',
+      email: 'ada@northaven.example',
+      company: 'Northaven',
+      receivedAt: expires,
+      adminUrl: 'https://orvnlabs.com/admin/early-access#app_1',
+    });
+
+    expect(message.html).toContain('https://orvnlabs.com/admin/early-access#app_1');
+    expect(message.text).toContain('Open in the queue');
+    expect(message.replyTo).toBe('ada@northaven.example');
+  });
+
+  it('still renders without a queue link, for a deployment with no base URL', async () => {
+    const message = await betaApplicationEmail({
+      id: 'app_2',
+      name: 'Ada Okonkwo',
+      email: 'ada@northaven.example',
+      receivedAt: expires,
+    });
+    expect(message.html).not.toContain('/admin/early-access');
+    expect(message.text).toContain('ada@northaven.example');
+  });
+});
+
 describe('shared shell', () => {
   it('renders the wordmark, the company and the address in every message', async () => {
     const message = await resetPasswordEmail({ to: 'a@b.co', url: 'https://x/1' });

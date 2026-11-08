@@ -243,3 +243,96 @@ npm run email:preview     # writes public/preview-emails/*.html, gitignored
 **Not done from here, and cannot be:** the dashboard steps. There are no Cloudflare, Neon or Calder
 credentials in this environment and outbound requests are limited to the package registries, so I
 cannot provision or verify any of it. What is in the repo is the code and the exact records to add.
+
+---
+
+## 7. What happens when somebody submits a form
+
+### The journey, exactly
+
+An early-access request, end to end:
+
+1. **Validate.** `betaApplySchema` (zod) checks the fields; a honeypot field and a rate limit sit in
+   front of it. Nothing is stored from an invalid submission.
+2. **Store.** The row is written to `beta_applications` first. The table has a unique index on
+   email, so a resubmission is a no-op rather than a duplicate — and the applicant is never told
+   whether they had applied before.
+3. **Notify.** Only then is the email sent, to `EARLY_ACCESS_INBOX` — a real, monitored mailbox.
+   `replyTo` is the applicant. The message carries their answers verbatim, a **link to the record in
+   the queue** (`/admin/early-access#<id>`) and the invite command.
+4. **Work it.** The queue lists every application, newest first, filtered by status:
+   `new → reviewing → invited → declined`. The status lives on the row, so two people looking at the
+   same applicant see the same state.
+5. **If the email fails**, the row is still there. The applicant is told "we saved your request but
+   could not email the team", and the queue shows the application regardless. Nothing is lost to a
+   mail outage.
+
+Inquiries work the same way in the other direction: the row goes into `inquiries` for the publishing
+business, and the notification goes to that business's contact address with `replyTo` set to the
+buyer. The record is `/inquiries`; the email is a nudge.
+
+### Why email is not the system of record
+
+The tempting design is "send it to a Gmail and be done". It fails in four specific ways:
+
+| Failure | What it costs |
+| --- | --- |
+| Spam filing or a filter | The application exists nowhere else; it is simply gone |
+| Two people reply | Both answer the same applicant, neither knows |
+| No state | Nobody can tell who has been invited, so the same person is chased twice |
+| No history | No way to answer "how many asked in October, and what did they say?" |
+
+So: **the database holds the record, the email is a notification that something needs a decision,
+and the notification contains a link straight to that record.** That is the professional pattern,
+and it is what an applicant implicitly expects — their details were collected by a form, so they
+should live somewhere that answers "who has this and what did they do with it".
+
+### What Cloudflare forwarding actually does to the message
+
+If `hello@orvnlabs.com` is routed in Cloudflare Email Routing to a Gmail address, the forwarded copy
+arrives as an ordinary email with the original `From`, `Subject` and body preserved, the original
+`Reply-To` intact, and Cloudflare's own envelope sender and trace headers added by the hop. Because
+our mail is DKIM-signed by Calder for `orvnlabs.com` and forwarding keeps the signature, DMARC still
+aligns at Gmail; you may still see a small "via" hint in the header area. Attachments survive.
+
+That is fine for human mail. It is the wrong path for the product's own notifications, for three
+reasons: each hop is another chance to be filed as spam, the forwarded copy is a *second* copy that
+can drift from the record, and the queue link is what actually makes the email useful. So:
+
+- `hello@orvnlabs.com` → routed in Cloudflare → your inbox. This is for people writing to you.
+- App notifications → sent directly to `EARLY_ACCESS_INBOX`. No forwarding involved.
+
+### The admin queue
+
+`/admin/early-access` — built, not proposed:
+
+- Gated by `ADMIN_EMAILS` (comma-separated) on every request, in `lib/admin-guard.ts`. No session →
+  redirected to sign in and returned to the queue; session but not on the list → **404**, not 403,
+  because "not allowed" confirms the page is there.
+- Links in the sidebar only for addresses on that list.
+- Filters by status with counts, the applicant's own words preserved rather than summarised, and
+  one-click status changes.
+- Issuing an invitation is still `npm run invite --email …`, because provisioning a workspace
+  creates rows, a role and an owner. The queue offers the command to copy, so the two steps stay
+  next to each other without a mis-click being able to create a workspace.
+
+There is no separate audit table for queue changes yet. When a second operator is added, it should
+be added in the same pass as the audit row.
+
+### The email's colours
+
+Same tokens as the site, by name and by value:
+
+| Token | Site | Email |
+| --- | --- | --- |
+| Bone | `#f5f2eb` | `#f5f2eb` |
+| Pine | `#0e1512` | `#0e1512` |
+| Card / white | `#fffdf8` | `#fffdf8` |
+| Lime | `#c9f26e` | `#c9f26e` |
+| Lime ink | `#22380c` | `#22380c` |
+| Muted | `#55605a` | `#55605a` |
+| Hairline | `rgba(16,22,19,0.09)` | `#eae8e3` (the same colour flattened) |
+
+One deliberate difference: the site sets Bricolage Grotesque and Figtree as webfonts; the email asks
+for Figtree and falls back to the system stack. Gmail strips `@font-face`, so the sizes and spacing
+are designed to look right in the fallback and only the letterforms improve where the font loads.

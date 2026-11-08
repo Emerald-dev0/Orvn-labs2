@@ -74,6 +74,7 @@ const samples = [
         frustration="Every buyer asks for the same three details and I retype them each time."
         website="northaven.example"
         receivedAt={new Date('2026-11-04T09:12:00Z')}
+        adminUrl="https://orvnlabs.com/admin/early-access#9f2c1a7e-5b6d-4c8a-9e10-2f3b4c5d6e7f"
       />
     ),
   },

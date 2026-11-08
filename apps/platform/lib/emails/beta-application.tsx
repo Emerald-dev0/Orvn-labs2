@@ -21,6 +21,7 @@ export async function betaApplicationEmail(opts: {
   frustration?: string | null;
   website?: string | null;
   receivedAt: Date;
+  adminUrl?: string;
 }): Promise<EmailMessage> {
   const facts = [
     opts.company ? `Company: ${opts.company}` : null,
@@ -44,6 +45,7 @@ export async function betaApplicationEmail(opts: {
       opts.frustration ? `\nMost frustrating part:\n${opts.frustration}` : null,
       '',
       `Received ${opts.receivedAt.toUTCString()} · application ${opts.id}`,
+      opts.adminUrl ? `Open in the queue: ${opts.adminUrl}` : null,
       '',
       'Reply to this email to answer them directly. Invitations are issued with:',
       `  npm run invite --email ${opts.email}`,

@@ -2,6 +2,7 @@ import * as React from 'react';
 import {
   Body,
   Container,
+  Font,
   Head,
   Hr,
   Html,
@@ -28,11 +29,18 @@ export const palette = {
   muted: '#55605a',
   lime: '#c9f26e',
   limeInk: '#22380c',
-  line: '#e6e0d3',
+  line: '#eae8e3', // rgba(16,22,19,0.09) over the card, matching --line
 };
 
+/**
+ * Figtree where the client supports webfonts (Apple Mail, iOS, Outlook for Mac), the system stack
+ * everywhere else. Gmail strips @font-face, so the fallback is the design, not the emergency plan:
+ * the sizes and spacing assume the fallback and only the letterforms improve.
+ */
+export const FONT_URL = 'https://orvnlabs.com/fonts/figtree.woff2';
+
 const FONT =
-  "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif";
+  "'Figtree', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif";
 
 export function Brand({
   preview,
@@ -46,6 +54,13 @@ export function Brand({
   return (
     <Html lang="en">
       <Head>
+        <Font
+          fontFamily="Figtree"
+          fallbackFontFamily={['Arial', 'Helvetica', 'sans-serif']}
+          webFont={{ url: FONT_URL, format: 'woff2' }}
+          fontWeight={400}
+          fontStyle="normal"
+        />
         {/* React Email does not add this for us; without it Gmail and iOS zoom the layout out. */}
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="color-scheme" content="light" />

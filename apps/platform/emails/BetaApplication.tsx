@@ -29,6 +29,7 @@ export function BetaApplication({
   frustration,
   website,
   receivedAt,
+  adminUrl,
 }: {
   id: string;
   name: string;
@@ -41,6 +42,8 @@ export function BetaApplication({
   frustration?: string | null;
   website?: string | null;
   receivedAt: Date;
+  /** Deep link to the record in the queue. Absent only if the deployment has no base URL. */
+  adminUrl?: string;
 }) {
   return (
     <Brand
@@ -75,6 +78,12 @@ export function BetaApplication({
           <Para muted>The part that costs them time</Para>
           <Quote>{frustration}</Quote>
         </>
+      ) : null}
+
+      {adminUrl ? (
+        <Action href={adminUrl} note="The record is in the queue, with the status and the invite step.">
+          Open in the queue
+        </Action>
       ) : null}
 
       <Action href={`mailto:${email}?subject=Your%20ORREI%20early%20access`}>
