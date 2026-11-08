@@ -51,7 +51,19 @@ async function query(name, type) {
   return null;
 }
 
-const DKIM_SELECTORS = ['google', 'calder', 'calder1', 'cf2024-1', 'resend', 'default'];
+const DKIM_SELECTORS = ['google', 'zmail', 'calder', 'calder1', 'cf2024-1', 'resend', 'default'];
+
+/** The hosts a mail provider publishes, so the check can name what it finds. */
+const MAIL_HOSTS = [
+  { name: 'Google Workspace', match: 'aspmx.l.google.com', spf: '_spf.google.com' },
+  { name: 'Zoho Mail', match: 'mx.zoho.', spf: 'zoho.com' },
+  { name: 'Microsoft 365', match: 'mail.protection.outlook.com', spf: 'spf.protection.outlook.com' },
+  { name: 'Fastmail', match: 'messagingengine.com', spf: 'spf.messagingengine.com' },
+  { name: 'Migadu', match: 'migadu.com', spf: 'spf.migadu.com' },
+  { name: 'Proton Mail', match: 'protonmail.ch', spf: '_spf.protonmail.ch' },
+  { name: 'Cloudflare Email Routing', match: 'mx.cloudflare.net', spf: '_spf.mx.cloudflare.net' },
+  { name: 'ImprovMX', match: 'improvmx.com', spf: 'spf.improvmx.com' },
+];
 
 const checks = [];
 
@@ -83,22 +95,32 @@ async function main() {
 
   const mx = await query(DOMAIN, 'MX');
   const mxHosts = (mx ?? []).map((answer) => answer.data);
-  const google = mxHosts.some((host) => host.includes('google.com'));
-  const cloudflareRouting = mxHosts.some((host) => host.includes('mx.cloudflare.net'));
+  const provider = MAIL_HOSTS.find((candidate) => mxHosts.some((host) => host.includes(candidate.match)));
   record(
     'mail host',
     'MX',
     mxHosts.length ? 'ok' : 'missing',
     mxHosts.length
-      ? `${google ? 'Google Workspace' : cloudflareRouting ? 'Cloudflare Email Routing' : 'custom'} · ${mxHosts.length} hosts`
+      ? `${provider?.name ?? 'custom host'} · ${mxHosts.length} hosts`
       : 'no MX — nothing at this domain can receive mail',
   );
+  if (provider?.name === 'Cloudflare Email Routing') {
+    record('mailbox', '', 'note', 'Cloudflare Email Routing forwards only; there is no mailbox to send from');
+  }
 
   const txt = await query(DOMAIN, 'TXT');
-  const spf = (txt ?? []).map((answer) => answer.data).find((value) => /v=spf1/i.test(value));
+  const allTxt = (txt ?? []).map((answer) => answer.data);
+  const spfs = allTxt.filter((value) => /v=spf1/i.test(value));
+  const spf = spfs[0];
   record('SPF', 'TXT', spf ? 'ok' : 'missing', spf ?? 'no v=spf1 record');
-  if (spf && !/include:_spf\.google\.com/i.test(spf) && google) {
-    record('SPF covers Google Workspace', '', 'warn', 'mail from @' + DOMAIN + ' sent by Google would fail SPF');
+  if (spfs.length > 1) {
+    record('SPF records', '', 'warn', `${spfs.length} SPF records — receivers use the first and ignore the rest`);
+  }
+  if (spf && provider && !spf.includes(provider.spf)) {
+    record('SPF covers mail host', '', 'warn', `mail sent through ${provider.name} would fail SPF`);
+  }
+  if (spf && !/include:.*calder|api\.calder/i.test(spf)) {
+    record('SPF covers Calder', '', 'note', 'fine if Calder sends with its own return-path and DKIM aligns');
   }
 
   const dmarc = (await query(`_dmarc.${DOMAIN}`, 'TXT')) ?? [];
@@ -108,6 +130,21 @@ async function main() {
     const policy = /p=(\w+)/i.exec(dmarcValue)?.[1]?.toLowerCase();
     if (!policy || policy === 'none') {
       record('DMARC policy', '', 'note', `p=${policy ?? 'unset'} — monitoring only, nothing is enforced yet`);
+    }
+
+    // A reporting address that cannot receive is worse than none: it looks like coverage.
+    const rua = /rua=mailto:([^;,\s]+)/i.exec(dmarcValue)?.[1];
+    if (rua) {
+      const ruaDomain = rua.split('@')[1];
+      const ruaMx = ruaDomain ? await query(ruaDomain, 'MX') : null;
+      record(
+        'DMARC reports',
+        'MX',
+        ruaMx && ruaMx.length ? 'ok' : 'warn',
+        ruaMx && ruaMx.length
+          ? `${rua} can receive mail`
+          : `${rua} has no MX — reports will bounce`,
+      );
     }
   }
 
