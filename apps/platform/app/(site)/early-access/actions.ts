@@ -117,7 +117,7 @@ export async function requestEarlyAccess(
   // A new application rings the inbox once. A resubmission does not.
   if (applicationId || !stored) {
     try {
-      const message = betaApplicationEmail({
+      const message = await betaApplicationEmail({
         id: applicationId ?? 'unstored',
         name: input.name,
         email,
