@@ -12,7 +12,7 @@ have to click yourself marked **you**.
 | Database | **Neon Postgres** | The app is built on it: RLS, enums, transactions, `@neondatabase/serverless` |
 | MongoDB? | No | It would remove the security boundary this product is built on (see §2) |
 | Does Cloudflare cover the database? | No | D1 is SQLite; Hyperdrive is a connector to Postgres, not a database |
-| Cloudflare's job | DNS, TLS, Email Routing (inbound), R2 (files), optionally WAF | All of it is already in the stack except the DNS setup |
+| Cloudflare's job | DNS, TLS, R2 (files), optionally WAF | Nameservers are already moved; R2 is in the stack |
 | Where the app runs | Vercel | Cloudflare DNS points at it, DNS-only |
 
 ---
@@ -50,7 +50,7 @@ security tests against a different engine. It is a different product at that poi
 | **D1** | Managed SQLite | Not used |
 | **KV** | Key-value cache | Not used |
 | **R2** | Object storage, no egress fee | **Used** — uploads and images |
-| **Email Routing** | Inbound mail forwarding | **Used** — `hello@`, `early@` |
+| **Email Routing** | Inbound mail forwarding | **Not used** — the domain already has Google Workspace (§4) |
 | **Workers** | Edge compute | Not used; the app is Next.js on Vercel |
 
 So Cloudflare covers storage, DNS, TLS and inbound email. The database stays on Neon.
@@ -128,66 +128,116 @@ Keep Cloudflare's cache out of the way of the app:
 
 ## 4. Email
 
-Two directions, two systems, and they do not conflict as long as the DNS is right.
+Three systems, three jobs, and they do not conflict as long as each stays in its lane:
 
-### 4.1 Inbound — Cloudflare Email Routing
+| Job | System | Record it owns |
+| --- | --- | --- |
+| Receiving mail (`hello@`) | **Google Workspace** | `MX` |
+| Sending the app's mail | **Calder** | DKIM selector + an SPF include |
+| Saying who may speak for the domain | **DMARC** | `_dmarc` |
+| DNS | **Cloudflare** | everything above |
 
-**You** — dashboard → Email Service → Email Routing → onboard `orvnlabs.com` → *Add missing records*.
-Cloudflare writes and locks these:
+### 4.1 Do not enable Cloudflare Email Routing
 
-```
-orvnlabs.com          MX   21 route1.mx.cloudflare.net
-orvnlabs.com          MX   43 route2.mx.cloudflare.net
-orvnlabs.com          MX   65 route3.mx.cloudflare.net
-orvnlabs.com          TXT       "v=spf1 include:_spf.mx.cloudflare.net ~all"
-cf2024-1._domainkey   TXT       v=DKIM1; … (generated)
-```
+This is the one to get wrong. The domain already has a **Google Workspace** mail host (five
+`aspmx.l.google.com` records). Cloudflare Email Routing would replace those MX records with its own,
+and every mailbox on the domain would stop receiving mail.
 
-Then route the addresses you actually use, all to the inbox you read:
+Email Routing is for a domain that has no mail host, where you want `hello@` forwarded into a
+personal inbox. This domain has a mail host. So:
 
-| Address | Purpose |
-| --- | --- |
-| `hello@orvnlabs.com` | everything, the only address on the site |
-| `early@orvnlabs.com` | where `EARLY_ACCESS_INBOX` points for beta requests |
+- `hello@orvnlabs.com` is a Google Workspace address (or an alias/group in the admin console).
+- The app's notifications go straight to `EARLY_ACCESS_INBOX`, which is the address somebody reads.
+- Nothing in the mail path depends on forwarding, so nothing can be misfiled by a hop.
 
-Both are already used by the code (`MAIL_FROM`, `EARLY_ACCESS_INBOX`, the legal pages).
+### 4.2 Calder: add the sending domain
 
-### 4.2 Outbound — Calder
+In Calder → **Domains & DNS** → *Add Sending Domain*, use the **root domain**: `orvnlabs.com`.
 
-`lib/email.ts` posts to `api.calder.click` with an `Idempotency-Key` on every send. It is the only
-sender; nothing in the app talks to an SMTP server.
+Not a subdomain. The product sends as `hello@orvnlabs.com`, and DMARC alignment is judged against
+the domain in that From address. Registering the root means Calder's DKIM signs as `d=orvnlabs.com`,
+which aligns. A `mail.orvnlabs.com` subdomain would sign as a different domain and would need
+`adkim=s` gymnastics — or a uglier From address — for no benefit at this volume.
 
-For mail from `hello@orvnlabs.com` to pass DMARC:
-
-1. **You** — add Calder's DKIM records for `orvnlabs.com` (they give you the selector and value).
-2. Merge the SPF so both systems are allowed. Cloudflare's TXT is locked to its own include; if the
-   dashboard will not let you edit it, remove and re-add the record as:
-   ```
-   v=spf1 include:_spf.mx.cloudflare.net include:<calder's spf include> ~all
-   ```
-   If Calder only publishes a return-path on its own domain, send the envelope from
-   `mail.orvnlabs.com` and keep the From as `hello@orvnlabs.com` — DMARC alignment then comes from
-   DKIM rather than SPF, which is normal and fine.
-3. DMARC, start relaxed and tighten later:
-   ```
-   _dmarc.orvnlabs.com  TXT  "v=DMARC1; p=none; rua=mailto:hello@orvnlabs.com; adkim=r; aspf=r"
-   ```
-   Move to `p=quarantine` once a week of reports is clean. Do not start at `p=reject`.
-4. Set `MAIL_FROM="ORREI <hello@orvnlabs.com>"` in Vercel.
-
-### 4.3 Verify it
+Publish what Calder generates. Expect a DKIM record and possibly a return-path/CNAME:
 
 ```
-dig +short MX orvnlabs.com
-dig +short TXT orvnlabs.com
-dig +short TXT _dmarc.orvnlabs.com
-dig +short TXT cf2024-1._domainkey.orvnlabs.com
+<selector>._domainkey.orvnlabs.com   TXT    v=DKIM1; k=rsa; p=MIIBIjAN…
 ```
 
-Then send a real invitation to a Gmail address and check it lands in Primary, not Promotions, and
-that the "via" line does not say `calder.click`.
+Rules for adding them in Cloudflare:
 
----
+1. **Proxy off** (grey cloud) on any CNAME. A proxied CNAME never resolves to Calder's target, so
+   verification sits at "pending" forever.
+2. One SPF record per domain. There is currently **no** SPF record at all, so add the combined one:
+   ```
+   orvnlabs.com   TXT   "v=spf1 include:_spf.google.com include:<calder's include> ~all"
+   ```
+   Keep Google's include even though Google only sends your own reply mail — it is still your mail,
+   and dropping it would start failing SPF the day someone replies from the Workspace inbox.
+3. If Calder sends with a return-path on its own bounce domain, the SPF include is belt-and-braces
+   rather than a requirement: DKIM alone aligns. Add it anyway; it costs one DNS lookup.
+
+Also set the **sender identity** to `hello@orvnlabs.com` with the display name `ORREI`. Calder
+rejects a From that is not a verified identity, and a mismatch is the most common cause of "the API
+returns 200 but nothing arrives".
+
+### 4.3 DMARC
+
+There is already a record: `v=DMARC1; p=none; rua=mailto:danieloye@orvnlabs.com`. Keep it at
+`p=none` until the SPF and DKIM are both verified and a week of reports is clean, then move to
+`p=quarantine`. Do not jump to `p=reject` on a domain people send real mail from.
+
+Make sure the `rua` mailbox actually exists in the Workspace account; a reporting address that
+bounces is worse than none, because it looks like coverage.
+
+### 4.4 Clean up
+
+`resend._domainkey.orvnlabs.com` still exists in the zone. Nothing in this product sends through
+Resend — Calder is the sender. Left in place it is a stale key that an attacker with the matching
+private key could sign with. Delete it.
+
+### 4.5 Check it
+
+The zone editor shows what you typed. This shows what the internet resolves:
+
+```
+cd apps/platform
+npm run dns:check
+npm run dns:check -- --domain example.com
+```
+
+It queries public resolvers over DNS-over-HTTPS for nameservers, apex and `www`, the mail host, SPF,
+DMARC and the common DKIM selectors, prints a verdict per record, and exits non-zero if a required
+one is missing — so it can gate a deployment.
+
+**What it says today** (verified from this environment):
+
+```
+ok    nameservers   leia.ns.cloudflare.com. pranab.ns.cloudflare.com.
+ok    DNS provider  Cloudflare
+ok    apex          64.29.17.65 64.29.17.1            → Vercel, DNS-only
+ok    www           A 216.198.79.1 A 216.198.79.65    → Vercel, DNS-only
+ok    mail host     Google Workspace · 5 hosts
+MISS  SPF           no v=spf1 record
+ok    DMARC         v=DMARC1; p=none; rua=mailto:danieloye@orvnlabs.com
+note  DMARC policy  p=none — monitoring only
+ok    DKIM google   (Workspace signing is on)
+ok    DKIM resend   stale, not used by this product
+```
+
+So the remaining work is exactly two things: **add the Calder sending domain and its records**, and
+**add the SPF record**. Everything else is already in place, including the Cloudflare nameservers and
+both web records.
+
+### 4.6 Environment
+
+```
+CALDER_API_KEY=...            # the key for project proj_dd2355404c90
+CALDER_API_URL=https://api.calder.click/v1
+MAIL_FROM="ORREI <hello@orvnlabs.com>"   # must match the verified sender identity
+EARLY_ACCESS_INBOX=...        # the mailbox a person actually reads
+```
 
 ## 5. The email design system
 
@@ -233,10 +283,13 @@ npm run email:preview     # writes public/preview-emails/*.html, gitignored
 1. Neon project → `DATABASE_URL`, `DATABASE_URL_ADMIN`.
 2. `npm run db:migrate && npm run db:policies`.
 3. Cloudflare nameservers → A/CNAME (DNS-only) → Vercel domains → certificate active.
-4. Email Routing onboarded → addresses routed → test inbound.
-5. Calder DKIM + SPF + DMARC → send a real invitation → check inbox placement.
+4. Calder sending domain `orvnlabs.com` added → DKIM published (proxy off) → combined SPF → Calder
+   shows verified.
+5. Send a real invitation to a Gmail address → check inbox placement and the "via" line → tighten
+   DMARC once the reports are clean.
 6. R2 bucket, private, custom domain → upload a photo → confirm the public page serves it and a
    private one does not.
+7. `npm run dns:check` → everything it lists as required must be `ok`.
 7. Everything else in `.env.example`: `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `ANALYTICS_HASH_SALT`,
    `GROQ_API_KEY`, `ADMIN_EMAILS`, optional `SENTRY_DSN` and `NEXT_PUBLIC_POSTHOG_KEY`.
 
@@ -289,7 +342,9 @@ should live somewhere that answers "who has this and what did they do with it".
 
 ### What Cloudflare forwarding actually does to the message
 
-If `hello@orvnlabs.com` is routed in Cloudflare Email Routing to a Gmail address, the forwarded copy
+The domain's mail host is Google Workspace, so nothing needs forwarding (§4.1). But if you ever add
+a forward — a Google Workspace routing rule, or Cloudflare Email Routing on a domain without a mail
+host — the forwarded copy
 arrives as an ordinary email with the original `From`, `Subject` and body preserved, the original
 `Reply-To` intact, and Cloudflare's own envelope sender and trace headers added by the hop. Because
 our mail is DKIM-signed by Calder for `orvnlabs.com` and forwarding keeps the signature, DMARC still
@@ -299,7 +354,7 @@ That is fine for human mail. It is the wrong path for the product's own notifica
 reasons: each hop is another chance to be filed as spam, the forwarded copy is a *second* copy that
 can drift from the record, and the queue link is what actually makes the email useful. So:
 
-- `hello@orvnlabs.com` → routed in Cloudflare → your inbox. This is for people writing to you.
+- `hello@orvnlabs.com` → a Google Workspace mailbox (§4.1). This is for people writing to you.
 - App notifications → sent directly to `EARLY_ACCESS_INBOX`. No forwarding involved.
 
 ### The admin queue

@@ -13,7 +13,8 @@
     "db:migrate": "drizzle-kit migrate",
     "db:policies": "node scripts/apply-policies.mjs",
     "invite": "node scripts/invite.mjs",
-    "email:preview": "tsx scripts/preview-emails.tsx"
+    "email:preview": "tsx scripts/preview-emails.tsx",
+    "dns:check": "node scripts/check-dns.mjs"
   },
   "dependencies": {
     "@fontsource-variable/bricolage-grotesque": "^5.3.0",
