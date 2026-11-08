@@ -148,9 +148,10 @@ choices, and they are not equivalent:
 | --- | --- | --- |
 | Cost | free tier, one domain | free |
 | Mailboxes | up to 5, 5 GB each | **none** — forwarding only |
-| Send as `hello@` | **yes**, webmail + mobile apps | **no** |
-| IMAP/POP | not on the free tier | n/a |
-| Reading mail | Zoho webmail or the Zoho apps | your own inbox |
+| Send as `hello@` | **yes** | **no** |
+| Webmail | yes — `mail.zoho.com`, nothing to install | n/a |
+| Phone | Zoho Mail app (iOS/Android) is free to install, but Zoho has moved some client access behind the paid tiers — **check the live plan page before relying on it** | your own mail app, via the forward |
+| IMAP/POP | not on the free tier, so no Apple Mail, Outlook or Spark | n/a |
 
 **Recommendation: Zoho Mail.** Not because it is the best mail product, but because `hello@orvnlabs.com`
 is printed on every page of the site and on every deal sheet. Somebody will answer it, and an answer
