@@ -53,7 +53,8 @@ includes the real password.
 
 ## 3. Put them in the environment
 
-Local:
+Local — the file goes in **`apps/platform`**, next to `next.config.mjs`. Not at the repository root:
+Next only reads env files from the app directory, and a root-level file is ignored without complaint.
 
 ```bash
 cd apps/platform
@@ -68,7 +69,9 @@ DATABASE_URL_ADMIN=postgresql://neondb_owner:...eu-west-2.aws.neon.tech/neondb?s
 ```
 
 `.env.local` is git-ignored. Never paste these into a file that gets committed, and never into a
-message or a screenshot — the password is full access to the database.
+message or a screenshot — the password is full access to the database. The scripts read this file
+directly (`.env.local` beats `.env`, and a real environment variable beats both), so there is nothing
+to `export`.
 
 Deployed: **Vercel → project → Settings → Environment Variables**, add both for *Production* and
 *Preview*. A Vercel env var added after a deployment only applies to the next one — redeploy.

@@ -3,6 +3,28 @@
 The short version of what goes in `.env.local` (local) or the Vercel project (deployed), in the order
 you can actually obtain them. Nothing here is a secret worth committing — `.env.local` is git-ignored.
 
+## Where the file goes
+
+**`apps/platform/.env.local`** — next to `next.config.mjs`, never at the repository root.
+
+Next reads env files from the directory containing the app it is building, so a root-level
+`.env.local` is silently ignored: the app starts in demo mode and nothing tells you why. The root also
+still holds the old Vite app, whose own `.env` would load into that build instead.
+
+Nothing lives in a file once deployed. Vercel → **project → Settings → Environment Variables**, with
+**Root Directory set to `apps/platform`** (it already is — that is how the deployment finds
+`vercel.json`). If the root directory is ever changed to the repo root, the build breaks and every
+variable has to move.
+
+The operator scripts load the same two files themselves, in this order of precedence:
+
+1. a real environment variable (shell export, or Vercel)
+2. `apps/platform/.env.local`
+3. `apps/platform/.env`
+
+So `npm run db:status`, `db:migrate`, `db:policies` and `npm run invite` work with one file and no
+`export`. `next dev` and `next build` use `.env.local` the same way.
+
 ---
 
 ## 1. You can fill these in right now, no DNS needed

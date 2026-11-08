@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import './load-env.mjs';
 /**
  * Operator tool: issue or revoke a beta invitation.
  *

@@ -9,6 +9,7 @@
  * console: did the migrations land, do the two application roles exist, does the
  * connecting user own them, and is row level security actually switched on.
  */
+import './load-env.mjs';
 import { Pool, neonConfig } from '@neondatabase/serverless';
 import WebSocket from 'ws';
 
@@ -31,8 +32,9 @@ if (!connectionString) {
   console.error(`
 No ${key} in the environment.
 
-Copy apps/platform/.env.example to apps/platform/.env.local and paste the Neon connection
-strings, then run this again. Step by step: docs/neon-setup.md
+Looked in the shell and in apps/platform/.env.local (and .env). Copy .env.example to
+.env.local in apps/platform, paste the Neon connection strings, then run this again.
+Step by step: docs/neon-setup.md
 `);
   process.exit(1);
 }

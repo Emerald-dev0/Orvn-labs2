@@ -8,6 +8,7 @@
  * The file is idempotent, so this is safe to re-run after adding a table or a policy.
  * It must run as the owner: it creates the two application roles and grants to them.
  */
+import './load-env.mjs';
 import { readFile } from 'node:fs/promises';
 import { Pool, neonConfig } from '@neondatabase/serverless';
 import WebSocket from 'ws';
