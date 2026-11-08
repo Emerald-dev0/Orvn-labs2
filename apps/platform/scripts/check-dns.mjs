@@ -4,6 +4,7 @@
  *
  *   npm run dns:check
  *   npm run dns:check -- --domain example.com
+ *   npm run dns:check -- --expect zoho     (fails unless the mail host is Zoho)
  *
  * Deployment steps are usually described in a dashboard that lies by omission: a record exists in
  * the zone editor but never left Cloudflare, or a DKIM key is there under a selector nobody
@@ -14,8 +15,13 @@
  */
 
 const args = process.argv.slice(2);
-const domainFlag = args.indexOf('--domain');
-const DOMAIN = (domainFlag >= 0 ? args[domainFlag + 1] : 'orvnlabs.com') ?? 'orvnlabs.com';
+const argValue = (flag) => {
+  const index = args.indexOf(flag);
+  return index >= 0 ? args[index + 1] : undefined;
+};
+const DOMAIN = argValue('--domain') ?? 'orvnlabs.com';
+/** Assert the cutover actually happened rather than eyeballing the table. */
+const EXPECT = argValue('--expect')?.toLowerCase();
 
 const RESOLVERS = [
   (name, type) => `https://dns.google/resolve?name=${encodeURIComponent(name)}&type=${type}`,
@@ -104,6 +110,14 @@ async function main() {
       ? `${provider?.name ?? 'custom host'} · ${mxHosts.length} hosts`
       : 'no MX — nothing at this domain can receive mail',
   );
+  if (EXPECT && !(provider?.name ?? '').toLowerCase().includes(EXPECT)) {
+    record(
+      'mail host is ' + EXPECT,
+      '',
+      'missing',
+      `expected ${EXPECT} MX records, found ${provider?.name ?? (mxHosts.length ? 'an unrecognised host' : 'none')}`,
+    );
+  }
   if (provider?.name === 'Cloudflare Email Routing') {
     record('mailbox', '', 'note', 'Cloudflare Email Routing forwards only; there is no mailbox to send from');
   }

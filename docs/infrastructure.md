@@ -13,7 +13,7 @@ have to click yourself marked **you**.
 | MongoDB? | No | It would remove the security boundary this product is built on (see §2) |
 | Does Cloudflare cover the database? | No | D1 is SQLite; Hyperdrive is a connector to Postgres, not a database |
 | Cloudflare's job | DNS, TLS, R2 (files), optionally WAF | Nameservers are already moved; R2 is in the stack |
-| Mail host | **Zoho Mail** (or Cloudflare Email Routing, receive-only) | Leaving Google Workspace; see §4.1 |
+| Mail host | **Zoho Mail**, free tier | Replaces Google Workspace; five mailboxes, no IMAP. See §4.1 and `mail-cutover.md` |
 | Where the app runs | Vercel | Cloudflare DNS points at it, DNS-only |
 
 ---
@@ -139,51 +139,28 @@ Three systems, three jobs. The one that trips people up is that **receiving and 
 | Saying who may speak for the domain | **DMARC** | `_dmarc` |
 | DNS | **Cloudflare** | everything above |
 
-### 4.1 Choose a mailbox host, without Google Workspace
+### 4.1 The mailbox host: Zoho Mail
 
-The domain currently has five Google Workspace MX hosts and Google DKIM. Moving off it means two
-choices, and they are not equivalent:
+Decided 4 November 2026 — **Zoho Mail**, on the free tier: five mailboxes, 5 GB each, one domain.
+It gives what Cloudflare Email Routing cannot, a mailbox you can *send* from as
+`hello@orvnlabs.com`, which is the address printed on every page, deal sheet and buyer summary.
 
-| | **Zoho Mail, Forever Free** | **Cloudflare Email Routing** |
-| --- | --- | --- |
-| Cost | free tier, one domain | free |
-| Mailboxes | up to 5, 5 GB each | **none** — forwarding only |
-| Send as `hello@` | **yes** | **no** |
-| Webmail | yes — `mail.zoho.com`, nothing to install | n/a |
-| Phone | Zoho Mail app (iOS/Android) is free to install, but Zoho has moved some client access behind the paid tiers — **check the live plan page before relying on it** | your own mail app, via the forward |
-| IMAP/POP | not on the free tier, so no Apple Mail, Outlook or Spark | n/a |
+Constraints to plan around: **no IMAP/POP** on the free tier, so everyone reads mail in
+`mail.zoho.com` or the Zoho app; and a **sixth user moves the account onto a paid plan**, so aliases
+and groups come before new mailboxes.
 
-**Recommendation: Zoho Mail.** Not because it is the best mail product, but because `hello@orvnlabs.com`
-is printed on every page of the site and on every deal sheet. Somebody will answer it, and an answer
-that comes from a personal Gmail address undoes the whole "professional page" promise. Cloudflare
-Email Routing is excellent at what it does — and what it does is *receive*, with no identity to send
-back from.
-
-Take Email Routing only if you decide that replies will come from the app (inquiry replies) and from
-a personal address otherwise, and you are comfortable with that.
+The full cutover, the records, and who gets access to what: **[mail-cutover.md](mail-cutover.md)**.
+The rest of this section is the short version for anyone reading the deployment plan end to end.
 
 ### 4.2 The cutover, in an order that loses no mail
 
-Do not delete the Google MX until the new host is answering. Steps:
+The full sequence, with the records, the tests after each step and a rollback, is in
+**[mail-cutover.md](mail-cutover.md)**. The two rules that decide whether mail is lost:
 
-1. **Lower the MX TTL first.** In Cloudflare, edit the existing Google MX records to TTL `300` and
-   wait an hour. Otherwise the old TTL (often 3600) keeps some senders pointed at Google after you
-   switch, and those messages bounce.
-2. **Create the account and the mailboxes.** `hello@` (the one on the site), the founder's own
-   address, and `early@` if you want a separate intake. Aliases are free and better than a second
-   mailbox for addresses only ever used in one direction.
-3. **Verify the domain** with the TXT record Zoho gives you.
-4. **Publish Zoho's DKIM** (`zmail._domainkey`) *before* switching MX, and confirm it resolves:
-   `npm run dns:check` should list it.
-5. **Switch the MX.** Delete all five `aspmx.l.google.com` records, add Zoho's three
-   (`mx.zoho.com` 10, `mx2.zoho.com` 20, `mx3.zoho.com` 50 — copy the exact values Zoho prints,
-   including the regional domain if your account is in `.eu` or `.in`).
-6. **Send a real message in and out.** From a personal address to `hello@`, then a reply from Zoho
-   back. Check the headers: `spf=pass`, `dkim=pass`, `dmarc=pass`.
-7. **Only now remove the Google records**: `google._domainkey`, and the `google-site-verification`
-   TXT entries if you are not using Search Console.
-8. **Delete `resend._domainkey`.** Nothing in this product sends through Resend; a stale private key
-   in the zone is a liability, not clutter.
+1. **Lower the MX TTL to 300 and wait an hour** before switching. Old TTLs keep senders pointed at
+   Google after the switch, and those messages bounce.
+2. **Publish Zoho's DKIM and send a test in both directions *before* deleting the Google records.**
+   Deleting first turns a misconfiguration into an outage.
 
 ### 4.3 Calder: add the sending domain
 
@@ -235,6 +212,7 @@ There is already a record: `v=DMARC1; p=none; rua=mailto:danieloye@orvnlabs.com`
 cd apps/platform
 npm run dns:check
 npm run dns:check -- --domain example.com
+npm run dns:check -- --expect zoho    # fails unless the mail host is Zoho
 ```
 
 It asks public resolvers over DNS-over-HTTPS for nameservers, apex and `www`, the mail host, SPF,
