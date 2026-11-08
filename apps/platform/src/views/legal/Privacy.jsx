@@ -9,8 +9,8 @@ export default function Privacy() {
       title="Privacy Policy"
       path="/legal/privacy"
       lastUpdated="2026-11-05"
-      description="What ORVN Labs collects when you visit this site, request early access or use the platform, and what we do not do with it."
-      intro="This policy describes what ORVN Labs collects when you visit orvnlabs.com, request early access, or use the platform — and what we deliberately do not collect."
+      description="What ORVN Labs collects when you visit this site, request early access or use ORREI, and what we do not do with it."
+      intro="This policy describes what ORVN Labs collects when you visit orvnlabs.com, request early access, or use ORREI, our product — and what we deliberately do not collect."
       sections={[
         {
           heading: 'Who this policy covers',
@@ -19,7 +19,7 @@ export default function Privacy() {
               <P>Three groups of people:</P>
               <UL items={[
                 'Visitors to orvnlabs.com, including anyone who requests early access or writes to us.',
-                'People who use the platform — during early access, invited businesses and the individuals inside them.',
+                'People who use ORREI — during early access, invited businesses and the individuals inside them.',
                 'Buyers who send an inquiry through a published property page. For that inquiry, the business that published the page decides what happens to it and ORVN Labs processes it on their behalf.',
               ]} />
             </>
@@ -53,7 +53,7 @@ export default function Privacy() {
           heading: 'Why we hold it',
           body: (
             <UL items={[
-              'To run the product: accounts, workspaces, published pages and the inbox where inquiries arrive.',
+              'To run ORREI: accounts, workspaces, published pages and the inbox where inquiries arrive.',
               'To send transactional email only — invitations, password resets, and notice that an inquiry arrived.',
               'To keep the service secure and to investigate abuse.',
               'To meet legal obligations and to answer you when you write to us.',
@@ -114,7 +114,7 @@ export default function Privacy() {
           heading: 'Children',
           body: (
             <P>
-              The site and the platform are not directed to children under 13, and we do not knowingly
+              The site and ORREI are not directed to children under 13, and we do not knowingly
               collect their information.
             </P>
           ),

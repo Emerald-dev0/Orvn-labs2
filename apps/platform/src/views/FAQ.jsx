@@ -14,8 +14,8 @@ const GROUPS = [
     title: 'What it does',
     items: [
       {
-        q: 'What is the platform, in one paragraph?',
-        a: 'It keeps a property record and turns that record into a presentation: a description you edit, a deal sheet laid out for you, and a property page you can publish and send as a link. The human approves the facts and presses publish.',
+        q: 'What is ORREI, in one paragraph?',
+        a: 'ORREI is the product ORVN Labs is building. It keeps a property record and turns that record into a presentation: a description you edit, a deal sheet laid out for you, and a property page you can publish and send as a link. The human approves the facts and presses publish.',
       },
       {
         q: 'Who is it for?',
@@ -119,7 +119,7 @@ export default function FAQ() {
   useDocumentMeta({
     title: 'Questions',
     description:
-      'Straight answers about the platform: early access, what you get for a property, how facts are checked, privacy, analytics and pricing.',
+      'Straight answers about ORREI: early access, what you get for a property, how facts are checked, privacy, analytics and pricing.',
     path: '/faq',
   });
 

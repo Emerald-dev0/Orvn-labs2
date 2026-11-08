@@ -27,7 +27,7 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, ease: EASE }}
         >
-          <p className="flow-kicker">Property presentations · Early access</p>
+          <p className="flow-kicker">ORREI · Property presentations · Early access</p>
 
           <h1 className="flow-title">
             Turn property details into presentations you can share.

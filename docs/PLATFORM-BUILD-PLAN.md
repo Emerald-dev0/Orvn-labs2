@@ -1,5 +1,9 @@
 # LAREI platform build plan
 
+> **Naming decided (November 2026).** The product is **ORREI**; **ORVN Labs** is the company.
+> This plan was written under the working name LAREI. The code, the database roles
+> (`orrei_app`, `orrei_public`), the emails and the site use ORREI.
+
 Working document. Answers two questions: what we build first, and which third-party tools we
 buy. Revised for the stack agreed on 4 Nov: Next.js, Neon, Cloudflare Workers, Groq.
 

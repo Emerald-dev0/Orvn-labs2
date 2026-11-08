@@ -20,7 +20,7 @@ const TABS = [
     id: 'record',
     label: 'The record',
     title: 'One property, one set of facts.',
-    body: 'Address, price, size, tenure, the agent responsible and where each fact came from. Everything else on the platform reads from this page.',
+    body: 'Address, price, size, tenure, the agent responsible and where each fact came from. Everything else in ORREI reads from this page.',
   },
   {
     id: 'check',

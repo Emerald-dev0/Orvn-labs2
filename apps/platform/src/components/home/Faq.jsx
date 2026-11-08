@@ -35,7 +35,7 @@ export default function Faq() {
             <span className="eyebrow">Questions</span>
             <h2 className="faq-home-title">A few things worth knowing first.</h2>
             <p className="lead">
-              Plain answers, including the ones about what the platform does not do.
+              Plain answers, including the ones about what ORREI does not do.
             </p>
             <Link href="/faq" className="arrow-link">View all questions</Link>
           </div>

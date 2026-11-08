@@ -9,7 +9,7 @@ import { filesReleased } from './publication/visibility';
  * A document marked private must stay unreachable even to somebody who knows the exact object
  * key (F08, T15). Storage is private, and this function is the only gate in front of it: the
  * row must be public *and* its property must be published *and* the publication not withdrawn.
- * RLS enforces the same rule on larei_public, so a bug here still fails closed.
+ * RLS enforces the same rule on orrei_public, so a bug here still fails closed.
  */
 
 export type MediaDecision =

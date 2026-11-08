@@ -25,8 +25,8 @@ function Brand() {
         </svg>
       </span>
       <span className="ws-brand-text">
-        <strong>ORVN Labs</strong>
-        <em>beta</em>
+        <strong>ORREI</strong>
+        <em>by ORVN Labs</em>
       </span>
     </Link>
   );

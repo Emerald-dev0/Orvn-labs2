@@ -8,7 +8,7 @@ import { ArrowUpRight, Menu, X } from 'lucide-react';
 import Logo from './Logo';
 
 const LINKS = [
-  { to: '/product', label: 'Product' },
+  { to: '/product', label: 'ORREI' },
   { to: '/how-it-works', label: 'How it works' },
   { to: '/who-its-for', label: "Who it's for" },
   { to: '/about', label: 'Company' },

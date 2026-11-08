@@ -2,7 +2,7 @@ import SignIn from '../../../src/views/SignIn';
 
 export const metadata = {
   title: 'Sign in',
-  description: 'Sign in to your ORVN Labs workspace. Access is by invitation during early access.',
+  description: 'Sign in to ORREI, the workspace ORVN Labs is building. Access is by invitation during early access.',
   robots: { index: false, follow: false },
 };
 

@@ -251,8 +251,8 @@ export default async function PublicPropertyPage({ params }) {
             Unpublishing removes this page and its files.
           </span>
           <span>
-            <Link href={`/w/${site.username}`}>{site.businessName}</Link> · Published with ORVN Labs ·{' '}
-            <Link href="/">ORVN Labs</Link>
+            <Link href={`/w/${site.username}`}>{site.businessName}</Link> · Published with{' '}
+            <Link href="/product">ORREI</Link>, built by <Link href="/">ORVN Labs</Link>
           </span>
         </div>
       </footer>

@@ -193,9 +193,9 @@ export default function Product() {
   return (
     <PageWrapper>
       <PageHero
-        eyebrow="The product"
+        eyebrow="ORREI"
         title={<>The workspace behind the page.</>}
-        lede="The platform keeps the facts, the photographs and the permissions for each property in one place. The published page, the printable deal sheet and the buyer summary are all made from that record, so they agree."
+        lede="ORREI keeps the facts, the photographs and the permissions for each property in one place. The published page, the printable deal sheet and the buyer summary are all made from that record, so they agree."
         actions={
           <>
             <Link href="/early-access" className="btn btn-primary">
@@ -323,7 +323,7 @@ export default function Product() {
         <div className="shell">
           <div className="section-head">
             <span className="eyebrow">Limits</span>
-            <h2 className="section-title">What the platform will not do.</h2>
+            <h2 className="section-title">What ORREI will not do.</h2>
             <p className="lead">
               A tool is defined by what it refuses. These are ours, written down so nobody is
               surprised later.

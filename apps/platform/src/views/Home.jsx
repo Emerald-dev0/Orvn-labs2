@@ -19,9 +19,9 @@ import { SiteEditorMock, VoiceMock, StatsMock } from '../components/home/mocks';
 
 export default function Home() {
   useDocumentMeta({
-    title: 'Professional websites and property deal pages',
+    title: 'ORREI by ORVN Labs | Professional websites and property deal pages',
     description:
-      'ORVN Labs is building a platform that turns property details into presentations you can share: organise a property, prepare an editable deal sheet and publish a professional page linked to your profile.',
+      'ORREI, from ORVN Labs, turns property details into presentations you can share: organise a property, prepare an editable deal sheet and publish a professional page linked to your profile.',
     path: '/',
   });
 

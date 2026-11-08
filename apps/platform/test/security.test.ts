@@ -118,7 +118,7 @@ describe('row level security coverage', () => {
   it('never grants the public role read access to inquiries, invitations or audit', () => {
     const publicReadGrants = policies
       .split('\n')
-      .filter((line) => line.startsWith('grant ') && line.includes('larei_public'))
+      .filter((line) => line.startsWith('grant ') && line.includes('orrei_public'))
       .filter((line) => line.includes('select'))
       .join('\n');
 
@@ -129,7 +129,7 @@ describe('row level security coverage', () => {
   });
 
   it('lets a visitor insert an inquiry but not read one back', () => {
-    expect(policies).toContain('grant insert on inquiries, analytics_events to larei_public;');
+    expect(policies).toContain('grant insert on inquiries, analytics_events to orrei_public;');
     const publicPolicy = policies.match(
       /create policy inquiries_public_insert on inquiries for (\w+)[\s\S]*?;/,
     );

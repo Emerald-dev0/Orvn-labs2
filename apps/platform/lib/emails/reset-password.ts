@@ -3,10 +3,10 @@ import type { EmailMessage } from '../email';
 export function resetPasswordEmail(opts: { to: string; url: string }): EmailMessage {
   return {
     to: opts.to,
-    subject: 'Reset your ORVN Labs password',
+    subject: 'Reset your ORREI password',
     businessKey: `reset:${opts.to}:${Math.floor(Date.now() / 60_000)}`,
     text: [
-      'Someone asked to reset the password for this ORVN Labs account.',
+      'Someone asked to reset the password for this ORREI account.',
       '',
       opts.url,
       '',

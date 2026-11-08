@@ -19,7 +19,7 @@ export default async function Image({ params }: { params: Promise<{ username: st
 
   const title = data?.snapshot.title ?? 'Property unavailable';
   const place = data ? locationLabel(data.snapshot) : '';
-  const business = data?.site.businessName ?? 'LAREI';
+  const business = data?.site.businessName ?? 'ORREI';
   const price = data ? formatPrice(data.snapshot.price) : '';
 
   return new ImageResponse(
@@ -77,7 +77,7 @@ export default async function Image({ params }: { params: Promise<{ username: st
             color: 'rgba(255,253,248,0.55)',
           }}
         >
-          <span>Published with LAREI</span>
+          <span>Published with ORREI</span>
           <span>orvnlabs.com</span>
         </div>
       </div>

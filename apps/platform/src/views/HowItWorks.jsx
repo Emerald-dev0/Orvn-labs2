@@ -31,7 +31,7 @@ const STEPS = [
     icon: ScanEye,
     label: 'Step two',
     title: 'Check it once.',
-    body: 'The platform lists the facts it can support and flags the ones that disagree with another source. You confirm each figure. Publication stays blocked until the open questions are closed.',
+    body: 'ORREI lists the facts it can support and flags the ones that disagree with another source. You confirm each figure. Publication stays blocked until the open questions are closed.',
     points: ['Conflicts shown side by side', 'Unknown values left blank', 'Every decision dated', 'Nothing published by accident'],
     visual: 'check',
   },
@@ -60,7 +60,7 @@ const NEEDS = [
   },
   {
     title: 'Photographs worth showing',
-    body: 'Phone photographs are fine. The platform crops and lays them out, and tells you when an image is too small to print well.',
+    body: 'Phone photographs are fine. ORREI crops and lays them out, and tells you when an image is too small to print well.',
   },
   {
     title: 'Twenty minutes',
@@ -71,11 +71,11 @@ const NEEDS = [
 const FAQS = [
   {
     q: 'Do I have to move my listings off the portals?',
-    a: 'No. Keep them where they are. The platform gives you a record and a page you control, and it will import from a portal rather than asking you to start again.',
+    a: 'No. Keep them where they are. ORREI gives you a record and a page you control, and it will import from a portal rather than asking you to start again.',
   },
   {
     q: 'What if I do not have all the information?',
-    a: 'Leave it blank. A missing field is shown as missing rather than guessed, and you can publish without it. The platform will not invent a measurement or a service charge.',
+    a: 'Leave it blank. A missing field is shown as missing rather than guessed, and you can publish without it. ORREI will not invent a measurement or a service charge.',
   },
   {
     q: 'Can I publish something before the whole property is ready?',
@@ -203,7 +203,7 @@ export default function HowItWorks() {
               <ArrowRight strokeWidth={2.2} />
             </Link>
             <Link href="/product" className="btn btn-secondary">
-              See the product
+              Explore ORREI
             </Link>
           </>
         }

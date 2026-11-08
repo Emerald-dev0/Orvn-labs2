@@ -28,8 +28,8 @@ export default async function InvitePage({ params }) {
     <div className="invite">
       <header className="invite-bar">
         <Link href="/" className="invite-brand">
-          <span className="invite-mark" aria-hidden="true">L</span>
-          ORVN Labs
+          <span className="invite-mark" aria-hidden="true">O</span>
+          ORREI
         </Link>
         <span className="invite-tag">Early access</span>
       </header>

@@ -13,7 +13,7 @@ const ROLES = [
     tint: 'sand',
     name: 'Agents and brokers',
     title: 'Look as good as the property does.',
-    body: 'You already have the photographs and the facts. The platform turns them into a page you are happy to send, a deal sheet you can hand over, and an inspection sheet that matches both.',
+    body: 'You already have the photographs and the facts. ORREI turns them into a page you are happy to send, a deal sheet you can hand over, and an inspection sheet that matches both.',
     gets: [
       'A page per property, in your name',
       'Deal sheets for serious buyers',
@@ -48,7 +48,7 @@ const ROLES = [
 ];
 
 const POOR_FIT = [
-  'You want automated valuations or investment analysis. The platform does not model price.',
+  'You want automated valuations or investment analysis. ORREI does not model price.',
   'You are looking for a CRM with pipelines, tasks and commission tracking.',
   'You need a mass-distribution engine that pushes to hundreds of buyer lists.',
   'You want a website builder for a general business rather than property.',
@@ -58,7 +58,7 @@ export default function WhoItsFor() {
   useDocumentMeta({
     title: "Who it's for",
     description:
-      'The platform is built for wholesalers and small disposition teams first, with agents, brokers and developers supported by the same record behind every page, sheet and printout they send.',
+      'ORREI is built for wholesalers and small disposition teams first, with agents, brokers and developers supported by the same record behind every page, sheet and printout they send.',
     path: '/who-its-for',
   });
 

@@ -126,15 +126,15 @@ Questions, mailto. All `200`.
    not interchangeable, but does not say which one is true today. I used **"in development, early
    access by request"** everywhere, because there is no released product and no paying users. If
    there are live beta users, the wording should say so and I will change it in one pass.
-2. **Interim product name.** "the platform" is used in prose per the brief. It is fine for now and
-   will read oddly on a pricing page later. A real name, or a decision to keep saying "the ORVN
-   Labs platform", is needed before launch.
+2. **Interim product name.** *Closed.* The product name is **ORREI**; ORVN Labs stays the company
+   and the brand. See §11.
 3. **Which outputs may be claimed.** The record, the published page, the share link, the portfolio,
    inquiries and view counts exist in code. The deal sheet, buyer summary and PDF/print export do
    not. I have labelled them planned. If you want them claimed as shipping, they need to be built
    first.
-4. **Database role names.** `larei_app` / `larei_public` are internal. Renaming is a migration
-   touching every RLS policy and grant, and I would rather not do it inside a copy pass.
+4. **Database role names.** *Closed.* Renamed to `orrei_app` / `orrei_public` across
+   `db/sql/policies.sql`, the tenant helper and the security test. Nothing has been applied to a
+   live database yet, so this is a rename before first use rather than a migration.
 5. **`/pricing`.** There is no pricing page and the brief bans published pricing, so the URL
    redirects to `/faq`, which explains why there is no price yet. If you would rather it 404 or
    redirect home, say which.
@@ -266,3 +266,39 @@ release, fact selection, blockers, prompt contents, cleaning, number and price c
 reconstruction). **Not verified:** the database round-trip for either action, because `DATABASE_URL`
 is not configured here, and the live model call, because no key is present. Both are honest gaps, not
 passes.
+
+## 11. Naming: ORREI is the product, ORVN Labs is the company
+
+The name is no longer provisional. The rule applied everywhere is the one the roadmap recommended
+in D1: **ORVN Labs is the masterbrand; ORREI is the product.** They are never used as if they were
+the same thing, and ORREI never replaces the company name in a legal sentence.
+
+| Surface | Now reads |
+| --- | --- |
+| Site title, Open Graph, Twitter | `ORREI by ORVN Labs \| Property presentations you can share` |
+| Page title template | `%s · ORVN Labs` (the site is the company's) |
+| Site navigation | `ORREI` where "Product" used to be |
+| Hero kicker | `ORREI · Property presentations · Early access` |
+| Company band | "ORVN Labs builds ORREI…" with a Product row in the facts column |
+| Footer | tagline names ORREI; column titled ORREI |
+| Product, How it works, Who it's for, About, FAQ, Contact | "the platform" → ORREI |
+| Legal | ORREI introduced once as "our product"; ORVN Labs remains the contracting party |
+| Workspace shell | wordmark **ORREI**, sublabel *by ORVN Labs* |
+| Invitation screen | ORREI, and the placeholder letter is now **O** (it was a stale **L**) |
+| Emails | `Your ORREI invitation`, `Reset your ORREI password`, `Sign in to ORREI`; signature stays ORVN Labs |
+| Auth | `appName: 'ORREI'` |
+| Published property page and profile | "Published with ORREI, built by ORVN Labs" |
+| Open Graph image | "Published with ORREI"; the fallback business name was still LAREI |
+| `llms.txt` | rewritten around ORREI, with the retired routes described instead of linked |
+| Database roles, bucket, MAIL_FROM | `orrei_app`, `orrei_public`, `orrei-media`, `ORREI <hello@orvnlabs.com>` |
+
+Two things worth calling out because they were live defects, not naming preferences:
+
+1. The Open Graph image route still fell back to `LAREI` when a page had no business name. It never
+   appeared in the HTML I checked, which is why it survived the earlier purge.
+2. The invitation screen rendered a hardcoded **L** as its mark. It now renders **O**.
+
+**Unchanged on purpose:** the domain stays `orvnlabs.com`, paths (`/w/:username/p/:slug`) stay,
+the company address `hello@orvnlabs.com` stays, and `ROADMAP.md`, `docs/source/*` and the build plan
+keep their historical LAREI wording with a dated note at the top, because they are a record of what
+was decided then and not published anywhere.

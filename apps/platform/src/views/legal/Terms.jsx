@@ -9,8 +9,8 @@ export default function Terms() {
       title="Terms of Use"
       path="/legal/terms"
       lastUpdated="2026-11-05"
-      description="The terms that apply to orvnlabs.com and to the ORVN Labs platform during early access."
-      intro="These terms cover this website and access to the ORVN Labs platform during early access. They are short because the early-access period is short."
+      description="The terms that apply to orvnlabs.com and to ORREI, the ORVN Labs product, during early access."
+      intro="These terms cover this website and access to ORREI, the ORVN Labs product, during early access. They are short because the early-access period is short."
       sections={[
         {
           heading: 'Using this site',
@@ -27,7 +27,7 @@ export default function Terms() {
           body: (
             <>
               <P>
-                The platform is invitation only and not on general sale. Access is granted to a named
+                ORREI is invitation only and not on general sale. Access is granted to a named
                 business and the people invited into it; it cannot be transferred. Nothing is
                 charged during the beta, and there is no obligation to continue afterwards.
               </P>
@@ -72,9 +72,9 @@ export default function Terms() {
           heading: 'Our content',
           body: (
             <P>
-              The site, its design and its writing belong to ORVN Labs. The platform and ORVN Labs are
-              names of ORVN Labs. Personal, non-commercial sharing is welcome with attribution.
-              Screens and listings used on this site are illustrative.
+              The site, its design and its writing belong to ORVN Labs. ORREI is the product name;
+              ORVN Labs is the company name. Personal, non-commercial sharing is welcome with
+              attribution. Screens and listings used on this site are illustrative.
             </P>
           ),
         },
@@ -82,8 +82,7 @@ export default function Terms() {
           heading: 'Content on this site is not advice',
           body: (
             <P>
-              Anything published here — including the calculators and the journal — is general
-              information for people working in real estate. It is not financial, legal, valuation
+              Anything published here is general information for people working in real estate. It is not financial, legal, valuation
               or fiduciary advice, and it does not know your circumstances.
             </P>
           ),

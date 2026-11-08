@@ -9,17 +9,17 @@ export function invitationEmail(opts: {
   invitationId: string;
 }): EmailMessage {
   const greeting = opts.workspaceName
-    ? `You have been invited to ${opts.workspaceName} on the ORVN Labs platform.`
-    : 'You have been invited to the ORVN Labs platform.';
+    ? `You have been invited to ${opts.workspaceName} on ORREI.`
+    : 'You have been invited to ORREI, the workspace ORVN Labs is building.';
 
   return {
     to: opts.to,
-    subject: 'Your ORVN Labs invitation',
+    subject: 'Your ORREI invitation',
     businessKey: `invite:${opts.invitationId}`,
     text: [
       greeting,
       '',
-      'This workspaces is part of an early-access release. The link below opens your workspace and sets your password.',
+      'This workspace is part of an early-access release. The link below opens it and sets your password.',
       '',
       opts.acceptUrl,
       '',

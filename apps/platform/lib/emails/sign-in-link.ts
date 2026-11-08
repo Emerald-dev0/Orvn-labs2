@@ -8,10 +8,10 @@ export function signInLinkEmail(opts: { to: string; url: string; expiresAt: Date
   const safeUrl = escape(opts.url);
   return {
     to: opts.to,
-    subject: 'Sign in to ORVN Labs',
+    subject: 'Sign in to ORREI',
     businessKey: `magic:${opts.to}:${Math.floor(opts.expiresAt.getTime() / 60_000)}`,
     text: [
-      'Use the link below to sign in to ORVN Labs.',
+      'Use the link below to sign in to ORREI.',
       '',
       opts.url,
       '',
@@ -21,8 +21,8 @@ export function signInLinkEmail(opts: { to: string; url: string; expiresAt: Date
       'ORVN Labs',
     ].join('\n'),
     html: [
-      '<p>Use the link below to sign in to ORVN Labs.</p>',
-      `<p><a href="${safeUrl}">Sign in to ORVN Labs</a></p>`,
+      '<p>Use the link below to sign in to ORREI.</p>',
+      `<p><a href="${safeUrl}">Sign in to ORREI</a></p>`,
       `<p style="color:#6b7280;font-size:13px">It works once and expires ${escape(opts.expiresAt.toUTCString())}. If you did not ask to sign in, ignore this email.</p>`,
     ].join(''),
   };

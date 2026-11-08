@@ -27,7 +27,7 @@ export default function About() {
   useDocumentMeta({
     title: 'About ORVN Labs',
     description:
-      'ORVN Labs builds software for how real estate gets presented. The platform is in development; early access is by request.',
+      'ORVN Labs builds ORREI, software for how real estate gets presented. ORREI is in development; early access is by request.',
     path: '/about',
   });
 
@@ -36,7 +36,7 @@ export default function About() {
       <PageHero
         eyebrow="Company"
         title={<>A small company building tools for how property gets presented.</>}
-        lede="ORVN Labs makes software for real estate. The platform is what we are building now. This page explains what that means, what is live, and what is not."
+        lede="ORVN Labs makes software for real estate. ORREI is what we are building now. This page explains what that means, what is live, and what is not."
       />
 
       <section className="about">
@@ -44,14 +44,14 @@ export default function About() {
           <div className="about-grid">
             <Reveal className="about-card">
               <span className="eyebrow">Current product</span>
-              <h2>The platform</h2>
+              <h2>ORREI</h2>
               <p>
                 A workspace for a property record, the presentations built from it and the pages
                 published against your profile. AI-assisted drafts stay under your review. In
                 development.
               </p>
               <Link href="/product" className="arrow-link">
-                Explore the product
+                Explore ORREI
                 <ArrowUpRight strokeWidth={2} />
               </Link>
             </Reveal>
@@ -91,7 +91,7 @@ export default function About() {
               <span className="eyebrow">Contact</span>
               <h2 className="about-title">One inbox, read by a person.</h2>
               <p className="lead">
-                Questions about the platform, early access, or something you read here: write to us.
+                Questions about ORREI, early access, or something you read here: write to us.
               </p>
             </div>
             <div className="about-contact-actions">

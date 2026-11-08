@@ -11,7 +11,7 @@ import type { PublicationSnapshot } from '../publication/snapshot';
 /**
  * Read models for everything a visitor can see.
  *
- * These run as `larei_public`, a role that cannot read drafts, inquiries, unpublished files
+ * These run as `orrei_public`, a role that cannot read drafts, inquiries, unpublished files
  * or another workspace's rows even if this file is edited carelessly. The filters below are
  * therefore a second opinion, not the only one.
  */

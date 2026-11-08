@@ -31,7 +31,7 @@ export default function FeatureSplit({ id, eyebrow, title, body, note, points, m
 
         {link && (
           <Link href="/product" className="arrow-link">
-            Explore the product
+            Explore ORREI
             <ArrowUpRight strokeWidth={2} />
           </Link>
         )}

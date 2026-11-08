@@ -12,6 +12,11 @@ const FACTS = [
     d: 'Software for clearer real-estate presentation.',
   },
   {
+    k: 'Product',
+    v: 'ORREI',
+    d: 'The product: property records, presentations and shareable pages.',
+  },
+  {
     k: 'Status',
     v: 'In development',
     d: 'Early access by request. Nothing is on general sale.',
@@ -39,7 +44,7 @@ export default function Company() {
             </Reveal>
             <Reveal delay={0.1}>
               <p className="lead">
-                ORVN Labs builds software for how real estate gets presented. The platform is one
+                ORVN Labs builds ORREI, software for how real estate gets presented. ORREI is one
                 place for a property record, the presentation that comes out of it and the page you
                 send to a buyer. It is in development, early access is by request, and nothing is
                 on general sale.

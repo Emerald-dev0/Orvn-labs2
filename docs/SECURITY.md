@@ -36,7 +36,7 @@ Two database URLs exist on purpose:
 | Variable | Role | Used by |
 |---|---|---|
 | `DATABASE_URL_ADMIN` | table owner | migrations, `db:policies`, operator scripts |
-| `DATABASE_URL` | `larei_app`, no bypass | the application at runtime |
+| `DATABASE_URL` | `orrei_app`, no bypass | the application at runtime |
 
 ## 3. Authentication and membership
 
@@ -90,11 +90,11 @@ membership, and the resolved id is what queries use.
 `db/sql/policies.sql`. Thirteen tables carry `workspace_id` (directly or through a property)
 and all thirteen have RLS enabled with explicit policies.
 
-- `larei_app` — members read; `owner`/`editor` write; deletes restricted to owners; beta
+- `orrei_app` — members read; `owner`/`editor` write; deletes restricted to owners; beta
   invitations (no workspace) are invisible to tenants entirely.
 - `beta_applications` has RLS enabled and **no** policy: it belongs to no workspace, so neither
   application role can read or write it. Only the admin connection touches it.
-- `larei_public` — read-only over published projections: published properties, approved and
+- `orrei_public` — read-only over published projections: published properties, approved and
   public facts, public media, publications that are not withdrawn, published profiles. It can
   insert an inquiry (with consent, matching workspace, published property) and a view counter.
   It cannot read inquiries, invitations, audit entries, memberships or drafts back.
@@ -103,7 +103,7 @@ and all thirteen have RLS enabled with explicit policies.
 - A trigger refuses any update to a publication snapshot except `unpublished_at`.
 
 The two privileged functions (`app_accept_invitation`, `app_create_workspace`) are
-`SECURITY DEFINER`, are revoked from `PUBLIC`, and are granted only to `larei_app`.
+`SECURITY DEFINER`, are revoked from `PUBLIC`, and are granted only to `orrei_app`.
 
 ### 4.3 Roles and write permissions
 
@@ -292,7 +292,7 @@ Incident responses that exist today:
    the database and call those actions. `/website`, `/analytics` and `/settings` still render the
    sample workspace. Without `DATABASE_URL` the whole app falls back to that sample workspace
    behind a visible "Preview build" banner, so the preview is never mistaken for live data.
-2. **No live policy test.** A Neon branch plus a test that runs as `larei_app` and asserts
+2. **No live policy test.** A Neon branch plus a test that runs as `orrei_app` and asserts
    cross-tenant reads return zero rows would turn the static checks into proof.
 3. **Better Auth rate limiting is per-isolate.** Move to the Postgres limiter or Workers rate
    limiting before the beta opens.
