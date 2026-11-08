@@ -292,8 +292,9 @@ npm run email:preview     # writes public/preview-emails/*.html, gitignored
 
 ## 6. Order of operations
 
-1. Neon project → `DATABASE_URL`, `DATABASE_URL_ADMIN`.
-2. `npm run db:migrate && npm run db:policies`.
+1. Neon project → `DATABASE_URL` (pooled) and `DATABASE_URL_ADMIN` (direct), same user.
+2. `npm run db:migrate && npm run db:policies && npm run db:status`. Full walkthrough:
+   [neon-setup.md](neon-setup.md).
 3. Cloudflare nameservers → A/CNAME (DNS-only) → Vercel domains → certificate active.
 4. Cloudflare Email Routing: destination confirmed → addresses added → test in and out → Google
    records removed → Gmail replies configured.

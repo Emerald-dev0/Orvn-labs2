@@ -12,6 +12,7 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:policies": "node scripts/apply-policies.mjs",
+    "db:status": "node scripts/db-status.mjs",
     "invite": "node scripts/invite.mjs",
     "email:preview": "tsx scripts/preview-emails.tsx",
     "dns:check": "node scripts/check-dns.mjs"
