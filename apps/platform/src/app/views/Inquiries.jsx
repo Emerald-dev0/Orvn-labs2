@@ -103,7 +103,7 @@ export default function Inquiries({ empty = false, items: provided = inquiries }
             </div>
 
             <p className="ws-small ws-muted" style={{ marginTop: 14 }}>
-              Replies go from your own inbox. LAREI does not send anything on your behalf.
+              Replies go from your own inbox. The platform does not send anything on your behalf.
             </p>
           </Card>
         ) : null}

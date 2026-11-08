@@ -12,9 +12,14 @@ const FACTS = [
     d: 'Software for clearer real-estate presentation.',
   },
   {
-    k: 'Current product',
-    v: 'LAREI',
-    d: 'Private beta. Applications reviewed individually.',
+    k: 'Product',
+    v: 'ORREI',
+    d: 'The product: property records, presentations and shareable pages.',
+  },
+  {
+    k: 'Status',
+    v: 'In development',
+    d: 'Early access by request. Nothing is on general sale.',
   },
   {
     k: 'Contact',
@@ -34,20 +39,21 @@ export default function Company() {
             </Reveal>
             <Reveal delay={0.05}>
               <h2 className="company-title">
-                LAREI is the product. ORVN Labs is the company building it.
+                A company for the work behind a property listing.
               </h2>
             </Reveal>
             <Reveal delay={0.1}>
               <p className="lead">
-                ORVN Labs builds software for how real estate gets presented. LAREI is our current
-                product: one professional home for a brand, its property portfolio and the pages it
-                sends to buyers. It is in private beta, and it is not on general sale.
+                ORVN Labs builds ORREI, software for how real estate gets presented. ORREI is one
+                place for a property record, the presentation that comes out of it and the page you
+                send to a buyer. It is in development, early access is by request, and nothing is
+                on general sale.
               </p>
             </Reveal>
             <Reveal delay={0.14}>
               <p className="company-note">
-                Screens and listings on this site are illustrative, and anything still in
-                development is labelled as such.
+                Screens and listings on this site are illustrative. Features that are not built
+                yet are labelled as planned rather than shown as if they work.
               </p>
             </Reveal>
 

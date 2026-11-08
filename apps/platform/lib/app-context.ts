@@ -52,7 +52,7 @@ export function shellFor(viewer: Viewer, workspace: ActiveWorkspace): ShellWorks
     id: workspace.id,
     name: workspace.name,
     handle: workspace.username,
-    plan: workspace.profilePublishedAt ? 'Private beta · site live' : 'Private beta',
+    plan: workspace.profilePublishedAt ? 'Early access · profile live' : 'Early access',
     publicUrl: `/w/${workspace.username}`,
     owner: { name: viewer.name, email: viewer.email, initials: initials(viewer.name) },
   };

@@ -113,7 +113,7 @@ async function notifyOwner(inquiryId: string) {
 
   const baseUrl = process.env.BETTER_AUTH_URL ?? 'http://localhost:5174';
   await sendEmail(
-    inquiryNotificationEmail({
+    await inquiryNotificationEmail({
       to: row.contact_email,
       inquirerName: row.name,
       inquirerEmail: row.email,

@@ -1,6 +1,7 @@
 import { and, eq } from 'drizzle-orm';
 import { databaseConfigured, withPublicDb } from './db/tenant';
 import { properties, propertyMedia } from '../db/schema';
+import { filesReleased } from './publication/visibility';
 
 /**
  * The file authorisation boundary.
@@ -8,7 +9,7 @@ import { properties, propertyMedia } from '../db/schema';
  * A document marked private must stay unreachable even to somebody who knows the exact object
  * key (F08, T15). Storage is private, and this function is the only gate in front of it: the
  * row must be public *and* its property must be published *and* the publication not withdrawn.
- * RLS enforces the same rule on larei_public, so a bug here still fails closed.
+ * RLS enforces the same rule on orrei_public, so a bug here still fails closed.
  */
 
 export type MediaDecision =
@@ -56,7 +57,10 @@ export async function authoriseMediaRequest(storageKey: string): Promise<MediaDe
 
   const row = rows[0];
   if (!row) return { allowed: false, reason: 'not_found' };
-  if (row.status !== 'published') return { allowed: false, reason: 'unpublished' };
+  // The page gate decides first: an unpublished property releases no files at all.
+  if (!filesReleased({ publicationStatus: row.status, showOnPortfolio: true })) {
+    return { allowed: false, reason: 'unpublished' };
+  }
   if (row.visibility !== 'public') return { allowed: false, reason: 'not_public' };
 
   const contentType = contentTypeFor(row.key);

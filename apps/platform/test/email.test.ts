@@ -14,7 +14,7 @@ describe('Calder adapter', () => {
   beforeEach(() => {
     process.env.CALDER_API_KEY = 'calder_sk_test_example';
     process.env.CALDER_API_URL = 'https://api.calder.click/v1';
-    process.env.MAIL_FROM = 'LAREI <hello@orvnlabs.com>';
+    process.env.MAIL_FROM = 'ORVN Labs <hello@orvnlabs.com>';
   });
 
   afterEach(() => {
@@ -32,7 +32,7 @@ describe('Calder adapter', () => {
 
     const result = await sendEmail({
       to: 'ada@example.com',
-      subject: 'Your LAREI invitation',
+      subject: 'Your ORVN Labs invitation',
       text: 'hello',
       businessKey: 'invite:42',
     });
@@ -47,9 +47,9 @@ describe('Calder adapter', () => {
 
     const body = JSON.parse(String(calls[0].init.body));
     expect(body).toMatchObject({
-      from: 'LAREI <hello@orvnlabs.com>',
+      from: 'ORVN Labs <hello@orvnlabs.com>',
       to: 'ada@example.com',
-      subject: 'Your LAREI invitation',
+      subject: 'Your ORVN Labs invitation',
       text: 'hello',
       stream: 'transactional',
     });

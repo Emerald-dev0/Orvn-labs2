@@ -5,7 +5,8 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { Icon } from '../icons';
 import { PageHead, Card, StatusPill, Tabs, FactRow, EmptyState } from '../ui';
-import PublishBar from '../PublishBar';
+import VisibilityControl from '../VisibilityControl';
+import DraftPanel from '../DraftPanel';
 import MediaUploader from '../MediaUploader';
 import { properties, activity } from '../data';
 
@@ -19,7 +20,7 @@ const TABS = [
   { id: 'activity', label: 'Activity' },
 ];
 
-function Overview({ property }) {
+function Overview({ property, live = false, publicPath = null }) {
   const approved = property.facts.filter((f) => f.state === 'approved' && f.public).slice(0, 4);
   return (
     <div className="ws-split">
@@ -76,25 +77,40 @@ function Overview({ property }) {
           <p className="ws-small ws-muted" style={{ marginTop: 10 }}>{property.nextAction}</p>
         </Card>
 
-        <Card>
-          <div className="ws-section-head">
-            <h2>Publishing</h2>
-          </div>
-          <div style={{ display: 'grid', gap: 8 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span className="ws-small ws-muted">Status</span>
-              <StatusPill status={property.status} />
+        {live ? (
+          <Card>
+            <VisibilityControl
+              propertyId={property.id}
+              visibility={property.visibility ?? 'private'}
+              blockers={property.blockers ?? []}
+              publicPath={property.visibility === 'public' || property.visibility === 'link_only' ? publicPath : null}
+            />
+          </Card>
+        ) : (
+          <Card>
+            <div className="ws-section-head">
+              <h2>Who can see this page</h2>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span className="ws-small ws-muted">Address visibility</span>
-              <span style={{ fontSize: 13 }}>Approximate location</span>
+            <div style={{ display: 'grid', gap: 8 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span className="ws-small ws-muted">Visibility</span>
+                <span style={{ fontSize: 13 }}>Sample workspace</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span className="ws-small ws-muted">Address visibility</span>
+                <span style={{ fontSize: 13 }}>Approximate location</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span className="ws-small ws-muted">Last updated</span>
+                <span style={{ fontSize: 13 }}>{property.updated}</span>
+              </div>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span className="ws-small ws-muted">Last updated</span>
-              <span style={{ fontSize: 13 }}>{property.updated}</span>
-            </div>
-          </div>
-        </Card>
+            <p className="ws-small ws-muted" style={{ marginTop: 10 }}>
+              Private, link only and public are real states. Changing one is limited to the owners
+              and editors of the workspace, so this card is read-only from here.
+            </p>
+          </Card>
+        )}
       </div>
     </div>
   );
@@ -202,63 +218,70 @@ function Media({ property, live = false }) {
   );
 }
 
-function CopyAssets({ property }) {
+function CopyAssets({ property, live = false }) {
+  const description = (property.description ?? '').trim();
+  const words = description ? description.split(/\s+/).length : 0;
+
   return (
     <div className="ws-split">
-      <Card>
-        <div className="ws-section-head">
-          <h2>Buyer description</h2>
-          <span className="ws-mono-note">
-            <Icon name="magic" size={13} />
-            Draft
-          </span>
-        </div>
-        <div
-          style={{
-            background: 'var(--bone)',
-            borderRadius: 14,
-            padding: 16,
-            fontSize: 14.5,
-            lineHeight: 1.65,
-            color: 'var(--ink-2)',
-          }}
-        >
-          A four-bedroom house in the Harbour district with 620 m² of internal space, a walled
-          garden and a service charge confirmed by the developer. Viewings by appointment.
-        </div>
-        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 12 }}>
-          {['$480,000', '4 bedrooms', '620 m²', 'Harbour district'].map((chip) => (
-            <span key={chip} className="ws-mono-note">{chip}</span>
-          ))}
-        </div>
-        <p className="ws-small ws-muted" style={{ marginTop: 12 }}>
-          Generated from your approved facts. Editing a fact marks this copy as needing regeneration.
-        </p>
-        <div style={{ display: 'flex', gap: 8, marginTop: 14 }}>
-          <button type="button" className="ws-btn is-dark" disabled>
-            <Icon name="refresh" size={15} />
-            Regenerate
-          </button>
-          <button type="button" className="ws-btn is-quiet" disabled>Edit copy</button>
-        </div>
-      </Card>
-
-      <Card>
-        <div className="ws-section-head">
-          <h2>Drafting</h2>
-        </div>
-        <p className="ws-small ws-muted">
-          AI drafting is the next milestone. This screen shows where it lands and what it is allowed
-          to touch: the facts above, your tone, and nothing else.
-        </p>
-        <div className="ws-callout is-ok" style={{ marginTop: 12 }}>
-          <Icon name="checkCircle" size={16} />
-          <div>
-            <strong>Facts stay fixed</strong>
-            <p>Generated words can never change a price, an ID or a status.</p>
+      <div className="ws-stack">
+        <Card>
+          <div className="ws-section-head">
+            <h2>Buyer description</h2>
+            <span className="ws-small ws-muted">{description ? `${words} words` : 'Empty'}</span>
           </div>
-        </div>
-      </Card>
+          {description ? (
+            <div
+              style={{
+                background: 'var(--bone)',
+                borderRadius: 14,
+                padding: 16,
+                fontSize: 14.5,
+                lineHeight: 1.65,
+                color: 'var(--ink-2)',
+              }}
+            >
+              {description}
+            </div>
+          ) : (
+            <p className="ws-small ws-muted" style={{ margin: 0 }}>
+              Nothing written yet. Draft one from the facts below, or write it yourself on the
+              Details tab. A blank description stays blank on the page.
+            </p>
+          )}
+          <p className="ws-small ws-muted" style={{ marginTop: 12 }}>
+            This is the text the public page prints. It changes only when you save it.
+          </p>
+        </Card>
+
+        <Card>
+          {live ? (
+            <DraftPanel
+              propertyId={property.id}
+              description={description}
+              facts={Array.isArray(property.facts) ? property.facts : []}
+            />
+          ) : (
+            <>
+              <div className="ws-section-head">
+                <h2>Drafting</h2>
+              </div>
+              <p className="ws-small ws-muted">
+                Drafting runs from the approved public facts on the record and writes nothing until
+                a person accepts it. It is limited to owners and editors, so this record is
+                read-only from here.
+              </p>
+              <div className="ws-callout is-ok" style={{ marginTop: 12 }}>
+                <Icon name="checkCircle" size={16} />
+                <div>
+                  <strong>Facts stay fixed</strong>
+                  <p>Drafted words can never change a price, an ID or a status.</p>
+                </div>
+              </div>
+            </>
+          )}
+        </Card>
+      </div>
     </div>
   );
 }
@@ -449,12 +472,18 @@ export default function PropertyDetail({ id, property: provided = null, initialT
           </p>
         </div>
         {live ? (
-          <PublishBar
-            propertyId={property.id}
-            status={property.status}
-            blockers={property.blockers ?? []}
-            publicPath={property.status === 'published' ? publicPath : null}
-          />
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+            {property.status === 'published' && publicPath ? (
+              <a href={publicPath} target="_blank" rel="noreferrer" className="ws-btn is-quiet">
+                <Icon name="view" size={16} />
+                Open page
+              </a>
+            ) : null}
+            <Link href={`/properties/${property.id}?tab=copy`} className="ws-btn is-dark">
+              <Icon name="magic" size={16} />
+              Draft copy
+            </Link>
+          </div>
         ) : (
           <div style={{ display: 'flex', gap: 8 }}>
             <button type="button" className="ws-btn is-quiet">
@@ -473,10 +502,10 @@ export default function PropertyDetail({ id, property: provided = null, initialT
         <Tabs tabs={TABS} value={tab} onChange={setTab} />
       </div>
 
-      {tab === 'overview' ? <Overview property={property} /> : null}
+      {tab === 'overview' ? <Overview property={property} live={live} publicPath={publicPath} /> : null}
       {tab === 'details' ? <Details property={property} /> : null}
       {tab === 'media' ? <Media property={property} live={live} /> : null}
-      {tab === 'copy' ? <CopyAssets property={property} /> : null}
+      {tab === 'copy' ? <CopyAssets property={property} live={live} /> : null}
       {tab === 'sheet' ? <DealSheet property={property} /> : null}
       {tab === 'public' ? <PublicPage property={property} /> : null}
       {tab === 'activity' ? <ActivityTab property={property} /> : null}

@@ -17,8 +17,8 @@ import { tenantDb, type TenantTx } from './pool';
 /** A deployment without a database is a preview: nothing is published, nothing is readable. */
 export const databaseConfigured = Boolean(process.env.DATABASE_URL);
 
-export const TENANT_ROLE = 'larei_app';
-export const PUBLIC_ROLE = 'larei_public';
+export const TENANT_ROLE = 'orrei_app';
+export const PUBLIC_ROLE = 'orrei_public';
 
 export async function withUserDb<T>(userId: string, fn: (tx: TenantTx) => Promise<T>): Promise<T> {
   if (!userId) throw new Error('withUserDb requires an authenticated user id');

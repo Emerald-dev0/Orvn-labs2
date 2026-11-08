@@ -35,6 +35,10 @@ const schema = z.object({
   R2_SECRET_ACCESS_KEY: optionalString,
   R2_BUCKET: optionalString,
 
+  // Drafting. Optional: without a key the drafting panel says so instead of inventing text.
+  GROQ_API_KEY: optionalString,
+  GROQ_MODEL: optionalString,
+
   // Analytics
   ANALYTICS_HASH_SALT: optionalString,
 });

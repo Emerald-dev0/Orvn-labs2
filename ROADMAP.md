@@ -1,5 +1,9 @@
 # ORVN Labs / LAREI: Website and Product Roadmap
 
+> **Naming decided (November 2026).** The product is **ORREI**; **ORVN Labs** is the company.
+> Everything below was written while the name was provisional and still reads **LAREI**. The
+> record is kept as it was; the code and the site now use ORREI, and D3 is closed.
+
 Prepared 4 November 2026 for Daniel (ORVN Labs).
 Sources: the three 21 October 2026 handoff documents in Drive, plus the current state of this repository.
 Scope note: colour and visual-theme guidance from the brief has been excluded as instructed. Everything here concerns structure, copy, behaviour, sequencing and decisions.

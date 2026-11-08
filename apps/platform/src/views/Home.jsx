@@ -19,9 +19,9 @@ import { SiteEditorMock, VoiceMock, StatsMock } from '../components/home/mocks';
 
 export default function Home() {
   useDocumentMeta({
-    title: 'Professional websites and property deal pages',
+    title: 'ORREI by ORVN Labs | Professional websites and property deal pages',
     description:
-      'LAREI is being built for wholesalers, agents, investors and real-estate operators who want one professional home for their brand, property portfolio and deal presentations.',
+      'ORREI, from ORVN Labs, turns property details into presentations you can share: organise a property, prepare an editable deal sheet and publish a professional page linked to your profile.',
     path: '/',
   });
 
@@ -30,18 +30,20 @@ export default function Home() {
       <Hero />
       <Bridge />
 
+      <Showcase />
+
+      <Steps />
+
       <FeatureSplit
         id="professional-presence"
-        eyebrow="Your professional presence"
-        title="One address for your business. A clear view of your work."
-        body="Give people a direct destination to learn who you are, what markets you serve, how to contact you and which properties or projects you choose to show. Start with your details, review an AI-assisted page draft and make the site your own within a focused design system."
-        note="My Website · Edit profile · Preview · Publish site · Copy public link"
+        eyebrow="Your profile"
+        title="The property page hangs off a profile you control."
+        body="A published property is not a one-off link. It sits against your name, markets and contact details, so a buyer who opens it knows who is behind it. The profile is edited with structured controls and reviewed before it goes public."
+        note="Profile · Markets · Contact details · Preview · Publish"
         media={<SiteEditorMock />}
       />
 
       <Portfolio />
-
-      <Showcase />
 
       <FeatureSplit
         eyebrow="Your voice, not a generic template"
@@ -52,13 +54,11 @@ export default function Home() {
       />
 
       <FeatureSplit
-        eyebrow="Observable activity"
-        title="Know what was viewed and what prompted a response."
-        body="See engagement on published professional and property pages, tracked clicks and buyer inquiries in one workspace. Understand which opportunities are receiving attention without guessing who an anonymous visitor is."
+        eyebrow="Activity"
+        title="Views and inquiries, kept separate from guesswork."
+        body="The first release records that a published page was opened and stores the inquiries people choose to send. It does not identify visitors, and it does not estimate how many of them were real buyers. Reporting beyond that is planned, not shipped."
         media={<StatsMock />}
       />
-
-      <Steps />
       <Roles />
       <Trust />
       <Company />

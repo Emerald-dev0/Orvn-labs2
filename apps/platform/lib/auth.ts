@@ -77,7 +77,7 @@ export function assertAuthConfigured() {
 }
 
 export const auth = betterAuth({
-  appName: 'LAREI',
+  appName: 'ORREI',
   baseURL: env.BETTER_AUTH_URL ?? 'http://localhost:5174',
   secret: env.BETTER_AUTH_SECRET ?? 'development-only-secret-not-for-deployment',
   trustedOrigins,
@@ -98,7 +98,7 @@ export const auth = betterAuth({
     // Invited users may set a password; nobody else can create an account (see the hook).
     disableSignUp: false,
     sendResetPassword: async ({ user, url }) => {
-      await deliver(resetPasswordEmail({ to: user.email, url }));
+      await deliver(await resetPasswordEmail({ to: user.email, url }));
     },
   },
 
@@ -163,7 +163,7 @@ export const auth = betterAuth({
       disableSignUp: false, // Account creation is governed by the hook above, not by the plugin.
       sendMagicLink: async ({ email, url }) => {
         await deliver(
-          signInLinkEmail({ to: email, url, expiresAt: new Date(Date.now() + 10 * 60 * 1000) }),
+          await signInLinkEmail({ to: email, url, expiresAt: new Date(Date.now() + 10 * 60 * 1000) }),
         );
       },
     }),

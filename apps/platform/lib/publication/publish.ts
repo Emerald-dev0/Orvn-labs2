@@ -74,6 +74,12 @@ export async function publishProperty(
     rightsAttestedAt: property.rightsAttestedAt,
     publicMediaCount: opts.allowWithoutPhotos ? 1 : publicMediaCount,
     locationPrecision: property.locationPrecision,
+    unreviewedPublicFactCount: details.filter(
+      (detail) =>
+        detail.isPublic &&
+        detail.approvalState === 'unreviewed' &&
+        (detail.value ?? '').trim().length > 0,
+    ).length,
   });
 
   if (blockers.length) throw new PublicationError(blockers);

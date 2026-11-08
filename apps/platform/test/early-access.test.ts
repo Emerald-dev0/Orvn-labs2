@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 import { betaApplySchema } from '../lib/validation/invite';
 import { betaApplicationEmail } from '../lib/emails/beta-application';
 
@@ -42,26 +42,30 @@ describe('early-access form', () => {
 });
 
 describe('notification email', () => {
-  const message = betaApplicationEmail({
-    id: 'app_123',
-    name: 'Ada Okonkwo',
-    email: 'ada@northaven.example',
-    company: 'Northaven Property Group',
-    role: 'Agent or broker',
-    markets: 'Harbour district',
-    volume: '3–10',
-    currentTools: 'PDFs and WhatsApp links',
-    frustration: 'Every buyer asks for the same three details.',
-    website: 'northaven.example',
-    receivedAt: new Date('2026-11-04T12:00:00Z'),
+  let message: Awaited<ReturnType<typeof betaApplicationEmail>>;
+
+  beforeAll(async () => {
+    message = await betaApplicationEmail({
+      id: 'app_123',
+      name: 'Ada Okonkwo',
+      email: 'ada@northaven.example',
+      company: 'Northaven Property Group',
+      role: 'Agent or broker',
+      markets: 'Harbour district',
+      volume: '3–10',
+      currentTools: 'PDFs and WhatsApp links',
+      frustration: 'Every buyer asks for the same three details.',
+      website: 'northaven.example',
+      receivedAt: new Date('2026-11-04T12:00:00Z'),
+    });
   });
 
   it('is replyable in one click', () => {
     expect(message.replyTo).toBe('ada@northaven.example');
   });
 
-  it('keys idempotency to the application, not the moment', () => {
-    const again = betaApplicationEmail({
+  it('keys idempotency to the application, not the moment', async () => {
+    const again = await betaApplicationEmail({
       id: 'app_123',
       name: 'Ada Okonkwo',
       email: 'ada@northaven.example',
@@ -78,6 +82,12 @@ describe('notification email', () => {
   });
 
   it('labels the request with the person and the company', () => {
-    expect(message.subject).toBe('Early access: Ada Okonkwo · Northaven Property Group');
+    expect(message.subject).toBe('Early access: Ada Okonkwo (Northaven Property Group)');
+  });
+
+  it('renders a designed HTML body alongside the text', () => {
+    expect(message.html).toContain('ORREI');
+    expect(message.html).toContain('Northaven Property Group');
+    expect(message.html).not.toContain('<script');
   });
 });

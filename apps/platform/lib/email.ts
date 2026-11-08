@@ -75,7 +75,7 @@ async function calderOnce(message: EmailMessage, idempotencyKey: string): Promis
       'Idempotency-Key': idempotencyKey,
     },
     body: JSON.stringify({
-      from: process.env.MAIL_FROM ?? 'LAREI <hello@orvnlabs.com>',
+      from: process.env.MAIL_FROM ?? 'ORVN Labs <hello@orvnlabs.com>',
       to: message.to,
       subject: message.subject,
       text: message.text,

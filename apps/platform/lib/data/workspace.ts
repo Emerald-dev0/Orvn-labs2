@@ -15,6 +15,7 @@ import {
 } from '../../db/schema';
 import { priceLabel, recordCompleteness, timeAgo, typeLabel, placeLabel } from '../format';
 import { publicationBlockers } from '../validation/property';
+import { visibilityOf, type Visibility } from '../publication/visibility';
 
 /**
  * Tenant read models.
@@ -72,6 +73,8 @@ export type PropertyDetailView = PropertyCard & {
   publication: { version: number; publishedAt: string; publicFacts: number } | null;
   rightsAttestedAt: string | null;
   showOnPortfolio: boolean;
+  /** Derived, never stored: publication state decides whether a page exists at all. */
+  visibility: Visibility;
   blockers: string[];
   slugPreview: string;
 };
@@ -100,6 +103,7 @@ export type Overview = {
 
 const approvedPublicFact = sql<number>`count(*) filter (where ${propertyDetails.approvalState} = 'approved' and ${propertyDetails.isPublic} = true and length(trim(coalesce(${propertyDetails.value}, ''))) > 0)`;
 const publicMediaCount = sql<number>`count(*) filter (where ${propertyMedia.visibility} = 'public')`;
+const unreviewedPublicFact = sql<number>`count(*) filter (where ${propertyDetails.approvalState} = 'unreviewed' and ${propertyDetails.isPublic} = true and length(trim(coalesce(${propertyDetails.value}, ''))) > 0)`;
 
 async function countsFor(
   tx: Parameters<Parameters<typeof withUserDb>[1]>[0],
@@ -109,6 +113,7 @@ async function countsFor(
   inquiries: Map<string, number>;
   facts: Map<string, number>;
   media: Map<string, number>;
+  unreviewedFacts: Map<string, number>;
 }> {
   const [viewRows, inquiryRows, factRows, mediaRows] = await Promise.all([
     tx
@@ -128,7 +133,11 @@ async function countsFor(
       .where(and(eq(inquiries.workspaceId, workspaceId), ne(inquiries.status, 'archived')))
       .groupBy(inquiries.propertyId),
     tx
-      .select({ propertyId: propertyDetails.propertyId, total: approvedPublicFact })
+      .select({
+        propertyId: propertyDetails.propertyId,
+        total: approvedPublicFact,
+        unreviewed: unreviewedPublicFact,
+      })
       .from(propertyDetails)
       .groupBy(propertyDetails.propertyId),
     tx
@@ -137,9 +146,14 @@ async function countsFor(
       .groupBy(propertyMedia.propertyId),
   ]);
 
-  const toMap = (rows: { propertyId: string | null; total: number }[]) => {
+  const toMap = <T extends { propertyId: string | null }>(
+    rows: T[],
+    field: 'total' | 'unreviewed' = 'total',
+  ) => {
     const map = new Map<string, number>();
-    for (const row of rows) if (row.propertyId) map.set(row.propertyId, Number(row.total));
+    for (const row of rows) {
+      if (row.propertyId) map.set(row.propertyId, Number((row as Record<string, unknown>)[field] ?? 0));
+    }
     return map;
   };
 
@@ -148,12 +162,20 @@ async function countsFor(
     inquiries: toMap(inquiryRows as { propertyId: string | null; total: number }[]),
     facts: toMap(factRows as { propertyId: string | null; total: number }[]),
     media: toMap(mediaRows as { propertyId: string | null; total: number }[]),
+    unreviewedFacts: toMap(factRows as unknown as { propertyId: string | null; unreviewed: number }[], 'unreviewed'),
   };
 }
 
 function buildCard(
   row: typeof properties.$inferSelect,
-  extra: { views: number; inquiries: number; publicFacts: number; publicMedia: number; contactEmail: string | null },
+  extra: {
+    views: number;
+    inquiries: number;
+    publicFacts: number;
+    publicMedia: number;
+    unreviewedFacts: number;
+    contactEmail: string | null;
+  },
 ): PropertyCard {
   const completeness = recordCompleteness({
     title: row.title,
@@ -174,6 +196,7 @@ function buildCard(
     rightsAttestedAt: row.rightsAttestedAt,
     publicMediaCount: extra.publicMedia,
     locationPrecision: row.locationPrecision,
+    unreviewedPublicFactCount: extra.unreviewedFacts,
   });
 
   let nextAction = 'Nothing waiting.';
@@ -239,6 +262,7 @@ export async function listPropertyCards(userId: string, workspaceId: string): Pr
         inquiries: counts.inquiries.get(row.id) ?? 0,
         publicFacts: counts.facts.get(row.id) ?? 0,
         publicMedia: counts.media.get(row.id) ?? 0,
+        unreviewedFacts: counts.unreviewedFacts.get(row.id) ?? 0,
         contactEmail,
       }),
       cover: coverByProperty.get(row.id) ?? null,
@@ -301,6 +325,9 @@ export async function getPropertyDetail(
       inquiries: counts.inquiries.get(row.id) ?? 0,
       publicFacts,
       publicMedia: visibleMedia.length,
+      unreviewedFacts: details.filter(
+        (fact) => fact.isPublic && fact.approvalState === 'unreviewed' && fact.value?.trim(),
+      ).length,
       contactEmail,
     });
 
@@ -353,6 +380,13 @@ export async function getPropertyDetail(
         rightsAttestedAt: row.rightsAttestedAt,
         publicMediaCount: visibleMedia.length,
         locationPrecision: row.locationPrecision,
+        unreviewedPublicFactCount: details.filter(
+          (fact) => fact.isPublic && fact.approvalState === 'unreviewed' && fact.value?.trim(),
+        ).length,
+      }),
+      visibility: visibilityOf({
+        publicationStatus: row.publicationStatus,
+        showOnPortfolio: row.showOnPortfolio,
       }),
       cover: media.find((item) => item.isCover)?.storageKey ?? media[0]?.storageKey ?? null,
       slugPreview: `${workspaceRow[0]?.username ?? ''}/${row.slug}`,

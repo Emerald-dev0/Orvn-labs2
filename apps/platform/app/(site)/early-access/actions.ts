@@ -16,8 +16,18 @@ export type BetaApplyState =
   | { status: 'sent' }
   | { status: 'error'; message: string };
 
-/** Where early-access requests land until there is an admin queue. */
+/**
+ * Where the notification lands.
+ *
+ * A real mailbox, not a role address that forwards: forwarding adds a hop, rewrites the envelope
+ * and makes the message easier to misfile. `hello@orvnlabs.com` is routed in Cloudflare for people
+ * writing to us; the queue notification goes straight to the inbox somebody reads.
+ */
 const INBOX = () => serverEnv().EARLY_ACCESS_INBOX ?? 'danieloyegoke001@gmail.com';
+
+/** The record in the admin queue, so the email is a notification and not the archive. */
+const QUEUE_URL = (id: string) =>
+  `${serverEnv().BETTER_AUTH_URL ?? 'https://orvnlabs.com'}/admin/early-access#${id}`;
 
 /**
  * Early-access requests.
@@ -117,7 +127,7 @@ export async function requestEarlyAccess(
   // A new application rings the inbox once. A resubmission does not.
   if (applicationId || !stored) {
     try {
-      const message = betaApplicationEmail({
+      const message = await betaApplicationEmail({
         id: applicationId ?? 'unstored',
         name: input.name,
         email,
@@ -129,6 +139,7 @@ export async function requestEarlyAccess(
         frustration: input.frustration,
         website: input.website,
         receivedAt,
+        adminUrl: QUEUE_URL(applicationId ?? ''),
       });
 
       await sendEmail({

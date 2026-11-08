@@ -38,7 +38,7 @@ export default function Website({ empty = false }) {
         <EmptyState
           icon="website"
           title="Your site starts with your details"
-          body="Add your name, markets and a short description. LAREI drafts the first version from that, and you edit it through structured controls rather than prompts."
+          body="Add your name, markets and a short description. The platform drafts the first version from that, and you edit it through structured controls rather than prompts."
           action={{ href: '/settings', label: 'Add business details' }}
           secondary={{ href: '/product', label: 'See what the page includes' }}
         />

@@ -31,7 +31,7 @@ const STEPS = [
     icon: ScanEye,
     label: 'Step two',
     title: 'Check it once.',
-    body: 'LAREI lists the facts it can support and flags the ones that disagree with another source. You confirm each figure. Publication stays blocked until the open questions are closed.',
+    body: 'ORREI lists the facts it can support and flags the ones that disagree with another source. You confirm each figure. Publication stays blocked until the open questions are closed.',
     points: ['Conflicts shown side by side', 'Unknown values left blank', 'Every decision dated', 'Nothing published by accident'],
     visual: 'check',
   },
@@ -39,7 +39,7 @@ const STEPS = [
     icon: Send,
     label: 'Step three',
     title: 'Publish what you need.',
-    body: 'Turn on the property page, send a deal sheet, share a buyer summary or print the inspection sheet. Each output has its own state, so you control who sees what.',
+    body: 'Publish the property page and send the link. Deal sheets, buyer summaries and print sheets come later from the same record. Each output has its own state, so you control who sees what.',
     points: ['Page, sheet, summary, printout', 'Preview before publishing', 'Private documents stay private', 'Update one, update all'],
     visual: 'publish',
   },
@@ -60,7 +60,7 @@ const NEEDS = [
   },
   {
     title: 'Photographs worth showing',
-    body: 'Phone photographs are fine. LAREI crops and lays them out, and tells you when an image is too small to print well.',
+    body: 'Phone photographs are fine. ORREI crops and lays them out, and tells you when an image is too small to print well.',
   },
   {
     title: 'Twenty minutes',
@@ -71,15 +71,15 @@ const NEEDS = [
 const FAQS = [
   {
     q: 'Do I have to move my listings off the portals?',
-    a: 'No. Keep them where they are. LAREI gives you a record and a page you control, and it will import from a portal rather than asking you to start again.',
+    a: 'No. Keep them where they are. ORREI gives you a record and a page you control, and it will import from a portal rather than asking you to start again.',
   },
   {
     q: 'What if I do not have all the information?',
-    a: 'Leave it blank. A missing field is shown as missing rather than guessed, and you can publish without it. LAREI will not invent a measurement or a service charge.',
+    a: 'Leave it blank. A missing field is shown as missing rather than guessed, and you can publish without it. ORREI will not invent a measurement or a service charge.',
   },
   {
     q: 'Can I publish something before the whole property is ready?',
-    a: 'Yes. A deal sheet can go to a buyer while the public page is still in draft, and a print sheet can exist before either. Each output is switched on separately.',
+    a: 'Yes. The page, the printable deal sheet and the buyer summary all come from the same approved record, so you can send the sheet to one buyer while the page stays a draft.',
   },
   {
     q: 'What happens when a price changes?',
@@ -186,7 +186,7 @@ export default function HowItWorks() {
   useDocumentMeta({
     title: 'How it works',
     description:
-      'Add a property, check the facts once, publish the page, the deal sheet, the buyer summary and the print sheet, then keep everything current from one record.',
+      'Add a property, check the facts once, publish the page and share the link. Every later output comes from the same approved record.',
     path: '/how-it-works',
   });
 
@@ -199,11 +199,11 @@ export default function HowItWorks() {
         actions={
           <>
             <Link href="/early-access" className="btn btn-primary">
-              Request beta access
+              Request early access
               <ArrowRight strokeWidth={2.2} />
             </Link>
             <Link href="/product" className="btn btn-secondary">
-              See the product
+              Explore ORREI
             </Link>
           </>
         }
@@ -289,7 +289,7 @@ export default function HowItWorks() {
           <div className="cta-band-inner on-dark">
             <div>
               <h2>See whether it fits how you already work.</h2>
-              <p>Tell us about one property and we will show you the record, the page and the deal sheet.</p>
+              <p>Tell us about one property and we will show you the record and the page it produces.</p>
             </div>
             <Link href="/early-access" className="btn btn-lime">
               Request access

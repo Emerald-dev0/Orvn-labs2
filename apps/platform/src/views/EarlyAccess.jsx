@@ -98,7 +98,7 @@ export default function EarlyAccess() {
                     <label className="form-legal" htmlFor="consent" style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
                       <input id="consent" name="consent" type="checkbox" required style={{ marginTop: 3 }} />
                       <span>
-                        I agree that ORVN Labs may contact me about LAREI early access. See our{' '}
+                        I agree that ORVN Labs may contact me about early access. See our{' '}
                         <Link href="/legal/privacy">Privacy Policy</Link>. Nothing else is done with
                         these details.
                       </span>

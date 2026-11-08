@@ -19,7 +19,7 @@ export default function Contact() {
   useDocumentMeta({
     title: 'Contact',
     description:
-      'Questions about LAREI, beta access or a property you want to publish. A person reads every message.',
+      'Questions about ORREI, early access or a property you want to publish. A person reads every message.',
     path: '/contact',
   });
 
@@ -35,7 +35,7 @@ export default function Contact() {
       <PageHero
         eyebrow="Contact"
         title={<>Talk to a person.</>}
-        lede="Questions about LAREI, beta access, or a property you are trying to present. Tell us what you are working on and we will answer in plain language."
+        lede="Questions about ORREI, early access, or a property you are trying to present. Tell us what you are working on and we will answer in plain language."
       />
 
       <section className="form-page">
@@ -109,7 +109,7 @@ export default function Contact() {
                   <Building2 size={16} strokeWidth={1.9} />
                   <span>
                     <span className="contact-line-label">Company</span>
-                    ORVN Labs, makers of LAREI
+                    ORVN Labs
                   </span>
                 </div>
               </div>

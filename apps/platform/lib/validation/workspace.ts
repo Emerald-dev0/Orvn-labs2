@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { amountField, apnListField, currencyField, emailField, slugField } from './common';
 import { AVAILABILITY, LOCATION_PRECISION, PRICE_VISIBILITY, PROPERTY_TYPES } from './property';
+import { VISIBILITIES } from '../publication/visibility';
 
 /**
  * Input schemas for the workspace actions. The workspace id is never in here: it comes from
@@ -51,6 +52,11 @@ export const factDecisionSchema = z.object({
   propertyId: z.string().uuid(),
   factId: z.string().uuid(),
   decision: z.enum(['approved', 'rejected', 'unknown', 'reset']),
+});
+
+export const visibilitySchema = z.object({
+  propertyId: z.string().uuid(),
+  visibility: z.enum(VISIBILITIES),
 });
 
 export const propertyIdSchema = z.object({

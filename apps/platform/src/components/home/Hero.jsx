@@ -3,118 +3,145 @@
 import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { ArrowRight, Bath, BedDouble, MapPin, Ruler, ShieldCheck } from 'lucide-react';
+import { ArrowRight, Check, Copy, FileText, MapPin, Share2 } from 'lucide-react';
 
 const EASE = [0.16, 1, 0.3, 1];
 
+/**
+ * The hero.
+ *
+ * The evidence is the product flow, not the property photograph: a record being assembled with
+ * sources attached, the deal sheet it produces, and the page that goes out with a share link.
+ * Property imagery appears once, inside the page panel, as context.
+ *
+ * Everything in the stage is illustrative. The tag says so, and no figure here is presented as a
+ * customer result.
+ */
 export default function Hero() {
   return (
-    <section className="hero">
-      <div className="hero-frame">
-        <motion.img
-          src="/images/hero-villa.jpg"
-          alt="A concrete and timber house at dusk, warm interior light spilling onto a wet stone drive"
-          className="hero-photo"
-          initial={{ scale: 1.08 }}
-          animate={{ scale: 1 }}
-          transition={{ duration: 2.2, ease: EASE }}
-          fetchPriority="high"
-        />
-        <div className="hero-scrim" aria-hidden="true" />
+    <section className="flow-hero">
+      <div className="shell flow-hero-grid">
+        <motion.div
+          className="flow-hero-copy"
+          initial={{ opacity: 0, y: 22 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, ease: EASE }}
+        >
+          <p className="flow-kicker">ORREI · Property presentations · Early access</p>
 
-        <div className="hero-inner shell">
-          <motion.div
-            className="hero-copy"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.15, ease: EASE }}
-          >
-            <p className="hero-kicker">Real estate publishing and professional presence</p>
+          <h1 className="flow-title">
+            Turn property details into presentations you can share.
+          </h1>
 
-            <h1 className="hero-title">
-              Your real estate business deserves a better place to be seen.
-            </h1>
+          <p className="flow-sub">
+            Organise a property, prepare an editable deal sheet, and publish a professional page
+            linked to your profile.
+          </p>
 
-            <p className="hero-sub">
-              LAREI is being built for wholesalers, agents, investors and real-estate operators who
-              want one professional home for their brand, property portfolio and deal presentations.
-              Organize the details, prepare the materials, publish with control, and share a page
-              people can actually use.
-            </p>
+          <div className="flow-actions">
+            <Link href="/early-access" className="btn btn-primary">
+              Request early access
+              <ArrowRight strokeWidth={2.2} />
+            </Link>
+            <Link href="/how-it-works" className="btn btn-secondary">
+              See how it works
+            </Link>
+          </div>
 
-            <div className="hero-actions">
-              <Link href="/early-access" className="btn btn-lime">
-                Request early access
-                <ArrowRight strokeWidth={2.2} />
-              </Link>
-              <Link href="/product" className="btn btn-glass">
-                Explore the product
-              </Link>
-            </div>
+          <p className="flow-note">
+            In development. The screens below are illustrations of the intended flow, not a live
+            account. Requests are read and answered by a person.
+          </p>
+        </motion.div>
 
-            <p className="hero-note">
-              LAREI is a product of ORVN Labs. Private beta, applications reviewed individually.
-            </p>
-          </motion.div>
+        <motion.div
+          className="flow-stage"
+          initial={{ opacity: 0, y: 28 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.15, ease: EASE }}
+        >
+          <div className="flow-stage-head">
+            <span className="flow-stage-title">One property, start to share</span>
+            <span className="flow-stage-tag">Illustrative · pre-release</span>
+          </div>
 
-          <motion.aside
-            className="hero-card glass"
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.1, delay: 0.45, ease: EASE }}
-          >
-            <div className="hero-card-head">
-              <span className="hero-card-label">My Website · Draft</span>
-              <span className="pill pill-glass hero-card-live">Preview</span>
-            </div>
+          <ol className="flow-list">
+            <li className="flow-panel">
+              <span className="flow-panel-num">01</span>
+              <div className="flow-panel-body">
+                <div className="flow-panel-head">
+                  <p className="flow-panel-title">Add the property</p>
+                  <span className="flow-panel-meta">Record</span>
+                </div>
 
-            <div className="hero-site-profile">
-              <span className="hero-site-avatar">AP</span>
-              <div>
-                <p className="hero-card-name">Northaven Property Group</p>
-                <p className="hero-card-addr">Wholesaler · 6-person team</p>
+                <div className="flow-fact">
+                  <span>Halden House, 4 bed · 5 bath · 620 m²</span>
+                  <em>from your notes</em>
+                </div>
+                <div className="flow-fact">
+                  <span>$480,000 asking</span>
+                  <em>from the brochure</em>
+                </div>
+                <div className="flow-fact is-gap">
+                  <span>Service charge</span>
+                  <em>missing, flagged</em>
+                </div>
               </div>
-              <span className="hero-card-verified">
-                <ShieldCheck size={13} strokeWidth={2.2} />
-                Sample
-              </span>
-            </div>
+            </li>
 
-            <div className="hero-card-body">
-              <img src="/images/prop-3.jpg" alt="" className="hero-card-thumb" />
-              <div className="hero-card-info">
-                <p className="hero-card-name">Halden House, Harbour district</p>
-                <p className="hero-card-addr">
-                  <MapPin size={11} strokeWidth={2} /> Harbour district · approximate location
-                </p>
-                <p className="hero-card-price">$480,000</p>
+            <li className="flow-panel">
+              <span className="flow-panel-num">02</span>
+              <div className="flow-panel-body">
+                <div className="flow-panel-head">
+                  <p className="flow-panel-title">Prepare the deal sheet</p>
+                  <span className="flow-panel-meta">v3 · editable</span>
+                </div>
+
+                <div className="flow-sheet">
+                  <span className="flow-sheet-icon">
+                    <FileText size={14} strokeWidth={2} />
+                  </span>
+                  <div>
+                    <p>Halden House — deal sheet</p>
+                    <span>Facts approved by you · wording edited by you</span>
+                  </div>
+                  <span className="flow-sheet-check">
+                    <Check size={12} strokeWidth={3} />
+                  </span>
+                </div>
               </div>
-            </div>
+            </li>
 
-            <div className="hero-card-specs">
-              <span><BedDouble size={14} strokeWidth={2} /> 4 beds</span>
-              <span><Bath size={14} strokeWidth={2} /> 5 baths</span>
-              <span><Ruler size={14} strokeWidth={2} /> 620 m²</span>
-            </div>
+            <li className="flow-panel is-last">
+              <span className="flow-panel-num">03</span>
+              <div className="flow-panel-body">
+                <div className="flow-panel-head">
+                  <p className="flow-panel-title">Publish the property page</p>
+                  <span className="flow-panel-meta">Link ready</span>
+                </div>
 
-            <div className="hero-card-foot">
-              <span className="hero-card-verified">
-                <ArrowRight size={14} strokeWidth={2.2} />
-                Ask about this property
-              </span>
-              <span className="hero-card-publish">Publish site</span>
-            </div>
+                <div className="flow-page">
+                  <img src="/images/prop-3.jpg" alt="" className="flow-page-thumb" />
+                  <div className="flow-page-info">
+                    <p>Halden House</p>
+                    <span>
+                      <MapPin size={11} strokeWidth={2} /> Harbour district · approximate
+                    </span>
+                  </div>
+                </div>
 
-            <p className="hero-card-caption">Illustrative sample. Product preview, in development.</p>
-          </motion.aside>
-        </div>
-
-        <div className="hero-rail">
-          <span>Professional site</span>
-          <span>Property portfolio</span>
-          <span>Property pages</span>
-          <span>Inquiries</span>
-        </div>
+                <div className="flow-page-actions">
+                  <span className="flow-page-btn is-primary">
+                    <Share2 size={12} strokeWidth={2} /> Share link
+                  </span>
+                  <span className="flow-page-btn">
+                    <Copy size={12} strokeWidth={2} /> Copy
+                  </span>
+                </div>
+              </div>
+            </li>
+          </ol>
+        </motion.div>
       </div>
     </section>
   );

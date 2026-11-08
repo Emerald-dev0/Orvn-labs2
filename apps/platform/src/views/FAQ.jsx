@@ -10,112 +10,106 @@ import { useDocumentMeta } from '../lib/seo';
 
 const GROUPS = [
   {
-    id: 'access',
-    title: 'Access and the beta',
-    items: [
-      {
-        q: 'How do I get in?',
-        a: 'Request access and a person reads it. Invitations go out in small cohorts so we can fix the workflow while it is still cheap to fix. There is no queue position to chase.',
-      },
-      {
-        q: 'What does it cost during the beta?',
-        a: 'Nothing. No card is taken and nothing is charged. When a paid plan arrives you will be told the price before anything changes, and you can leave with your data.',
-      },
-      {
-        q: 'How long until I hear back?',
-        a: 'Usually within a week. If we cannot offer a place yet, we say so rather than leaving the request open indefinitely.',
-      },
-      {
-        q: 'Do you take teams?',
-        a: 'Yes. Small agencies and developer sales teams are the second group we are inviting, and the Studio workspace is being built with them.',
-      },
-    ],
-  },
-  {
     id: 'product',
-    title: 'The product',
+    title: 'What it does',
     items: [
       {
-        q: 'What exactly do I get for one property?',
-        a: 'A property page on the web, a PDF deal sheet, a short buyer summary you can forward, and an A4 print sheet. All four are generated from the same record.',
+        q: 'What is ORREI, in one paragraph?',
+        a: 'ORREI is the product ORVN Labs is building. It keeps a property record and turns that record into a presentation: a description you edit, a deal sheet laid out for you, and a property page you can publish and send as a link. The human approves the facts and presses publish.',
       },
       {
-        q: 'Do I need to stop using the portals?',
-        a: 'No. Keep your portal listings. LAREI gives you a record and a page you control, and it can import from a portal rather than asking you to type everything again.',
+        q: 'Who is it for?',
+        a: 'Wholesalers and small disposition teams first, because they repeat the same job many times a month. Agents, brokers, developers and investors are supported by the same record, and nothing in the model assumes one country.',
       },
       {
-        q: 'Can I use my own branding?',
-        a: 'Yes. Your name, your colours, your contact details. The page should look like your business, not like a platform you rented.',
+        q: 'Is it a CRM?',
+        a: 'No. It does not manage pipelines, commissions, accounting or long-running contact histories. It prepares and publishes property information, and it stores the inquiries a page receives.',
       },
       {
-        q: 'Does it work on a phone?',
-        a: 'Adding photographs and checking a record works well on a phone, which is where most inspections happen. Layout editing is easier on a larger screen.',
+        q: 'What does one property actually produce?',
+        a: 'A structured record with the source of each fact, an editable description, a published page with a share link, a printable deal sheet (one A4 page, saved as PDF from the print dialog) and a plain-text buyer summary you can paste into a message.',
+      },
+      {
+        q: 'Do I have to stop using portals or WhatsApp?',
+        a: 'No. Keep the tools you already use. The platform gives you a record and a page you control, and a link is usually easier to send than a file.',
       },
     ],
   },
   {
     id: 'facts',
-    title: 'Facts and accuracy',
+    title: 'Facts and artificial intelligence',
     items: [
       {
-        q: 'What happens when a fact is wrong?',
-        a: 'Change it once in the record. Every output that used the figure is regenerated. The previous version stays in the history along with who changed it and when.',
+        q: 'Does it verify property facts automatically?',
+        a: 'No. It records where each fact came from, shows when two sources disagree and blocks publication until you approve the value. It does not confirm ownership, title, zoning, condition or seller authority, and it will not be presented as if it does.',
+      },
+      {
+        q: 'What can the AI do, exactly?',
+        a: 'Help with wording: draft a description from facts already in the record, tighten your own text and keep a consistent tone. It does not invent measurements, prices or dates, and nothing it writes publishes without review.',
       },
       {
         q: 'Do you fill in missing information?',
-        a: 'No. Unknown values are shown as unknown. LAREI will not estimate a size, a service charge or a completion date to make a page look complete.',
+        a: 'No. Unknown values stay unknown. The platform will not estimate a size, a service charge or a completion date to make a page look complete.',
       },
       {
         q: 'Is there an automated valuation?',
-        a: 'No. We do not produce valuations, ARV figures or investment analysis. The price is yours to set and ours to keep consistent.',
+        a: 'No. No valuations, ARV figures or investment analysis. The price is yours to set and ours to keep consistent.',
       },
       {
-        q: 'Who writes the descriptions?',
-        a: 'You do, by default. If you ask for a draft, it is written only from facts already in the record, clearly marked as a draft, and it cannot publish without your approval.',
+        q: 'What happens when a fact changes?',
+        a: 'You change it once in the record. The description and the page are prepared again from the updated record, and the previous published version remains in the history with who changed it and when.',
       },
     ],
   },
   {
-    id: 'privacy',
-    title: 'Privacy and publishing',
+    id: 'publishing',
+    title: 'Publishing and visibility',
     items: [
       {
-        q: 'Who can see my drafts?',
-        a: 'Only your workspace. Drafts, private documents and unpublished outputs are not public and are not indexed by search engines.',
+        q: 'Can buyers see a page without signing up?',
+        a: 'Yes. A published property page opens with no account, no wall and no form before the details. Inquiries are optional and go to the publisher, not to us.',
+      },
+      {
+        q: 'What visibility options exist?',
+        a: 'Three. Private: a draft that only your workspace sees. Link-only: published and reachable by anyone with the address, kept out of the portfolio and marked so search engines do not index it. Note that link-only is unlisted, not confidential: anyone with the link can open it. Public: published, listed on your portfolio and indexable.',
+      },
+      {
+        q: 'Who can see my drafts and documents?',
+        a: 'Only your workspace. Drafts, source files and unpublished outputs are private by default and are not indexed.',
       },
       {
         q: 'What do the analytics record?',
-        a: 'Page views, image attention, downloads and enquiry clicks. We do not identify anonymous visitors and we do not sell data to anybody.',
+        a: 'That a page was opened, plus the inquiries a visitor chooses to send. We do not identify anonymous visitors, we do not fingerprint devices and we do not sell data.',
       },
       {
         q: 'Do you use my photographs to train models?',
-        a: 'No. Your images are stored so we can render pages, sheets and printouts for you. They are not used for training and they are not resold.',
-      },
-      {
-        q: 'Can I delete a property?',
-        a: 'Yes. Deleting removes the record, the outputs and the files. You can also retire a listing, which takes the page offline and keeps the history.',
+        a: 'No. Images are stored to render your pages. They are not used for training and they are not resold.',
       },
     ],
   },
   {
-    id: 'commercial',
-    title: 'Commercial',
+    id: 'access',
+    title: 'Access, price and status',
     items: [
       {
-        q: 'What will it cost after the beta?',
-        a: 'We have not announced pricing because the product is still changing. When it is decided, beta users hear first and nobody is moved onto a paid plan without agreeing to it.',
+        q: 'Is it available now?',
+        a: 'It is in development. There is an early-access list, invitations go out in small groups, and features are labelled as shipped or planned rather than described as if they were finished.',
       },
       {
-        q: 'Which markets will it support?',
-        a: 'It is not built around one country. The interface is in English, prices can be set in any currency and addresses are free-form rather than a fixed list. Billing, when it starts, will depend on where you are.',
+        q: 'How do I get in?',
+        a: 'Request access and a person reads it. If there is a place in the next group you get an email with a workspace invitation. There is no queue position to chase and no automated account creation.',
       },
       {
-        q: 'Do you offer support?',
-        a: 'During the beta you talk directly to the people building it. There is no ticket queue and no chatbot pretending to be a person.',
+        q: 'What does it cost?',
+        a: 'Nothing during early access. No card is taken. Pricing is not decided and it is not published; when it is, you will hear first and nobody moves onto a paid plan without agreeing.',
+      },
+      {
+        q: 'Which countries does it work in?',
+        a: 'The interface is in English and the data model is not built around one country: addresses are free-form, prices take any currency and property types are generic. That is not the same as being localised everywhere, and billing, when it arrives, will depend on where you are.',
       },
       {
         q: 'Who owns the content?',
-        a: 'You do. The facts, the photographs and the descriptions remain yours. We host and render them, and you can export or delete them.',
+        a: 'You do. The facts, the photographs and the descriptions stay yours. You can retire a page, export what you supplied or delete the record.',
       },
     ],
   },
@@ -125,7 +119,7 @@ export default function FAQ() {
   useDocumentMeta({
     title: 'Questions',
     description:
-      'Straight answers about LAREI: beta access, what you get for a property, how facts are checked, privacy, analytics and pricing.',
+      'Straight answers about ORREI: early access, what you get for a property, how facts are checked, privacy, analytics and pricing.',
     path: '/faq',
   });
 

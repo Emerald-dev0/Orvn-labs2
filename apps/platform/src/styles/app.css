@@ -1,5 +1,5 @@
 /* =========================================================================
-   LAREI workspace
+   ORREI workspace
    Same vocabulary as the site: bone ground, white cards, pine text, one lime
    accent, softly rounded geometry. Denser than the marketing pages because
    this is a tool, not a brochure.
@@ -720,4 +720,186 @@
   .ws-card { padding: 16px; border-radius: 18px; }
   .ws-tab { padding: 7px 12px; font-size: 13px; }
   .ws-chart { height: 140px; }
+}
+
+/* --- Visibility control: three states, one decision -------------------------------- */
+.ws-visibility-option {
+  display: grid;
+  gap: 4px;
+  width: 100%;
+  text-align: left;
+  padding: 12px 14px;
+  border: 1px solid var(--line-2);
+  border-radius: 14px;
+  background: var(--white);
+  cursor: pointer;
+  transition: border-color 0.16s ease, background 0.16s ease, transform 0.16s ease;
+}
+.ws-visibility-option:hover:not(:disabled) { border-color: var(--ink); transform: translateY(-1px); }
+.ws-visibility-option:focus-visible { outline: 2px solid var(--lime-2); outline-offset: 2px; }
+.ws-visibility-option:disabled { cursor: default; }
+.ws-visibility-option.is-current {
+  border-color: var(--lime-2);
+  background: var(--lime-pale);
+  cursor: default;
+}
+.ws-visibility-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.ws-visibility-head strong { font-size: 13.5px; letter-spacing: -0.01em; }
+.ws-visibility-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  border: 1px solid var(--line-3, var(--line-2));
+  background: transparent;
+  flex: none;
+}
+.ws-visibility-option.is-current .ws-visibility-dot { background: var(--lime-ink); border-color: var(--lime-ink); }
+.ws-visibility-tag {
+  margin-left: auto;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  color: var(--lime-ink);
+  background: rgba(201, 242, 110, 0.55);
+  border-radius: 999px;
+  padding: 2px 8px;
+}
+
+/* --- Draft diff -------------------------------------------------------------------- */
+.ws-diff {
+  background: var(--bone);
+  border-radius: 14px;
+  padding: 16px;
+  font-size: 14.5px;
+  line-height: 1.75;
+  color: var(--ink-2);
+}
+.ws-diff-token.is-added {
+  background: rgba(201, 242, 110, 0.5);
+  border-radius: 4px;
+  padding: 1px 2px;
+  color: var(--lime-ink);
+}
+.ws-diff-token.is-removed {
+  color: var(--muted);
+  text-decoration: line-through;
+  text-decoration-color: rgba(168, 113, 43, 0.6);
+}
+
+/* --- Fact review rows -------------------------------------------------------------- */
+.ws-fact-review {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--line-2);
+  border-radius: 12px;
+  background: var(--white);
+  flex-wrap: wrap;
+}
+.ws-fact-review.is-used { border-color: rgba(201, 242, 110, 0.9); background: var(--lime-pale); }
+
+.ws-input {
+  font: inherit;
+  font-size: 14px;
+  color: var(--ink);
+  background: var(--white);
+  border: 1px solid var(--line-2);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+.ws-input:focus-visible { outline: 2px solid var(--lime-2); outline-offset: 1px; border-color: var(--ink); }
+
+@media (max-width: 640px) {
+  .ws-fact-review { flex-direction: column; align-items: stretch; }
+  .ws-fact-review form { justify-content: flex-end; }
+  .ws-diff { padding: 12px; font-size: 14px; }
+}
+
+/* --- Admin queue ------------------------------------------------------------------- */
+.adm { min-height: 100vh; background: var(--bone); color: var(--ink); }
+.adm-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px clamp(16px, 4vw, 40px);
+  background: var(--pine);
+  color: var(--white);
+  flex-wrap: wrap;
+}
+.adm-brand { display: inline-flex; align-items: center; gap: 10px; color: inherit; text-decoration: none; }
+.adm-mark {
+  width: 26px; height: 26px; border-radius: 8px;
+  display: grid; place-items: center;
+  background: var(--lime); color: var(--lime-ink);
+  font-weight: 700; font-size: 13px;
+}
+.adm-brand strong { display: block; font-size: 14px; letter-spacing: 0.12em; }
+.adm-brand em { display: block; font-style: normal; font-size: 11px; color: rgba(255, 253, 248, 0.55); }
+.adm-nav { display: flex; gap: 18px; }
+.adm-nav a { color: rgba(255, 253, 248, 0.75); font-size: 13px; text-decoration: none; }
+.adm-nav a:hover { color: var(--lime); }
+
+.adm-main { max-width: 940px; margin: 0 auto; padding: clamp(22px, 4vw, 44px) clamp(16px, 4vw, 40px) 80px; }
+.adm-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+.adm-kicker { margin: 0; font-size: 12px; color: var(--muted); }
+.adm-head h1 { margin: 4px 0 8px; font-family: var(--font-display); font-size: 30px; letter-spacing: -0.03em; }
+.adm-lede { margin: 0; max-width: 60ch; color: var(--muted); font-size: 14px; line-height: 1.6; }
+.adm-count { display: grid; justify-items: end; }
+.adm-count strong { font-family: var(--font-display); font-size: 32px; letter-spacing: -0.03em; }
+.adm-count span { font-size: 12px; color: var(--muted); }
+
+.adm-filters { display: flex; gap: 8px; flex-wrap: wrap; margin: 22px 0 18px; }
+.adm-chip {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 7px 12px; border-radius: 999px;
+  border: 1px solid var(--line-2); background: var(--white);
+  color: var(--ink); font-size: 13px; text-decoration: none;
+}
+.adm-chip span { color: var(--muted); font-size: 12px; }
+.adm-chip.is-active { background: var(--lime-pale); border-color: var(--lime-2); }
+
+.adm-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.adm-card { background: var(--white); border: 1px solid var(--line); border-radius: 18px; padding: 18px 20px; }
+.adm-card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.adm-card-head h2 { margin: 0; font-size: 17px; letter-spacing: -0.02em; }
+.adm-sub { margin: 3px 0 0; font-size: 13px; color: var(--muted); }
+.adm-sub a { color: var(--muted); }
+.adm-status { font-size: 11.5px; padding: 3px 9px; border-radius: 999px; background: var(--bone-2); color: var(--muted); text-transform: capitalize; }
+.adm-status.is-new { background: var(--lime-pale); color: var(--lime-ink); }
+.adm-status.is-invited { background: rgba(46, 125, 82, 0.12); color: #1f6b46; }
+.adm-status.is-declined { background: rgba(168, 63, 43, 0.1); color: #8d3a29; }
+
+.adm-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px 16px; margin: 14px 0 0; }
+.adm-facts dt { font-size: 11.5px; color: var(--muted); }
+.adm-facts dd { margin: 2px 0 0; font-size: 13.5px; }
+.adm-answer { margin-top: 14px; border-left: 3px solid var(--lime-2); background: var(--bone); border-radius: 4px 10px 10px 4px; padding: 10px 14px; }
+.adm-answer span { font-size: 11.5px; color: var(--muted); }
+.adm-answer p { margin: 4px 0 0; font-size: 13.5px; line-height: 1.6; white-space: pre-wrap; }
+
+.adm-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+.adm-actions form { display: flex; gap: 6px; flex-wrap: wrap; }
+.adm-btn {
+  font: inherit; font-size: 12.5px; padding: 6px 11px; border-radius: 9px;
+  border: 1px solid var(--line-2); background: var(--white); color: var(--ink);
+  cursor: pointer; text-transform: capitalize;
+}
+.adm-btn:hover:not(:disabled) { border-color: var(--ink); }
+.adm-btn.is-current { background: var(--bone-2); color: var(--muted); cursor: default; }
+.adm-btn.is-quiet { background: transparent; }
+.adm-btn:disabled { opacity: 0.55; cursor: default; }
+.adm-note { font-size: 12.5px; color: var(--muted); }
+.adm-note.is-warn { color: #8d3a29; }
+
+.adm-empty { background: var(--white); border: 1px dashed var(--line-2); border-radius: 18px; padding: 34px 22px; text-align: center; }
+.adm-empty strong { display: block; font-size: 15px; }
+.adm-empty p { margin: 6px 0 0; color: var(--muted); font-size: 13.5px; }
+
+@media (max-width: 640px) {
+  .adm-head h1 { font-size: 25px; }
+  .adm-count { display: none; }
+  .adm-actions { align-items: stretch; }
+  .adm-actions form { width: 100%; }
+  .adm-btn { flex: 1 1 auto; }
 }

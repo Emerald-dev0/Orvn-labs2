@@ -2,7 +2,7 @@ import Home from '../../src/views/Home';
 
 export const metadata = {
   description:
-    'LAREI is being built for wholesalers, agents, investors and real-estate operators who want one professional home for their brand, property portfolio and deal presentations.',
+    'ORREI, from ORVN Labs, turns property details into presentations you can share: organise a property, prepare an editable deal sheet and publish a professional page linked to your profile.',
 };
 
 export default function Page() {

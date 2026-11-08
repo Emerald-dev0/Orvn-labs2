@@ -25,14 +25,14 @@ function Brand() {
         </svg>
       </span>
       <span className="ws-brand-text">
-        <strong>LAREI</strong>
-        <em>beta</em>
+        <strong>ORREI</strong>
+        <em>by ORVN Labs</em>
       </span>
     </Link>
   );
 }
 
-export default function AppShell({ children, workspace: ws = workspace, unread = 0, demo = false }) {
+export default function AppShell({ children, workspace: ws = workspace, unread = 0, demo = false, admin = false }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
@@ -51,9 +51,14 @@ export default function AppShell({ children, workspace: ws = workspace, unread =
 
   const isActive = (href) => pathname === href || pathname.startsWith(`${href}/`);
 
+  // The queue is only in the sidebar for addresses on ADMIN_EMAILS; everyone else never sees it.
+  const items = admin
+    ? [...NAV, { href: '/admin/early-access', label: 'Early access queue', icon: 'inquiries' }]
+    : NAV;
+
   const nav = (
     <nav className="ws-nav" aria-label="Workspace">
-      {NAV.map((item) => (
+      {items.map((item) => (
         <Link
           key={item.href}
           href={item.href}
@@ -89,7 +94,7 @@ export default function AppShell({ children, workspace: ws = workspace, unread =
         <div className="ws-side-foot">
           <Link href="/product" className="ws-side-link">
             <Icon name="help" size={17} strokeWidth={1.6} />
-            How LAREI works
+            How it works
           </Link>
           <Link href="/website" className="ws-side-link">
             <Icon name="arrowUpRight" size={17} strokeWidth={1.6} />

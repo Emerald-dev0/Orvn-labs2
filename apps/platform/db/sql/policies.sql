@@ -1,12 +1,12 @@
 -- ============================================================================
--- LAREI — row level security
+-- ORREI — row level security
 --
 -- Applied after migrations:  npm run db:policies
 -- Idempotent. Safe to re-run.
 --
 -- Roles
---   larei_app     authenticated application role. RLS applies to every tenant table.
---   larei_public  the role the *public page code path* uses. Read-only over published
+--   orrei_app     authenticated application role. RLS applies to every tenant table.
+--   orrei_public  the role the *public page code path* uses. Read-only over published
 --                 projections, plus the two writes a visitor can cause: an inquiry row and
 --                 a view counter.
 --
@@ -21,28 +21,28 @@
 
 do $$
 begin
-  if not exists (select 1 from pg_roles where rolname = 'larei_app') then
-    create role larei_app nologin;
+  if not exists (select 1 from pg_roles where rolname = 'orrei_app') then
+    create role orrei_app nologin;
   end if;
-  if not exists (select 1 from pg_roles where rolname = 'larei_public') then
-    create role larei_public nologin;
+  if not exists (select 1 from pg_roles where rolname = 'orrei_public') then
+    create role orrei_public nologin;
   end if;
 end $$;
 
 -- The migrating role must be able to assume them (needed for SET LOCAL ROLE).
 do $$
 begin
-  execute format('grant larei_app, larei_public to %I', current_user);
+  execute format('grant orrei_app, orrei_public to %I', current_user);
 exception when others then
   raise notice 'Could not grant roles to %: %', current_user, sqlerrm;
 end $$;
 
-grant usage on schema public to larei_app, larei_public;
+grant usage on schema public to orrei_app, orrei_public;
 
-grant select, insert, update, delete on all tables in schema public to larei_app;
-grant usage, select on all sequences in schema public to larei_app;
+grant select, insert, update, delete on all tables in schema public to orrei_app;
+grant usage, select on all sequences in schema public to orrei_app;
 
-alter default privileges in schema public grant select, insert, update, delete on tables to larei_app;
+alter default privileges in schema public grant select, insert, update, delete on tables to orrei_app;
 
 -- ---------------------------------------------------------------------------
 -- Helper functions. Security definer so policies can look at memberships without
@@ -99,13 +99,13 @@ $$;
 
 alter table workspaces enable row level security;
 drop policy if exists workspaces_read on workspaces;
-create policy workspaces_read on workspaces for select to larei_app using (app_is_member(id));
+create policy workspaces_read on workspaces for select to orrei_app using (app_is_member(id));
 drop policy if exists workspaces_update on workspaces;
-create policy workspaces_update on workspaces for update to larei_app
+create policy workspaces_update on workspaces for update to orrei_app
   using (app_is_owner(id))
   with check (app_is_owner(id) and owner_id = app_uid());
 drop policy if exists workspaces_public_read on workspaces;
-create policy workspaces_public_read on workspaces for select to larei_public
+create policy workspaces_public_read on workspaces for select to orrei_public
   using (exists (
     select 1 from professional_profiles pp
     where pp.workspace_id = workspaces.id and pp.published_at is not null
@@ -113,9 +113,9 @@ create policy workspaces_public_read on workspaces for select to larei_public
 
 alter table memberships enable row level security;
 drop policy if exists memberships_read on memberships;
-create policy memberships_read on memberships for select to larei_app using (app_is_member(workspace_id));
+create policy memberships_read on memberships for select to orrei_app using (app_is_member(workspace_id));
 drop policy if exists memberships_owner_write on memberships;
-create policy memberships_owner_write on memberships for all to larei_app
+create policy memberships_owner_write on memberships for all to orrei_app
   using (app_is_owner(workspace_id))
   with check (app_is_owner(workspace_id));
 
@@ -125,30 +125,30 @@ create policy memberships_owner_write on memberships for all to larei_app
 
 alter table properties enable row level security;
 drop policy if exists properties_read on properties;
-create policy properties_read on properties for select to larei_app using (app_is_member(workspace_id));
+create policy properties_read on properties for select to orrei_app using (app_is_member(workspace_id));
 drop policy if exists properties_insert on properties;
-create policy properties_insert on properties for insert to larei_app
+create policy properties_insert on properties for insert to orrei_app
   with check (app_can_write(workspace_id) and created_by = app_uid());
 drop policy if exists properties_update on properties;
-create policy properties_update on properties for update to larei_app
+create policy properties_update on properties for update to orrei_app
   using (app_can_write(workspace_id))
   with check (app_can_write(workspace_id));
 drop policy if exists properties_delete on properties;
-create policy properties_delete on properties for delete to larei_app using (app_is_owner(workspace_id));
+create policy properties_delete on properties for delete to orrei_app using (app_is_owner(workspace_id));
 drop policy if exists properties_public_read on properties;
-create policy properties_public_read on properties for select to larei_public
+create policy properties_public_read on properties for select to orrei_public
   using (publication_status = 'published' and published_at is not null);
 
 alter table property_details enable row level security;
 drop policy if exists details_read on property_details;
-create policy details_read on property_details for select to larei_app
+create policy details_read on property_details for select to orrei_app
   using (app_is_member(app_property_workspace(property_id)));
 drop policy if exists details_write on property_details;
-create policy details_write on property_details for all to larei_app
+create policy details_write on property_details for all to orrei_app
   using (app_can_write(app_property_workspace(property_id)))
   with check (app_can_write(app_property_workspace(property_id)));
 drop policy if exists details_public_read on property_details;
-create policy details_public_read on property_details for select to larei_public
+create policy details_public_read on property_details for select to orrei_public
   using (
     is_public = true
     and approval_state = 'approved'
@@ -157,26 +157,26 @@ create policy details_public_read on property_details for select to larei_public
 
 alter table property_media enable row level security;
 drop policy if exists media_read on property_media;
-create policy media_read on property_media for select to larei_app
+create policy media_read on property_media for select to orrei_app
   using (app_is_member(app_property_workspace(property_id)));
 drop policy if exists media_write on property_media;
-create policy media_write on property_media for all to larei_app
+create policy media_write on property_media for all to orrei_app
   using (app_can_write(app_property_workspace(property_id)))
   with check (app_can_write(app_property_workspace(property_id)));
 drop policy if exists media_public_read on property_media;
-create policy media_public_read on property_media for select to larei_public
+create policy media_public_read on property_media for select to orrei_public
   using (visibility = 'public' and app_property_is_public(property_id));
 
 alter table property_publications enable row level security;
 drop policy if exists publications_read on property_publications;
-create policy publications_read on property_publications for select to larei_app
+create policy publications_read on property_publications for select to orrei_app
   using (app_is_member(app_property_workspace(property_id)));
 drop policy if exists publications_write on property_publications;
-create policy publications_write on property_publications for all to larei_app
+create policy publications_write on property_publications for all to orrei_app
   using (app_can_write(app_property_workspace(property_id)))
   with check (app_can_write(app_property_workspace(property_id)));
 drop policy if exists publications_public_read on property_publications;
-create policy publications_public_read on property_publications for select to larei_public
+create policy publications_public_read on property_publications for select to orrei_public
   using (unpublished_at is null and app_property_is_public(property_id));
 
 -- A snapshot is evidence of what went live. Only the unpublish timestamp may change.
@@ -203,14 +203,14 @@ create trigger property_publications_immutable
 
 alter table inquiries enable row level security;
 drop policy if exists inquiries_read on inquiries;
-create policy inquiries_read on inquiries for select to larei_app using (app_is_member(workspace_id));
+create policy inquiries_read on inquiries for select to orrei_app using (app_is_member(workspace_id));
 drop policy if exists inquiries_update on inquiries;
-create policy inquiries_update on inquiries for update to larei_app
+create policy inquiries_update on inquiries for update to orrei_app
   using (app_is_member(workspace_id))
   with check (app_is_member(workspace_id));
--- No insert policy for larei_app: the workspace is chosen by the server, never by the tenant.
+-- No insert policy for orrei_app: the workspace is chosen by the server, never by the tenant.
 drop policy if exists inquiries_public_insert on inquiries;
-create policy inquiries_public_insert on inquiries for insert to larei_public
+create policy inquiries_public_insert on inquiries for insert to orrei_public
   with check (
     consent = true
     and property_id is not null
@@ -220,9 +220,9 @@ create policy inquiries_public_insert on inquiries for insert to larei_public
 
 alter table analytics_events enable row level security;
 drop policy if exists events_read on analytics_events;
-create policy events_read on analytics_events for select to larei_app using (app_is_member(workspace_id));
+create policy events_read on analytics_events for select to orrei_app using (app_is_member(workspace_id));
 drop policy if exists events_public_insert on analytics_events;
-create policy events_public_insert on analytics_events for insert to larei_public
+create policy events_public_insert on analytics_events for insert to orrei_public
   with check (
     property_id is not null
     and workspace_id = app_property_workspace(property_id)
@@ -236,10 +236,10 @@ create policy events_public_insert on analytics_events for insert to larei_publi
 
 alter table invitations enable row level security;
 drop policy if exists invitations_read on invitations;
-create policy invitations_read on invitations for select to larei_app
+create policy invitations_read on invitations for select to orrei_app
   using (workspace_id is not null and app_is_owner(workspace_id));
 drop policy if exists invitations_owner_write on invitations;
-create policy invitations_owner_write on invitations for all to larei_app
+create policy invitations_owner_write on invitations for all to orrei_app
   using (workspace_id is not null and app_is_owner(workspace_id))
   with check (workspace_id is not null and app_is_owner(workspace_id));
 -- Beta invitations (workspace_id null) are readable only through app_inspect_invitation()
@@ -247,25 +247,25 @@ create policy invitations_owner_write on invitations for all to larei_app
 
 alter table ai_generations enable row level security;
 drop policy if exists generations_read on ai_generations;
-create policy generations_read on ai_generations for select to larei_app using (app_is_member(workspace_id));
+create policy generations_read on ai_generations for select to orrei_app using (app_is_member(workspace_id));
 drop policy if exists generations_write on ai_generations;
-create policy generations_write on ai_generations for all to larei_app
+create policy generations_write on ai_generations for all to orrei_app
   using (app_can_write(workspace_id))
   with check (app_can_write(workspace_id));
 
 alter table audit_events enable row level security;
 drop policy if exists audit_read on audit_events;
-create policy audit_read on audit_events for select to larei_app using (app_is_member(workspace_id));
+create policy audit_read on audit_events for select to orrei_app using (app_is_member(workspace_id));
 drop policy if exists audit_append on audit_events;
-create policy audit_append on audit_events for insert to larei_app
+create policy audit_append on audit_events for insert to orrei_app
   with check (actor_id = app_uid() and (workspace_id is null or app_is_member(workspace_id)));
 -- Append-only: deliberately no update or delete policy.
 
 alter table rate_limits enable row level security;
 drop policy if exists rate_limits_public on rate_limits;
-create policy rate_limits_public on rate_limits for all to larei_public using (true) with check (true);
+create policy rate_limits_public on rate_limits for all to orrei_public using (true) with check (true);
 drop policy if exists rate_limits_app on rate_limits;
-create policy rate_limits_app on rate_limits for all to larei_app using (true) with check (true);
+create policy rate_limits_app on rate_limits for all to orrei_app using (true) with check (true);
 
 -- ---------------------------------------------------------------------------
 -- Public professional profile
@@ -273,20 +273,20 @@ create policy rate_limits_app on rate_limits for all to larei_app using (true) w
 
 alter table professional_profiles enable row level security;
 drop policy if exists profiles_read on professional_profiles;
-create policy profiles_read on professional_profiles for select to larei_app
+create policy profiles_read on professional_profiles for select to orrei_app
   using (app_is_member(workspace_id));
 drop policy if exists profiles_write on professional_profiles;
-create policy profiles_write on professional_profiles for all to larei_app
+create policy profiles_write on professional_profiles for all to orrei_app
   using (app_can_write(workspace_id))
   with check (app_can_write(workspace_id));
 drop policy if exists profiles_public_read on professional_profiles;
-create policy profiles_public_read on professional_profiles for select to larei_public
+create policy profiles_public_read on professional_profiles for select to orrei_public
   using (published_at is not null);
 
 grant select on properties, property_details, property_media, property_publications,
-  professional_profiles, workspaces to larei_public;
-grant insert on inquiries, analytics_events to larei_public;
-grant select, insert, update on rate_limits to larei_public;
+  professional_profiles, workspaces to orrei_public;
+grant insert on inquiries, analytics_events to orrei_public;
+grant select, insert, update on rate_limits to orrei_public;
 
 -- ---------------------------------------------------------------------------
 -- Narrow privileged paths.
@@ -421,9 +421,9 @@ end $$;
 revoke all on function app_accept_invitation(text, text, text, text, text) from public;
 revoke all on function app_create_workspace(text, text) from public;
 revoke all on function app_inspect_invitation(text, text) from public;
-grant execute on function app_accept_invitation(text, text, text, text, text) to larei_app;
-grant execute on function app_create_workspace(text, text) to larei_app;
-grant execute on function app_inspect_invitation(text, text) to larei_app;
+grant execute on function app_accept_invitation(text, text, text, text, text) to orrei_app;
+grant execute on function app_create_workspace(text, text) to orrei_app;
+grant execute on function app_inspect_invitation(text, text) to orrei_app;
 
 -- ---------------------------------------------------------------------------
 -- Beta applications

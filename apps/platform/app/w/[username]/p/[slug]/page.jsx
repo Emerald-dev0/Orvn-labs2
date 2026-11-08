@@ -7,7 +7,9 @@ import { getPublishedProperty } from '../../../../../lib/data/public-site';
 import { formatPrice, locationLabel } from '../../../../../lib/publication/snapshot';
 import { isLikelyBot, recordPropertyView, visitorHash } from '../../../../../lib/analytics';
 import { randomToken } from '../../../../../lib/crypto';
+import { isIndexable, visibilityOf } from '../../../../../lib/publication/visibility';
 import InquiryForm from './InquiryForm';
+import CopySummary from './CopySummary';
 
 export const dynamic = 'force-dynamic';
 
@@ -29,7 +31,7 @@ export async function generateMetadata({ params }) {
     };
   }
 
-  const { snapshot, site } = data;
+  const { snapshot, site, listed } = data;
   const place = [snapshot.place.city, snapshot.place.region].filter(Boolean).join(', ');
   const title = `${snapshot.title}${place ? ` — ${place}` : ''}`;
   const description =
@@ -41,7 +43,10 @@ export async function generateMetadata({ params }) {
     title: { absolute: `${title} · ${site.businessName}` },
     description,
     alternates: { canonical: `/w/${site.username}/p/${snapshot.slug}` },
-    robots: { index: true, follow: true },
+    // Link-only pages are unlisted, not confidential: keep them out of indexes, keep the page open.
+    robots: isIndexable(visibilityOf({ publicationStatus: 'published', showOnPortfolio: listed }))
+      ? { index: true, follow: true }
+      : { index: false, follow: true },
     openGraph: {
       type: 'article',
       title,
@@ -157,6 +162,19 @@ export default async function PublicPropertyPage({ params }) {
                     Email {site.businessName}
                   </a>
                 ) : null}
+
+                <div className="pub-take">
+                  <a
+                    className="pub-take-link"
+                    href={`/w/${site.username}/p/${snapshot.slug}/sheet`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Deal sheet
+                    <span>print or save as PDF</span>
+                  </a>
+                  <CopySummary summaryUrl={`/w/${site.username}/p/${snapshot.slug}/summary`} />
+                </div>
               </div>
             </div>
           </div>
@@ -233,8 +251,8 @@ export default async function PublicPropertyPage({ params }) {
             Unpublishing removes this page and its files.
           </span>
           <span>
-            <Link href={`/w/${site.username}`}>{site.businessName}</Link> · Published with LAREI ·{' '}
-            <Link href="/">ORVN Labs</Link>
+            <Link href={`/w/${site.username}`}>{site.businessName}</Link> · Published with{' '}
+            <Link href="/product">ORREI</Link>, built by <Link href="/">ORVN Labs</Link>
           </span>
         </div>
       </footer>

@@ -1,10 +1,13 @@
+import * as React from 'react';
 import type { EmailMessage } from '../email';
+import { renderEmail } from '../../emails/render';
+import { InquiryNotification } from '../../emails/InquiryNotification';
 
-const escape = (s: string) =>
-  s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-
-/** Tells the owner once. It never says the owner has read anything, because nobody has yet. */
-export function inquiryNotificationEmail(opts: {
+/**
+ * Tells the publisher once. It never claims the inquiry has been read, because nobody has read it
+ * yet, and `replyTo` is the buyer so answering does not require copying an address.
+ */
+export async function inquiryNotificationEmail(opts: {
   to: string;
   inquirerName: string | null;
   inquirerEmail: string;
@@ -13,7 +16,7 @@ export function inquiryNotificationEmail(opts: {
   workspaceName: string;
   inboxUrl: string;
   inquiryId: string;
-}): EmailMessage {
+}): Promise<EmailMessage> {
   const from = opts.inquirerName ? `${opts.inquirerName} (${opts.inquirerEmail})` : opts.inquirerEmail;
 
   return {
@@ -30,15 +33,19 @@ export function inquiryNotificationEmail(opts: {
       '',
       `Open the inquiry in ${opts.workspaceName}: ${opts.inboxUrl}`,
       '',
+      'Reply to this email to answer them directly.',
+      '',
       'You are receiving this because inquiry notifications are on for this workspace.',
     ].join('\n'),
-    html: [
-      `<p>Someone asked about <strong>${escape(opts.propertyTitle)}</strong>.</p>`,
-      `<p style="color:#6b7280;font-size:13px">From: ${escape(from)}</p>`,
-      `<blockquote style="margin:0;padding:12px 16px;background:#f6f4ee;border-radius:10px">${escape(
-        opts.message,
-      ).replace(/\n/g, '<br>')}</blockquote>`,
-      `<p><a href="${escape(opts.inboxUrl)}">Open the inquiry</a></p>`,
-    ].join(''),
+    html: await renderEmail(
+      <InquiryNotification
+        inquirerName={opts.inquirerName}
+        inquirerEmail={opts.inquirerEmail}
+        message={opts.message}
+        propertyTitle={opts.propertyTitle}
+        workspaceName={opts.workspaceName}
+        inboxUrl={opts.inboxUrl}
+      />,
+    ),
   };
 }

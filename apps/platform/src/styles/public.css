@@ -505,3 +505,51 @@
   .pub-form-foot { flex-direction: column; align-items: stretch; }
   .pub-submit { width: 100%; }
 }
+
+/* ── Take it with you: deal sheet and buyer summary ───────────────────── */
+
+.pub-take {
+  display: grid;
+  gap: 8px;
+  margin-top: 4px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+
+.pub-take-link {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--line-2);
+  text-underline-offset: 3px;
+}
+
+.pub-take-link span {
+  font-size: 11.5px;
+  font-weight: 400;
+  color: var(--muted-2);
+  text-decoration: none;
+}
+
+.pub-copy { display: grid; gap: 6px; }
+
+.pub-copy .pub-btn {
+  height: 38px;
+  padding: 0 14px;
+  font-size: 12.5px;
+  justify-content: flex-start;
+}
+
+.pub-copy-note {
+  margin: 0;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--muted-2);
+}
+
+.pub-copy-note a { color: var(--ink-2); text-decoration: underline; }

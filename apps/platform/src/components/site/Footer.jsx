@@ -7,9 +7,9 @@ import Logo from './Logo';
 
 const COLUMNS = [
   {
-    title: 'Product',
+    title: 'ORREI',
     links: [
-      { to: '/product', label: 'Product' },
+      { to: '/product', label: 'What it does' },
       { to: '/how-it-works', label: 'How it works' },
       { to: '/who-its-for', label: "Who it's for" },
       { to: '/faq', label: 'FAQ' },
@@ -34,10 +34,10 @@ export default function Footer() {
         <div className="footer-top">
           <div className="footer-brand">
             <Logo dark />
-            <p className="footer-tagline">Software for clearer real-estate presentation.</p>
+            <p className="footer-tagline">ORREI: software for clearer real-estate presentation.</p>
             <p className="footer-note">
-              LAREI is our product for wholesalers, agents, investors and the teams behind
-              property deals.
+              ORREI is for wholesalers and small disposition teams first, with agents, investors
+              and the teams behind property deals supported by the same record.
             </p>
 
             <div className="footer-actions">
@@ -71,7 +71,7 @@ export default function Footer() {
         </div>
 
         <div className="footer-bottom">
-          <p>© {new Date().getFullYear()} ORVN Labs. LAREI is a product of ORVN Labs.</p>
+          <p>© {new Date().getFullYear()} ORVN Labs. All rights reserved.</p>
           <div className="footer-bottom-links">
             <Link href="/faq">Questions</Link>
             <a href="mailto:hello@orvnlabs.com">hello@orvnlabs.com</a>

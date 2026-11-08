@@ -92,7 +92,7 @@ export async function createInvitation(opts: {
 
   try {
     await sendEmail(
-      invitationEmail({
+      await invitationEmail({
         to: email,
         workspaceName: opts.workspaceName ?? undefined,
         acceptUrl,

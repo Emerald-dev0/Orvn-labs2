@@ -25,7 +25,7 @@ export default function PropertyUnavailable() {
             is shown here.
           </p>
           <div style={{ display: 'flex', gap: 10, justifyContent: 'center', marginTop: 24 }}>
-            <Link className="pub-btn is-dark" href="/">Go to ORVN Labs</Link>
+            <Link className="pub-btn is-dark" href="/">Go to ORREI</Link>
             <Link className="pub-btn" href="/early-access">Request access</Link>
           </div>
         </div>
