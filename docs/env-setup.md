@@ -79,6 +79,30 @@ reason to wait for that to use the queue.
 
 Anyone not on this list gets a **404** on `/admin`, not a 403. Changing the list is a redeploy.
 
+## 3a. Signing in — there is no default password
+
+Nothing is seeded and nothing is printed in a document. The account is created once, by you:
+
+```
+cd apps/platform
+npm run admin:create -- --email you@example.com
+```
+
+It generates a long password, creates the account and prints the password **once** — copy it into a
+password manager before you close the terminal. Pass `--password '…'` to choose your own (10
+characters minimum).
+
+The address must be in `ADMIN_EMAILS`, or the beta gate refuses the sign-up. If it is missing, the
+script says so and prints the line to add.
+
+Two other ways in, both requiring Calder to be working:
+
+- **Magic link** — the "Email me a link" tab on `/sign-in`. One use, ten minutes.
+- **Forgot password** — sends a reset link to an existing account.
+
+Locally, with no `DATABASE_URL`, there is no sign-in at all: the site runs in demo mode and the
+queue is not reachable. That is the honest behaviour, not a broken password.
+
 ## 4. Calder: sender identity and sending domain
 
 Calder → **Domains & DNS**:
