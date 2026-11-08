@@ -10,13 +10,12 @@ const EASE = [0.16, 1, 0.3, 1];
 /**
  * The hero.
  *
- * One claim and one piece of evidence. The claim is the reason someone keeps reading — what they
- * send today is a forwarded PDF and a voice note. The evidence is the same property after ORREI:
- * a record, a deal sheet, a page with a share link.
+ * One claim, then the same property twice: the message a buyer receives today, and the page they
+ * receive instead. The right column is the argument; the left column is why anyone keeps reading.
  *
- * The left column is deliberately loud (pine ground, oversized display type, one lime stroke) and
- * the right column is deliberately quiet (two cards, side by side in time). Everything in the
- * cards is illustrative; the tag says so, and no figure here is a customer result.
+ * No location, no price claim, no customer result. The cards are illustrative and say so — the tag
+ * stays on the page even though it costs a line of polish, because the alternative is implying a
+ * customer exists who does not.
  */
 export default function Hero() {
   const reduce = useReducedMotion();
@@ -25,42 +24,36 @@ export default function Hero() {
     reduce
       ? {}
       : {
-          initial: { opacity: 0, y: 24 },
+          initial: { opacity: 0, y: 26 },
           animate: { opacity: 1, y: 0 },
-          transition: { duration: 0.85, delay, ease: EASE },
+          transition: { duration: 0.9, delay, ease: EASE },
         };
 
-  const tilt = (rotate, delay) =>
+  const card = (rotate, delay) =>
     reduce
       ? {}
       : {
-          initial: { opacity: 0, y: 18, rotate: rotate * 2.4 },
+          initial: { opacity: 0, y: 20, rotate: rotate * 2.6 },
           animate: { opacity: 1, y: 0, rotate },
-          transition: { duration: 0.95, delay, ease: EASE },
+          transition: { duration: 1, delay, ease: EASE },
         };
 
   return (
     <section className="hero">
       <div className="hero-glow" aria-hidden="true" />
+      <div className="hero-grain" aria-hidden="true" />
 
       <div className="shell hero-grid">
         <div className="hero-copy">
-          <motion.p className="hero-kicker" {...rise(0)}>
-            <span className="hero-kicker-dot" aria-hidden="true" />
-            Early access · ORREI by ORVN Labs
-          </motion.p>
-
-          <motion.h1 className="hero-title" {...rise(0.06)}>
+          <motion.h1 className="hero-title" {...rise(0)}>
             A property deserves better than a <em>forwarded PDF</em>.
           </motion.h1>
 
-          <motion.p className="hero-sub" {...rise(0.14)}>
-            Organise the record, prepare an editable deal sheet, and publish a professional page
-            that hangs off your profile — so the first thing a buyer sees is the property at its
-            best, not a file named final.
+          <motion.p className="hero-sub" {...rise(0.1)}>
+            A record, an editable deal sheet, and a page that looks like the price you are asking.
           </motion.p>
 
-          <motion.div className="hero-actions" {...rise(0.2)}>
+          <motion.div className="hero-actions" {...rise(0.18)}>
             <Link href="/early-access" className="btn btn-primary">
               Request early access
               <ArrowRight strokeWidth={2.2} />
@@ -70,18 +63,23 @@ export default function Hero() {
             </Link>
           </motion.div>
 
-          <motion.p className="hero-note" {...rise(0.26)}>
+          <motion.p className="hero-note" {...rise(0.24)}>
             In development. The example opposite is an illustration of the intended flow, not a live
             account. Every request is read and answered by a person.
           </motion.p>
         </div>
 
         <div className="hero-proof">
-          <motion.div className="proof-card proof-today" {...tilt(-1.2, 0.2)}>
-            <span className="proof-label">What goes out today</span>
-            <p className="proof-note">
-              “4 bed in Lekki, 480k, service charge negotiable. Call me — no photos yet.”
+          <motion.div className="proof-today" {...card(-1.4, 0.22)}>
+            <div className="proof-thread-head">
+              <span className="proof-thread-dot" aria-hidden="true" />
+              Forwarded · 09:41
+            </div>
+
+            <p className="proof-bubble">
+              “4 bed townhouse, 480k, service charge negotiable. Call me — no photos yet.”
             </p>
+
             <div className="proof-attachments">
               <span className="proof-attach">
                 <FileText size={12} strokeWidth={2} />
@@ -89,7 +87,7 @@ export default function Hero() {
               </span>
               <span className="proof-attach">
                 <Mic size={12} strokeWidth={2} />
-                voice note · 0:42
+                0:42
               </span>
             </div>
           </motion.div>
@@ -98,9 +96,9 @@ export default function Hero() {
             <ArrowDown size={15} strokeWidth={2.6} />
           </motion.span>
 
-          <motion.div className="proof-card proof-orrei" {...tilt(0, 0.28)}>
+          <motion.div className="proof-orrei" {...card(0, 0.3)}>
             <div className="proof-head">
-              <span className="proof-label is-dark">What ORREI sends</span>
+              <span className="proof-label">The page, instead</span>
               <span className="proof-tag">Illustrative · pre-release</span>
             </div>
 
@@ -114,7 +112,7 @@ export default function Hero() {
 
             <div className="proof-body">
               <p className="proof-title">Halden House</p>
-              <p className="proof-facts">4 bed · 5 bath · 620 m² · $480,000 asking</p>
+              <p className="proof-facts">4 bed · 5 bath · 620 m² · 480,000 asking</p>
 
               <div className="proof-sheet">
                 <span className="proof-sheet-icon">
@@ -138,6 +136,17 @@ export default function Hero() {
                   <Copy size={12} strokeWidth={2} />
                   Copy
                 </span>
+
+                {!reduce && (
+                  <motion.span
+                    className="proof-toast"
+                    initial={{ opacity: 0, y: 4 }}
+                    animate={{ opacity: [0, 0, 1, 1], y: [4, 4, 0, 0] }}
+                    transition={{ duration: 2.6, delay: 1.5, times: [0, 0.15, 0.3, 1], ease: 'easeOut' }}
+                  >
+                    Link copied
+                  </motion.span>
+                )}
               </div>
             </div>
           </motion.div>
