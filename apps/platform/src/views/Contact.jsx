@@ -6,6 +6,7 @@ import { ArrowRight, Building2, Check, Mail } from 'lucide-react';
 import PageWrapper from '../components/PageWrapper';
 import PageHero from '../components/site/PageHero';
 import { Reveal } from '../components/site/Reveal';
+import SelectField from '../components/SelectField';
 import { useDocumentMeta } from '../lib/seo';
 
 const TOPICS = [
@@ -71,10 +72,7 @@ export default function Contact() {
                   </div>
                   <div className="field">
                     <label className="field-label" htmlFor="c-topic">What is this about?</label>
-                    <select id="c-topic" className="select" defaultValue="">
-                      <option value="" disabled>Select a topic</option>
-                      {TOPICS.map((t) => <option key={t}>{t}</option>)}
-                    </select>
+                    <SelectField id="c-topic" name="topic" options={TOPICS} placeholder="Select a topic" />
                   </div>
                   <div className="field span-2">
                     <label className="field-label" htmlFor="c-message">Message</label>
