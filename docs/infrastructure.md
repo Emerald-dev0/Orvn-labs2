@@ -349,7 +349,9 @@ store → notify order, same shared inbox, `replyTo` set to the sender so answer
 There is no queue page for it — the messages are short and a person answers them from mail — but the
 row is still the record, so a mail outage does not lose the message.
 
-Both tables are created by `npm run db:migrate`; nothing else needs running.
+Both tables are created by `npm run db:migrate`; nothing else needs running. That command reports
+what it applied (`applied now  0005_uneven_stone_men`) and checks `contact_messages` before it exits,
+so a silent run is not mistaken for a successful one.
 
 Inquiries work the same way in the other direction: the row goes into `inquiries` for the publishing
 business, and the notification goes to that business's contact address with `replyTo` set to the

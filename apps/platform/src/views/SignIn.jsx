@@ -11,6 +11,19 @@ import { authClient } from '../../lib/auth-client';
  * Two ways in, one rule: the form never says whether an address has an account.
  * A magic link that finds no invitation is answered exactly like one that does.
  */
+/**
+ * Shown on every refusal path. It names the early-access list without confirming whether the
+ * address is on it, so it is safe to show to someone who was never invited and to someone who was.
+ */
+function NotInvitedNotice() {
+  return (
+    <p className="signin-note" style={{ marginTop: 12 }}>
+      Not on the early-access list yet?{' '}
+      <Link href="/early-access">Request access</Link> and we will get back to you.
+    </p>
+  );
+}
+
 export default function SignIn({ next = '/dashboard' }) {
   const [mode, setMode] = useState('link');
   const [email, setEmail] = useState('');
@@ -19,11 +32,13 @@ export default function SignIn({ next = '/dashboard' }) {
   const [confirm, setConfirm] = useState('');
   const [status, setStatus] = useState('idle');
   const [message, setMessage] = useState('');
+  const [refusedNotice, setRefusedNotice] = useState(false);
 
   async function sendLink(event) {
     event.preventDefault();
     setStatus('pending');
     setMessage('');
+    setRefusedNotice(false);
     try {
       await authClient.signIn.magicLink({ email, callbackURL: next });
     } catch {
@@ -42,6 +57,7 @@ export default function SignIn({ next = '/dashboard' }) {
   async function createAccount(event) {
     event.preventDefault();
     setMessage('');
+    setRefusedNotice(false);
 
     if (password.length < 10) {
       setStatus('error');
@@ -62,13 +78,17 @@ export default function SignIn({ next = '/dashboard' }) {
     } catch (error) {
       const detail = String(error?.message ?? '');
       setStatus('error');
+      const refused = /invit|forbidden|beta/i.test(detail) && !/origin/i.test(detail);
       setMessage(
         /exist/i.test(detail)
           ? 'An account already uses that address. Sign in with your password instead.'
-          : /invit|forbidden|beta/i.test(detail)
-            ? 'That address is not on the beta list yet. Request access and we will add it.'
-            : 'We could not create the account just now. Try again, or use a sign-in link.',
+          : /origin/i.test(detail)
+            ? 'This page is not the address sign-in is set up for. Open orvnlabs.com in a new tab and try there.'
+            : refused
+              ? 'This address does not have early access, so it cannot create an account yet.'
+              : 'We could not create the account just now. Try again, or use a sign-in link.',
       );
+      setRefusedNotice(refused);
     }
   }
 
@@ -76,6 +96,7 @@ export default function SignIn({ next = '/dashboard' }) {
     event.preventDefault();
     setStatus('pending');
     setMessage('');
+    setRefusedNotice(false);
     try {
       const result = await authClient.signIn.email({ email, password });
       if (result?.error) throw new Error('rejected');
@@ -83,6 +104,7 @@ export default function SignIn({ next = '/dashboard' }) {
     } catch {
       setStatus('error');
       setMessage('That email and password do not match an account.');
+      setRefusedNotice(true);
     }
   }
 
@@ -114,6 +136,7 @@ export default function SignIn({ next = '/dashboard' }) {
                       If {email || 'that address'} has beta access, a sign-in link is on its way.
                       It works once and expires in ten minutes.
                     </p>
+                    <NotInvitedNotice />
                   </div>
                 </div>
               ) : mode === 'create' ? (
@@ -176,6 +199,7 @@ export default function SignIn({ next = '/dashboard' }) {
                     <ArrowRight strokeWidth={2.2} />
                   </button>
                   {message ? <p className="field-error" role="alert">{message}</p> : null}
+                  {refusedNotice && message ? <NotInvitedNotice /> : null}
                 </form>
               ) : mode === 'link' ? (
                 <form className="signin-form" onSubmit={sendLink}>
@@ -230,23 +254,24 @@ export default function SignIn({ next = '/dashboard' }) {
                     <ArrowRight strokeWidth={2.2} />
                   </button>
                   {message ? <p className="field-error" role="alert">{message}</p> : null}
+                  {refusedNotice && message ? <NotInvitedNotice /> : null}
                 </form>
               )}
 
               <div className="signin-switch">
                 {mode === 'create' ? (
-                  <button type="button" onClick={() => { setMode('password'); setStatus('idle'); setMessage(''); }}>
+                  <button type="button" onClick={() => { setMode('password'); setStatus('idle'); setMessage(''); setRefusedNotice(false); }}>
                     I already have a password
                   </button>
                 ) : (
-                  <button type="button" onClick={() => { setMode('link'); setStatus('idle'); setMessage(''); }}>
+                  <button type="button" onClick={() => { setMode('link'); setStatus('idle'); setMessage(''); setRefusedNotice(false); }}>
                     Email me a link instead
                   </button>
                 )}
                 {mode !== 'create' ? (
                   <>
                     <span aria-hidden="true">·</span>
-                    <button type="button" onClick={() => { setMode('create'); setStatus('idle'); setMessage(''); }}>
+                    <button type="button" onClick={() => { setMode('create'); setStatus('idle'); setMessage(''); setRefusedNotice(false); }}>
                       Create your password
                     </button>
                   </>

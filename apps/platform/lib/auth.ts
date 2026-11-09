@@ -9,6 +9,8 @@ import { sendEmail } from './email';
 import { signInLinkEmail } from './emails/sign-in-link';
 import { resetPasswordEmail } from './emails/reset-password';
 import { findUsableInvitation } from './invitations';
+import { adminEmails } from './admin';
+import { trustedOriginsFrom } from './auth-origins';
 import { serverEnv } from './env';
 
 /**
@@ -40,21 +42,21 @@ async function deliver(message: Parameters<typeof sendEmail>[0]) {
 const env = serverEnv();
 const isProd = env.NODE_ENV === 'production';
 
-const adminEmails = (env.ADMIN_EMAILS ?? '')
-  .split(',')
-  .map((value) => value.trim().toLowerCase())
-  .filter(Boolean);
+const trustedOrigins = trustedOriginsFrom(process.env);
 
-const trustedOrigins = Array.from(
-  new Set(
-    [
-      env.BETTER_AUTH_URL,
-      'http://localhost:5174',
-      'http://127.0.0.1:5174',
-      ...(process.env.EXTRA_TRUSTED_ORIGINS ?? '').split(',').map((v) => v.trim()),
-    ].filter((v): v is string => Boolean(v)),
-  ),
-);
+// Said once per process, because the failure it describes is silent otherwise: with an empty
+// allow-list and no invitations, every sign-up and every magic link answers 403 "not on the beta
+// list", which reads like a broken button rather than a missing environment variable.
+let warnedAboutEmptyAllowlist = false;
+function warnIfNobodyCanJoin() {
+  if (warnedAboutEmptyAllowlist || adminEmails().length > 0) return;
+  warnedAboutEmptyAllowlist = true;
+  console.warn(
+    '[auth] ADMIN_EMAILS is empty: no address can create an account or receive a sign-in link ' +
+      'unless it holds an invitation. Set ADMIN_EMAILS to the operator address (comma-separated ' +
+      'for several) and redeploy.',
+  );
+}
 
 export const BETA_GATE_MESSAGE =
   'This address does not have beta access yet. Request access at orvnlabs.com/early-access.';
@@ -144,10 +146,20 @@ export const auth = betterAuth({
         before: async (user) => {
           const email = String(user.email ?? '').toLowerCase();
           if (!email) return { data: user };
-          if (adminEmails.includes(email)) return { data: user };
+
+          // Read the list per request rather than snapshotting it at import: lib/admin.ts treats
+          // ADMIN_EMAILS as something that can change without a code change, and the gate should
+          // agree with the pages that use the same rule.
+          if (adminEmails().includes(email)) return { data: user };
 
           const invitation = await findUsableInvitation(email);
           if (!invitation) {
+            warnIfNobodyCanJoin();
+            // The address is logged; the reason is what makes a 403 in the browser explainable.
+            console.warn('[auth] refused account creation', {
+              email,
+              reason: 'no usable invitation, and the address is not in ADMIN_EMAILS',
+            });
             throw new APIError('FORBIDDEN', { message: BETA_GATE_MESSAGE });
           }
           return { data: user };

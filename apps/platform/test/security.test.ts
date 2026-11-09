@@ -98,6 +98,7 @@ describe('row level security coverage', () => {
     'audit_events',
     'rate_limits',
     'beta_applications',
+    'contact_messages',
   ];
 
   it('enables RLS on every table that holds workspace data', () => {
@@ -113,6 +114,12 @@ describe('row level security coverage', () => {
     expect(policies).toContain('alter table beta_applications enable row level security;');
     expect(policies).not.toMatch(/create policy [a-z_]* on beta_applications/i);
     expect(policies).not.toMatch(/grant [^;]*on beta_applications/i);
+  });
+
+  it('keeps contact messages operator-only: RLS on, no policy, no grant', () => {
+    expect(policies).toContain('alter table contact_messages enable row level security;');
+    expect(policies).not.toMatch(/create policy [a-z_]* on contact_messages/i);
+    expect(policies).not.toMatch(/grant [^;]*on contact_messages/i);
   });
 
   it('never grants the public role read access to inquiries, invitations or audit', () => {

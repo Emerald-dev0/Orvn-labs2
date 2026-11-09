@@ -92,8 +92,11 @@ and all thirteen have RLS enabled with explicit policies.
 
 - `orrei_app` — members read; `owner`/`editor` write; deletes restricted to owners; beta
   invitations (no workspace) are invisible to tenants entirely.
-- `beta_applications` has RLS enabled and **no** policy: it belongs to no workspace, so neither
-  application role can read or write it. Only the admin connection touches it.
+- `beta_applications` and `contact_messages` have RLS enabled and **no** policy: they belong to no
+  workspace, so neither application role can read or write them. Both are written and read only
+  over the admin connection (the contact form writes a stranger's message, the queue page reads
+  applications). That is deliberate: a future code path that reached either table as `orrei_app`
+  would get nothing rather than the whole inbox.
 - `orrei_public` — read-only over published projections: published properties, approved and
   public facts, public media, publications that are not withdrawn, published profiles. It can
   insert an inquiry (with consent, matching workspace, published property) and a view counter.

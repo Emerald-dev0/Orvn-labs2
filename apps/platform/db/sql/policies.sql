@@ -434,3 +434,14 @@ grant execute on function app_inspect_invitation(text, text) to orrei_app;
 -- ---------------------------------------------------------------------------
 
 alter table beta_applications enable row level security;
+
+-- ---------------------------------------------------------------------------
+-- Contact messages
+--
+-- The second operator table, same shape: a stranger writes a row from a public form, no
+-- tenant owns it, and only a person reads it — through the admin connection, which is the
+-- owner. RLS on with no policy means any future path that reaches this table as orrei_app
+-- (or as orrei_public) gets nothing, instead of quietly reading the whole inbox.
+-- ---------------------------------------------------------------------------
+
+alter table contact_messages enable row level security;
