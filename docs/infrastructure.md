@@ -247,7 +247,7 @@ replies, repoint DMARC reporting, add the Calder sending domain, delete the Goog
 ```
 CALDER_API_KEY=...            # the key for project proj_dd2355404c90
 CALDER_API_URL=https://api.calder.click/v1
-MAIL_FROM="ORREI <hello@orvnlabs.com>"   # must match the verified sender identity
+MAIL_FROM=hello@orvnlabs.com   # bare address, no name or quotes; must match the verified sender identity
 EARLY_ACCESS_INBOX=hello@orvnlabs.com   # one inbox; everything lands here
 ```
 

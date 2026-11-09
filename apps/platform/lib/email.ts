@@ -75,7 +75,9 @@ async function calderOnce(message: EmailMessage, idempotencyKey: string): Promis
       'Idempotency-Key': idempotencyKey,
     },
     body: JSON.stringify({
-      from: process.env.MAIL_FROM ?? 'ORVN Labs <hello@orvnlabs.com>',
+      // Bare address: Calder's `from` takes an email address or a sender ID, and rejects
+      // "Name <address>" with validation_error. The display name is set on the sender identity.
+      from: process.env.MAIL_FROM ?? 'hello@orvnlabs.com',
       to: message.to,
       subject: message.subject,
       text: message.text,

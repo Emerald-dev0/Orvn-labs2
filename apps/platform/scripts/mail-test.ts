@@ -66,7 +66,7 @@ Without it the site still saves every submission and says it could not email.`);
 
 if (!process.env.MAIL_FROM) {
   stop(`No MAIL_FROM. Set it to a sender identity Calder has verified, exactly:
-MAIL_FROM=ORREI <hello@orvnlabs.com>
+MAIL_FROM=hello@orvnlabs.com   (bare address: no name, no <>, no quotes)
 A From that is not a verified identity is the classic "API returned 200, nothing arrived".`);
 }
 
@@ -107,7 +107,7 @@ try {
       unauthorized: 'The key is wrong, revoked, or from another project.',
       forbidden: 'The key is valid but not allowed to send — check the sending domain is verified.',
       sender_not_verified: 'MAIL_FROM names an address that is not a verified sender identity in Calder.',
-      invalid_from: 'MAIL_FROM is malformed. Use the exact form: ORREI <hello@orvnlabs.com>',
+      invalid_from: 'MAIL_FROM is malformed. Use a bare address, e.g. hello@orvnlabs.com — no name and no angle brackets',
       rate_limited: 'Too many messages just now. Wait a minute and try again.',
     };
     console.error(`\nMISS  delivery    ${error.message}`);
