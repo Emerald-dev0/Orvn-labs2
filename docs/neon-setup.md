@@ -117,6 +117,11 @@ What each does:
   and installs the row level security policies. It is idempotent — re-run it after adding a table.
 - **`db:status`** — read-only. Prints the verdict table in §5.
 
+Run `db:policies` again after any migration that adds a table: the grants land on new tables by
+default, but RLS is switched on per table inside `db/sql/policies.sql`, so a table that arrives with
+a migration is unprotected until the policy script runs. `db:status` counts the protected tables —
+if that number did not go up when the table count did, this is why.
+
 Both scripts are safe to re-run. If you run `db:policies` before `db:migrate`, it grants privileges on
 tables that do not exist yet; run it again after migrating and the grants land.
 
@@ -127,7 +132,7 @@ ok    connected          neondb_owner on neondb · Postgres 17.2
 ok    role orrei_app     nologin, assumable by neondb_owner
 ok    role orrei_public  nologin, assumable by neondb_owner
 ok    migrations         6 applied
-ok    tables             19 in public, 14 with row level security
+ok    tables             19 in public, 15 with row level security
 ok    policies           35 defined
 ok    early access       0 applications stored
 ok    contact form       0 messages stored
