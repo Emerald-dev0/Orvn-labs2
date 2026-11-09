@@ -113,7 +113,7 @@ another site from posting to the auth endpoints with a session cookie.
 **More than one admin** is a comma-separated list, and each person creates their own password:
 
 ```
-ADMIN_EMAILS=daniel@orvnlabs.com,ops@orvnlabs.com
+ADMIN_EMAILS=daniel@orvnlabs.com,ops@orvnlabs.com   # no spaces needed; spaces either side also work
 ```
 
 Everyone on the list sees the same queue, because the queue is the database, not a mailbox.

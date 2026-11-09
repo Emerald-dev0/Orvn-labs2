@@ -25,6 +25,16 @@ describe('who is an admin', () => {
     expect(isAdminEmail('ops@orvnlabs.com')).toBe(true);
   });
 
+  it('takes the list with or without spaces around the commas', () => {
+    const expected = ['daniel@orvnlabs.com', 'ops@orvnlabs.com'];
+    process.env.ADMIN_EMAILS = 'daniel@orvnlabs.com,ops@orvnlabs.com';
+    expect(adminEmails()).toEqual(expected);
+    process.env.ADMIN_EMAILS = 'daniel@orvnlabs.com, ops@orvnlabs.com';
+    expect(adminEmails()).toEqual(expected);
+    process.env.ADMIN_EMAILS = 'daniel@orvnlabs.com ,ops@orvnlabs.com\n';
+    expect(adminEmails()).toEqual(expected);
+  });
+
   it('refuses everybody else', () => {
     process.env.ADMIN_EMAILS = 'daniel@orvnlabs.com';
     expect(isAdminEmail('someone@example.com')).toBe(false);
