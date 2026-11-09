@@ -65,9 +65,11 @@ export default function SignIn({ next = '/dashboard' }) {
       setMessage(
         /exist/i.test(detail)
           ? 'An account already uses that address. Sign in with your password instead.'
-          : /invit|forbidden|beta/i.test(detail)
-            ? 'That address is not on the beta list yet. Request access and we will add it.'
-            : 'We could not create the account just now. Try again, or use a sign-in link.',
+          : /origin/i.test(detail)
+            ? 'This page is not the address sign-in is set up for. Open orvnlabs.com in a new tab and try there.'
+            : /invit|forbidden|beta/i.test(detail)
+              ? 'That address is not on the beta list yet. Request access and we will add it.'
+              : 'We could not create the account just now. Try again, or use a sign-in link.',
       );
     }
   }

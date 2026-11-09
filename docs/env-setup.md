@@ -92,6 +92,24 @@ The beta gate decides who may create one: an address on `ADMIN_EMAILS`, or one h
 invitation. Everybody else is refused with the same sentence, so the form cannot be used to find out
 who has an account.
 
+### 3b. A `403` on `/api/auth/sign-up/email`
+
+Two things answer with exactly that status, and the browser shows only the number.
+
+| Server log line | Means | Fix |
+| --- | --- | --- |
+| `[auth] refused account creation { email: … }` | the beta gate — the address holds no invitation and is not on `ADMIN_EMAILS` | add it to `ADMIN_EMAILS`, redeploy, try again |
+| `[auth] ADMIN_EMAILS is empty` | nobody can create an account or receive a link; invitations only | set `ADMIN_EMAILS` and redeploy |
+| `Invalid origin: https://…` | the page you are on is not a trusted address (a preview URL, a different port, a tunnel) | open the site on the address in `BETTER_AUTH_URL`, or add the origin via `EXTRA_TRUSTED_ORIGINS` |
+
+`ADMIN_EMAILS` is **not** in the fatal-config list on purpose: the public site must keep serving
+without it. The consequence is that a deployment missing it looks like a broken sign-in page rather
+than a missing variable, which is why both warnings are logged rather than swallowed.
+
+The deployment's own Vercel URL is trusted automatically, so preview builds can be signed into
+without listing them. An `Origin` that is not trusted still gets a 403 — that check is what stops
+another site from posting to the auth endpoints with a session cookie.
+
 **More than one admin** is a comma-separated list, and each person creates their own password:
 
 ```
