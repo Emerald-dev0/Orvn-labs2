@@ -2,6 +2,7 @@ import * as React from 'react';
 import type { EmailMessage } from '../email';
 import { renderEmail } from '../../emails/render';
 import { SignInLink } from '../../emails/SignInLink';
+import { formatWhen } from './when';
 
 /** Passwordless sign-in. The token lives inside the URL and is never repeated elsewhere. */
 export async function signInLinkEmail(opts: {
@@ -18,7 +19,7 @@ export async function signInLinkEmail(opts: {
       '',
       opts.url,
       '',
-      `It works once and expires ${opts.expiresAt.toUTCString()}.`,
+      `It works once and expires ${formatWhen(opts.expiresAt)}.`,
       'If you did not ask to sign in, ignore this email; the link will not be used.',
       '',
       'ORVN Labs · hello@orvnlabs.com',
