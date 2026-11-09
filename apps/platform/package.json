@@ -10,7 +10,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate",
+    "db:migrate": "node scripts/db-migrate.mjs",
     "db:policies": "node scripts/apply-policies.mjs",
     "db:status": "node scripts/db-status.mjs",
     "invite": "node scripts/invite.mjs",

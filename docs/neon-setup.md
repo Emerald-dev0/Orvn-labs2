@@ -88,9 +88,30 @@ npm run db:status     # proves all of it
 
 What each does:
 
-- **`db:migrate`** — drizzle-kit applies `db/migrations` and records what it applied in
-  `drizzle.__drizzle_migrations`. It connects with `DATABASE_URL`. The tables end up owned by
-  `neondb_owner`.
+- **`db:migrate`** — runs `scripts/db-migrate.mjs`, which applies `db/migrations` and records what it
+  applied in `drizzle.__drizzle_migrations`, then prints the before and after. It uses
+  `DATABASE_URL_ADMIN` when it is set (DDL should not go through a pooler) and falls back to
+  `DATABASE_URL`. The tables end up owned by `neondb_owner`.
+
+  It is a wrapper rather than a bare `drizzle-kit migrate` because **drizzle-kit prints nothing when
+  it succeeds** — the same three lines appear for "applied six migrations", "nothing was pending" and
+  "never opened a socket". The wrapper opens the WebSocket itself (the Neon driver needs
+  `neonConfig.webSocketConstructor` in Node, which drizzle-kit does not set) and answers the question:
+
+  ```
+  db:migrate
+
+  ok    migrations on disk  6 in db/migrations
+  ok    already applied     5 of 6
+  ok    connected           neondb_owner on neondb · Postgres 17.2
+  ok    applied now         0005_uneven_stone_men
+  ok    tables              23 in public
+  ok    contact form        contact_messages present
+
+  Schema up to date. Next: npm run db:policies
+  ```
+
+  `npm run db:migrate -- --dry` reports what would run and applies nothing.
 - **`db:policies`** — runs `db/sql/policies.sql` with `DATABASE_URL_ADMIN`. It creates the two
   `nologin` roles, **grants them to whoever is connected** (`current_user`), grants table privileges,
   and installs the row level security policies. It is idempotent — re-run it after adding a table.
@@ -105,10 +126,11 @@ tables that do not exist yet; run it again after migrating and the grants land.
 ok    connected          neondb_owner on neondb · Postgres 17.2
 ok    role orrei_app     nologin, assumable by neondb_owner
 ok    role orrei_public  nologin, assumable by neondb_owner
-ok    migrations         5 applied
-ok    tables             18 in public, 14 with row level security
+ok    migrations         6 applied
+ok    tables             19 in public, 14 with row level security
 ok    policies           35 defined
 ok    early access       0 applications stored
+ok    contact form       0 messages stored
 ```
 
 Anything marked `MISS` prints the command that fixes it:

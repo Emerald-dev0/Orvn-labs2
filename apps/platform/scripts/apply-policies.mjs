@@ -15,7 +15,7 @@ import WebSocket from 'ws';
 
 neonConfig.webSocketConstructor = WebSocket;
 
-const connectionString = process.env.DATABASE_URL_ADMIN ?? process.env.DATABASE_URL;
+const connectionString = process.env.DATABASE_URL_ADMIN?.trim() || process.env.DATABASE_URL?.trim() || '';
 if (!connectionString) {
   console.error('Set DATABASE_URL_ADMIN (owner role) or DATABASE_URL before running this script.');
   process.exit(1);

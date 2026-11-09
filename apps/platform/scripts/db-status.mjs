@@ -17,7 +17,8 @@ neonConfig.webSocketConstructor = WebSocket;
 
 const useAdmin = process.argv.includes('--admin');
 const key = useAdmin ? 'DATABASE_URL_ADMIN' : 'DATABASE_URL';
-const connectionString = process.env[key] ?? (useAdmin ? process.env.DATABASE_URL : undefined);
+const connectionString =
+  process.env[key]?.trim() || (useAdmin ? process.env.DATABASE_URL?.trim() : undefined) || '';
 
 let failed = false;
 const width = 18;
@@ -102,6 +103,16 @@ try {
     record('early access', `${rows[0].n} application${rows[0].n === 1 ? '' : 's'} stored`);
   } else {
     record('early access', 'beta_applications missing — run npm run db:migrate', 'missing');
+  }
+
+  // The contact form's table arrived in migration 0005; it is the newest one, so it is
+  // also the quickest proof that a re-run of db:migrate actually applied something.
+  const contact = await pool.query(`select to_regclass('public.contact_messages') is not null as present`);
+  if (contact.rows[0].present) {
+    const { rows } = await pool.query(`select count(*)::int as n from contact_messages`);
+    record('contact form', `${rows[0].n} message${rows[0].n === 1 ? '' : 's'} stored`);
+  } else {
+    record('contact form', 'contact_messages missing — run npm run db:migrate', 'missing');
   }
 } catch (error) {
   const message = String(error?.message ?? error);

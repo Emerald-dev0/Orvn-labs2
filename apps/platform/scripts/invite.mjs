@@ -19,7 +19,7 @@ const value = (name) => {
   return index === -1 ? undefined : args[index + 1];
 };
 
-const connectionString = process.env.DATABASE_URL_ADMIN ?? process.env.DATABASE_URL;
+const connectionString = process.env.DATABASE_URL_ADMIN?.trim() || process.env.DATABASE_URL?.trim() || '';
 if (!connectionString) {
   console.error('Set DATABASE_URL_ADMIN (owner role) before running this script.');
   process.exit(1);
