@@ -17,13 +17,13 @@ export type BetaApplyState =
   | { status: 'error'; message: string };
 
 /**
- * Where the notification lands.
+ * Where the notification lands: `hello@orvnlabs.com`, the same address the site publishes.
  *
- * A real mailbox, not a role address that forwards: forwarding adds a hop, rewrites the envelope
- * and makes the message easier to misfile. `hello@orvnlabs.com` is routed in Cloudflare for people
- * writing to us; the queue notification goes straight to the inbox somebody reads.
+ * There is one inbox. Operators share it, Cloudflare Email Routing forwards it to whoever reads it,
+ * and every submission — early access, contact, inquiry — arrives in the same place rather than
+ * being scattered across addresses somebody has to remember.
  */
-const INBOX = () => serverEnv().EARLY_ACCESS_INBOX ?? 'danieloyegoke001@gmail.com';
+const INBOX = () => serverEnv().EARLY_ACCESS_INBOX ?? 'hello@orvnlabs.com';
 
 /** The record in the admin queue, so the email is a notification and not the archive. */
 const QUEUE_URL = (id: string) =>

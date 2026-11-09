@@ -38,7 +38,7 @@ So `npm run db:status`, `db:migrate`, `db:policies` and `npm run invite` work wi
 | `CALDER_API_URL` | `https://api.calder.click/v1` | this file, by hand |
 | `CALDER_API_KEY` | `calder_sk_live_…` | Calder → project `proj_dd2355404c90` → **API keys** → create one. The full key is shown once |
 | `MAIL_FROM` | `ORREI <hello@orvnlabs.com>` | only after that address exists as a **sender identity** in Calder (§4) |
-| `EARLY_ACCESS_INBOX` | `danieloyegoke001@gmail.com` for now | your own inbox. Change it to `hello@orvnlabs.com` once §5 is done |
+| `EARLY_ACCESS_INBOX` | `hello@orvnlabs.com` | one inbox for everything — the same address the site publishes (§5 forwards it to your Gmail) |
 | `GROQ_API_KEY` | `gsk_…` | `console.groq.com` → API Keys. Optional: without it the drafting panel says so instead of inventing text |
 
 `MAIL_FROM` note: it must match a **verified sender identity** in Calder, character for character on the
@@ -150,9 +150,10 @@ MX records for you; you are not on Google Workspace, so there is nothing to pres
 
    | Address | Purpose |
    | --- | --- |
-   | `hello@orvnlabs.com` | on the site, on deal sheets, on invoices |
-   | `early@orvnlabs.com` | early-access and inquiry notifications — use it for `EARLY_ACCESS_INBOX` |
-   | `daniel@orvnlabs.com` | you, when a `@orvnlabs.com` address is expected |
+   | `hello@orvnlabs.com` | everything — the site, deal sheets, invoices, and every submission |
+
+   One address, not a set of role addresses. Every form and notification points at `hello@`, so
+   there is no question of which inbox to check and nothing to forget to route.
 
 3. Cloudflare publishes its own SPF record (`include:_spf.mx.cloudflare.net`). **Keep exactly one SPF
    record** — merge, never add a second.
@@ -237,6 +238,6 @@ bucket.
 [ ] Cloudflare Email Routing on, destination confirmed, three custom addresses added
 [ ] Gmail Send mail as configured (Path A now, Path B before any buyer conversation)
 [ ] npm run mail:test -- --dry shows nothing missing, then npm run mail:test sends one
-[ ] EARLY_ACCESS_INBOX switched from Gmail to early@orvnlabs.com
+[ ] EARLY_ACCESS_INBOX set to hello@orvnlabs.com
 [ ] npm run dns:check -- --expect cloudflare passes
 ```
