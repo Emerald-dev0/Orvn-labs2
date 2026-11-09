@@ -1,12 +1,15 @@
 import * as React from 'react';
 import {
   Body,
+  Column,
   Container,
   Font,
   Head,
   Hr,
   Html,
+  Img,
   Preview,
+  Row,
   Section,
   Text,
 } from '@react-email/components';
@@ -39,6 +42,17 @@ export const palette = {
  */
 export const FONT_URL = 'https://orvnlabs.com/fonts/figtree.woff2';
 
+/**
+ * The mark, as a PNG at 2x.
+ *
+ * It cannot be the SVG the site uses: Gmail, Outlook and Apple Mail all drop inline SVG. It is a
+ * light version of the same mark, flattened onto the masthead's pine so the letterbox edges are
+ * invisible in clients that force a background colour.
+ */
+export const MARK_URL = 'https://orvnlabs.com/email/mark.png';
+const MARK_WIDTH = 36;
+const MARK_HEIGHT = 26;
+
 const FONT =
   "'Figtree', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif";
 
@@ -70,8 +84,21 @@ export function Brand({
       <Body style={body}>
         <Container style={container}>
           <Section style={masthead}>
-            <Text style={wordmark}>ORREI</Text>
-            <Text style={wordmarkBy}>by ORVN Labs</Text>
+            <Row>
+              <Column style={markColumn}>
+                <Img
+                  src={MARK_URL}
+                  width={MARK_WIDTH}
+                  height={MARK_HEIGHT}
+                  alt="ORVN Labs"
+                  style={mark}
+                />
+              </Column>
+              <Column style={markTextColumn}>
+                <Text style={wordmark}>ORREI</Text>
+                <Text style={wordmarkBy}>by ORVN Labs</Text>
+              </Column>
+            </Row>
           </Section>
 
           <Section style={card}>{children}</Section>
@@ -175,6 +202,22 @@ const masthead: React.CSSProperties = {
   backgroundColor: palette.pine,
   borderRadius: '16px 16px 0 0',
   padding: '18px 26px',
+};
+
+const markColumn: React.CSSProperties = {
+  width: MARK_WIDTH + 14,
+  verticalAlign: 'middle',
+};
+
+const mark: React.CSSProperties = {
+  display: 'block',
+  border: 0,
+  outline: 'none',
+  textDecoration: 'none',
+};
+
+const markTextColumn: React.CSSProperties = {
+  verticalAlign: 'middle',
 };
 
 const wordmark: React.CSSProperties = {

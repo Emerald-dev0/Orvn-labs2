@@ -263,6 +263,8 @@ emails/
   SignInLink.tsx           passwordless sign-in
   InquiryNotification.tsx  one inquiry, forwarded to the publisher
   BetaApplication.tsx      early-access request, sent to the operator inbox
+  EarlyAccessReceived.tsx  the applicant's confirmation, sent to them
+  ContactMessage.tsx       contact form, sent to the shared inbox
 lib/emails/*.tsx           builds the message: subject, idempotency key, plain text, HTML
 ```
 
@@ -272,6 +274,9 @@ Design rules, matching the site:
   on the action.
 - One column, 560px, table-based internals: Outlook still needs tables.
 - System font stack — a webfont that fails to load is worse than a font that was never promised.
+- **The mark is a PNG** (`public/email/mark.png`), not the SVG the site uses: Gmail, Outlook and
+  Apple Mail all drop inline SVG. It is a light version of the same mark flattened onto the masthead
+  pine, so the edges are invisible where a client forces a background colour.
 - `color-scheme: light` and a viewport meta, so dark-mode clients do not invert the card.
 - Every link is also spelled out as a copyable URL; plain-text clients cannot click.
 - Plain text is written by hand, not generated, because generated text drops the URLs.
@@ -280,6 +285,11 @@ Why React rather than string-built HTML: **escaping is the renderer's job now.**
 a buyer's message is inserted as a React child, so `<script>` arrives as characters. The old templates
 escaped by hand and one missed call was one injection away. `test/emails.test.tsx` proves both the
 escaping and the idempotency keys.
+
+Every form has two messages: the one to the operator inbox, and — for early access — the one to the
+person who asked. The applicant's copy confirms the request arrived, repeats their answers back so
+they can see it was read, and says we will write back **without inventing a date**: no reply time,
+no place in a cohort, nothing that has not been built.
 
 Preview them locally:
 

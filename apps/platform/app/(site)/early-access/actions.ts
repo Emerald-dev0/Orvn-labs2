@@ -9,6 +9,7 @@ import { normaliseEmail } from '../../../lib/validation/common';
 import { consumeRateLimit, RULES, rateLimitIdentity } from '../../../lib/rate-limit';
 import { sendEmail } from '../../../lib/email';
 import { betaApplicationEmail } from '../../../lib/emails/beta-application';
+import { earlyAccessReceivedEmail } from '../../../lib/emails/early-access-received';
 import { serverEnv } from '../../../lib/env';
 
 export type BetaApplyState =
@@ -24,6 +25,9 @@ export type BetaApplyState =
  * being scattered across addresses somebody has to remember.
  */
 const INBOX = () => serverEnv().EARLY_ACCESS_INBOX ?? 'hello@orvnlabs.com';
+
+/** Where the applicant is sent after we confirm: the plainest explanation of the product. */
+const PRODUCT_URL = () => `${serverEnv().BETTER_AUTH_URL ?? 'https://orvnlabs.com'}/product`;
 
 /** The record in the admin queue, so the email is a notification and not the archive. */
 const QUEUE_URL = (id: string) =>
@@ -168,6 +172,31 @@ export async function requestEarlyAccess(
       status: 'error',
       message: 'We could not take that request just now. Nothing was submitted; please retry.',
     };
+  }
+
+  // The applicant's copy. Deliberately last and deliberately non-fatal: the request is already
+  // stored at this point, and a bounce here must not make them think it was not.
+  if (stored && applicationId) {
+    try {
+      const confirmation = await earlyAccessReceivedEmail({
+        to: email,
+        name: input.name,
+        company: input.company,
+        role: input.role,
+        markets: input.markets,
+        volume: input.volume,
+        frustration: input.frustration,
+        receivedAt,
+        productUrl: PRODUCT_URL(),
+      });
+
+      await sendEmail(confirmation);
+    } catch (error) {
+      console.error('[early-access] applicant confirmation failed', {
+        code: (error as { code?: string }).code,
+        applicationId,
+      });
+    }
   }
 
   return { status: 'sent' };
