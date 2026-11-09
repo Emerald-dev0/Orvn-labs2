@@ -1214,11 +1214,8 @@
 @media (max-width: 760px) {
   .nav-signin { display: none; }
   .nav-cta { display: none; }
-  .hero { padding: 8px 8px 0; }
-  .hero-frame { min-height: 88vh; }
-  .hero-title { max-width: 100%; }
-  .hero-rail { display: none; }
-  .hero-card { max-width: 100%; }
+  /* The hero is composed in its own block at the end of this file — the
+     old frame/rail/card rules referred to markup that no longer exists. */
   .outputs-grid { grid-template-columns: 1fr; }
   .output-card { min-height: 0; }
   .gallery-grid { grid-template-columns: 1fr; }
@@ -2787,27 +2784,8 @@
   .nav-sheet-link { padding: 15px 0; font-size: clamp(24px, 7vw, 30px); }
   .nav-sheet-foot { padding-top: 26px; }
 
-  /* ── Hero ── */
-  .hero { padding: 6px 6px 0; }
-  .hero-frame { min-height: 0; border-radius: 24px; }
-  .hero-photo { object-position: 62% 52%; }
-  .hero-inner { padding-top: calc(var(--nav-h) + 46px); padding-bottom: 16px; gap: 22px; }
-  .hero-title { font-size: clamp(29px, 8.4vw, 38px); line-height: 1.02; letter-spacing: -0.03em; max-width: 100%; }
-  .hero-sub { margin-top: 13px; font-size: 14.5px; line-height: 1.56; }
-  .hero-actions { margin-top: 20px; gap: 9px; }
-  .hero-actions .btn { width: 100%; padding-inline: 20px; }
-  .hero-note { margin-top: 13px; font-size: 12.5px; line-height: 1.5; }
-  .hero-card { max-width: 100%; padding: 15px; border-radius: 20px; }
-  .hero-card-head { margin-bottom: 11px; }
-  .hero-site-profile { margin-bottom: 10px; }
-  .hero-card-thumb { width: 60px; height: 52px; border-radius: 10px; }
-  .hero-card-name { font-size: 16px; }
-  .hero-card-addr { font-size: 11px; }
-  .hero-card-price { font-size: 14px; margin-top: 5px; }
-  .hero-card-specs { margin-top: 12px; padding-top: 10px; gap: 6px 12px; font-size: 11.5px; }
-  .hero-card-caption { margin-top: 9px; font-size: 9.5px; }
-  .hero-card-live { font-size: 10.5px; padding: 4px 9px; }
-  .hero-card-publish { font-size: 10px; padding: 5px 10px; }
+  /* The hero has its own mobile block at the end of this file — it is the
+     last word on the subject, so nothing here competes with it. */
 
   /* ── Type rhythm ── */
   .eyebrow { font-size: 11.5px; padding: 6px 12px 7px; }
@@ -3426,4 +3404,301 @@
 
 @media (prefers-reduced-motion: reduce) {
   .proof-today { transform: none; }
+}
+
+/* =========================================================================
+   Custom select
+   The native control is still present — it carries the name and the required
+   check — but it is invisible and exactly the size of the trigger, so the
+   browser's own menu never opens. Everything seen here is a button and a
+   listbox drawn with the same tokens as the inputs beside it.
+   ========================================================================= */
+
+.cf-select {
+  position: relative;
+  width: 100%;
+}
+
+.cf-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-height: 52px;
+  padding: 14px 16px;
+  background: var(--white);
+  border: 1.5px solid var(--line-2);
+  border-radius: var(--r-sm);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.3;
+  text-align: left;
+  color: var(--ink);
+  cursor: pointer;
+  transition: border-color 0.25s var(--ease), box-shadow 0.25s var(--ease);
+}
+
+.cf-trigger:hover { border-color: var(--line-2); }
+
+.cf-trigger:focus-visible {
+  outline: none;
+  border-color: var(--ink);
+  box-shadow: 0 0 0 4px rgba(201, 242, 110, 0.5);
+}
+
+.cf-trigger.is-open {
+  border-color: var(--ink);
+  box-shadow: 0 0 0 4px rgba(201, 242, 110, 0.5);
+}
+
+.cf-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--muted-2);
+}
+
+.cf-trigger.has-value .cf-label { color: var(--ink); }
+
+.cf-chevron {
+  flex: none;
+  color: var(--muted);
+  transition: transform 0.3s var(--ease), color 0.3s var(--ease);
+}
+
+.cf-trigger.is-open .cf-chevron {
+  transform: rotate(180deg);
+  color: var(--ink);
+}
+
+/* The real select, under the trigger's footprint. Not display:none — a hidden
+   control is still validated, so `required` keeps working on submit. */
+.cf-native {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.cf-panel {
+  position: absolute;
+  z-index: 40;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  max-height: 280px;
+  overflow-y: auto;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  box-shadow: var(--sh-3);
+  animation: cf-open 0.16s var(--ease);
+}
+
+@keyframes cf-open {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.cf-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 11px 12px;
+  border-radius: var(--r-xs);
+  font-size: 15px;
+  color: var(--ink-2);
+  cursor: pointer;
+}
+
+.cf-option.is-active { background: var(--bone); }
+
+.cf-option.is-selected {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.cf-option.is-selected svg { color: var(--pos); flex: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .cf-panel { animation: none; }
+  .cf-chevron { transition: none; }
+}
+
+/* =========================================================================
+   Mobile: the hero as a composed page
+   A desktop hero squeezed into 390px reads as a poster with the text too
+   small and the cards too loud. Here the type gets its own scale, the second
+   action becomes a link rather than a second block, and the pair of cards
+   tightens without losing their proportions.
+   ========================================================================= */
+
+@media (max-width: 680px) {
+  .hero {
+    padding-top: calc(var(--nav-h) + 38px);
+    padding-bottom: clamp(38px, 10vw, 54px);
+    padding-left: 0;
+    padding-right: 0;
+    border-bottom-left-radius: 22px;
+    border-bottom-right-radius: 22px;
+  }
+
+  .hero-glow {
+    top: -14%;
+    right: -52%;
+    width: 180vw;
+  }
+
+  .hero-grid { gap: 30px; }
+
+  /* One thought per line, at a size a thumb-length away still reads. */
+  .hero-title {
+    font-size: clamp(31px, 8.7vw, 41px);
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    max-width: 100%;
+    text-wrap: balance;
+  }
+
+  .hero-title em { background-size: 100% 0.085em; }
+
+  .hero-sub {
+    margin-top: 15px;
+    max-width: 32ch;
+    font-size: 15.5px;
+    line-height: 1.55;
+  }
+
+  /* One action, then a line of text under it — a column, not a wrapped row. */
+  .hero-actions {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 22px;
+    gap: 2px;
+  }
+
+  .hero .btn.btn-primary {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* The secondary action stops shouting: same tap target, no second box. */
+  .hero-ghost {
+    width: auto;
+    min-height: 44px;
+    padding: 12px 2px;
+    border: 0;
+    color: rgba(255, 253, 248, 0.8);
+    font-size: 14px;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-color: rgba(201, 242, 110, 0.7);
+  }
+
+  .hero-ghost:hover {
+    background: transparent;
+    border: 0;
+    color: var(--white);
+  }
+
+  .hero-note {
+    margin-top: 14px;
+    max-width: 34ch;
+    font-size: 11.8px;
+    line-height: 1.55;
+  }
+
+  /* ---- The pair of cards ---- */
+
+  .hero-proof { max-width: 100%; }
+
+  .proof-today {
+    padding: 12px;
+    border-radius: 20px;
+  }
+
+  .proof-thread-head {
+    padding: 0 2px 9px;
+    font-size: 9.8px;
+    letter-spacing: 0.07em;
+  }
+
+  .proof-bubble {
+    padding: 12px 13px;
+    border-radius: 14px 14px 14px 5px;
+    font-size: 14px;
+    line-height: 1.45;
+  }
+
+  .proof-attachments { margin-top: 9px; gap: 6px; }
+
+  .proof-attach {
+    padding: 5px 9px;
+    font-size: 10.8px;
+  }
+
+  .proof-arrow {
+    width: 30px;
+    height: 30px;
+    margin: -11px auto;
+  }
+
+  .proof-orrei { border-radius: 20px; }
+
+  .proof-head { padding: 11px 13px; }
+
+  .proof-tag {
+    padding: 3px 8px;
+    font-size: 9.5px;
+  }
+
+  .proof-photo { height: clamp(150px, 40vw, 176px); }
+
+  .proof-photo-chip {
+    left: 10px;
+    bottom: 10px;
+    font-size: 9.8px;
+    padding: 4px 8px;
+  }
+
+  .proof-body { padding: 13px; }
+
+  .proof-title { font-size: 19px; }
+
+  .proof-facts { font-size: 12px; }
+
+  .proof-sheet {
+    margin-top: 11px;
+    padding: 9px 10px;
+    gap: 9px;
+  }
+
+  .proof-sheet-text strong { font-size: 12px; }
+  .proof-sheet-text span { font-size: 10px; }
+
+  .proof-page-actions { margin-top: 10px; gap: 5px; }
+
+  .proof-page-btn {
+    padding: 6px 10px;
+    font-size: 10.5px;
+  }
+}
+
+@media (max-width: 420px) {
+  .hero-title { font-size: clamp(29px, 8.4vw, 34px); }
+  .proof-photo { height: 146px; }
+}
+
+/* The dropdown panel must not run off the bottom of a short screen. */
+@media (max-width: 680px) {
+  .cf-panel { max-height: min(46vh, 300px); }
 }

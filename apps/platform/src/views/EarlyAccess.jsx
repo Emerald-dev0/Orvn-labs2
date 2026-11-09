@@ -6,6 +6,7 @@ import { ArrowRight, Check, Mail } from 'lucide-react';
 import PageWrapper from '../components/PageWrapper';
 import PageHero from '../components/site/PageHero';
 import { Reveal } from '../components/site/Reveal';
+import SelectField from '../components/SelectField';
 import { requestEarlyAccess } from '../../app/(site)/early-access/actions';
 
 const ROLES = ['Agent or broker', 'Developer', 'Small agency', 'Property manager', 'Other'];
@@ -55,10 +56,7 @@ export default function EarlyAccess() {
                   </div>
                   <div className="field">
                     <label className="field-label" htmlFor="role">Your role</label>
-                    <select id="role" name="role" required className="select" defaultValue="">
-                      <option value="" disabled>Select a role</option>
-                      {ROLES.map((role) => <option key={role} value={role}>{role}</option>)}
-                    </select>
+                    <SelectField id="role" name="role" required options={ROLES} placeholder="Select a role" />
                   </div>
                   <div className="field">
                     <label className="field-label" htmlFor="markets">Primary market</label>
@@ -66,10 +64,7 @@ export default function EarlyAccess() {
                   </div>
                   <div className="field">
                     <label className="field-label" htmlFor="volume">Properties presented monthly</label>
-                    <select id="volume" name="volume" className="select" defaultValue="">
-                      <option value="" disabled>Select a range</option>
-                      {VOLUMES.map((volume) => <option key={volume} value={volume}>{volume}</option>)}
-                    </select>
+                    <SelectField id="volume" name="volume" options={VOLUMES} placeholder="Select a range" />
                   </div>
                   <div className="field span-2">
                     <label className="field-label" htmlFor="current">How do you share properties today?</label>

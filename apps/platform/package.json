@@ -14,6 +14,7 @@
     "db:policies": "node scripts/apply-policies.mjs",
     "db:status": "node scripts/db-status.mjs",
     "invite": "node scripts/invite.mjs",
+    "admin:create": "tsx scripts/create-admin.ts",
     "email:preview": "tsx scripts/preview-emails.tsx",
     "mail:test": "tsx scripts/mail-test.ts",
     "dns:check": "node scripts/check-dns.mjs"

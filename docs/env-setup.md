@@ -38,7 +38,7 @@ So `npm run db:status`, `db:migrate`, `db:policies` and `npm run invite` work wi
 | `CALDER_API_URL` | `https://api.calder.click/v1` | this file, by hand |
 | `CALDER_API_KEY` | `calder_sk_live_…` | Calder → project `proj_dd2355404c90` → **API keys** → create one. The full key is shown once |
 | `MAIL_FROM` | `ORREI <hello@orvnlabs.com>` | only after that address exists as a **sender identity** in Calder (§4) |
-| `EARLY_ACCESS_INBOX` | `danieloyegoke001@gmail.com` for now | your own inbox. Change it to `hello@orvnlabs.com` once §5 is done |
+| `EARLY_ACCESS_INBOX` | `hello@orvnlabs.com` | one inbox for everything — the same address the site publishes (§5 forwards it to your Gmail) |
 | `GROQ_API_KEY` | `gsk_…` | `console.groq.com` → API Keys. Optional: without it the drafting panel says so instead of inventing text |
 
 `MAIL_FROM` note: it must match a **verified sender identity** in Calder, character for character on the
@@ -79,6 +79,54 @@ reason to wait for that to use the queue.
 
 Anyone not on this list gets a **404** on `/admin`, not a 403. Changing the list is a redeploy.
 
+## 3a. Signing in — every operator sets their own password
+
+There is no default password, and no shared one. Each person creates their own account the first
+time they sign in:
+
+1. Open `/sign-in` → **Create your password**.
+2. Name, the address on `ADMIN_EMAILS`, and a password of at least 10 characters, twice.
+3. That is the account. Sign in with it from then on.
+
+The beta gate decides who may create one: an address on `ADMIN_EMAILS`, or one holding a usable
+invitation. Everybody else is refused with the same sentence, so the form cannot be used to find out
+who has an account.
+
+**More than one admin** is a comma-separated list, and each person creates their own password:
+
+```
+ADMIN_EMAILS=daniel@orvnlabs.com,ops@orvnlabs.com
+```
+
+Everyone on the list sees the same queue, because the queue is the database, not a mailbox.
+
+### Creating an account without the form
+
+```bash
+cd apps/platform
+npm run admin:create -- --email you@example.com
+```
+
+Same gate, no browser: generates a long password and prints it once. Useful for a headless or CI
+account, or when the sign-in page is not reachable yet.
+
+### Why not one default password everyone changes later
+
+A known starting password on a public URL is the most-exploited door in an admin panel, and "change
+it on first login" is a promise people break. It also destroys the answer to "who did this?" —
+two people on one account cannot be told apart in the audit trail. Self-service creation costs one
+extra field on a form and avoids both.
+
+### The other two ways in
+
+Both send mail through Calder, so they work only once the sender identity is verified:
+
+- **Magic link** — the "Email me a link" tab. One use, ten minutes.
+- **Forgot password** — sends a reset link to an existing account.
+
+Locally, with no `DATABASE_URL`, there is no sign-in at all: the site runs in demo mode and the
+queue is not reachable. That is the honest behaviour, not a wrong password.
+
 ## 4. Calder: sender identity and sending domain
 
 Calder → **Domains & DNS**:
@@ -102,9 +150,10 @@ MX records for you; you are not on Google Workspace, so there is nothing to pres
 
    | Address | Purpose |
    | --- | --- |
-   | `hello@orvnlabs.com` | on the site, on deal sheets, on invoices |
-   | `early@orvnlabs.com` | early-access and inquiry notifications — use it for `EARLY_ACCESS_INBOX` |
-   | `daniel@orvnlabs.com` | you, when a `@orvnlabs.com` address is expected |
+   | `hello@orvnlabs.com` | everything — the site, deal sheets, invoices, and every submission |
+
+   One address, not a set of role addresses. Every form and notification points at `hello@`, so
+   there is no question of which inbox to check and nothing to forget to route.
 
 3. Cloudflare publishes its own SPF record (`include:_spf.mx.cloudflare.net`). **Keep exactly one SPF
    record** — merge, never add a second.
@@ -189,6 +238,6 @@ bucket.
 [ ] Cloudflare Email Routing on, destination confirmed, three custom addresses added
 [ ] Gmail Send mail as configured (Path A now, Path B before any buyer conversation)
 [ ] npm run mail:test -- --dry shows nothing missing, then npm run mail:test sends one
-[ ] EARLY_ACCESS_INBOX switched from Gmail to early@orvnlabs.com
+[ ] EARLY_ACCESS_INBOX set to hello@orvnlabs.com
 [ ] npm run dns:check -- --expect cloudflare passes
 ```

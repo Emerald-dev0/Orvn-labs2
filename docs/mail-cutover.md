@@ -27,9 +27,10 @@ and its SPF record itself; there is nothing to preserve, because you are leaving
 
    | Address | Routes to | Used for |
    | --- | --- | --- |
-   | `hello@orvnlabs.com` | shared Gmail | the address on the site, deal sheets and invoices |
-   | `early@orvnlabs.com` | shared Gmail | `EARLY_ACCESS_INBOX` — queue notifications |
-   | `daniel@orvnlabs.com` | your Gmail | you, when a domain address is expected |
+   | `hello@orvnlabs.com` | shared Gmail | everything — the site, deal sheets, invoices, and every submission |
+
+   One address. Early-access requests, contact messages and property inquiries all land in `hello@`,
+   so `EARLY_ACCESS_INBOX` is `hello@orvnlabs.com` and there is no second inbox to remember.
 
 3. **One SPF record.** Cloudflare inserts `include:_spf.mx.cloudflare.net`. If an SPF record already
    exists, merge into it — two SPF records is the same as none, receivers use the first and ignore the

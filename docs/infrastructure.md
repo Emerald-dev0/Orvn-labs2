@@ -248,7 +248,7 @@ replies, repoint DMARC reporting, add the Calder sending domain, delete the Goog
 CALDER_API_KEY=...            # the key for project proj_dd2355404c90
 CALDER_API_URL=https://api.calder.click/v1
 MAIL_FROM="ORREI <hello@orvnlabs.com>"   # must match the verified sender identity
-EARLY_ACCESS_INBOX=...        # early@orvnlabs.com, once routing forwards it
+EARLY_ACCESS_INBOX=hello@orvnlabs.com   # one inbox; everything lands here
 ```
 
 ## 5. The email design system
@@ -263,6 +263,8 @@ emails/
   SignInLink.tsx           passwordless sign-in
   InquiryNotification.tsx  one inquiry, forwarded to the publisher
   BetaApplication.tsx      early-access request, sent to the operator inbox
+  EarlyAccessReceived.tsx  the applicant's confirmation, sent to them
+  ContactMessage.tsx       contact form, sent to the shared inbox
 lib/emails/*.tsx           builds the message: subject, idempotency key, plain text, HTML
 ```
 
@@ -272,6 +274,9 @@ Design rules, matching the site:
   on the action.
 - One column, 560px, table-based internals: Outlook still needs tables.
 - System font stack — a webfont that fails to load is worse than a font that was never promised.
+- **The mark is a PNG** (`public/email/mark.png`), not the SVG the site uses: Gmail, Outlook and
+  Apple Mail all drop inline SVG. It is a light version of the same mark flattened onto the masthead
+  pine, so the edges are invisible where a client forces a background colour.
 - `color-scheme: light` and a viewport meta, so dark-mode clients do not invert the card.
 - Every link is also spelled out as a copyable URL; plain-text clients cannot click.
 - Plain text is written by hand, not generated, because generated text drops the URLs.
@@ -280,6 +285,11 @@ Why React rather than string-built HTML: **escaping is the renderer's job now.**
 a buyer's message is inserted as a React child, so `<script>` arrives as characters. The old templates
 escaped by hand and one missed call was one injection away. `test/emails.test.tsx` proves both the
 escaping and the idempotency keys.
+
+Every form has two messages: the one to the operator inbox, and — for early access — the one to the
+person who asked. The applicant's copy confirms the request arrived, repeats their answers back so
+they can see it was read, and says we will write back **without inventing a date**: no reply time,
+no place in a cohort, nothing that has not been built.
 
 Preview them locally:
 
@@ -333,6 +343,13 @@ An early-access request, end to end:
 5. **If the email fails**, the row is still there. The applicant is told "we saved your request but
    could not email the team", and the queue shows the application regardless. Nothing is lost to a
    mail outage.
+
+The **contact form** takes the same path with a different table: `contact_messages`, same validate →
+store → notify order, same shared inbox, `replyTo` set to the sender so answering is one button.
+There is no queue page for it — the messages are short and a person answers them from mail — but the
+row is still the record, so a mail outage does not lose the message.
+
+Both tables are created by `npm run db:migrate`; nothing else needs running.
 
 Inquiries work the same way in the other direction: the row goes into `inquiries` for the publishing
 business, and the notification goes to that business's contact address with `replyTo` set to the

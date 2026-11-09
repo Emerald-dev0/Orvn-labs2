@@ -15,6 +15,8 @@ import { ResetPassword } from '../emails/ResetPassword';
 import { SignInLink } from '../emails/SignInLink';
 import { InquiryNotification } from '../emails/InquiryNotification';
 import { BetaApplication } from '../emails/BetaApplication';
+import { EarlyAccessReceived } from '../emails/EarlyAccessReceived';
+import { ContactMessage } from '../emails/ContactMessage';
 
 const outDir = path.join(process.cwd(), 'public', 'preview-emails');
 
@@ -56,6 +58,36 @@ const samples = [
         propertyTitle="Harbour house, four bedrooms"
         workspaceName="Northaven Property Group"
         inboxUrl="https://orvnlabs.com/inquiries/6b1c2d3e-4f50-4a1b-8c2d-3e4f5a6b7c8d"
+      />
+    ),
+  },
+  {
+    name: 'early-access-received',
+    element: (
+      <EarlyAccessReceived
+        name="Ada Okonkwo"
+        email="ada@example.com"
+        company="Northaven Property Group"
+        role="Agent or broker"
+        markets="Lagos mainland"
+        volume="3–10"
+        frustration="Rebuilding the same deck for every viewing, and it never looks the same twice."
+        receivedAt={new Date('2026-11-08T09:15:00Z')}
+        productUrl="https://orvnlabs.com/product"
+      />
+    ),
+  },
+  {
+    name: 'contact-message',
+    element: (
+      <ContactMessage
+        id="msg_1"
+        name="Ada Okonkwo"
+        email="ada@example.com"
+        company="Northaven Property Group"
+        topic="Teams and agencies"
+        message="We list around twenty units a month and the deck is rebuilt by hand each time."
+        receivedAt={new Date('2026-11-08T09:15:00Z')}
       />
     ),
   },

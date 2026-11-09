@@ -34,6 +34,7 @@ export const RULES = {
   signInRequest: { bucket: 'auth:signin', limit: 6, windowSeconds: 60 * 15 },
   inviteAccept: { bucket: 'invite:accept', limit: 10, windowSeconds: 60 * 15 },
   betaApply: { bucket: 'beta:apply', limit: 4, windowSeconds: 60 * 60 },
+  contactMessage: { bucket: 'contact:message', limit: 4, windowSeconds: 60 * 60 },
   viewCount: { bucket: 'view:count', limit: 60, windowSeconds: 60 },
 } as const;
 

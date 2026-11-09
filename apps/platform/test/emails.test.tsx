@@ -6,6 +6,8 @@ import { resetPasswordEmail } from '../lib/emails/reset-password';
 import { signInLinkEmail } from '../lib/emails/sign-in-link';
 import { inquiryNotificationEmail } from '../lib/emails/inquiry-notification';
 import { betaApplicationEmail } from '../lib/emails/beta-application';
+import { contactMessageEmail } from '../lib/emails/contact-message';
+import { earlyAccessReceivedEmail } from '../lib/emails/early-access-received';
 import { Invitation } from '../emails/Invitation';
 import { InquiryNotification } from '../emails/InquiryNotification';
 
@@ -176,5 +178,93 @@ describe('shared shell', () => {
     );
     expect(html.startsWith('<!DOCTYPE')).toBe(true);
     expect(html).toContain('viewport');
+  });
+});
+
+
+describe('contact message', () => {
+  const base = {
+    to: 'hello@orvnlabs.com',
+    id: 'msg_1',
+    name: 'Ada Okonkwo',
+    email: 'ada@example.com',
+    message: 'We list 20 units a month and the deck is rebuilt by hand each time.',
+    receivedAt: new Date('2026-11-08T09:15:00Z'),
+  };
+
+  it('replies to the sender and carries their words in both halves', async () => {
+    const message = await contactMessageEmail({ ...base, topic: 'Teams and agencies' });
+
+    expect(message.to).toBe('hello@orvnlabs.com');
+    expect(message.replyTo).toBe('ada@example.com');
+    expect(message.businessKey).toBe('contact:msg_1');
+    expect(message.text).toContain(base.message);
+    expect(message.html).toContain(base.message);
+    expect(message.html).toContain('ada@example.com');
+  });
+
+  it('keeps a hostile message as text', async () => {
+    const message = await contactMessageEmail({
+      ...base,
+      name: '<script>alert(1)</script>',
+      message: '<img src=x onerror=alert(1)> and a real sentence to pass the minimum.',
+    });
+
+    // The words survive as escaped text; what must not survive is anything a browser executes.
+    expect(hasTag(message.html)).toBe(false);
+    expect(/<img[^>]*onerror/i.test(message.html)).toBe(false);
+    expect(message.html).toContain('&lt;img src=x onerror=alert(1)&gt;');
+  });
+
+  it('says nothing about a topic that was not chosen', async () => {
+    const message = await contactMessageEmail({ ...base, topic: null });
+    expect(message.subject).toBe('Contact: Ada Okonkwo');
+  });
+});
+
+
+describe('early-access confirmation', () => {
+  const base = {
+    to: 'ada@example.com',
+    name: 'Ada Okonkwo',
+    company: 'Northaven',
+    role: 'Agent or broker',
+    markets: 'Lagos mainland',
+    volume: '3–10',
+    frustration: 'Rebuilding the deck for every viewing.',
+    receivedAt: new Date('2026-11-08T09:15:00Z'),
+    productUrl: 'https://orvnlabs.com/product',
+  };
+
+  it('goes to the applicant, not the inbox, and replies to a person', async () => {
+    const message = await earlyAccessReceivedEmail(base);
+
+    expect(message.to).toBe('ada@example.com');
+    expect(message.replyTo).toBe('hello@orvnlabs.com');
+    expect(message.subject).toBe('We have your ORREI early-access request');
+  });
+
+  it('says we will write back, without inventing a date', async () => {
+    const message = await earlyAccessReceivedEmail(base);
+
+    expect(message.text).toContain('we will write back');
+    expect(message.text).not.toMatch(/within \d+ (hours?|days?|weeks?)/i);
+    expect(message.text).not.toMatch(/guarantee|promise you/i);
+    expect(message.text).not.toContain('PDF');
+  });
+
+  it('carries the mark and the answers they gave, in both halves', async () => {
+    const message = await earlyAccessReceivedEmail(base);
+
+    expect(message.html).toContain('https://orvnlabs.com/email/mark.png');
+    expect(message.html).toContain('Northaven');
+    expect(message.text).toContain('Agent or broker');
+    expect(message.html).toContain('https://orvnlabs.com/product');
+  });
+
+  it('keys one confirmation per request per day, so a double click sends one', async () => {
+    const first = await earlyAccessReceivedEmail(base);
+    const second = await earlyAccessReceivedEmail({ ...base, name: 'Ada O.' });
+    expect(first.businessKey).toBe(second.businessKey);
   });
 });
