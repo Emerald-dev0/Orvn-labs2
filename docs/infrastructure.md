@@ -334,6 +334,13 @@ An early-access request, end to end:
    could not email the team", and the queue shows the application regardless. Nothing is lost to a
    mail outage.
 
+The **contact form** takes the same path with a different table: `contact_messages`, same validate →
+store → notify order, same shared inbox, `replyTo` set to the sender so answering is one button.
+There is no queue page for it — the messages are short and a person answers them from mail — but the
+row is still the record, so a mail outage does not lose the message.
+
+Both tables are created by `npm run db:migrate`; nothing else needs running.
+
 Inquiries work the same way in the other direction: the row goes into `inquiries` for the publishing
 business, and the notification goes to that business's contact address with `replyTo` set to the
 buyer. The record is `/inquiries`; the email is a nudge.

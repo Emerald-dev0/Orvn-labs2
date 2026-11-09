@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useActionState } from 'react';
 import Link from 'next/link';
 import { ArrowRight, Building2, Check, Mail } from 'lucide-react';
 import PageWrapper from '../components/PageWrapper';
@@ -8,6 +8,7 @@ import PageHero from '../components/site/PageHero';
 import { Reveal } from '../components/site/Reveal';
 import SelectField from '../components/SelectField';
 import { useDocumentMeta } from '../lib/seo';
+import { sendContactMessage } from '../../app/(site)/contact/actions';
 
 const TOPICS = [
   'Beta access',
@@ -15,6 +16,8 @@ const TOPICS = [
   'Teams and agencies',
   'Something else',
 ];
+
+/** The message must reach someone; see app/(site)/contact/actions.ts. */
 
 export default function Contact() {
   useDocumentMeta({
@@ -24,12 +27,7 @@ export default function Contact() {
     path: '/contact',
   });
 
-  const [status, setStatus] = useState('idle');
-
-  const onSubmit = (e) => {
-    e.preventDefault();
-    setStatus('sent');
-  };
+  const [state, formAction, pending] = useActionState(sendContactMessage, { status: 'idle' });
 
   return (
     <PageWrapper>
@@ -43,7 +41,7 @@ export default function Contact() {
         <div className="shell">
           <div className="form-shell">
             <div>
-              {status === 'sent' ? (
+              {state.status === 'sent' ? (
                 <Reveal className="form-success-block">
                   <span className="form-success-icon"><Check size={20} strokeWidth={2.6} /></span>
                   <h2>Message received.</h2>
@@ -57,18 +55,18 @@ export default function Contact() {
                   </Link>
                 </Reveal>
               ) : (
-                <form onSubmit={onSubmit} className="form-grid">
+                <form action={formAction} className="form-grid">
                   <div className="field">
                     <label className="field-label" htmlFor="c-name">Your name</label>
-                    <input id="c-name" required className="input" placeholder="Ada Okonkwo" />
+                    <input id="c-name" name="name" required minLength={2} maxLength={120} className="input" placeholder="Ada Okonkwo" autoComplete="name" />
                   </div>
                   <div className="field">
                     <label className="field-label" htmlFor="c-email">Email</label>
-                    <input id="c-email" required type="email" className="input" placeholder="you@business.com" />
+                    <input id="c-email" name="email" required type="email" maxLength={254} className="input" placeholder="you@business.com" autoComplete="email" />
                   </div>
                   <div className="field">
                     <label className="field-label" htmlFor="c-company">Company</label>
-                    <input id="c-company" className="input" placeholder="Optional" />
+                    <input id="c-company" name="company" maxLength={160} className="input" placeholder="Optional" autoComplete="organization" />
                   </div>
                   <div className="field">
                     <label className="field-label" htmlFor="c-topic">What is this about?</label>
@@ -76,7 +74,7 @@ export default function Contact() {
                   </div>
                   <div className="field span-2">
                     <label className="field-label" htmlFor="c-message">Message</label>
-                    <textarea id="c-message" required className="textarea" rows={6} placeholder="What are you trying to publish, and what is getting in the way?" />
+                    <textarea id="c-message" name="message" required minLength={10} maxLength={4000} className="textarea" rows={6} placeholder="What are you trying to publish, and what is getting in the way?" />
                   </div>
 
                   <div className="form-foot span-2">
@@ -84,11 +82,21 @@ export default function Contact() {
                       We use your message to answer it. Nothing else. See the{' '}
                       <Link href="/legal/privacy">Privacy Policy</Link>.
                     </p>
-                    <button type="submit" className="btn btn-primary">
-                      Send message
+                    <button type="submit" className="btn btn-primary" disabled={pending}>
+                      {pending ? 'Sending…' : 'Send message'}
                       <ArrowRight strokeWidth={2.2} />
                     </button>
                   </div>
+
+                  {/* Honeypot: a real person never fills this in. */}
+                  <div className="field span-2" aria-hidden="true" style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, overflow: 'hidden' }}>
+                    <label htmlFor="c-company-url">Company URL</label>
+                    <input id="c-company-url" name="company_url_confirm" type="text" tabIndex={-1} autoComplete="off" />
+                  </div>
+
+                  {state.status === 'error' ? (
+                    <p className="field-error span-2" role="alert">{state.message}</p>
+                  ) : null}
                 </form>
               )}
             </div>

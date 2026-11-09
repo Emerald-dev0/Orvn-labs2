@@ -354,3 +354,25 @@ export const betaApplications = pgTable(
   },
   (t) => [uniqueIndex('beta_applications_email_key').on(t.email)],
 );
+
+/**
+ * Messages from the public contact form. Same principle as the beta queue: the row is the record,
+ * the email is a nudge, and losing the notification must not lose the person.
+ */
+export const contactMessages = pgTable(
+  'contact_messages',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    name: text('name').notNull(),
+    email: text('email').notNull(),
+    company: text('company'),
+    topic: text('topic'),
+    message: text('message').notNull(),
+    status: text('status').notNull().default('new'),
+    source: text('source'),
+    /** Salted hash of the submitter's address, for abuse limits only. Never the raw IP. */
+    ipHash: text('ip_hash'),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index('contact_messages_created_idx').on(t.createdAt)],
+);

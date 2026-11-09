@@ -6,6 +6,7 @@ import { resetPasswordEmail } from '../lib/emails/reset-password';
 import { signInLinkEmail } from '../lib/emails/sign-in-link';
 import { inquiryNotificationEmail } from '../lib/emails/inquiry-notification';
 import { betaApplicationEmail } from '../lib/emails/beta-application';
+import { contactMessageEmail } from '../lib/emails/contact-message';
 import { Invitation } from '../emails/Invitation';
 import { InquiryNotification } from '../emails/InquiryNotification';
 
@@ -176,5 +177,46 @@ describe('shared shell', () => {
     );
     expect(html.startsWith('<!DOCTYPE')).toBe(true);
     expect(html).toContain('viewport');
+  });
+});
+
+
+describe('contact message', () => {
+  const base = {
+    to: 'hello@orvnlabs.com',
+    id: 'msg_1',
+    name: 'Ada Okonkwo',
+    email: 'ada@example.com',
+    message: 'We list 20 units a month and the deck is rebuilt by hand each time.',
+    receivedAt: new Date('2026-11-08T09:15:00Z'),
+  };
+
+  it('replies to the sender and carries their words in both halves', async () => {
+    const message = await contactMessageEmail({ ...base, topic: 'Teams and agencies' });
+
+    expect(message.to).toBe('hello@orvnlabs.com');
+    expect(message.replyTo).toBe('ada@example.com');
+    expect(message.businessKey).toBe('contact:msg_1');
+    expect(message.text).toContain(base.message);
+    expect(message.html).toContain(base.message);
+    expect(message.html).toContain('ada@example.com');
+  });
+
+  it('keeps a hostile message as text', async () => {
+    const message = await contactMessageEmail({
+      ...base,
+      name: '<script>alert(1)</script>',
+      message: '<img src=x onerror=alert(1)> and a real sentence to pass the minimum.',
+    });
+
+    // The words survive as escaped text; what must not survive is anything a browser executes.
+    expect(hasTag(message.html)).toBe(false);
+    expect(/<img[^>]*onerror/i.test(message.html)).toBe(false);
+    expect(message.html).toContain('&lt;img src=x onerror=alert(1)&gt;');
+  });
+
+  it('says nothing about a topic that was not chosen', async () => {
+    const message = await contactMessageEmail({ ...base, topic: null });
+    expect(message.subject).toBe('Contact: Ada Okonkwo');
   });
 });
