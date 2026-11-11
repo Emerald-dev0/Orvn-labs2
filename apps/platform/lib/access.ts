@@ -86,7 +86,7 @@ export async function requireWorkspace(
 ): Promise<{ viewer: Viewer; workspace: ActiveWorkspace }> {
   const viewer = await requireUser();
   const workspace = await getActiveWorkspace(viewer);
-  if (!workspace) redirect('/invite/expired?reason=no-workspace');
+  if (!workspace) redirect('/no-workspace');
   if (!allowed.includes(workspace.role)) redirect('/dashboard?denied=1');
   return { viewer, workspace };
 }

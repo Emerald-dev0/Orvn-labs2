@@ -8,7 +8,6 @@ const WHEN = new Intl.DateTimeFormat('en-GB', {
   hour: '2-digit',
   minute: '2-digit',
   timeZone: 'Africa/Lagos',
-  timeZoneName: 'short',
 });
 
 /**
@@ -59,7 +58,7 @@ export function ContactMessage({
       </Action>
 
       <SmallPrint>
-        Received {WHEN.format(receivedAt)} · message {id}
+        Received {WHEN.format(receivedAt)} WAT · message {id}
       </SmallPrint>
     </Brand>
   );

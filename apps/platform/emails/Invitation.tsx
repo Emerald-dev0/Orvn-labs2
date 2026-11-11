@@ -8,7 +8,6 @@ const WHEN = new Intl.DateTimeFormat('en-GB', {
   hour: '2-digit',
   minute: '2-digit',
   timeZone: 'Africa/Lagos',
-  timeZoneName: 'short',
 });
 
 export function Invitation({
@@ -33,7 +32,7 @@ export function Invitation({
         The link below sets your password and opens the workspace. It works once.
       </Para>
 
-      <Action href={acceptUrl} note={`The link expires ${WHEN.format(expiresAt)}.`}>
+      <Action href={acceptUrl} note={`The link expires ${WHEN.format(expiresAt)} WAT.`}>
         Set your password
       </Action>
 

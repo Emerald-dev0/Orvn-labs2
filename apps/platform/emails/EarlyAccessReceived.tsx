@@ -75,7 +75,7 @@ export function EarlyAccessReceived({
       </Action>
 
       <SmallPrint>
-        Received {WHEN.format(receivedAt)}. Reply to this message if anything above is wrong, or if
+        Received {WHEN.format(receivedAt)} WAT. Reply to this message if anything above is wrong, or if
         your situation has changed.
       </SmallPrint>
     </Brand>
