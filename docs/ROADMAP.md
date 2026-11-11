@@ -86,6 +86,10 @@ Nothing in Phase 1 starts until every **P0** item in Stage 0 is Verified.
 
 ### S0.1 — Production configuration (P0)
 
+- **Verified (2026-11-11):** `curl https://orvnlabs.com/api/health` returns `"status":"ready"`, database, auth secret,
+  auth URL, email and analytics salt all `true`. `storage: false` is expected until R2 is set up. The redeploy-after-env-change
+  check is still open.
+
 - **Status (2026-11-11):** variables confirmed set in Vercel by the founder. `/api/health` returns `ready` in production,
   but `storage: false` (R2 not configured). Storage is not a Stage 0 gate, but uploads (P1.3) need it. Redeploy still open.
 - **Done when:** every required variable is set in Vercel for Production and Preview, and the latest
@@ -101,6 +105,9 @@ Nothing in Phase 1 starts until every **P0** item in Stage 0 is Verified.
 - **Blocked by:** nothing.
 
 ### S0.2 — Outbound mail path (P0)
+
+- **Decision (2026-11-11, founder):** click tracking on sign-in mail stays on for now. Risk: a mail scanner can open a
+  single-use sign-in link before the person does. Revisit before inviting external testers to sign in.
 
 - **Status (2026-11-11):** a production sign-in email arrived from `hello@orvnlabs.com` with expiry in WAT and the
   right link text. Open issue: the button link is wrapped by a click tracker (`awstrack.me`), so the visible host is
@@ -118,6 +125,9 @@ Nothing in Phase 1 starts until every **P0** item in Stage 0 is Verified.
 - **Blocked by:** S0.1.
 
 ### S0.3 — Deliverability (P0)
+
+- **Verified (2026-11-11):** a message from `hello@orvnlabs.com` to Gmail shows `SPF: PASS`, `DKIM: PASS (orvnlabs.com)`,
+  `DMARC: PASS (p=NONE)` and was delivered to the inbox. Fix applied: the duplicate `_dmarc` TXT record was removed.
 
 - **Status (2026-11-11):** a test message from `hello@orvnlabs.com` to Gmail shows SPF pass, DKIM pass (`orvnlabs.com`), and
   **DMARC FAIL**. Cause: `_dmarc.orvnlabs.com` has **two** DMARC TXT records (`p=none; pct=100; adkim=s; aspf=s` and
