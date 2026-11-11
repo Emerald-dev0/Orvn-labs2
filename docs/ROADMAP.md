@@ -179,7 +179,8 @@ Nothing in Phase 1 starts until every **P0** item in Stage 0 is Verified.
 
 ### S0.6 — Invitation and first sign-in (P0)
 
-- **Tester landed on an empty workspace (2026-11-11):** reported by the founder. Still open: the on-screen refusal notice for an uninvited address, which the log line proves on the backend but not on the page.
+- **Tester (2026-11-11):** accepted the invitation and created their own workspace. Verified.
+- **Refusal (2026-11-11):** the backend refusal is in the Vercel log. The on-page result is raw JSON, not the notice. See the defect in the Phase 0 closure below.
 
 - **Evidence (2026-11-11):** Vercel log `[auth] refused account creation` for a non-invited address (10:06:58 UTC), reason `no usable invitation`. `phase0:check`: one invited non-operator has accepted. Still open: the on-screen early-access notice, and the tester's first dashboard.
 
@@ -231,21 +232,14 @@ Nothing in Phase 1 starts until every **P0** item in Stage 0 is Verified.
 - **Evidence:** the grep output and the preview screenshots.
 - **Blocked by:** S0.2.
 
-**Phase 0 closed by the founder, 2026-11-11.** The exit criteria below were not all met when this was declared. Open items
-carried into Stage 1 as named exceptions:
+**Phase 0 closed by the founder, 2026-11-11 (second closure, after the evidence in S0.3–S0.6).** Exceptions carried into Stage 1:
 
-- S0.1: redeploy after the last env change, and `/api/health` check (health is `ready`, `storage: false`).
-- S0.2: decide whether Calder click tracking is turned off for sign-in mail (button link goes through `awstrack.me`).
-- S0.3: fix the duplicate DMARC record (see above); confirm Gmail inbox placement with DMARC pass.
-- S0.4: confirmation email, reply-to and duplicate check on production.
-- S0.5: run `db:policies` on production; submit `/contact`; confirm 15 of 19 tables with RLS.
-- S0.6: tester invitation and uninvited-address refusal on production (operator path verified).
-- S0.7: monitoring is not built. No error alerting exists in the code.
-- S0.8: read every email template once in preview.
-
-Run `npm run phase0:check` (in `apps/platform`) to re-check the automatable items: health, DMARC record count, RLS,
-stored applications and messages, an accepted tester invitation, error reporting, UTC wording in templates. It prints the
-steps for the rest.
+- S0.1: redeploy after the last env change not evidenced. Confirm the production `BETTER_AUTH_URL` is `https://orvnlabs.com`.
+- S0.2: click tracking on sign-in mail stays on (founder decision, deferred). Risk recorded in S0.2.
+- S0.4: applicant confirmation email, duplicate check and reply-to not evidenced. Founder notification delivered.
+- S0.6: **defect.** After a sign-in link for an uninvited address, the browser shows raw JSON at `/api/auth/magic-link/verify`: `{"message":"This address does not have beta access yet. Request access at orvnlabs.com/early-access."}`. The sign-in page notice is not shown, and the wording says "beta" where the product says "early access". Fix: redirect to `/sign-in` with the notice.
+- S0.7: monitoring not built (founder decision, deferred).
+- S0.8: template read-through by a person not evidenced.
 
 **Stage 0 exit criteria (as written):** S0.1–S0.7 Verified. The founder has signed in on production. One real early-access
 applicant and one invited tester have completed their journeys. This is the only point at which Phase 1 starts.
