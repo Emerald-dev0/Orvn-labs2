@@ -86,7 +86,8 @@ Nothing in Phase 1 starts until every **P0** item in Stage 0 is Verified.
 
 ### S0.1 — Production configuration (P0)
 
-- **Status (2026-11-11):** variables confirmed set in Vercel by the founder. Steps 2–3 open.
+- **Status (2026-11-11):** variables confirmed set in Vercel by the founder. `/api/health` returns `ready` in production,
+  but `storage: false` (R2 not configured). Storage is not a Stage 0 gate, but uploads (P1.3) need it. Redeploy still open.
 - **Done when:** every required variable is set in Vercel for Production and Preview, and the latest
   deployment was built after the last change.
 - **Verify by:**
@@ -101,6 +102,11 @@ Nothing in Phase 1 starts until every **P0** item in Stage 0 is Verified.
 
 ### S0.2 — Outbound mail path (P0)
 
+- **Status (2026-11-11):** a production sign-in email arrived from `hello@orvnlabs.com` with expiry in WAT and the
+  right link text. Open issue: the button link is wrapped by a click tracker (`awstrack.me`), so the visible host is
+  not `orvnlabs.com`. Single-use links behind a tracker can be consumed by a mail scanner before the person clicks.
+  Decide: turn off click tracking for sign-in mail in Calder, or use the plain link only.
+
 - **Done when:** `npm run mail:test -- --to <founder address>` prints `ok sent` locally, and a live
   sign-in link from `orvnlabs.com` arrives in the inbox (not spam) within a minute.
 - **Verify by:**
@@ -114,6 +120,8 @@ Nothing in Phase 1 starts until every **P0** item in Stage 0 is Verified.
 ### S0.3 — Deliverability (P0)
 
 - **Status (2026-11-11):** `npm run dns:check` reports nothing missing (SPF, DKIM google/cf2024-1/resend, DMARC present).
+  The `mail:test` run that reported `replayed` was a replay of an earlier send that day (fixed in b28e952: a fresh key per run).
+  Re-run it and check Gmail headers.
   Notes: DMARC is `p=none` (monitoring only). Gmail inbox placement not yet checked.
 - **Done when:** `npm run dns:check` reports SPF and DKIM for the sending domain with nothing missing, and
   a test message lands in the Gmail inbox, not spam.
