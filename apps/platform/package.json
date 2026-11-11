@@ -17,7 +17,8 @@
     "admin:create": "tsx scripts/create-admin.ts",
     "email:preview": "tsx scripts/preview-emails.tsx",
     "mail:test": "tsx scripts/mail-test.ts",
-    "dns:check": "node scripts/check-dns.mjs"
+    "dns:check": "node scripts/check-dns.mjs",
+    "phase0:check": "node scripts/phase0-check.mjs"
   },
   "dependencies": {
     "@fontsource-variable/bricolage-grotesque": "^5.3.0",
