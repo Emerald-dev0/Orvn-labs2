@@ -146,6 +146,8 @@ Nothing in Phase 1 starts until every **P0** item in Stage 0 is Verified.
 
 ### S0.4 — Early-access applicant journey (P0)
 
+- **Founder notification delivered (2026-11-11):** confirmed by the founder's contact. Still open: applicant confirmation email, duplicate check, reply-to.
+
 - **Evidence (2026-11-11):** `db:status` shows 2 applications stored (was 1). Still open: confirmation email arrival, duplicate check (count unchanged on resubmit), reply-to.
 
 - **Status (2026-11-11):** one real application is stored (Daniel Oluwadare, status `new`). Confirmation email,
@@ -163,6 +165,8 @@ Nothing in Phase 1 starts until every **P0** item in Stage 0 is Verified.
 
 ### S0.5 — Contact form (P0)
 
+- **Verified (2026-11-11):** message stored (`contact message stored 1`), and the founder inbox received the notification (confirmed by the founder's contact).
+
 - **Verified (2026-11-11):** `db:policies` applied: 35 policies across 15 protected tables. `db:status`: 15 of 19 tables with RLS; `contact message stored 1`. Still open: founder inbox notification.
 
 - **Done when:** a message submitted at `/contact` is stored in `contact_messages` and the inbox is notified.
@@ -174,6 +178,8 @@ Nothing in Phase 1 starts until every **P0** item in Stage 0 is Verified.
 - **Blocked by:** S0.2, S0.3.
 
 ### S0.6 — Invitation and first sign-in (P0)
+
+- **Tester landed on an empty workspace (2026-11-11):** reported by the founder. Still open: the on-screen refusal notice for an uninvited address, which the log line proves on the backend but not on the page.
 
 - **Evidence (2026-11-11):** Vercel log `[auth] refused account creation` for a non-invited address (10:06:58 UTC), reason `no usable invitation`. `phase0:check`: one invited non-operator has accepted. Still open: the on-screen early-access notice, and the tester's first dashboard.
 
