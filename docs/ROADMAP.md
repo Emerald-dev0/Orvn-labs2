@@ -50,7 +50,7 @@ What is live or verified:
 
 What is blocking real use:
 
-- **Production environment variables** were not all set on Vercel when the sign-in email returned 500. The code fix is merged; the Vercel values and a redeploy are still needed.
+- **Production environment variables** are all set in Vercel (confirmed by the founder, 2026-11-11). The redeploy and `/api/health` check in S0.1 are still open.
 - **No real operator or tester has completed sign-in on production yet.**
 - **Deliverability is unverified.** Test messages have arrived, but SPF/DKIM completeness has not been confirmed with `npm run dns:check`.
 - The public site still uses the name LAREI in some copy; the product name is undecided (see §10).
@@ -86,15 +86,16 @@ Nothing in Phase 1 starts until every **P0** item in Stage 0 is Verified.
 
 ### S0.1 — Production configuration (P0)
 
+- **Status (2026-11-11):** variables confirmed set in Vercel by the founder. Steps 2–3 open.
 - **Done when:** every required variable is set in Vercel for Production and Preview, and the latest
   deployment was built after the last change.
 - **Verify by:**
-  1. In Vercel → Settings → Environment Variables, confirm: `DATABASE_URL`, `DATABASE_URL_ADMIN`,
+  1. [x] In Vercel → Settings → Environment Variables, confirm: `DATABASE_URL`, `DATABASE_URL_ADMIN`,
      `BETTER_AUTH_SECRET` (≥32 chars), `BETTER_AUTH_URL=https://orvnlabs.com`, `ADMIN_EMAILS`,
      `ANALYTICS_HASH_SALT` (≥16 chars), `CALDER_API_KEY` (a `calder_sk_live_` key), `CALDER_API_URL=https://api.calder.click/v1`,
      `MAIL_FROM=hello@orvnlabs.com` (bare, no name, no quotes), `EARLY_ACCESS_INBOX`.
-  2. Redeploy. Check the deployment's build timestamp is after the last env change.
-  3. `curl -sS https://orvnlabs.com/api/health` returns OK.
+  2. [ ] Redeploy. Check the deployment's build timestamp is after the last env change.
+  3. [ ] `curl -sS https://orvnlabs.com/api/health` returns OK.
 - **Evidence:** screenshot of the env list with values masked; deployment id and timestamp.
 - **Blocked by:** nothing.
 
@@ -112,6 +113,8 @@ Nothing in Phase 1 starts until every **P0** item in Stage 0 is Verified.
 
 ### S0.3 — Deliverability (P0)
 
+- **Status (2026-11-11):** `npm run dns:check` reports nothing missing (SPF, DKIM google/cf2024-1/resend, DMARC present).
+  Notes: DMARC is `p=none` (monitoring only). Gmail inbox placement not yet checked.
 - **Done when:** `npm run dns:check` reports SPF and DKIM for the sending domain with nothing missing, and
   a test message lands in the Gmail inbox, not spam.
 - **Verify by:** `npm run dns:check`; send to a Gmail address; check "Show original" for `spf=pass` and `dkim=pass`.
@@ -120,6 +123,8 @@ Nothing in Phase 1 starts until every **P0** item in Stage 0 is Verified.
 
 ### S0.4 — Early-access applicant journey (P0)
 
+- **Status (2026-11-11):** one real application is stored (Daniel Oluwadare, status `new`). Confirmation email,
+  reply-to, and duplicate check not yet confirmed.
 - **Done when:** a real applicant submits `/early-access` on production, the row is stored once, the
   founder receives the notification with a reply-to set to the applicant, and the applicant receives the
   confirmation email.
@@ -134,6 +139,8 @@ Nothing in Phase 1 starts until every **P0** item in Stage 0 is Verified.
 ### S0.5 — Contact form (P0)
 
 - **Done when:** a message submitted at `/contact` is stored in `contact_messages` and the inbox is notified.
+- **Status (2026-11-11):** `npm run db:status` reports 14 of 19 tables with RLS. `policies.sql` enables RLS on 15,
+  so `contact_messages` is the likely missing one until `db:policies` runs on production. Not yet confirmed.
 - **Verify by:** submit it; `npm run db:status` shows a `contact form` row with count 1 after `npm run db:policies` has
   been run on production (so RLS is on for the table).
 - **Evidence:** `db:status` output after the submission.
@@ -156,6 +163,20 @@ Nothing in Phase 1 starts until every **P0** item in Stage 0 is Verified.
   4. Check the server log for `[auth] refused account creation` for the uninvited attempt.
 - **Evidence:** screenshots of steps 2 and 3; the log line.
 - **Blocked by:** S0.2.
+
+### S0.9 — Operator admin console (P1)
+
+- **Status:** not started as a redesign. `/admin/early-access` works: requests list, status filter, status
+  form, copy-invite command. The founder has said the admin pages are not good enough yet, and this is part
+  of the product, not a finishing touch. Admin pages are out of scope for Stage 0 but must be upgraded before
+  the first real batch of applicants is reviewed at volume.
+- **Done when:** the early-access queue, the invitation flow and the operator dashboard have been reviewed by
+  the founder on a real screen and approved; the layout works on a laptop and a phone; each row shows what
+  the operator needs to decide without opening it.
+- **Verify by:** the founder walks through reviewing three applications and issuing one invitation end to end
+  and signs off in writing.
+- **Evidence:** screenshots before and after; the founder's sign-off note.
+- **Blocked by:** S0.4 (real applications to design against).
 
 ### S0.7 — Monitoring (P0)
 
@@ -584,7 +605,7 @@ Each of these needs a written reason before it enters a phase.
 
 ## 14. Immediate next actions (this week)
 
-1. Complete S0.1 (environment and redeploy). Record evidence.
+1. Complete S0.1 steps 2–3 (redeploy and health check). Record evidence.
 2. Complete S0.2 (sign-in email on production, correct time, correct link).
 3. Run `npm run dns:check` and complete S0.3.
 4. Ask one applicant to use `/early-access`; complete S0.4.
