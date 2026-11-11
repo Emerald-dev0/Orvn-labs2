@@ -146,6 +146,8 @@ Nothing in Phase 1 starts until every **P0** item in Stage 0 is Verified.
 
 ### S0.4 — Early-access applicant journey (P0)
 
+- **Evidence (2026-11-11):** `db:status` shows 2 applications stored (was 1). Still open: confirmation email arrival, duplicate check (count unchanged on resubmit), reply-to.
+
 - **Status (2026-11-11):** one real application is stored (Daniel Oluwadare, status `new`). Confirmation email,
   reply-to, and duplicate check not yet confirmed.
 - **Done when:** a real applicant submits `/early-access` on production, the row is stored once, the
@@ -161,6 +163,8 @@ Nothing in Phase 1 starts until every **P0** item in Stage 0 is Verified.
 
 ### S0.5 — Contact form (P0)
 
+- **Verified (2026-11-11):** `db:policies` applied: 35 policies across 15 protected tables. `db:status`: 15 of 19 tables with RLS; `contact message stored 1`. Still open: founder inbox notification.
+
 - **Done when:** a message submitted at `/contact` is stored in `contact_messages` and the inbox is notified.
 - **Status (2026-11-11):** `npm run db:status` reports 14 of 19 tables with RLS. `policies.sql` enables RLS on 15,
   so `contact_messages` is the likely missing one until `db:policies` runs on production. Not yet confirmed.
@@ -170,6 +174,8 @@ Nothing in Phase 1 starts until every **P0** item in Stage 0 is Verified.
 - **Blocked by:** S0.2, S0.3.
 
 ### S0.6 — Invitation and first sign-in (P0)
+
+- **Evidence (2026-11-11):** Vercel log `[auth] refused account creation` for a non-invited address (10:06:58 UTC), reason `no usable invitation`. `phase0:check`: one invited non-operator has accepted. Still open: the on-screen early-access notice, and the tester's first dashboard.
 
 - **Operator first run (built 2026-11-11):** an address on `ADMIN_EMAILS` with no workspace is taken to
   `/no-workspace`, names its workspace and address once, and lands on `/dashboard`. No invitation needed.
@@ -209,6 +215,8 @@ Nothing in Phase 1 starts until every **P0** item in Stage 0 is Verified.
 - **Blocked by:** S0.1.
 
 ### S0.8 — Time and copy correctness (P1)
+
+- **Partly done (2026-11-11):** `npm run email:preview` wrote 7 templates to `public/preview-emails`. Still open: a person reads each one and confirms WAT and the links.
 
 - **Done when:** every user-facing time in email and on the site is labelled with its zone; no template still says UTC
   without saying so.
