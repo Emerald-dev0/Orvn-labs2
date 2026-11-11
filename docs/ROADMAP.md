@@ -219,6 +219,10 @@ carried into Stage 1 as named exceptions:
 - S0.7: monitoring is not built. No error alerting exists in the code.
 - S0.8: read every email template once in preview.
 
+Run `npm run phase0:check` (in `apps/platform`) to re-check the automatable items: health, DMARC record count, RLS,
+stored applications and messages, an accepted tester invitation, error reporting, UTC wording in templates. It prints the
+steps for the rest.
+
 **Stage 0 exit criteria (as written):** S0.1–S0.7 Verified. The founder has signed in on production. One real early-access
 applicant and one invited tester have completed their journeys. This is the only point at which Phase 1 starts.
 
