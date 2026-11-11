@@ -146,7 +146,7 @@ Nothing in Phase 1 starts until every **P0** item in Stage 0 is Verified.
 
 ### S0.4 — Early-access applicant journey (P0)
 
-- **Founder notification delivered (2026-11-11):** confirmed by the founder's contact. Still open: applicant confirmation email, duplicate check, reply-to.
+- **Verified (2026-11-11):** applicant confirmation delivered; duplicate submission leaves the count unchanged and shows the already-received screen; reply to the founder notification goes to the applicant.
 
 - **Evidence (2026-11-11):** `db:status` shows 2 applications stored (was 1). Still open: confirmation email arrival, duplicate check (count unchanged on resubmit), reply-to.
 
@@ -236,8 +236,7 @@ Nothing in Phase 1 starts until every **P0** item in Stage 0 is Verified.
 
 - S0.1: redeploy after the last env change not evidenced. Confirm the production `BETTER_AUTH_URL` is `https://orvnlabs.com`.
 - S0.2: click tracking on sign-in mail stays on (founder decision, deferred). Risk recorded in S0.2.
-- S0.4: applicant confirmation email, duplicate check and reply-to not evidenced. Founder notification delivered.
-- S0.6: **defect.** After a sign-in link for an uninvited address, the browser shows raw JSON at `/api/auth/magic-link/verify`: `{"message":"This address does not have beta access yet. Request access at orvnlabs.com/early-access."}`. The sign-in page notice is not shown, and the wording says "beta" where the product says "early access". Fix: redirect to `/sign-in` with the notice.
+- S0.6: **defect (narrowed).** Uninvited addresses are now refused before any email is sent (`lib/magic-link-gate.ts`, `[auth] magic link not sent` in logs). Links sent before that change can still land on the JSON below. After a sign-in link for an uninvited address, the browser shows raw JSON at `/api/auth/magic-link/verify`: `{"message":"This address does not have beta access yet. Request access at orvnlabs.com/early-access."}`. The sign-in page notice is not shown, and the wording says "beta" where the product says "early access". Fix: redirect to `/sign-in` with the notice.
 - S0.7: monitoring not built (founder decision, deferred).
 - S0.8: template read-through by a person not evidenced.
 
