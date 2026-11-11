@@ -66,7 +66,7 @@ Blueprint phases map onto the repo as follows:
 
 | Blueprint phase | Repo milestone | Status |
 | --- | --- | --- |
-| Phase 0 — Foundation | M0 + launch hardening (Stage 0 below) | Mostly built; launch-blocked |
+| Phase 0 — Foundation | M0 + launch hardening (Stage 0 below) | Closed by the founder 2026-11-11 with named exceptions (§2) |
 | Phase 1 — Core deal preparation | M1 property record, M2 publish and inquire, M3 AI drafting | M1–M2 built; M3 open |
 | Phase 2 — Professional presence | M4 breadth (website, profile, branding) | Open; `/website` is sample data |
 | Phase 3 — Buyer network | Not in M0–M4 | Open; needs a design decision (§10) |
@@ -119,7 +119,12 @@ Nothing in Phase 1 starts until every **P0** item in Stage 0 is Verified.
 
 ### S0.3 — Deliverability (P0)
 
-- **Status (2026-11-11):** `npm run dns:check` reports nothing missing (SPF, DKIM google/cf2024-1/resend, DMARC present).
+- **Status (2026-11-11):** a test message from `hello@orvnlabs.com` to Gmail shows SPF pass, DKIM pass (`orvnlabs.com`), and
+  **DMARC FAIL**. Cause: `_dmarc.orvnlabs.com` has **two** DMARC TXT records (`p=none; pct=100; adkim=s; aspf=s` and
+  `p=none; rua=mailto:danieloye@orvnlabs.com`). Receivers treat duplicate DMARC records as invalid. Fix: keep one record,
+  e.g. `v=DMARC1; p=none; pct=100; adkim=s; aspf=s; rua=mailto:danieloye@orvnlabs.com`, and delete the other in Cloudflare.
+  `dns:check` reported DMARC as ok and did not flag the duplicate; that check needs fixing too.
+- **Earlier (2026-11-11):** `npm run dns:check` reports nothing missing (SPF, DKIM google/cf2024-1/resend, DMARC present).
   The `mail:test` run that reported `replayed` was a replay of an earlier send that day (fixed in b28e952: a fresh key per run).
   Re-run it and check Gmail headers.
   Notes: DMARC is `p=none` (monitoring only). Gmail inbox placement not yet checked.
@@ -202,7 +207,19 @@ Nothing in Phase 1 starts until every **P0** item in Stage 0 is Verified.
 - **Evidence:** the grep output and the preview screenshots.
 - **Blocked by:** S0.2.
 
-**Stage 0 exit criteria:** S0.1–S0.7 Verified. The founder has signed in on production. One real early-access
+**Phase 0 closed by the founder, 2026-11-11.** The exit criteria below were not all met when this was declared. Open items
+carried into Stage 1 as named exceptions:
+
+- S0.1: redeploy after the last env change, and `/api/health` check (health is `ready`, `storage: false`).
+- S0.2: decide whether Calder click tracking is turned off for sign-in mail (button link goes through `awstrack.me`).
+- S0.3: fix the duplicate DMARC record (see above); confirm Gmail inbox placement with DMARC pass.
+- S0.4: confirmation email, reply-to and duplicate check on production.
+- S0.5: run `db:policies` on production; submit `/contact`; confirm 15 of 19 tables with RLS.
+- S0.6: tester invitation and uninvited-address refusal on production (operator path verified).
+- S0.7: monitoring is not built. No error alerting exists in the code.
+- S0.8: read every email template once in preview.
+
+**Stage 0 exit criteria (as written):** S0.1–S0.7 Verified. The founder has signed in on production. One real early-access
 applicant and one invited tester have completed their journeys. This is the only point at which Phase 1 starts.
 
 ---
