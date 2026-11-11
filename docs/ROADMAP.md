@@ -1,6 +1,6 @@
 # ORVN Labs — Roadmap
 
-Status: working plan, dated 2026-11-04. Owner: Daniel (engineering) with the founder (product and market).
+Status: working plan, dated 2026-11-11. Owner: Daniel (engineering) with the founder (product and market).
 This file replaces nothing. `docs/PLATFORM-BUILD-PLAN.md` holds the detailed M0–M4 build notes for the
 operator workspace; this roadmap places that work inside the wider product blueprint and sets the rule
 for when each step counts as done.
@@ -36,7 +36,7 @@ Only **Verified** unblocks the next step. **Accepted** is required before a phas
 
 ---
 
-## 1. Where we are now (2026-11-04)
+## 1. Where we are now (2026-11-11)
 
 What is live or verified:
 
@@ -148,7 +148,7 @@ Nothing in Phase 1 starts until every **P0** item in Stage 0 is Verified.
 
 ### S0.6 — Invitation and first sign-in (P0)
 
-- **Operator first run (built 2026-11-04):** an address on `ADMIN_EMAILS` with no workspace is taken to
+- **Operator first run (built 2026-11-11):** an address on `ADMIN_EMAILS` with no workspace is taken to
   `/no-workspace`, names its workspace and address once, and lands on `/dashboard`. No invitation needed.
   Verify: sign in as the operator address on a fresh account, create the workspace, confirm the dashboard
   loads, sign out, sign in again and confirm no second workspace can be created. A non-operator with no
