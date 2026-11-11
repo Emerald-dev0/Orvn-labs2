@@ -13,6 +13,7 @@
  * Inbound (Cloudflare Email Routing → your Gmail) is a separate path and cannot be tested from
  * here: send yourself something at hello@orvnlabs.com from a phone.
  */
+import { randomUUID } from 'node:crypto';
 import '../scripts/load-env.mjs';
 import { EmailError, sendEmail } from '../lib/email';
 
@@ -93,7 +94,8 @@ try {
       `Sent ${new Date().toISOString()}.`,
       'Inbound is separate — reply to this message to test that direction.',
     ].join('\n'),
-    businessKey: `mail-test:${new Date().toISOString().slice(0, 10)}`,
+    // A fresh key per run. A per-day key replays the first send of the day, so no new email is sent.
+    businessKey: `mail-test:${randomUUID()}`,
   });
 
   console.log(`\nok    sent        ${result.provider} accepted it in ${Date.now() - started}ms`);
