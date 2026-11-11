@@ -37,7 +37,7 @@ So `npm run db:status`, `db:migrate`, `db:policies` and `npm run invite` work wi
 | `ANALYTICS_HASH_SALT` | 32 random hex bytes | `openssl rand -hex 32` |
 | `CALDER_API_URL` | `https://api.calder.click/v1` | this file, by hand |
 | `CALDER_API_KEY` | `calder_sk_live_…` | Calder → project `proj_dd2355404c90` → **API keys** → create one. The full key is shown once |
-| `MAIL_FROM` | `ORREI <hello@orvnlabs.com>` | only after that address exists as a **sender identity** in Calder (§4) |
+| `MAIL_FROM` | `hello@orvnlabs.com` (bare: no name, no `<>`, no quotes) | only after that address exists as a **sender identity** in Calder (§4) |
 | `EARLY_ACCESS_INBOX` | `hello@orvnlabs.com` | one inbox for everything — the same address the site publishes (§5 forwards it to your Gmail) |
 | `GROQ_API_KEY` | `gsk_…` | `console.groq.com` → API Keys. Optional: without it the drafting panel says so instead of inventing text |
 
@@ -154,7 +154,7 @@ Calder → **Domains & DNS**:
 3. Wait for Calder to show verified — the domain row, not the identity row.
 4. **Add Sender Identity** → `hello@orvnlabs.com`, display name `ORREI`.
 
-Only then is `MAIL_FROM=ORREI <hello@orvnlabs.com>` true. Sending from an identity that is not verified
+Only then is `MAIL_FROM=hello@orvnlabs.com` true. Sending from an identity that is not verified
 is the single most common cause of "the API said 200 and nothing arrived".
 
 ## 5. Receiving: Cloudflare Email Routing

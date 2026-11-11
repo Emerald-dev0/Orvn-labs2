@@ -7,7 +7,7 @@ const WHEN = new Intl.DateTimeFormat('en-GB', {
   year: 'numeric',
   hour: '2-digit',
   minute: '2-digit',
-  timeZone: 'UTC',
+  timeZone: 'Africa/Lagos',
   timeZoneName: 'short',
 });
 

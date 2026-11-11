@@ -2,6 +2,7 @@ import * as React from 'react';
 import type { EmailMessage } from '../email';
 import { renderEmail } from '../../emails/render';
 import { Invitation } from '../../emails/Invitation';
+import { formatWhen } from './when';
 
 /**
  * Invitation to an early-access workspace.
@@ -29,7 +30,7 @@ export async function invitationEmail(opts: {
       'Set your password and open the workspace:',
       opts.acceptUrl,
       '',
-      `The link expires ${opts.expiresAt.toUTCString()} and works once.`,
+      `The link expires ${formatWhen(opts.expiresAt)} and works once.`,
       '',
       'If you were not expecting this, ignore it and nothing happens.',
       '',

@@ -4,7 +4,7 @@ import { Action, Brand, FallbackUrl, Heading, Para, SmallPrint } from './compone
 const WHEN = new Intl.DateTimeFormat('en-GB', {
   hour: '2-digit',
   minute: '2-digit',
-  timeZone: 'UTC',
+  timeZone: 'Africa/Lagos',
   timeZoneName: 'short',
 });
 
