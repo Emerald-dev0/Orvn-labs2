@@ -141,6 +141,12 @@ Nothing in Phase 1 starts until every **P0** item in Stage 0 is Verified.
 
 ### S0.6 — Invitation and first sign-in (P0)
 
+- **Operator first run (built 2026-11-04):** an address on `ADMIN_EMAILS` with no workspace is taken to
+  `/no-workspace`, names its workspace and address once, and lands on `/dashboard`. No invitation needed.
+  Verify: sign in as the operator address on a fresh account, create the workspace, confirm the dashboard
+  loads, sign out, sign in again and confirm no second workspace can be created. A non-operator with no
+  workspace sees the invitation guidance, not the form.
+
 - **Done when:** the founder issues an invitation to a tester, the tester accepts it, creates a password or uses a
   magic link, and lands on an empty private workspace. An uninvited address is refused with the early-access notice.
 - **Verify by:**
