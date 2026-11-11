@@ -8,7 +8,6 @@ const WHEN = new Intl.DateTimeFormat('en-GB', {
   hour: '2-digit',
   minute: '2-digit',
   timeZone: 'Africa/Lagos',
-  timeZoneName: 'short',
 });
 
 /**
@@ -91,7 +90,7 @@ export function BetaApplication({
       </Action>
 
       <SmallPrint>
-        Received {WHEN.format(receivedAt)} · application {id}. Invite with{' '}
+        Received {WHEN.format(receivedAt)} WAT · application {id}. Invite with{' '}
         <code style={{ fontSize: 11.5 }}>npm run invite --email {email}</code>
       </SmallPrint>
     </Brand>

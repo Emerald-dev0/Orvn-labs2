@@ -67,7 +67,7 @@ export async function loadAppContext(): Promise<AppContext> {
   if (!viewer) redirect('/sign-in?next=/dashboard');
 
   const workspace = await getActiveWorkspace(viewer);
-  if (!workspace) redirect('/invite/expired?reason=no-workspace');
+  if (!workspace) redirect('/no-workspace');
 
   const unread = await countUnreadInquiries(viewer.userId, workspace.id);
   return { demo: false, unread, viewer, workspace, shell: shellFor(viewer, workspace) };

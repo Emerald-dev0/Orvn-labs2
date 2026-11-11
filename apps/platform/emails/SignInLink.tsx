@@ -5,7 +5,6 @@ const WHEN = new Intl.DateTimeFormat('en-GB', {
   hour: '2-digit',
   minute: '2-digit',
   timeZone: 'Africa/Lagos',
-  timeZoneName: 'short',
 });
 
 export function SignInLink({ url, expiresAt }: { url: string; expiresAt: Date }) {
@@ -18,7 +17,7 @@ export function SignInLink({ url, expiresAt }: { url: string; expiresAt: Date })
 
       <Para>Use the link below to open your workspace. No password needed.</Para>
 
-      <Action href={url} note={`Works once, expires at ${WHEN.format(expiresAt)}.`}>
+      <Action href={url} note={`Works once, expires at ${WHEN.format(expiresAt)} WAT.`}>
         Open ORREI
       </Action>
 
