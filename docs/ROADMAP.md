@@ -391,7 +391,7 @@ Repo milestones: M1 property record, M2 publish and inquire, M3 AI drafting.
 
 ### P1.4 — Publish snapshot and public page (M2, P0)
 
-- **Done when:** publishing creates an immutable snapshot; editing the record afterwards does not change the live page
+- **Done when:** each output (page, PDF, summary, card) has its own publication state (Document 03 PUB-04); publishing creates an immutable snapshot; editing the record afterwards does not change the live page
   until republished; unpublishing removes the page and its files.
 - **Verify by:** publish; edit the price; confirm the live page still shows the old price; republish; confirm the change;
   unpublish; confirm `/w/{username}/p/{slug}` returns not found and the file URLs are refused.
@@ -447,6 +447,8 @@ evidence log, not its address in the repository.
 ---
 
 ## 4. Phase 2 — Professional presence (M4)
+
+> **Spec status (2026-11-04):** P2.2 is controlled templates only. P2.4 and P2.5 are Stage 3 candidates. P2.3 is a release blocker (no mock figures). See §15.
 
 Blueprint goal: a wholesaler has one professional destination that shows who they are and their selected deals.
 
@@ -547,6 +549,8 @@ should not see.
 
 ## 6. Phase 4 — Deal distribution
 
+> **Spec status (2026-11-04):** moved after Stage 2. Auto-email blasts and SMS campaigns are deferred (Document 02 §10). See §15-4.
+
 Blueprint goal: a wholesaler can send a deal to a relevant audience and see what happened.
 
 ### P4.1 — Audience preview (P0)
@@ -606,6 +610,8 @@ the responses and the unsubscribes.
 
 ## 7. Phase 5 — JV network
 
+> **Spec status (2026-11-04):** a manual concierge pilot after Stage 2 (JV-01, JV-02). Automation is Stage 4 (JV-03). See §15-5.
+
 Blueprint goal: a wholesaler without a buyer can reach an eligible JV or disposition partner.
 
 ### P5.1 — JV partner profile with explicit opt-in (P0)
@@ -663,6 +669,8 @@ reflects the outcome.
 
 ## 8. Phase 6 — Advanced distribution
 
+> **Spec status (2026-11-04):** Stage 4 at the earliest, after manual proof. See §15-6.
+
 Only start if Phase 4 is accepted and real campaigns are being sent weekly.
 
 - **P6.1 — Social posting (P1):** platform-specific copy (Facebook, Instagram, X, LinkedIn) generated from approved facts;
@@ -678,6 +686,8 @@ Only start if Phase 4 is accepted and real campaigns are being sent weekly.
 ---
 
 ## 9. Phase 7 — Network intelligence
+
+> **Spec status (2026-11-04):** a separate product line (INTEL-01), not part of this roadmap's V1 or Stage 2 work. See §15-6.
 
 Only start after two wholesalers have closed deals through the platform (§11, the first milestone).
 
@@ -825,25 +835,18 @@ marked as conflicting.
    Phase 0 was closed on 2026-11-11 with named exceptions, and no deal was run end to end. *Founder: reopen the spec's Stage 0
    exit, or accept it as met in part.* Document 02 §18 says the gaps "block claiming a completed feature". I recommend the deal
    test before any beta invitation.
-2. **P2.2 website sections against "do not build a general-purpose website builder"** (Document 02 §10). Keep controlled templates
-   only. *Founder: confirm.*
-3. **P2.4 follow and P2.5 updates.** Document 02 §6.1 excludes full social networking, and neither feature has a spec ID. *Founder: move to
-   Stage 3, or remove.*
-4. **P4.4 campaign send is P0.** Document 02 §10 says auto-email blasts and SMS campaigns are deferred. *Founder: confirm that P4 moves
-   after Stage 2.* Opt-out and consent must still exist for any optional mail (Document 02 §14).
-5. **P5 JV steps are P0.** Document 02 §3 says JV is not required for V1. Document 03 places JV in Stage 3 as a manual concierge pilot,
-   with automation only in Stage 4 (JV-02, JV-03). *Founder: P5.1–P5.4 become a manual pilot after Stage 2.*
-6. **P6 and P7.** Document 03 §7 places network intelligence (INTEL-01) in a separate product line, outside V1. The roadmap keeps it as
-   a phase. *Founder: keep as a later, separate product, or remove from this roadmap.*
-7. **Milestone M-E** (two wholesalers close a deal through the platform). Document 02 excludes transaction automation, and
+2. **RESOLVED per spec (2026-11-04): no website section editor.** P2.2 is controlled templates only (Document 02 §10: "do not build a general-purpose website builder").
+3. **RESOLVED per spec (2026-11-04): P2.4 and P2.5 move to Stage 3 candidates.** Document 02 §6.1 excludes full social networking, and neither feature has a V1 spec ID. Document 02 §10 lists saved profiles and connections as a Stage 3 candidate.
+4. **RESOLVED per spec (2026-11-04): P4 moves after Stage 2.** Document 02 §10 defers auto-email blasts and SMS campaigns. Opt-out and consent must exist for any optional mail (Document 02 §14).
+5. **RESOLVED per spec (2026-11-04): P5 becomes a manual concierge pilot after Stage 2.** Document 02 §3 says JV is not required for V1. Document 03 places it in Stage 3 (JV-01, JV-02), with automation only in Stage 4 (JV-03).
+6. **RESOLVED per spec (2026-11-04): P6 is Stage 4, and P7 is a separate product line.** Document 03 §7 places network intelligence (INTEL-01) outside V1 and outside this roadmap's critical path.
+7. **OPEN, founder to confirm wording.** Milestone M-E (two wholesalers close a deal through the platform). Document 02 excludes transaction automation, and
    Document 02 §17 says paid readiness needs independent users accepting a paid offer. M-E is a validation outcome, not a
    closing feature. *Founder: confirm the wording.*
 8. **RESOLVED as a requirement, not yet met: R2 storage.** §1 said uploads were built, but R2 is not configured (`storage: false`).
    The spec requires secure object storage for uploads (Document 03 PROP-03 dependency; Document 06 §1; Document 02 Stage 0
    "secure uploads"; acceptance test T13). *Founder or engineering: create the R2 bucket and set the four `R2_*` variables in Vercel.
    P1.3 cannot be Verified, and the Stage 0 deal test cannot run, until `/api/health` reports `storage: true`.*
-9. **Analytics and sample data.** `/analytics` and `/website` still show sample data (§1). Document 03 AN-01 and acceptance test
-   T11 require that no mock figures appear in a real account. *Engineering: part of P2.3, and `/analytics` needs the same fix.*
-10. **Per-output publication states.** Document 03 PUB-04 requires each output (page, PDF, summary, card) to have its own state.
-    P1.4 and P1.8 do not yet say this. *Engineering: add to the P1.4 Done-when before it is built further.*
+9. **RESOLVED per spec (2026-11-04): no mock figures in any real account.** Document 03 AN-01 and acceptance test T11 require it. `/analytics` and `/website` must be fixed under P2.3, before the Stage 0 deal test.
+10. **RESOLVED per spec (2026-11-04): each output has its own state.** Document 03 PUB-04 requires page, PDF, summary and card to have independent states. P1.4 is amended to say so.
 
