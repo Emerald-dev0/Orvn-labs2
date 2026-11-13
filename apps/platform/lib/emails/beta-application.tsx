@@ -48,8 +48,7 @@ export async function betaApplicationEmail(opts: {
       `Received ${formatWhen(opts.receivedAt)} · application ${opts.id}`,
       opts.adminUrl ? `Open in the queue: ${opts.adminUrl}` : null,
       '',
-      'Reply to this email to answer them directly. Invitations are issued with:',
-      `  npm run invite --email ${opts.email}`,
+      'Reply to this email to answer them directly. To invite them, open the queue and press Send invitation.',
       '',
       'ORVN Labs · ORREI early access',
     ]

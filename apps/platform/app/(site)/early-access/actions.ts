@@ -11,6 +11,7 @@ import { sendEmail } from '../../../lib/email';
 import { betaApplicationEmail } from '../../../lib/emails/beta-application';
 import { earlyAccessReceivedEmail } from '../../../lib/emails/early-access-received';
 import { serverEnv } from '../../../lib/env';
+import { adminEmails } from '../../../lib/admin';
 
 export type BetaApplyState =
   | { status: 'idle' }
@@ -146,16 +147,36 @@ export async function requestEarlyAccess(
         adminUrl: QUEUE_URL(applicationId ?? ''),
       });
 
-      await sendEmail({
-        ...message,
-        to: INBOX(),
-        subject: stored ? message.subject : `${message.subject} (not stored — database unavailable)`,
-      });
+      // Every operator gets the notice, plus the shared inbox. Each recipient has its own
+      // idempotency key: one shared key would make Calder replay the first send and silently
+      // drop every other operator's copy.
+      const recipients = [...new Set([INBOX(), ...adminEmails()].map((address) => address.trim().toLowerCase()))].filter(Boolean);
+      const failures: string[] = [];
+      for (const to of recipients) {
+        try {
+          await sendEmail({
+            ...message,
+            to,
+            businessKey: `${message.businessKey ?? 'beta'}:${to}`,
+            subject: stored ? message.subject : `${message.subject} (not stored — database unavailable)`,
+          });
+        } catch (error) {
+          failures.push(to);
+          console.error('[early-access] notification failed', {
+            code: (error as { code?: string }).code,
+            applicationId,
+          });
+        }
+      }
+
+      if (failures.length === recipients.length) {
+        throw new Error('no notification delivered');
+      }
     } catch (error) {
       // The request is stored; the operator can still see it. Say so plainly rather than
       // claiming an email went out.
       console.error('[early-access] notification failed', {
-        code: (error as { code?: string }).code,
+        message: (error as Error).message,
         applicationId,
       });
       return {

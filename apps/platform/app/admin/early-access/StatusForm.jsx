@@ -54,7 +54,7 @@ export default function StatusForm({ id, status, statuses, name, email }) {
 
       <form action={submitStatus} className="adm-status-form" aria-label="Change status">
         <input type="hidden" name="id" value={id} />
-        {statuses.map((option) => (
+        {statuses.filter((option) => option !== 'invited').map((option) => (
           <button
             key={option}
             type="submit"
@@ -69,6 +69,8 @@ export default function StatusForm({ id, status, statuses, name, email }) {
           </button>
         ))}
       </form>
+
+      {status === 'invited' ? <span className="adm-note is-ok">Invitation sent to {email}</span> : null}
 
       {message.status === 'error' ? (
         <span className="adm-note is-warn" role="alert">{message.message}</span>

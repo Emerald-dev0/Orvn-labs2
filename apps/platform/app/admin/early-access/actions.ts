@@ -34,6 +34,11 @@ export async function setApplicationStatus(
   });
   if (!parsed.success) return { status: 'error', message: 'That change was not understood.' };
 
+  // "Invited" is only ever set by sending the invitation, so the applicant always gets the email.
+  if (parsed.data.status === 'invited') {
+    return { status: 'error', message: 'Use Send invitation to invite this person. It emails them the link.' };
+  }
+
   try {
     await adminDb
       .update(betaApplications)
@@ -105,6 +110,7 @@ export async function inviteApplicant(
       role: 'owner',
       invitedBy: viewer.userId,
       note: `Early access request ${applicant.id}`,
+      subject: 'Your ORREI early-access invitation',
     });
   } catch (error) {
     const message =

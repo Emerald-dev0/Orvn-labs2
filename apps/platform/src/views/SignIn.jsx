@@ -81,7 +81,7 @@ export default function SignIn({ next = '/dashboard', refused = false }) {
       const refused = /invit|forbidden|beta/i.test(detail) && !/origin/i.test(detail);
       setMessage(
         /exist/i.test(detail)
-          ? 'An account already uses that address. Sign in with your password instead.'
+          ? 'An account already uses that address. Sign in with an email link, then set a password on the next page.'
           : /origin/i.test(detail)
             ? 'This page is not the address sign-in is set up for. Open orvnlabs.com in a new tab and try there.'
             : refused
@@ -103,7 +103,7 @@ export default function SignIn({ next = '/dashboard', refused = false }) {
       window.location.assign(next);
     } catch {
       setStatus('error');
-      setMessage('That email and password do not match an account.');
+      setMessage('That email and password do not match. If you were approved but have not set a password yet, sign in with an email link first, then set one.');
       setRefusedNotice(true);
     }
   }

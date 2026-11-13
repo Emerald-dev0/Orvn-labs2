@@ -4,45 +4,25 @@ import { APPLICATION_STATUSES, listApplications, statusCounts } from '../../../l
 import StatusForm from './StatusForm';
 import { formatWhen } from '../../../lib/emails/when';
 
-/** Long answers fold away so each card stays scannable; the full text is one click away. */
-const FOLD_AT = 180;
-
+/** One labelled answer. Shown in full: an operator decides from the words the person used. */
 function Answer({ label, text }) {
-  const long = text.length > FOLD_AT;
-  if (!long) {
-    return (
-      <div className="adm-answer">
-        <span>{label}</span>
-        <p>{text}</p>
-      </div>
-    );
-  }
   return (
-    <details className="adm-answer adm-fold">
-      <summary>
-        <span>{label}</span>
-        <p>{text.slice(0, FOLD_AT).trimEnd()}…</p>
-        <em>Show full answer</em>
-      </summary>
-      <p className="adm-full">{text}</p>
-    </details>
+    <div className="adm-answer">
+      <span>{label}</span>
+      <p>{text}</p>
+    </div>
   );
 }
 
-export const metadata = {
-  title: 'Early access',
-  robots: { index: false, follow: false },
-};
-
-export const dynamic = 'force-dynamic';
-
-const FILTERS = [
-  { id: 'all', label: 'All' },
-  { id: 'new', label: 'New' },
-  { id: 'reviewing', label: 'Reviewing' },
-  { id: 'invited', label: 'Invited' },
-  { id: 'declined', label: 'Declined' },
-];
+/** A field that may be empty. Empty is written out, so a blank does not look like a bug. */
+function Field({ label, value, children }) {
+  return (
+    <div className="adm-field">
+      <dt>{label}</dt>
+      <dd>{children ?? (value ? value : <span className="adm-muted">Not given</span>)}</dd>
+    </div>
+  );
+}
 
 export default async function EarlyAccessQueue({ searchParams }) {
   await requireAdmin();
@@ -114,49 +94,30 @@ export default async function EarlyAccessQueue({ searchParams }) {
                 <div>
                   <h2>{application.name}</h2>
                   <p className="adm-sub">
-                    {application.company ? `${application.company} · ` : ''}
                     <a href={`mailto:${application.email}`}>{application.email}</a>
+                    {application.company ? <> · {application.company}</> : null}
                   </p>
                 </div>
-                <span className={`adm-status is-${application.status}`}>{application.status}</span>
+                <span className={`adm-status is-${application.status}`}>{STATUS_LABEL[application.status] ?? application.status}</span>
               </div>
 
-              <dl className="adm-facts">
-                {application.role ? (
-                  <>
-                    <dt>Role</dt>
-                    <dd>{application.role}</dd>
-                  </>
-                ) : null}
-                {application.markets ? (
-                  <>
-                    <dt>Market</dt>
-                    <dd>{application.markets}</dd>
-                  </>
-                ) : null}
-                {application.volume ? (
-                  <>
-                    <dt>Per month</dt>
-                    <dd>{application.volume}</dd>
-                  </>
-                ) : null}
-                {application.website ? (
-                  <>
-                    <dt>Website</dt>
-                    <dd>{application.website}</dd>
-                  </>
-                ) : null}
-                <dt>Received</dt>
-                <dd>{formatWhen(new Date(application.createdAt))}</dd>
+              <dl className="adm-fields">
+                <Field label="Role" value={application.role} />
+                <Field label="Primary market" value={application.markets} />
+                <Field label="Properties per month" value={application.volume} />
+                <Field label="Website or profile" value={application.website}>
+                  {application.website ? (
+                    <a href={/^https?:\/\//i.test(application.website) ? application.website : `https://${application.website}`} rel="noopener noreferrer nofollow" target="_blank">{application.website}</a>
+                  ) : null}
+                </Field>
+                <Field label="Consent recorded">{application.consent ? 'Yes' : 'No'}</Field>
+                <Field label="Received">{formatWhen(new Date(application.createdAt))}</Field>
               </dl>
 
-              {application.currentTools ? (
-                <Answer label="Shares properties today with" text={application.currentTools} />
-              ) : null}
-
-              {application.frustration ? (
-                <Answer label="The part that costs them time" text={application.frustration} />
-              ) : null}
+              <div className="adm-answers">
+                <Answer label="How they share properties today" text={application.currentTools || 'Not answered'} />
+                <Answer label="The part that costs them time" text={application.frustration || 'Not answered'} />
+              </div>
 
               <StatusForm
                 id={application.id}

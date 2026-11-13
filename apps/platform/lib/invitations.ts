@@ -68,6 +68,8 @@ export async function createInvitation(opts: {
   role?: 'owner' | 'editor' | 'viewer';
   invitedBy?: string | null;
   note?: string | null;
+  /** Overrides the default subject, e.g. when the invitation approves an early-access request. */
+  subject?: string;
 }): Promise<{ id: string; token: string; expiresAt: Date }> {
   const email = normaliseEmail(opts.email);
   const token = randomToken(32);
@@ -95,6 +97,7 @@ export async function createInvitation(opts: {
       await invitationEmail({
         to: email,
         workspaceName: opts.workspaceName ?? undefined,
+        subject: opts.subject,
         acceptUrl,
         expiresAt,
         invitationId: row.id,

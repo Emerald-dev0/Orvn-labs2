@@ -915,3 +915,13 @@
 .adm-fold em { display: inline-block; margin-top: 6px; font-style: normal; font-size: 12.5px; color: var(--lime-ink); font-weight: 600; }
 .adm-fold[open] summary em { display: none; }
 .adm-fold .adm-full { margin: 6px 0 0; }
+
+/* Early-access queue: full answers, labelled fields, copy-ready email. */
+.adm-fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px 18px; margin: 16px 0 0; }
+.adm-field dt { font-size: 11.5px; color: var(--muted); }
+.adm-field dd { margin: 3px 0 0; font-size: 14px; overflow-wrap: anywhere; }
+.adm-field dd a { color: var(--ink); }
+.adm-muted { color: var(--muted); font-style: italic; }
+.adm-answers { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; margin-top: 16px; }
+.adm-answers .adm-answer { margin-top: 0; }
+.adm-answer p { overflow-wrap: anywhere; }

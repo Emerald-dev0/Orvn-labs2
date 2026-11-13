@@ -14,6 +14,7 @@ import { formatWhen } from './when';
 export async function invitationEmail(opts: {
   to: string;
   workspaceName?: string;
+  subject?: string;
   acceptUrl: string;
   expiresAt: Date;
   invitationId: string;
@@ -22,7 +23,9 @@ export async function invitationEmail(opts: {
 
   return {
     to: opts.to,
-    subject: opts.workspaceName ? `Your ORREI invitation to ${opts.workspaceName}` : 'Your ORREI invitation',
+    subject:
+      opts.subject ??
+      (opts.workspaceName ? `Your ORREI invitation to ${opts.workspaceName}` : 'Your ORREI invitation'),
     businessKey: `invite:${opts.invitationId}`,
     text: [
       `You have been invited to ${where}.`,

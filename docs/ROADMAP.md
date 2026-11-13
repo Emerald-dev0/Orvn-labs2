@@ -830,7 +830,7 @@ Each is the spec's proposed default until the founder approves it.
 
 | ID | Pending decision | Roadmap link | Spec default | Status |
 | --- | --- | --- | --- | --- |
-| SPEC-D01 | Email link only, or password-based auth | D10 | One secure primary path; add another only if needed | Open |
+| SPEC-D01 | Email link only, or password-based auth | D10 | One secure primary path; add another only if needed | Decided by the founder 2026-11-13: both. Email link for everyone; approved people may set a password at /set-password |
 | SPEC-D02 | Are deal sheet PDFs V1 release blockers | P1.9, D13 | Yes for primary wholesale use, unless beta narrows the promise | Open |
 | SPEC-D03 | Which property categories and countries launch | D7 | US-first vacant land and houses; other types after QA | Open |
 | SPEC-D04 | Which source import formats are supported | none | Pasted notes and direct file uploads first; provider integrations later | Open |

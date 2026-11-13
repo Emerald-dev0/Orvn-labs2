@@ -78,7 +78,8 @@ describe('notification email', () => {
     expect(message.text).toContain('Harbour district');
     expect(message.text).toContain('PDFs and WhatsApp links');
     expect(message.text).toContain('Every buyer asks for the same three details.');
-    expect(message.text).toContain('npm run invite --email ada@northaven.example');
+    expect(message.text).toContain('open the queue and press Send invitation');
+    expect(message.text).not.toContain('npm run invite');
   });
 
   it('labels the request with the person and the company', () => {
