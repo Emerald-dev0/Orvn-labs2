@@ -98,7 +98,7 @@ What is blocking real use:
 - **Production environment variables** are all set in Vercel (confirmed by the founder, 2026-11-11). The redeploy and `/api/health` check in S0.1 are still open.
 - **No real operator or tester has completed sign-in on production yet.**
 - **Phase 0 is reopened (founder, 2026-11-04).** The earlier closure is withdrawn. Stage 0 exits when Document 02 §9 is met: three realistic deals run end to end on the live site.
-- **R2 file storage is not configured.** Document 03 PROP-03 and Document 06 §1 require secure object storage for uploads. Uploads, P1.3, and the Stage 0 deal test all depend on it. Env names: `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET`.
+- **R2 file storage is configured on production (2026-11-13).** `https://www.orvnlabs.com/api/health` returns `"storage": true` with all other checks true and `missing: []`. Uploads still need the end-to-end check in P1.3 (public image visible, private PDF not reachable signed out). Setup steps: `docs/r2-setup.md`.
 - **Deliverability is unverified.** Test messages have arrived, but SPF/DKIM completeness has not been confirmed with `npm run dns:check`.
 - The public site still uses the name LAREI in some copy; the product name is undecided (see §10).
 
@@ -905,7 +905,7 @@ Each of these needs a written reason before it enters a phase.
 6. Invite one tester; complete S0.6.
 7. Decide D1 and D7. Both are needed before Phase 2 copy.
 8. Book the compliance and legal review (D9) so P4.5 and P5.6 are not on the critical path later.
-9. Configure R2 (`R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET`) in Vercel; confirm `/api/health` shows `storage: true`. Steps: `docs/r2-setup.md`.
+9. ~~Configure R2 in Vercel~~ Done 2026-11-13: `/api/health` shows `storage: true`. Next: run the upload and access checks in `docs/r2-setup.md` Part 4, and record evidence for P1.3.
 10. Run the Stage 0 deal test (Document 02 §9): three realistic deals, end to end, on the live site.
 11. Website: complete W0.1 (claim inventory) and W0.2 (privacy and terms, counsel booked). Replace "Verified" and "twenty minutes" on the live site (W0.5, W0.7).
 
@@ -928,7 +928,7 @@ marked as conflicting.
 5. **RESOLVED per spec (2026-11-04): P5 becomes a manual concierge pilot after Stage 2.** Document 02 §3 says JV is not required for V1. Document 03 places it in Stage 3 (JV-01, JV-02), with automation only in Stage 4 (JV-03).
 6. **RESOLVED per spec (2026-11-04): P6 is Stage 4, and P7 is a separate product line.** Document 03 §7 places network intelligence (INTEL-01) outside V1 and outside this roadmap's critical path.
 7. **RESOLVED (founder, 2026-11-04): M-E reworded to progress, not closing.** Two wholesalers each source, publish and share a deal, and it reaches a documented next step. The platform does not run the closing (Document 02 §3; no transaction automation). §11 is updated.
-8. **RESOLVED as a requirement, not yet met: R2 storage.** §1 said uploads were built, but R2 is not configured (`storage: false`).
+8. **RESOLVED 2026-11-13: R2 storage configured.** Production health shows `storage: true`. P1.3 is still open until the upload and access checks pass. Previously: §1 said uploads were built, but R2 was not configured (`storage: false`).
    The spec requires secure object storage for uploads (Document 03 PROP-03 dependency; Document 06 §1; Document 02 Stage 0
    "secure uploads"; acceptance test T13). *Founder or engineering: create the R2 bucket and set the four `R2_*` variables in Vercel.
    P1.3 cannot be Verified, and the Stage 0 deal test cannot run, until `/api/health` reports `storage: true`.*
