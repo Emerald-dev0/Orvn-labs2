@@ -13,8 +13,7 @@ export const workspace = {
 };
 
 export const stats = [
-  { label: 'Site views', value: '1,284', delta: '+12%', trend: 'up', note: 'last 30 days' },
-  { label: 'Property views', value: '3,120', delta: '+8%', trend: 'up', note: 'last 30 days' },
+  { label: 'Property page opens', value: '3,120', delta: '+8%', trend: 'up', note: 'last 30 days' },
   { label: 'Inquiries', value: '6', delta: '+2', trend: 'up', note: 'last 30 days' },
   { label: 'Published', value: '2', delta: 'of 4', trend: 'flat', note: 'properties live' },
 ];

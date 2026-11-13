@@ -1,4 +1,6 @@
 import Settings from '../../../src/app/views/Settings';
+import { loadAppContext } from '../../../lib/app-context';
+import { listMembers } from '../../../lib/data/workspace';
 
 export const metadata = {
   title: 'Settings',
@@ -6,5 +8,21 @@ export const metadata = {
 };
 
 export default async function Page() {
-  return <Settings />;
+  const context = await loadAppContext();
+
+  if (context.demo) {
+    return <Settings data={null} />;
+  }
+
+  const members = await listMembers(context.viewer.userId, context.workspace.id);
+
+  return (
+    <Settings
+      data={{
+        workspace: { name: context.workspace.name, username: context.workspace.username },
+        owner: { name: context.viewer.name, email: context.viewer.email },
+        memberCount: members.length,
+      }}
+    />
+  );
 }
