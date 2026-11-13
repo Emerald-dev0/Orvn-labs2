@@ -2,6 +2,32 @@ import Link from 'next/link';
 import { requireAdmin } from '../../../lib/admin-guard';
 import { APPLICATION_STATUSES, listApplications, statusCounts } from '../../../lib/data/admin';
 import StatusForm from './StatusForm';
+import { formatWhen } from '../../../lib/emails/when';
+
+/** Long answers fold away so each card stays scannable; the full text is one click away. */
+const FOLD_AT = 180;
+
+function Answer({ label, text }) {
+  const long = text.length > FOLD_AT;
+  if (!long) {
+    return (
+      <div className="adm-answer">
+        <span>{label}</span>
+        <p>{text}</p>
+      </div>
+    );
+  }
+  return (
+    <details className="adm-answer adm-fold">
+      <summary>
+        <span>{label}</span>
+        <p>{text.slice(0, FOLD_AT).trimEnd()}…</p>
+        <em>Show full answer</em>
+      </summary>
+      <p className="adm-full">{text}</p>
+    </details>
+  );
+}
 
 export const metadata = {
   title: 'Early access',
@@ -17,16 +43,6 @@ const FILTERS = [
   { id: 'invited', label: 'Invited' },
   { id: 'declined', label: 'Declined' },
 ];
-
-const WHEN = new Intl.DateTimeFormat('en-GB', {
-  day: 'numeric',
-  month: 'short',
-  year: 'numeric',
-  hour: '2-digit',
-  minute: '2-digit',
-  timeZone: 'UTC',
-  timeZoneName: 'short',
-});
 
 export default async function EarlyAccessQueue({ searchParams }) {
   await requireAdmin();
@@ -131,27 +147,22 @@ export default async function EarlyAccessQueue({ searchParams }) {
                   </>
                 ) : null}
                 <dt>Received</dt>
-                <dd>{WHEN.format(new Date(application.createdAt))}</dd>
+                <dd>{formatWhen(new Date(application.createdAt))}</dd>
               </dl>
 
               {application.currentTools ? (
-                <div className="adm-answer">
-                  <span>Shares properties today with</span>
-                  <p>{application.currentTools}</p>
-                </div>
+                <Answer label="Shares properties today with" text={application.currentTools} />
               ) : null}
 
               {application.frustration ? (
-                <div className="adm-answer">
-                  <span>The part that costs them time</span>
-                  <p>{application.frustration}</p>
-                </div>
+                <Answer label="The part that costs them time" text={application.frustration} />
               ) : null}
 
               <StatusForm
                 id={application.id}
                 status={application.status}
                 statuses={APPLICATION_STATUSES}
+                name={application.name}
                 email={application.email}
               />
             </li>

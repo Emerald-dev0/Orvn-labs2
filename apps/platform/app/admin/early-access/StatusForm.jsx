@@ -1,32 +1,58 @@
 'use client';
 
 import { useActionState, useState } from 'react';
-import { setApplicationStatus } from './actions';
+import { inviteApplicant, setApplicationStatus } from './actions';
+
+const LABELS = {
+  new: 'New',
+  reviewing: 'Reviewing',
+  invited: 'Invited',
+  declined: 'Declined',
+};
+
+const HINTS = {
+  new: 'Not looked at yet',
+  reviewing: 'Under review',
+  invited: 'Invitation sent',
+  declined: 'Not taking part now',
+};
 
 /**
- * Status is one of four fixed values, so it is four buttons rather than a free-text field.
- *
- * The invite itself is still a script: creating a workspace provisions rows, a role and a first
- * owner, and a mis-click on a queue card should not be able to do that. The command is shown next
- * to the button so the two steps stay visible.
+ * Two actions on one request:
+ *  - Send invitation: creates a single-use link for this address and emails it. Asks for a second
+ *    click first, because it gives someone access to the beta.
+ *  - Status: a plain record of where the request is. It does not send anything.
  */
-export default function StatusForm({ id, status, statuses, email }) {
-  const [state, submit, pending] = useActionState(setApplicationStatus, { status: 'idle' });
-  const [copied, setCopied] = useState(false);
+export default function StatusForm({ id, status, statuses, name, email }) {
+  const [statusState, submitStatus, statusPending] = useActionState(setApplicationStatus, { status: 'idle' });
+  const [inviteState, submitInvite, invitePending] = useActionState(inviteApplicant, { status: 'idle' });
+  const [confirming, setConfirming] = useState(false);
 
-  const copy = async () => {
-    try {
-      await navigator.clipboard.writeText(`npm run invite --email ${email}`);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      setCopied(false);
-    }
-  };
+  const canInvite = status !== 'invited' && status !== 'declined';
+  const message = inviteState.status !== 'idle' ? inviteState : statusState;
 
   return (
     <div className="adm-actions">
-      <form action={submit}>
+      {canInvite ? (
+        confirming ? (
+          <form action={submitInvite} className="adm-confirm">
+            <input type="hidden" name="id" value={id} />
+            <span>Send the beta invitation to <strong>{email}</strong>?</span>
+            <button type="submit" className="adm-btn is-primary" disabled={invitePending}>
+              {invitePending ? 'Sending…' : `Yes, send to ${name.split(' ')[0]}`}
+            </button>
+            <button type="button" className="adm-btn is-quiet" onClick={() => setConfirming(false)} disabled={invitePending}>
+              Cancel
+            </button>
+          </form>
+        ) : (
+          <button type="button" className="adm-btn is-primary" onClick={() => setConfirming(true)}>
+            Send invitation
+          </button>
+        )
+      ) : null}
+
+      <form action={submitStatus} className="adm-status-form" aria-label="Change status">
         <input type="hidden" name="id" value={id} />
         {statuses.map((option) => (
           <button
@@ -35,22 +61,20 @@ export default function StatusForm({ id, status, statuses, email }) {
             name="status"
             value={option}
             className={`adm-btn ${status === option ? 'is-current' : ''}`}
-            disabled={pending || status === option}
+            disabled={statusPending || status === option}
+            title={HINTS[option]}
+            aria-pressed={status === option}
           >
-            {pending ? 'Saving…' : option}
+            {statusPending && status !== option ? 'Saving…' : LABELS[option]}
           </button>
         ))}
       </form>
 
-      <button type="button" className="adm-btn is-quiet" onClick={copy}>
-        {copied ? 'Command copied' : 'Copy invite command'}
-      </button>
-
-      {state.status === 'error' ? (
-        <span className="adm-note is-warn" role="alert">{state.message}</span>
+      {message.status === 'error' ? (
+        <span className="adm-note is-warn" role="alert">{message.message}</span>
       ) : null}
-      {state.status === 'ok' ? (
-        <span className="adm-note" role="status">{state.message}</span>
+      {message.status === 'ok' ? (
+        <span className="adm-note is-ok" role="status">{message.message}</span>
       ) : null}
     </div>
   );

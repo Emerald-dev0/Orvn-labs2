@@ -903,3 +903,15 @@
   .adm-actions form { width: 100%; }
   .adm-btn { flex: 1 1 auto; }
 }
+
+/* Early-access queue: invitation confirm, folded answers, WAT labels. */
+.adm-btn.is-primary { background: var(--lime); border-color: var(--lime); color: var(--ink); font-weight: 600; }
+.adm-btn.is-primary:hover:not(:disabled) { background: var(--lime-2); border-color: var(--lime-2); }
+.adm-confirm { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 13.5px; }
+.adm-status-form { display: flex; gap: 6px; flex-wrap: wrap; }
+.adm-note.is-ok { color: #1f6b46; }
+.adm-fold summary { list-style: none; cursor: pointer; }
+.adm-fold summary::-webkit-details-marker { display: none; }
+.adm-fold em { display: inline-block; margin-top: 6px; font-style: normal; font-size: 12.5px; color: var(--lime-ink); font-weight: 600; }
+.adm-fold[open] summary em { display: none; }
+.adm-fold .adm-full { margin: 6px 0 0; }
