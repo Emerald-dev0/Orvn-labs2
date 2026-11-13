@@ -9,5 +9,6 @@ export const metadata = {
 export default async function Page({ searchParams }) {
   const params = await searchParams;
   const next = typeof params?.next === 'string' ? params.next : '/dashboard';
-  return <SignIn next={next} />;
+  const refused = params?.refused === '1';
+  return <SignIn next={next} refused={refused} />;
 }

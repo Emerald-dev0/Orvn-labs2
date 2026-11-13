@@ -24,7 +24,7 @@ function NotInvitedNotice() {
   );
 }
 
-export default function SignIn({ next = '/dashboard' }) {
+export default function SignIn({ next = '/dashboard', refused = false }) {
   const [mode, setMode] = useState('link');
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
@@ -126,6 +126,14 @@ export default function SignIn({ next = '/dashboard' }) {
                   ? 'For operators and invited testers. If your address is on the list, this creates your account.'
                   : 'Your records, drafts and published pages, exactly where you left them.'}
               </p>
+
+              {refused && status !== 'sent' ? (
+                <div className="field-error" role="alert" style={{ marginBottom: 16 }}>
+                  <strong>This sign-in link can&apos;t be used.</strong>{' '}
+                  Access is by invitation during early access. You can ask for a new link below, or request access.
+                  <NotInvitedNotice />
+                </div>
+              ) : null}
 
               {status === 'sent' ? (
                 <div className="signin-sent" role="status">
