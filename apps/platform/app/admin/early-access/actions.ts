@@ -107,6 +107,9 @@ export async function inviteApplicant(
   try {
     await createInvitation({
       email: applicant.email,
+      // Accepting a beta invitation creates the person's own workspace and makes them its member
+      // with this role (see app_accept_invitation in db/sql/policies.sql). Owner is correct: they
+      // own that workspace. Editor would leave them a non-owner member of a workspace they own.
       role: 'owner',
       invitedBy: viewer.userId,
       note: `Early access request ${applicant.id}`,
