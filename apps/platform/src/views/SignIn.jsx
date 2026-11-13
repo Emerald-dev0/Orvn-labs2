@@ -24,7 +24,7 @@ function NotInvitedNotice() {
   );
 }
 
-export default function SignIn({ next = '/dashboard' }) {
+export default function SignIn({ next = '/dashboard', refused = false }) {
   const [mode, setMode] = useState('link');
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
@@ -81,7 +81,7 @@ export default function SignIn({ next = '/dashboard' }) {
       const refused = /invit|forbidden|beta/i.test(detail) && !/origin/i.test(detail);
       setMessage(
         /exist/i.test(detail)
-          ? 'An account already uses that address. Sign in with your password instead.'
+          ? 'An account already uses that address. Sign in with an email link, then set a password on the next page.'
           : /origin/i.test(detail)
             ? 'This page is not the address sign-in is set up for. Open orvnlabs.com in a new tab and try there.'
             : refused
@@ -103,7 +103,7 @@ export default function SignIn({ next = '/dashboard' }) {
       window.location.assign(next);
     } catch {
       setStatus('error');
-      setMessage('That email and password do not match an account.');
+      setMessage('That email and password do not match. If you were approved but have not set a password yet, sign in with an email link first, then set one.');
       setRefusedNotice(true);
     }
   }
@@ -126,6 +126,14 @@ export default function SignIn({ next = '/dashboard' }) {
                   ? 'For operators and invited testers. If your address is on the list, this creates your account.'
                   : 'Your records, drafts and published pages, exactly where you left them.'}
               </p>
+
+              {refused && status !== 'sent' ? (
+                <div className="field-error" role="alert" style={{ marginBottom: 16 }}>
+                  <strong>This sign-in link can&apos;t be used.</strong>{' '}
+                  Access is by invitation during early access. You can ask for a new link below, or request access.
+                  <NotInvitedNotice />
+                </div>
+              ) : null}
 
               {status === 'sent' ? (
                 <div className="signin-sent" role="status">

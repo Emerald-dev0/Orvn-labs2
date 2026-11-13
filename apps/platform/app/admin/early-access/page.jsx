@@ -2,31 +2,27 @@ import Link from 'next/link';
 import { requireAdmin } from '../../../lib/admin-guard';
 import { APPLICATION_STATUSES, listApplications, statusCounts } from '../../../lib/data/admin';
 import StatusForm from './StatusForm';
+import { formatWhen } from '../../../lib/emails/when';
 
-export const metadata = {
-  title: 'Early access',
-  robots: { index: false, follow: false },
-};
+/** One labelled answer. Shown in full: an operator decides from the words the person used. */
+function Answer({ label, text }) {
+  return (
+    <div className="adm-answer">
+      <span>{label}</span>
+      <p>{text}</p>
+    </div>
+  );
+}
 
-export const dynamic = 'force-dynamic';
-
-const FILTERS = [
-  { id: 'all', label: 'All' },
-  { id: 'new', label: 'New' },
-  { id: 'reviewing', label: 'Reviewing' },
-  { id: 'invited', label: 'Invited' },
-  { id: 'declined', label: 'Declined' },
-];
-
-const WHEN = new Intl.DateTimeFormat('en-GB', {
-  day: 'numeric',
-  month: 'short',
-  year: 'numeric',
-  hour: '2-digit',
-  minute: '2-digit',
-  timeZone: 'UTC',
-  timeZoneName: 'short',
-});
+/** A field that may be empty. Empty is written out, so a blank does not look like a bug. */
+function Field({ label, value, children }) {
+  return (
+    <div className="adm-field">
+      <dt>{label}</dt>
+      <dd>{children ?? (value ? value : <span className="adm-muted">Not given</span>)}</dd>
+    </div>
+  );
+}
 
 export default async function EarlyAccessQueue({ searchParams }) {
   await requireAdmin();
@@ -98,60 +94,36 @@ export default async function EarlyAccessQueue({ searchParams }) {
                 <div>
                   <h2>{application.name}</h2>
                   <p className="adm-sub">
-                    {application.company ? `${application.company} · ` : ''}
                     <a href={`mailto:${application.email}`}>{application.email}</a>
+                    {application.company ? <> · {application.company}</> : null}
                   </p>
                 </div>
-                <span className={`adm-status is-${application.status}`}>{application.status}</span>
+                <span className={`adm-status is-${application.status}`}>{STATUS_LABEL[application.status] ?? application.status}</span>
               </div>
 
-              <dl className="adm-facts">
-                {application.role ? (
-                  <>
-                    <dt>Role</dt>
-                    <dd>{application.role}</dd>
-                  </>
-                ) : null}
-                {application.markets ? (
-                  <>
-                    <dt>Market</dt>
-                    <dd>{application.markets}</dd>
-                  </>
-                ) : null}
-                {application.volume ? (
-                  <>
-                    <dt>Per month</dt>
-                    <dd>{application.volume}</dd>
-                  </>
-                ) : null}
-                {application.website ? (
-                  <>
-                    <dt>Website</dt>
-                    <dd>{application.website}</dd>
-                  </>
-                ) : null}
-                <dt>Received</dt>
-                <dd>{WHEN.format(new Date(application.createdAt))}</dd>
+              <dl className="adm-fields">
+                <Field label="Role" value={application.role} />
+                <Field label="Primary market" value={application.markets} />
+                <Field label="Properties per month" value={application.volume} />
+                <Field label="Website or profile" value={application.website}>
+                  {application.website ? (
+                    <a href={/^https?:\/\//i.test(application.website) ? application.website : `https://${application.website}`} rel="noopener noreferrer nofollow" target="_blank">{application.website}</a>
+                  ) : null}
+                </Field>
+                <Field label="Consent recorded">{application.consent ? 'Yes' : 'No'}</Field>
+                <Field label="Received">{formatWhen(new Date(application.createdAt))}</Field>
               </dl>
 
-              {application.currentTools ? (
-                <div className="adm-answer">
-                  <span>Shares properties today with</span>
-                  <p>{application.currentTools}</p>
-                </div>
-              ) : null}
-
-              {application.frustration ? (
-                <div className="adm-answer">
-                  <span>The part that costs them time</span>
-                  <p>{application.frustration}</p>
-                </div>
-              ) : null}
+              <div className="adm-answers">
+                <Answer label="How they share properties today" text={application.currentTools || 'Not answered'} />
+                <Answer label="The part that costs them time" text={application.frustration || 'Not answered'} />
+              </div>
 
               <StatusForm
                 id={application.id}
                 status={application.status}
                 statuses={APPLICATION_STATUSES}
+                name={application.name}
                 email={application.email}
               />
             </li>

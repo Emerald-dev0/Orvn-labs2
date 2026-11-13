@@ -9,6 +9,10 @@ import { sendEmail } from './email';
 import { signInLinkEmail } from './emails/sign-in-link';
 import { resetPasswordEmail } from './emails/reset-password';
 import { findUsableInvitation } from './invitations';
+import { magicLinkDecision } from './magic-link-gate';
+import { adminDb } from './db/admin';
+import { user as authUser } from '../db/auth-schema';
+import { sql } from 'drizzle-orm';
 import { adminEmails } from './admin';
 import { trustedOriginsFrom } from './auth-origins';
 import { serverEnv } from './env';
@@ -174,6 +178,26 @@ export const auth = betterAuth({
       expiresIn: 60 * 10,
       disableSignUp: false, // Account creation is governed by the hook above, not by the plugin.
       sendMagicLink: async ({ email, url }) => {
+        // Decide before sending. An address with no account, no invitation and no operator entry
+        // gets no email; the page says "Check your inbox" to everyone, so nothing is revealed.
+        const address = String(email).trim().toLowerCase();
+        const rows = await adminDb
+          .select({ id: authUser.id })
+          .from(authUser)
+          .where(sql`lower(${authUser.email}) = ${address}`)
+          .limit(1);
+        const decision = magicLinkDecision({
+          isAdmin: adminEmails().includes(address),
+          hasAccount: rows.length > 0,
+          hasInvitation: Boolean(await findUsableInvitation(address)),
+        });
+        if (decision === 'skip') {
+          console.warn('[auth] magic link not sent', {
+            email: address,
+            reason: 'no account, no usable invitation, and the address is not in ADMIN_EMAILS',
+          });
+          return;
+        }
         await deliver(
           await signInLinkEmail({ to: email, url, expiresAt: new Date(Date.now() + 10 * 60 * 1000) }),
         );

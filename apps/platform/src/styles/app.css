@@ -903,3 +903,52 @@
   .adm-actions form { width: 100%; }
   .adm-btn { flex: 1 1 auto; }
 }
+
+/* Early-access queue: invitation confirm, folded answers, WAT labels. */
+.adm-btn.is-primary { background: var(--lime); border-color: var(--lime); color: var(--ink); font-weight: 600; }
+.adm-btn.is-primary:hover:not(:disabled) { background: var(--lime-2); border-color: var(--lime-2); }
+.adm-confirm { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 13.5px; }
+.adm-status-form { display: flex; gap: 6px; flex-wrap: wrap; }
+.adm-note.is-ok { color: #1f6b46; }
+.adm-fold summary { list-style: none; cursor: pointer; }
+.adm-fold summary::-webkit-details-marker { display: none; }
+.adm-fold em { display: inline-block; margin-top: 6px; font-style: normal; font-size: 12.5px; color: var(--lime-ink); font-weight: 600; }
+.adm-fold[open] summary em { display: none; }
+.adm-fold .adm-full { margin: 6px 0 0; }
+
+/* Early-access queue: full answers, labelled fields, copy-ready email. */
+.adm-fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px 18px; margin: 16px 0 0; }
+.adm-field dt { font-size: 11.5px; color: var(--muted); }
+.adm-field dd { margin: 3px 0 0; font-size: 14px; overflow-wrap: anywhere; }
+.adm-field dd a { color: var(--ink); }
+.adm-muted { color: var(--muted); font-style: italic; }
+.adm-answers { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; margin-top: 16px; }
+.adm-answers .adm-answer { margin-top: 0; }
+.adm-answer p { overflow-wrap: anywhere; }
+
+/* Operator console: sidebar layout. Replaces the top bar. */
+.adm-shell { display: grid; grid-template-columns: 232px minmax(0, 1fr); min-height: 100vh; }
+.adm-side {
+  position: sticky; top: 0; align-self: start; height: 100vh;
+  display: flex; flex-direction: column; gap: 22px;
+  padding: 22px 16px; background: var(--pine); color: var(--white);
+}
+.adm-side .adm-brand { padding: 0 8px; }
+.adm-navlink {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 10px; border-radius: 10px;
+  color: rgba(255, 253, 248, 0.78); text-decoration: none; font-size: 14px;
+}
+.adm-navlink:hover { background: rgba(255, 253, 248, 0.07); color: var(--white); }
+.adm-navlink.is-current { background: var(--lime); color: var(--ink); font-weight: 600; }
+.adm-navlink:focus-visible { outline: 2px solid var(--lime); outline-offset: 2px; }
+.adm-side .adm-nav { display: grid; gap: 4px; }
+.adm-who { margin: auto 8px 0; font-size: 12px; color: rgba(255, 253, 248, 0.6); overflow-wrap: anywhere; }
+.adm-who span { color: rgba(255, 253, 248, 0.9); }
+.adm-shell .adm-main { max-width: 1120px; width: 100%; margin: 0; }
+@media (max-width: 760px) {
+  .adm-shell { grid-template-columns: 1fr; }
+  .adm-side { position: static; height: auto; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 12px; padding: 14px 16px; }
+  .adm-side .adm-nav { display: flex; flex-wrap: wrap; gap: 6px; }
+  .adm-who { display: none; }
+}

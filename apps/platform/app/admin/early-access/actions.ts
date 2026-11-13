@@ -1,11 +1,12 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { eq } from 'drizzle-orm';
+import { and, desc, eq, gt, isNull } from 'drizzle-orm';
 import { z } from 'zod';
 import { requireAdmin } from '../../../lib/admin-guard';
 import { adminDb } from '../../../lib/db/admin';
-import { betaApplications } from '../../../db/schema';
+import { betaApplications, invitations } from '../../../db/schema';
+import { createInvitation, InvitationError } from '../../../lib/invitations';
 import { APPLICATION_STATUSES } from '../../../lib/data/admin';
 import type { ActionState } from '../../../lib/actions/types';
 
@@ -33,6 +34,11 @@ export async function setApplicationStatus(
   });
   if (!parsed.success) return { status: 'error', message: 'That change was not understood.' };
 
+  // "Invited" is only ever set by sending the invitation, so the applicant always gets the email.
+  if (parsed.data.status === 'invited') {
+    return { status: 'error', message: 'Use Send invitation to invite this person. It emails them the link.' };
+  }
+
   try {
     await adminDb
       .update(betaApplications)
@@ -45,4 +51,90 @@ export async function setApplicationStatus(
 
   revalidatePath('/admin/early-access');
   return { status: 'ok', message: `Marked ${parsed.data.status}.` };
+}
+
+const inviteSchema = z.object({ id: z.string().uuid() });
+
+/**
+ * Sends the beta invitation from the queue. Same provisioning as `npm run invite`: a single-use
+ * link bound to the applicant's address, expiring in seven days, stored as a hash only. The
+ * invitation and the status change are separate writes, so the order matters: the invitation
+ * is created and emailed first, and the status moves to `invited` only after that succeeds.
+ * A failed send leaves the applicant where they were and can be retried.
+ */
+export async function inviteApplicant(
+  _previous: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  const viewer = await requireAdmin();
+
+  const parsed = inviteSchema.safeParse({ id: String(formData.get('id') ?? '') });
+  if (!parsed.success) return { status: 'error', message: 'That applicant was not found.' };
+
+  const [applicant] = await adminDb
+    .select({ id: betaApplications.id, email: betaApplications.email, status: betaApplications.status, name: betaApplications.name })
+    .from(betaApplications)
+    .where(eq(betaApplications.id, parsed.data.id))
+    .limit(1);
+  if (!applicant) return { status: 'error', message: 'That applicant was not found.' };
+  if (applicant.status === 'declined') {
+    return { status: 'error', message: 'This request was declined. Change its status first if you want to invite them.' };
+  }
+  if (applicant.status === 'invited') {
+    return { status: 'error', message: 'An invitation was already sent. Use the status buttons to change it.' };
+  }
+
+  const [open] = await adminDb
+    .select({ id: invitations.id })
+    .from(invitations)
+    .where(
+      and(
+        eq(invitations.email, applicant.email.trim().toLowerCase()),
+        isNull(invitations.acceptedAt),
+        isNull(invitations.revokedAt),
+        gt(invitations.expiresAt, new Date()),
+      ),
+    )
+    .orderBy(desc(invitations.createdAt))
+    .limit(1);
+  if (open) {
+    return {
+      status: 'error',
+      message: 'An open invitation already exists for this address. Wait for it to expire or ask the engineer to revoke it.',
+    };
+  }
+
+  try {
+    await createInvitation({
+      email: applicant.email,
+      // Accepting a beta invitation creates the person's own workspace and makes them its member
+      // with this role (see app_accept_invitation in db/sql/policies.sql). Owner is correct: they
+      // own that workspace. Editor would leave them a non-owner member of a workspace they own.
+      role: 'owner',
+      invitedBy: viewer.userId,
+      note: `Early access request ${applicant.id}`,
+      subject: 'Your ORREI early-access invitation',
+    });
+  } catch (error) {
+    const message =
+      error instanceof InvitationError ? error.message : 'The invitation could not be sent. Nothing changed; try again.';
+    console.error('[admin] invitation failed', { applicant: applicant.id, message: (error as Error).message });
+    return { status: 'error', message };
+  }
+
+  try {
+    await adminDb
+      .update(betaApplications)
+      .set({ status: 'invited' })
+      .where(eq(betaApplications.id, applicant.id));
+  } catch (error) {
+    console.error('[admin] invited status not saved', { applicant: applicant.id, message: (error as Error).message });
+    return {
+      status: 'error',
+      message: 'The invitation was sent, but the status did not update. Set it to Invited by hand.',
+    };
+  }
+
+  revalidatePath('/admin/early-access');
+  return { status: 'ok', message: `Invitation sent to ${applicant.name}.` };
 }

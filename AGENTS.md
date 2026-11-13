@@ -6,8 +6,8 @@ Rules for any AI agent working in this repository. Read this before making chang
 
 - The product is **ORREI** (company: ORVN Labs). The live app is `apps/platform` (Next.js App Router).
 - The plan is `docs/ROADMAP.md`. Phases and Stage 0 are defined there. It is the only roadmap to follow.
-  The root `ROADMAP.md` is an older product-spec record with different phase numbers. Do not use it for status.
-- Root-level `src/`, `api/`, `supabase/` and `vite.config.js` belong to the retired Vite app. Do not extend them.
+  The former root `ROADMAP.md` was deleted on 2026-11-13. Do not recreate it.
+- `archive/` holds the retired Vite app (`src/`, `api/`, `supabase/`). Do not extend it. Nothing in `apps/platform` depends on it.
   See `docs/legacy-routes.md`.
 - Operational docs: `docs/env-setup.md`, `docs/neon-setup.md`, `docs/mail-cutover.md`, `docs/SECURITY.md`.
 

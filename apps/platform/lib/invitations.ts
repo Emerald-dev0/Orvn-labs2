@@ -54,7 +54,7 @@ const MESSAGES: Record<InvitationError['code'], string> = {
   used: 'That invitation has already been used.',
   email_mismatch: 'This invitation was sent to a different email address.',
   workspace_required: 'Choose a workspace name and address to continue.',
-  delivery_failed: 'The invitation was created, but the email could not be sent. Retry the send.',
+  delivery_failed: 'The invitation email could not be sent. Nothing was issued; try again.',
 };
 
 export async function inviteTokenHash(token: string): Promise<string> {
@@ -68,6 +68,8 @@ export async function createInvitation(opts: {
   role?: 'owner' | 'editor' | 'viewer';
   invitedBy?: string | null;
   note?: string | null;
+  /** Overrides the default subject, e.g. when the invitation approves an early-access request. */
+  subject?: string;
 }): Promise<{ id: string; token: string; expiresAt: Date }> {
   const email = normaliseEmail(opts.email);
   const token = randomToken(32);
@@ -95,12 +97,16 @@ export async function createInvitation(opts: {
       await invitationEmail({
         to: email,
         workspaceName: opts.workspaceName ?? undefined,
+        subject: opts.subject,
         acceptUrl,
         expiresAt,
         invitationId: row.id,
       }),
     );
   } catch (error) {
+    // The link never reached the person, so it must not stay open: a retry would otherwise be
+    // blocked by a duplicate-invitation check for a link nobody has.
+    await adminDb.update(invitations).set({ revokedAt: new Date() }).where(eq(invitations.id, row.id));
     console.error('[invitations] delivery failed', {
       invitationId: row.id,
       code: (error as { code?: string }).code,
