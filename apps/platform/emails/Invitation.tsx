@@ -1,13 +1,15 @@
 import * as React from 'react';
 import { Action, Brand, FallbackUrl, Heading, Para, SmallPrint } from './components/Brand';
 
-const WHEN = new Intl.DateTimeFormat('en-GB', {
+const WHEN = new Intl.DateTimeFormat('en-US', {
   weekday: 'short',
   day: 'numeric',
   month: 'long',
-  hour: '2-digit',
+  hour: 'numeric',
   minute: '2-digit',
-  timeZone: 'Africa/Lagos',
+  hour12: true,
+  timeZone: 'America/New_York',
+  timeZoneName: 'short',
 });
 
 export function Invitation({
@@ -32,7 +34,7 @@ export function Invitation({
         The link below opens the workspace. It works once.
       </Para>
 
-      <Action href={acceptUrl} note={`The link expires ${WHEN.format(expiresAt)} WAT.`}>
+      <Action href={acceptUrl} note={`The link expires ${WHEN.format(expiresAt)}.`}>
         Open the workspace
       </Action>
 
