@@ -1,5 +1,6 @@
-import Link from 'next/link';
 import '../../src/styles/app.css';
+import { getViewer } from '../../lib/access';
+import AdminNav from './AdminNav';
 
 export const metadata = {
   title: 'Admin',
@@ -8,25 +9,18 @@ export const metadata = {
 
 export const dynamic = 'force-dynamic';
 
-/** The operator surface. Deliberately plain: it is read once a day, not lived in. */
-export default function AdminLayout({ children }) {
+/**
+ * The operator surface: a sidebar on desktop, a top bar on phones. Pages are read by a few people
+ * every day, so the layout favours a clear current location over decoration.
+ */
+export default async function AdminLayout({ children }) {
+  const viewer = await getViewer();
   return (
     <div className="adm">
-      <header className="adm-bar">
-        <Link href="/admin/early-access" className="adm-brand">
-          <span className="adm-mark" aria-hidden="true">O</span>
-          <span>
-            <strong>ORREI</strong>
-            <em>Admin</em>
-          </span>
-        </Link>
-        <nav className="adm-nav" aria-label="Admin">
-          <Link href="/admin/early-access">Early access</Link>
-          <Link href="/dashboard">Workspace</Link>
-          <Link href="/">Site</Link>
-        </nav>
-      </header>
-      <main className="adm-main">{children}</main>
+      <div className="adm-shell">
+        <AdminNav email={viewer?.email ?? null} />
+        <main id="main" className="adm-main">{children}</main>
+      </div>
     </div>
   );
 }

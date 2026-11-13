@@ -925,3 +925,30 @@
 .adm-answers { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; margin-top: 16px; }
 .adm-answers .adm-answer { margin-top: 0; }
 .adm-answer p { overflow-wrap: anywhere; }
+
+/* Operator console: sidebar layout. Replaces the top bar. */
+.adm-shell { display: grid; grid-template-columns: 232px minmax(0, 1fr); min-height: 100vh; }
+.adm-side {
+  position: sticky; top: 0; align-self: start; height: 100vh;
+  display: flex; flex-direction: column; gap: 22px;
+  padding: 22px 16px; background: var(--pine); color: var(--white);
+}
+.adm-side .adm-brand { padding: 0 8px; }
+.adm-navlink {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 10px; border-radius: 10px;
+  color: rgba(255, 253, 248, 0.78); text-decoration: none; font-size: 14px;
+}
+.adm-navlink:hover { background: rgba(255, 253, 248, 0.07); color: var(--white); }
+.adm-navlink.is-current { background: var(--lime); color: var(--ink); font-weight: 600; }
+.adm-navlink:focus-visible { outline: 2px solid var(--lime); outline-offset: 2px; }
+.adm-side .adm-nav { display: grid; gap: 4px; }
+.adm-who { margin: auto 8px 0; font-size: 12px; color: rgba(255, 253, 248, 0.6); overflow-wrap: anywhere; }
+.adm-who span { color: rgba(255, 253, 248, 0.9); }
+.adm-shell .adm-main { max-width: 1120px; width: 100%; margin: 0; }
+@media (max-width: 760px) {
+  .adm-shell { grid-template-columns: 1fr; }
+  .adm-side { position: static; height: auto; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 12px; padding: 14px 16px; }
+  .adm-side .adm-nav { display: flex; flex-wrap: wrap; gap: 6px; }
+  .adm-who { display: none; }
+}
