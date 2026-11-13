@@ -97,6 +97,8 @@ What is blocking real use:
 
 - **Production environment variables** are all set in Vercel (confirmed by the founder, 2026-11-11). The redeploy and `/api/health` check in S0.1 are still open.
 - **No real operator or tester has completed sign-in on production yet.**
+- **Phase 0 is reopened (founder, 2026-11-04).** The earlier closure is withdrawn. Stage 0 exits when Document 02 §9 is met: three realistic deals run end to end on the live site.
+- **R2 file storage is not configured.** Document 03 PROP-03 and Document 06 §1 require secure object storage for uploads. Uploads, P1.3, and the Stage 0 deal test all depend on it. Env names: `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET`.
 - **Deliverability is unverified.** Test messages have arrived, but SPF/DKIM completeness has not been confirmed with `npm run dns:check`.
 - The public site still uses the name LAREI in some copy; the product name is undecided (see §10).
 
@@ -111,7 +113,7 @@ Blueprint phases map onto the repo as follows:
 
 | Blueprint phase | Repo milestone | Status |
 | --- | --- | --- |
-| Phase 0 — Foundation | M0 + launch hardening (Stage 0 below) | Closed by the founder 2026-11-11 with named exceptions (§2) |
+| Phase 0 — Foundation | M0 + launch hardening (Stage 0 below) | **Reopened by the founder 2026-11-04.** Closure of 2026-11-11 is withdrawn. Spec Stage 0 exit test pending (§15-1) |
 | Phase 1 — Core deal preparation | M1 property record, M2 publish and inquire, M3 AI drafting | M1–M2 built; M3 open |
 | Phase 2 — Professional presence | M4 breadth (website, profile, branding) | Open; `/website` is sample data |
 | Phase 3 — Buyer network | Not in M0–M4 | Open; needs a design decision (§10) |
@@ -126,6 +128,8 @@ Blueprint phases map onto the repo as follows:
 
 Goal: a real early-access applicant, a real invited tester and the founder can each complete their
 first journey on the live site, and the emails they receive are correct.
+
+**Reopened 2026-11-04 by the founder.** Stage 0 exits only when Document 02 §9 is met: three realistic deals run end to end on the live site (including missing data, an import conflict, an update, private files and link withdrawal), with no critical auth or privacy issue, and secure uploads working on R2.
 
 Nothing in Phase 1 starts until every **P0** item in Stage 0 is Verified.
 
@@ -805,6 +809,8 @@ Each of these needs a written reason before it enters a phase.
 6. Invite one tester; complete S0.6.
 7. Decide D1 and D7. Both are needed before Phase 2 copy.
 8. Book the compliance and legal review (D9) so P4.5 and P5.6 are not on the critical path later.
+9. Configure R2 (`R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET`) in Vercel; confirm `/api/health` shows `storage: true`.
+10. Run the Stage 0 deal test (Document 02 §9): three realistic deals, end to end, on the live site.
 
 ---
 
@@ -813,7 +819,8 @@ Each of these needs a written reason before it enters a phase.
 Each item is a question for the founder, not a decision. Until one is resolved, the spec is followed and the roadmap item is
 marked as conflicting.
 
-1. **Phase 0 closure against the spec's Stage 0 exit.** Document 02 §9 requires three realistic deals run end to end, including
+1. **RESOLVED 2026-11-04 (founder): Stage 0 reopened.** It exits only on the spec's test (see §2).
+   Original question: **Phase 0 closure against the spec's Stage 0 exit.** Document 02 §9 requires three realistic deals run end to end, including
    missing data, an import conflict, an update, private files and link withdrawal, with no critical auth or privacy issues.
    Phase 0 was closed on 2026-11-11 with named exceptions, and no deal was run end to end. *Founder: reopen the spec's Stage 0
    exit, or accept it as met in part.* Document 02 §18 says the gaps "block claiming a completed feature". I recommend the deal
@@ -831,8 +838,10 @@ marked as conflicting.
 7. **Milestone M-E** (two wholesalers close a deal through the platform). Document 02 excludes transaction automation, and
    Document 02 §17 says paid readiness needs independent users accepting a paid offer. M-E is a validation outcome, not a
    closing feature. *Founder: confirm the wording.*
-8. **R2 storage.** §1 says uploads are built. The last production check reported `storage: false`. Document 03 PROP-03 requires
-   secure storage. *Engineering: verify on production before P1.3 is marked Verified.*
+8. **RESOLVED as a requirement, not yet met: R2 storage.** §1 said uploads were built, but R2 is not configured (`storage: false`).
+   The spec requires secure object storage for uploads (Document 03 PROP-03 dependency; Document 06 §1; Document 02 Stage 0
+   "secure uploads"; acceptance test T13). *Founder or engineering: create the R2 bucket and set the four `R2_*` variables in Vercel.
+   P1.3 cannot be Verified, and the Stage 0 deal test cannot run, until `/api/health` reports `storage: true`.*
 9. **Analytics and sample data.** `/analytics` and `/website` still show sample data (§1). Document 03 AN-01 and acceptance test
    T11 require that no mock figures appear in a real account. *Engineering: part of P2.3, and `/analytics` needs the same fix.*
 10. **Per-output publication states.** Document 03 PUB-04 requires each output (page, PDF, summary, card) to have its own state.
