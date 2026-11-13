@@ -1,6 +1,6 @@
 # ORVN Labs — Roadmap
 
-Status: working plan, dated 2026-11-13, aligned to Documents 02, 03 and 06 (see §A). Owner: Daniel (engineering) with the founder (product and market).
+Status: working plan, dated 2026-11-13, aligned to Documents 02, 03, 04 and 06 (see §A). §2B covers the public website corrections in Document 04. Owner: Daniel (engineering) with the founder (product and market).
 This file replaces nothing. `docs/PLATFORM-BUILD-PLAN.md` holds the detailed M0–M4 build notes for the
 operator workspace; this roadmap places that work inside the wider product blueprint and sets the rule
 for when each step counts as done.
@@ -351,6 +351,91 @@ Applies to every phase. Each phase has frontend and backend work (see `AGENTS.md
 **Known discrepancy to resolve before P1.3 is marked Verified**
 
 - §1 says uploads to R2 with per-file visibility are built. The last production check reported file storage as not configured (`storage: false`). Confirm with `/api/health` and a real upload before accepting this line.
+
+---
+
+## 2B. Public website corrections (Document 04, 2026-11-13)
+
+Source: Document 04, "Website audit and corrections" (working specification, 13 Nov 2026). It audits the public marketing site and the sign-in, early-access and legal pages. It is a separate workstream from the operator platform, but it shares the same rule: no claim on the site may be stronger than the feature behind it.
+
+**Claims rule (Document 04 §5), adopted as the working default until the founder approves it (D22).** Use the allowed substitute until proof exists:
+
+| Do not say | Say instead (until proof) |
+| --- | --- |
+| Verified (for a fact) | "Supplied by you", "User approved", or "Based on uploaded source" |
+| Live (for an unbuilt feature) | "Illustrative product preview" or "Planned" |
+| Automatically import any portal | "Supported source import, where available" |
+| No stale brochures / recall of downloaded files | "Revise and republish; downloaded copies are separate and may need reissuing" |
+| 1,284 views / 37 inquiries | "Illustrative figures, not customer results" |
+| Buyer engaged / qualified buyer | "Page opened" or "Inquiry submitted" |
+| Your AI remembers | "Save approved style preferences when available" (planned) |
+| Twenty minutes | "Designed to reduce manual assembly" |
+| Cross-border transactions | "Long-term vision" |
+
+**Status column.** "Found in code" means a string or component was found by search on 2026-11-13. It does not mean the page was checked in a browser. Every item needs a browser check on the live site before it is marked Verified.
+
+### W0 — P0 corrections (before any beta invitation or public announcement)
+
+**W0.1 — Claim inventory (P0-01, P0-05).** *Done when:* every product promise on `/`, `/how-it-works`, `/who-its-for`, `/about`, `/faq` and `/early-access` is listed with one status: implemented and tested, beta, planned, illustrative, or remove. *Verify by:* the inventory file exists in `docs/` and each claim cites its route. *Evidence:* the inventory. *Found in code:* "Twenty minutes" and "portal import" in `src/views/HowItWorks.jsx` (lines 26, 66, 74, 198); "No stale brochures" and "regenerated" in `HowItWorks.jsx` (lines 50–51, 86, 173); unbuilt outputs listed as "Deal sheet regenerated" in `HowItWorks.jsx`.
+
+**W0.2 — Privacy notice and terms (P0-02).** *Done when:* `/legal/privacy` and `/legal/terms` contain text that matches the real systems (hosting, email, storage, AI providers, retention, cookies), with an effective date and the operator's legal name and contact, and counsel has approved both. *Verify by:* the founder checks each claim against the code and the vendor list. *Evidence:* the approved text and the counsel sign-off. *Status:* routes exist; contents not reviewed; counsel not booked. *Blocks:* processing any real user document (Document 04 P0-02).
+
+**W0.3 — Sign-in, early access, confirmation and unsubscribe (P0-03).** *Done when:* every endpoint works on the live site; the sign-in and access forms do not reveal whether an address exists; marketing unsubscribe works without signing in and suppresses later optional updates; essential account notices stay separate. *Verify by:* S0.4 (applicant confirmation) is already Verified. Still open: unsubscribe, suppression log, and a check that the password links on `/forgot-password` and `/reset-password` do not appear to users until the password path is decided (SPEC-D01). *Found in code:* `/forgot-password` and `/reset-password` routes exist and are linked from the sign-in flow.
+
+**W0.4 — Sticky navigation contrast (P0-04).** *Done when:* the header is readable at every scroll position over dark and cream sections, and near the footer, at 360, 390, 768, 1024 and 1440 px. *Verify by:* screenshots at each position listed. *Evidence:* the screenshot set. *Found in code:* `src/components/site/Nav.jsx` and `src/styles/sections.css`. Not yet checked in a browser.
+
+**W0.5 — Remove "Verified" badges (P0-05, P1-02).** *Done when:* no fact or sample is labelled "Verified" unless an independent check supports it. Badges use "Supplied by you", "Source conflict", "Needs review" or "User approved". *Found in code:* the "Verified" label in `src/components/home/Showcase.jsx` (line 79); the `hero-card-verified` styles in `sections.css`; the text "verified" in `apps/platform/app/w/[username]/page.jsx` (line 211). Confirm the public-page wording there is not a claim about a fact.
+
+**W0.6 — Illustrative labels and no live-looking figures (P0-01, HOME-03, HOME-07).** *Done when:* every sample figure (1,284 views, 37 inquiries, "Site views 1,284") has the label "Illustrative example — not real customer results" directly above it, inside the card. *Found in code:* `src/components/home/Showcase.jsx` (line 149), `src/components/home/mocks.jsx` (lines 118, 145), `src/views/Product.jsx` (line 154), `src/app/data.js` (line 16). This overlaps with P2.3, which removes sample data from `/analytics` and `/website` in the signed-in app.
+
+**W0.7 — Remove "twenty minutes" (WORK-01).** *Done when:* the phrase is removed from the site until beta timing is measured. *Found in code:* `src/views/HowItWorks.jsx` (lines 66 and 198). Check the FAQ and the home page for the same claim.
+
+**W0.8 — AI claims (HOME-06, FAQ-01, FAQ-02).** *Done when:* the site separates extraction, drafting and independent verification; it says the AI drafts only from approved facts; it does not say the AI "only helps with wording" (FAQ-01 found this contradicts the intake proposition); and "Your AI remembers" is removed or marked planned. *Found in code:* the business-context block in `src/views/Home.jsx` (line 51) and the AI section of `src/views/FAQ.jsx`. Not yet checked for the exact FAQ wording.
+
+**W0.9 — Cross-border and transaction claims (§5).** *Done when:* no page presents cross-border transactions, escrow, legal closing or title checks as current. *Verify by:* search the built site for these terms. *Status:* not searched yet.
+
+**W0.10 — Founder and counsel sign-off (§9, §10).** *Done when:* the founder has approved the promises in the inventory and counsel has approved W0.2. Until then no beta invitation or public announcement is sent. *Blocked by:* W0.1 and W0.2.
+
+### W1 — P1 corrections (before public marketing)
+
+**W1.1 — Hero and supporting copy (HOME-01, HOME-02).** Replace with the Document 04 copy. Keep the comparison visual. Label the sample as illustrative next to it. Primary CTA "Request early access"; secondary "See how it works".
+
+**W1.2 — Audience and first segment (WHO-01, HOME-08, P1-04).** Wholesalers and disposition operators first, in every section, then investors, agents and brokers, and property teams with availability notes. Do not claim full coverage for every profession. Include a US vacant-land or single-family example.
+
+**W1.3 — Professional profile (HOME-04).** Rename "My Website" to "Professional profile" in `src/app/AppShell.jsx` (line 13), `src/app/views/Website.jsx` (lines 35 and 54), `app/(app)/website/page.jsx` (title) and `src/components/home/mocks.jsx` (line 18). Coordinate with P2.1 and P2.2.
+
+**W1.4 — Property imagery (HOME-05, P1-03).** Keep premium photography. Add one vacant-infill-lot example and one average single-family example, both clearly fictional, with currency and locale stated.
+
+**W1.5 — About page (ABOUT-01).** State the broader vision as a direction, not as current capability. Add named founder details only after the founder confirms permission and accuracy.
+
+**W1.6 — Early-access form (ACCESS-01).** Required fields: name, work email, role, primary market. One workflow question is optional. Other fields are optional. Split consent into operational (application) and optional product updates. Store consent time, source and version. Show the confirmation without revealing whether the email already exists. Check mobile layout and the consent link size.
+
+**W1.7 — Founder confirmation email (§6.2, P1-06).** Use the approved copy once the founder approves the exact identity and title. Include the postal address and a working opt-out for optional updates. Keep the operational receipt separate from marketing. Review classification with counsel (CAN-SPAM). *Found in code:* the applicant confirmation was verified (S0.4); compare its text with §6.2.
+
+**W1.8 — Metadata, canonical and indexing (P1-05, §8).** Unique title, H1 and meta description per public marketing route, using the table in §8. Canonical host chosen and 301 redirects set. Sitemap and robots. `noindex` on `/sign-in`, `/forgot-password`, `/reset-password`, `/no-workspace`, `/invite/*`, and on the app routes. Unlisted and link-only property pages (`/w/[username]/p/[slug]`) must not be indexed. Robots is not access control; the private pages must also be protected by the server.
+
+**W1.9 — Retired PAS routes (§8).** Inventory old routes against `docs/legacy-routes.md`. Each route gets a deliberate 404/410 or a redirect to the semantically closest page. No blanket redirects.
+
+**W1.10 — Responsive and accessibility pass (§4, §9).** Capture every route at 320, 390, 768, 1024 and 1440 px and at 200% zoom, with menus, forms and FAQ open. Keyboard test tabs and accordions. Check focus, contrast of grey support text, and the size of the legal links in the footer.
+
+### W2 — P2 (after launch and real use)
+
+**W2.1 — Walkthrough (P2-01).** Only after P1.4 publishes a real page. No CGI-only demo presented as shipping software.
+
+**W2.2 — Case studies and testimonials (P2-02).** Only from verified customers, with their consent. None now.
+
+**W2.3 — Editorial pilot (§8).** Five proposed topics, to be validated for search demand before writing.
+
+### Owners (Document 04 §10)
+
+| Workstream | Owner | Gate |
+| --- | --- | --- |
+| Copy and target segment (W1.1, W1.2) | Founder and product lead | Founder approves replacement copy |
+| Claim audit (W0.1, W0.5–W0.9) | Engineering | Each claim shown as working, beta, planned or removed |
+| Visual, nav and mobile (W0.4, W1.10) | Engineering and design | Pass all viewport screenshots and accessibility checks |
+| Privacy, terms, AI notices (W0.2) | Founder, counsel, engineering | Published text matches real systems |
+| Early access and email (W0.3, W1.6, W1.7) | Engineering and founder | Logged end-to-end test and opt-out working |
+| SEO and retired URLs (W1.8, W1.9) | Engineering and growth | Crawl test, canonical and routing verified |
 
 ---
 
@@ -736,6 +821,8 @@ Record each decision here with a date. Code that depends on an open decision wai
 | D19 | Hosting and database providers, and the app subdomain | Document 06 §1 | Open. Current: Vercel and Neon |
 | D20 | Error monitoring provider | S0.7 (deferred by the founder) | Open. Decide before public launch |
 | D21 | Fee and payment provider | SPEC-D10 (free vs paid) | Open |
+| D22 | Website claim policy (Document 04 §5 substitutes) | §2B, all public copy | Adopt substitutes as default until proof exists | Open (working default) |
+| D23 | Early-access form: minimum fields, consent split, founder signoff (Document 04 §6) | W1.6, W1.7 | Name, email, role, market required; others optional; founder approves signoff | Open |
 
 **10c. Document 03 decision register (SPEC-D01–D14)**
 
@@ -820,6 +907,7 @@ Each of these needs a written reason before it enters a phase.
 8. Book the compliance and legal review (D9) so P4.5 and P5.6 are not on the critical path later.
 9. Configure R2 (`R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET`) in Vercel; confirm `/api/health` shows `storage: true`.
 10. Run the Stage 0 deal test (Document 02 §9): three realistic deals, end to end, on the live site.
+11. Website: complete W0.1 (claim inventory) and W0.2 (privacy and terms, counsel booked). Replace "Verified" and "twenty minutes" on the live site (W0.5, W0.7).
 
 ---
 
@@ -846,4 +934,7 @@ marked as conflicting.
    P1.3 cannot be Verified, and the Stage 0 deal test cannot run, until `/api/health` reports `storage: true`.*
 9. **RESOLVED per spec (2026-11-04): no mock figures in any real account.** Document 03 AN-01 and acceptance test T11 require it. `/analytics` and `/website` must be fixed under P2.3, before the Stage 0 deal test.
 10. **RESOLVED per spec (2026-11-04): each output has its own state.** Document 03 PUB-04 requires page, PDF, summary and card to have independent states. P1.4 is amended to say so.
+11. **Product name on the public site (Document 04 header).** Document 04 uses ORREI and rejects older LAREI copy. §1 still shows LAREI in some copy. *Founder: confirm ORREI as the public name now. Clearance (D1, SPEC-D14) stays open.*
+12. **Website claim policy (Document 04 §5, D22).** The allowed substitutes in §2B are the working default. *Founder: approve or amend.*
+13. **Early-access minimum fields and founder identity (Document 04 §6, D23).** *Founder: confirm the required fields and the named signoff.*
 
