@@ -905,7 +905,7 @@ Each of these needs a written reason before it enters a phase.
 6. Invite one tester; complete S0.6.
 7. Decide D1 and D7. Both are needed before Phase 2 copy.
 8. Book the compliance and legal review (D9) so P4.5 and P5.6 are not on the critical path later.
-9. Configure R2 (`R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET`) in Vercel; confirm `/api/health` shows `storage: true`.
+9. Configure R2 (`R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET`) in Vercel; confirm `/api/health` shows `storage: true`. Steps: `docs/r2-setup.md`.
 10. Run the Stage 0 deal test (Document 02 §9): three realistic deals, end to end, on the live site.
 11. Website: complete W0.1 (claim inventory) and W0.2 (privacy and terms, counsel booked). Replace "Verified" and "twenty minutes" on the live site (W0.5, W0.7).
 
