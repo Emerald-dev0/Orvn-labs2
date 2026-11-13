@@ -245,6 +245,66 @@ applicant and one invited tester have completed their journeys. This is the only
 
 ---
 
+## 2A. Platform foundations (`apps/platform`)
+
+Source: `ORVN_Labs_Document_06_Technical_Architecture_and_Engineering.docx` (Google Drive, 13 Nov 2026, v1.0).
+Status: **proposed working specification, subject to founder approval.** Choices marked OPEN in §10 wait until decided.
+The existing Vercel deployment does not establish that any application feature is ready.
+
+Applies to every phase. Each phase has frontend and backend work (see `AGENTS.md`).
+
+**Boundaries and architecture**
+
+- Keep these as separate routes with separate permissions: marketing site (`orvnlabs.com`), signed-in application (proposed `app.orvnlabs.com`, OPEN D19), public profile routes, and public property pages.
+- Use a modular monolith in `apps/platform`: web UI, business rules, background jobs, relational database, protected object storage.
+- Reserve interfaces only, not active V1 services: payment entitlements, discovery, messaging, JV matching, country-specific transaction services.
+- Store timestamps in UTC. Store money as integer minor units with an ISO currency code. Store measurements with the original unit and a normalised comparison unit. Store addresses with country-aware fields.
+- Require staging and production environments, managed secrets, backups, logging, a rollback plan and documented admin access.
+
+**Two state machines, kept separate**
+
+- Property record: `DRAFT → NEEDS_REVIEW → APPROVED → ARCHIVED`, with reopen transitions.
+- Publication: `NOT_PUBLISHED → LINK_ONLY` or `PUBLIC → UNPUBLISHED / WITHDRAWN`.
+- A property can stay private while one approved output is shared by link. Portfolio exposure is controlled on its own. A JV request is not a visibility level.
+- Editing an approved, published snapshot must not change it silently. Offer review and an explicit republish.
+- A PDF that was already downloaded cannot be revoked. Show its revision and date. Do not promise "no stale copies anywhere".
+- A withdrawn public page shows an unavailable state and leaks no source material.
+
+**Facts and AI input**
+
+- Every fact has a source, a candidate value and a review state. Unknown values stay blank.
+- No silent AI verification. Do not claim verified title, zoning, ARV, boundaries, ownership or comparable sales without authoritative evidence and a scoped workflow.
+- Do not show confidence scores to users until they are validated.
+- Business tone memory must never change numerical or legal facts.
+- Guard against prompt injection in uploads. Apply cost, rate and size limits. Log errors without private source text.
+- If parsing or AI is down, allow manual entry and retry. Do not block the workspace.
+
+**Authorisation and privacy**
+
+- Check record-level permission on every read and write, on the server.
+- Roles: anonymous, individual, workspace editor, workspace publisher, workspace admin, ORVN support (logged, narrowly scoped). Support never browses source files routinely. Admins cannot impersonate users silently.
+- Required automated tests: owner A cannot fetch owner B's private files; private, link-only and public access boundaries; revoked links; form anti-spam; missing-field and source-conflict workflows.
+- Idempotency keys for publishing, email sending and payment operations.
+- Background jobs (file processing, extraction, rendering, notifications, analytics) show honest pending and failed states.
+
+**Engineering gates**
+
+- Test laptop, tablet and narrow mobile widths. Check keyboard navigation, labels, contrast and screen readers.
+- Staging seed data is fictional and labelled as such. Remove placeholder metrics before public production.
+- Monitoring covers uptime, failed sign-ins, upload failures, AI latency and cost, failed publication, inquiry delivery and broken routes. S0.7 is deferred by the founder; OPEN D20 must be decided before public launch.
+
+**Repository cleanup**
+
+- Root `src/`, `api/` and `supabase/` belong to the retired Vite app. `AGENTS.md` says not to extend them.
+- The `(app)` pages in `apps/platform` still import from root `src/app/views/*` and `src/styles/app.css`. Removing the root folders is therefore a separate PR: move those views and styles into `apps/platform` first, then delete. Status: not started.
+- `.github/workflows/keep-supabase-active.yml` pings a Supabase project daily. Decide whether it stays once `supabase/` is removed (OPEN).
+
+**Known discrepancy to resolve before P1.3 is marked Verified**
+
+- §1 says uploads to R2 with per-file visibility are built. The last production check reported file storage as not configured (`storage: false`). Confirm with `/api/health` and a real upload before accepting this line.
+
+---
+
 ## 3. Phase 1 — Core deal preparation (M1–M3)
 
 Blueprint goal: a wholesaler can take a real property opportunity, prepare a presentation and share it without
@@ -598,6 +658,18 @@ These block the phases named. Record each decision in this section with a date.
 | D7 | Market scope at launch | Phase 1 defaults | Florida first; the data model stores Florida counties and ZIP codes from day one | Recommended, not yet confirmed |
 | D8 | Non-account interest on a deal | Phase 3 | Allowed; account invitation afterwards | Open |
 | D9 | Compliance and legal advisers engaged | P4.5, P5.6 | Engage before any bulk send or JV request leaves the platform | Open |
+| D10 | Auth approach: email link only, or passwords too | Auth flows, Phase 2 accounts | None recorded. Current build is email link only | Open |
+| D11 | Team role model within a workspace | Phase 1 permissions, Phase 2 organisations | Define editor, publisher and admin before multi-user access | Open |
+| D12 | Minimum media and file limits (size, count, types) | P1.3 uploads | Set explicit limits and enforce them server-side | Open |
+| D13 | Do PDFs and buyer summaries ship in the first beta | P1.9 | Decide before P1.9 starts | Open |
+| D14 | Public profile structure | P2.1, P3 visibility | Decide with D5 | Open |
+| D15 | Saved-profile requires an account, or not | Phase 3 saving | Require an account for saving, not for viewing | Open |
+| D16 | Anonymous inquiry policy (what an unknown visitor may send) | P1.6 | Allow basic inquiry with rate limits and anti-spam; no account needed | Open |
+| D17 | Link-only security behaviour (who can open, how links are revoked) | P1.4, P1.5 | Unguessable tokens; revocable; expiry configurable | Open |
+| D18 | Data retention periods and deletion process | Launch, all phases | Define before any real personal data is collected beyond beta | Open |
+| D19 | Hosting and database providers, and the app subdomain | §2A boundaries | Current: Vercel and Neon. Confirm before public launch | Open |
+| D20 | Error monitoring provider | S0.7, §2A gates | Deferred by the founder. Decide before public launch | Open |
+| D21 | Fee and payment provider | Phase 4 billing, later payments | Defer until D6 is decided | Open |
 
 ---
 
@@ -628,6 +700,7 @@ Do not begin Phase 7 or any expansion beyond Florida before M-E is accepted.
 - Nationwide buyer-data aggregation.
 - Autonomous AI negotiation or closing coordination.
 - Predictive buyer scoring. AI does not decide who matches a deal.
+- Active messaging, JV matching, payment entitlements or country transaction services. Their interfaces are reserved in code, not built as V1 features (§2A).
 
 Each of these needs a written reason before it enters a phase.
 
