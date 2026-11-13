@@ -10,17 +10,17 @@ export function SiteEditorMock() {
       <div className="app-window">
         <div className="app-bar">
           <span className="app-dots" aria-hidden="true"><i /><i /><i /></span>
-          <span className="app-url">app.orvnlabs.com/my-website</span>
+          <span className="app-url">Illustrative design · pre-release</span>
         </div>
         <div className="app-main">
           <div className="site-editor-head">
             <div>
-              <p className="site-editor-title">My Website</p>
+              <p className="site-editor-title">Professional profile</p>
               <span className="site-editor-status">Draft</span>
             </div>
             <div className="site-editor-actions">
               <span className="site-editor-btn"><Eye size={12} strokeWidth={2} /> Preview</span>
-              <span className="site-editor-btn is-primary">Publish site</span>
+              <span className="site-editor-btn is-primary">Publish profile</span>
             </div>
           </div>
 
@@ -92,8 +92,8 @@ export function VoiceMock() {
 
         <div className="voice-sample">
           <p>
-            “A four-bedroom detached house in the Harbour district, 620 m² internally, with title
-            documents on file and a service charge confirmed by the developer.”
+            “A four-bedroom detached house in the Harbour district, 2,200 sq ft internally, with
+            title documents on file and HOA dues confirmed by the seller.”
           </p>
           <span><Check size={12} strokeWidth={3} /> Used in this draft</span>
         </div>
@@ -110,16 +110,19 @@ export function StatsMock() {
       <div className="app-window">
         <div className="app-bar">
           <span className="app-dots" aria-hidden="true"><i /><i /><i /></span>
-          <span className="app-url">app.orvnlabs.com/analytics</span>
+          <span className="app-url">Illustrative design · pre-release</span>
         </div>
         <div className="app-main">
+          <p className="mock-insight-foot" style={{ marginBottom: 10 }}>
+            Illustrative example — not real customer results
+          </p>
           <div className="mock-insight-top">
             <div>
-              <p className="mock-insight-num">1,284</p>
-              <span className="mock-insight-label">Page views, last 7 days</span>
+              <p className="mock-insight-num">132</p>
+              <span className="mock-insight-label">Page opens, last 7 days</span>
             </div>
             <div>
-              <p className="mock-insight-num">37</p>
+              <p className="mock-insight-num">12</p>
               <span className="mock-insight-label">Inquiries this month</span>
             </div>
           </div>

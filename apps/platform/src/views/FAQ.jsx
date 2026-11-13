@@ -19,7 +19,7 @@ const GROUPS = [
       },
       {
         q: 'Who is it for?',
-        a: 'Wholesalers and small disposition teams first, because they repeat the same job many times a month. Agents, brokers, developers and investors are supported by the same record, and nothing in the model assumes one country.',
+        a: 'Wholesalers and small disposition teams first, because they repeat the same job many times a month. The first release is built for the US: addresses, units and currency are US. Wider markets come later, not by pretending to be universal now.',
       },
       {
         q: 'Is it a CRM?',
@@ -105,7 +105,7 @@ const GROUPS = [
       },
       {
         q: 'Which countries does it work in?',
-        a: 'The interface is in English and the data model is not built around one country: addresses are free-form, prices take any currency and property types are generic. That is not the same as being localised everywhere, and billing, when it arrives, will depend on where you are.',
+        a: 'The first release is US only: US addresses, units (square feet, acres) and dollars. Property types at launch are vacant land and single-family homes, with more as they are tested. It is not localised elsewhere yet, and billing, when it arrives, will reflect where you are.',
       },
       {
         q: 'Who owns the content?',

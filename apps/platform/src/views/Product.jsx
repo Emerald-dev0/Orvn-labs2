@@ -106,22 +106,22 @@ function ConflictMock() {
       <div className="app-window">
         <div className="app-bar">
           <span className="app-dots" aria-hidden="true"><i /><i /><i /></span>
-          <span className="app-url">app.orvnlabs.com/properties/adaora-house/checks</span>
+          <span className="app-url">Illustrative design · pre-release</span>
         </div>
         <div className="app-main">
           <div className="mock-conflict">
             <div className="mock-conflict-head">
               <span className="mock-conflict-icon"><CircleAlert size={14} strokeWidth={2.4} /></span>
-              <p>Price does not match the portal</p>
+              <p>Price does not match the brochure</p>
               <span className="mock-time">2h ago</span>
             </div>
             <div className="mock-conflict-rows">
               <div><span>Record</span><strong>$480,000</strong><em>your source</em></div>
-              <div><span>Portal import</span><strong>$465,000</strong><em>imported</em></div>
+              <div><span>Brochure (PDF)</span><strong>$465,000</strong><em>your document</em></div>
             </div>
             <div className="mock-conflict-actions">
               <span className="mock-btn-dark">Use my figure</span>
-              <span className="mock-btn-light">Accept import</span>
+              <span className="mock-btn-light">Use brochure figure</span>
             </div>
           </div>
 
@@ -146,17 +146,20 @@ function InsightMock() {
       <div className="app-window">
         <div className="app-bar">
           <span className="app-dots" aria-hidden="true"><i /><i /><i /></span>
-          <span className="app-url">app.orvnlabs.com/properties/adaora-house/insight</span>
+          <span className="app-url">Illustrative design · pre-release</span>
         </div>
         <div className="app-main">
+          <p className="mock-insight-foot" style={{ marginBottom: 10 }}>
+            Illustrative example — not real customer results
+          </p>
           <div className="mock-insight-top">
             <div>
-              <p className="mock-insight-num">1,284</p>
-              <span className="mock-insight-label">Page views, last 7 days</span>
+              <p className="mock-insight-num">132</p>
+              <span className="mock-insight-label">Page opens, last 7 days</span>
             </div>
             <div>
-              <p className="mock-insight-num">37</p>
-              <span className="mock-insight-label">Enquiries this month</span>
+              <p className="mock-insight-num">12</p>
+              <span className="mock-insight-label">Inquiries this month</span>
             </div>
           </div>
           <div className="mock-bars" aria-hidden="true">
@@ -166,9 +169,8 @@ function InsightMock() {
           </div>
           <div className="mock-facts" style={{ marginTop: 16 }}>
             {[
-              ['Kitchen photograph', 'Most viewed image'],
-              ['Deal sheet', 'Downloaded 24 times'],
-              ['Enquiry button', '37 clicks'],
+              ['Property page', '132 opens · last 7 days'],
+              ['Inquiries', '12 this month'],
             ].map(([k, v]) => (
               <div className="mock-fact" key={k}>
                 <span className="mock-fact-key">{k}</span>
@@ -213,7 +215,7 @@ export default function Product() {
             <div className="hero-photo-chip glass">
               <BadgeCheck size={16} strokeWidth={2.2} />
               <div>
-                <strong>Facts checked</strong>
+                <strong>Facts you approved</strong>
                 <span>Before anything publishes</span>
               </div>
             </div>
@@ -232,7 +234,7 @@ export default function Product() {
           </p>
           <ul className="list-check">
             {[
-              'Facts you typed, imported or confirmed',
+              'Facts you entered or confirmed from your documents',
               'Unknowns marked as unknown, not filled in',
               'Documents attached to the field they prove',
               'A history of who changed what',
@@ -306,10 +308,10 @@ export default function Product() {
       <section className="split">
         <div className="split-copy">
           <span className="eyebrow">Insight</span>
-          <h2 className="split-title">Know which photograph people stopped on.</h2>
+          <h2 className="split-title">See what happened after you shared.</h2>
           <p className="lead">
-            Views, image attention, downloads and enquiries, counted without identifying anybody.
-            Useful enough to change next week's shoot, private enough to keep.
+            Where available, track page opens and submitted inquiries. Views are not verified
+            buyers, and interest is not proof of purchase.
           </p>
           <Link href="/legal/privacy" className="arrow-link">
             How the analytics work

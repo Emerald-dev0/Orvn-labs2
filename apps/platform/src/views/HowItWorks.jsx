@@ -23,7 +23,7 @@ const STEPS = [
     icon: Camera,
     label: 'Step one',
     title: 'Put the property in.',
-    body: 'Add the address, the price, the figures and your photographs. If the listing already exists on a portal, import it and fix what is wrong instead of typing it all again.',
+    body: 'Add the address, the price, the figures and your photographs, or paste in the notes you already have. Attach a brochure or brief and ORREI organizes what you supply into a record you can edit. Additional imports will depend on supported sources.',
     points: ['Address and location', 'Price and key figures', 'Photographs and floor plans', 'Your role and contact details'],
     visual: 'add',
   },
@@ -40,15 +40,15 @@ const STEPS = [
     label: 'Step three',
     title: 'Publish what you need.',
     body: 'Publish the property page and send the link. Deal sheets, buyer summaries and print sheets come later from the same record. Each output has its own state, so you control who sees what.',
-    points: ['Page, sheet, summary, printout', 'Preview before publishing', 'Private documents stay private', 'Update one, update all'],
+    points: ['Page, sheet, summary, printout', 'Preview before publishing', 'Private documents stay private', 'Each output approved on its own'],
     visual: 'publish',
   },
   {
     icon: RefreshCw,
     label: 'Step four',
-    title: 'Change it once, everywhere.',
-    body: 'When the price moves or a unit sells, edit the record. Every output that used that figure is regenerated, and the old versions are kept in the history.',
-    points: ['One edit, all outputs', 'Version history', 'Retire a listing without deleting it', 'No stale brochures in circulation'],
+    title: 'Update your source, then republish.',
+    body: 'When the price moves or a unit sells, revise the record and publish an updated page. Previously downloaded files remain separate copies and may need to be reissued.',
+    points: ['One record, updated outputs', 'Version history', 'Retire a listing without deleting it', 'Old files stay separate copies'],
     visual: 'update',
   },
 ];
@@ -63,15 +63,15 @@ const NEEDS = [
     body: 'Phone photographs are fine. ORREI crops and lays them out, and tells you when an image is too small to print well.',
   },
   {
-    title: 'Twenty minutes',
-    body: 'That is the realistic time for a property you know well. The second one is quicker because your details and house style are already saved.',
+    title: 'One property to begin with',
+    body: 'Start with a single property you know well. Time-to-value is being measured in beta, not promised.',
   },
 ];
 
 const FAQS = [
   {
     q: 'Do I have to move my listings off the portals?',
-    a: 'No. Keep them where they are. ORREI gives you a record and a page you control, and it will import from a portal rather than asking you to start again.',
+    a: 'No. Keep them where they are. ORREI gives you a record and a page you control. Enter the details you have and attach the brochures you already made; additional imports will depend on supported sources.',
   },
   {
     q: 'What if I do not have all the information?',
@@ -195,7 +195,7 @@ export default function HowItWorks() {
       <PageHero
         eyebrow="How it works"
         title={<>From a set of notes to a published property.</>}
-        lede="Four steps, in the order you already work. About twenty minutes for a property you know well, and less for the next one because your details and house style are saved."
+        lede="Four steps, in the order you already work. Add the information you already have, review what ORREI organizes, approve the presentation and share it when it is ready."
         actions={
           <>
             <Link href="/early-access" className="btn btn-primary">
