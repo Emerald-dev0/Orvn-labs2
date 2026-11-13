@@ -106,17 +106,17 @@ Recorded evidence (kept from prior revision; re-verified only where a date is gi
 
 ### D.2 PRD-compliance defects in the current build (found 2026-11-13 — each blocks Phase 0 close)
 
-| ID | Defect (evidence) | Required by |
-|---|---|---|
-| D-CODE-1 | **Password surface ships contrary to D01**: password sign-up/sign-in on the sign-in page (`src/views/SignIn.jsx`), `/forgot-password`, `/reset-password`, `/set-password` + "create password" links. **Founder must either approve removal or reopen D01 in writing** (PRD §20: reopen only by the founder, in writing, with ATs restated). If reopened, AT-21 is restated to match | D01; AUTH-01; AT-21 |
-| D-CODE-2 | **Upload limits contradict D18**: `MAX_UPLOAD_BYTES = 12 MB` (D18: 10 MB), AVIF allowed (D18: JPEG/PNG/WebP only), `MAX_FILES_PER_PROPERTY = 60` (D18: 25 photos ≤ 10 MB + 10 documents ≤ 25 MB), no 500 MB/property total found, UI numbers not verified equal to server numbers | D18; PROP-03; AT-22 |
-| D-CODE-3 | **`property_type` enum mismatch**: schema stores `vacant_land \| residential \| package \| project` (`db/schema.ts`); PRD §14.1/D03: `residential_land \| SFR` selectable; `duplex \| multifamily \| other` stored but hidden until QA | D03; PROP-01; §14.1; AT-22 |
-| D-CODE-4 | **Location disclosure missing**: no Exact / Street-level / Area-only levels; default for public output must be **Area only**, enforced in the page, the API payload and the map | D07; PUB-01/PUB-03; AT-23 |
-| D-CODE-5 | **Deal sheet not versioned**: `lib/print/sheet.ts` stamps only the date; no version identifier; old exports not marked stale in-app after a price change | D02, D09; PUB-02/PUB-05; AT-19 |
-| D-CODE-6 | **Sample data in a real account**: `/website`, `/analytics`, `/settings` render demo figures (e.g. `src/app/data.js` 1,284 views) | D08; AN-01; AT-18; PRD §6 |
-| D-CODE-7 | **"My Website" label** in nav, page title, mocks — must be **"Professional profile"** ("Never My Website or Publish site") | PRO-01; HOME-04; §16.2 |
-| D-CODE-8 | **Website claims outrun the product** (PRD §19; AT-20): "Twenty minutes" (`src/views/HowItWorks.jsx`), "No stale brochures in circulation" (ibid.), "Verified" badge (`src/components/home/Showcase.jsx`), unlabelled 1,284/37-style figures (`src/app/data.js`, `mocks.jsx`, `Showcase.jsx`, `Product.jsx`); no land/SFR example imagery (HOME-05); FAQ-01/02, SIGN-01, ACCESS-01, FOOT-01 copy not confirmed against PRD; `/privacy`/`/terms` contents unreviewed, no effective date; early-access consent split per §19.4 unverified | §19; AT-20 |
-| D-CODE-9 | **AI-01 not built** (extraction with source attribution) and `AI-02` conflict path untested (`AT-06`: $480,000 vs $465,000). Until these pass, drafting must not be marketed as intake automation, and `AT-07`/`AT-08` (prompt injection, AI outage) stay red | AI-01/AI-02; AT-06/07/08 |
+| ID | Defect (evidence) | Required by | Status (2026-11-13) |
+|---|---|---|---|
+| D-CODE-1 | **Password surface ships contrary to D01**: password sign-up/sign-in on the sign-in page (`src/views/SignIn.jsx`), `/forgot-password`, `/reset-password`, `/set-password` + "create password" links | D01; AUTH-01; AT-21 | **Fixed** — founder directed removal 2026-11-13 ("remove passwords"); magic-link-only surface, no password routes or fields remain (`d9cec46`). AT-21 to be run on staging; nothing is deployed yet |
+| D-CODE-2 | **Upload limits contradict D18**: 12 MB cap, AVIF allowed, 60 files/property, no 500 MB total | D18; PROP-03; AT-22 | **Fixed in code** — 10 MB photo / 25 MB PDF on detected type (not the declared one), AVIF refused, 25 photos + 10 documents + 500 MB per property enforced pre-store and again on detected type, `bytes` stored and counted, uploader copy matches (`b7ee82b`). Migration `0006_prd_compliance.sql` **not yet applied**; AT-22 pending |
+| D-CODE-3 | **`property_type` enum mismatch**: schema stored `vacant_land \| residential \| package \| project` | D03; PROP-01; §14.1; AT-22 | **Fixed** — enum remapped to `residential_land \| SFR \| duplex \| multifamily \| other` with a data-safe migration; launch picker offers land + SFR only (`b7ee82b`). drizzle-kit reports no schema drift. AT-22 pending on staging |
+| D-CODE-4 | **Location disclosure missing**: no Exact / Street-level / Area-only; default Area only | D07; PUB-01/PUB-03; AT-23 | **Fixed in model + outputs** — `location_disclosure` enum, default `area`, `postal_code` added; page snapshot, sheet, OG image and all public payloads render the disclosure-level location (exact = full line, street = number stripped, area = city/region/ZIP); exact-without-pin blocks publication (`b7ee82b`). **Open:** no UI yet edits the disclosure level (property edit form is unwired); map control not verified. AT-23 pending |
+| D-CODE-5 | **Deal sheet not versioned**: stamps only the date | D02, D09; PUB-02/PUB-05; AT-19 | **Partly fixed** — snapshot stores `recordVersion` at publish; print sheet stamps version + publication date in header/footer and plain-text summary exports (`b7ee82b`). **Open:** in-app "stale export" marking after a price change does not exist; withdrawn links 404 the sheet (already true). AT-19 pending |
+| D-CODE-6 | **Sample data in a real account**: `/website`, `/analytics`, `/settings` render demo figures | D08; AN-01; AT-18; PRD §6 | **Fixed** — all three screens read the database (profile publish/unpublish, 30-day page opens + inquiries, workspace/members); a new account shows zeros/empty state; sample values only in the no-database preview, labelled (`89b7270`). AT-18 pending |
+| D-CODE-7 | **"My Website" label** in nav, page title, mocks | PRO-01; HOME-04; §16.2 | **Fixed** — nav and page title say "Professional profile"; mocks renamed (`e792d66`, `951524a`). AT pending |
+| D-CODE-8 | **Website claims outrun the product** (PRD §19; AT-20) | §19; AT-20 | **Partly fixed** — "twenty minutes", "no stale brochures", portal-import promises, dwell-time claim, "Verified" badge, unlabelled 1,284/37 figures and fake app URLs removed or relabelled "Illustrative example — not real customer results"; Showcase carries the P0 concept label + HOME-06 copy; FAQ states US-only launch; units US (sq ft/acres/USD) (`951524a`). **Open:** HOME-05 land/SFR imagery; `/privacy` + `/terms` effective dates and counsel review; §19.4 early-access consent split + unsubscribe/suppression log (S0.4); ACCESS-01/FOOT-01 read-through; AT-20 not run |
+| D-CODE-9 | **AI-01 not built** (extraction with source attribution); `AI-02` conflict path untested (`AT-06`) | AI-01/AI-02; AT-06/07/08 | **Still open.** Drafting is labelled as drafting everywhere and is never marketed as intake automation (marketing sweep `951524a`; in-product DraftPanel already gates on approved facts and discards unaccepted drafts). AI-01 itself is not built; AT-06/07/08 remain red until it is built or descoped in writing by the founder |
 
 ### D.3 The Phase 0 demonstration (G0)
 
@@ -179,21 +179,21 @@ The old detailed Phase 3–7 plan (buyer network, distribution campaigns, JV aut
 
 **Still genuinely open (and only these):**
 
-1. Founder decision in writing: remove the password surface, or reopen D01 (D-CODE-1).
-2. Counsel review of PRD §20.2 and §19.5 (privacy notice, terms, retention) — blocks **live** launch, not the build.
-3. Trademark/domain clearance for ORREI — blocks paid spend (D14), not the build.
-4. Founder: the title to use in the early-access signoff (old D23 residual).
-5. Engineering: canonical host + 301 map and `noindex` sweep (PRD §19.6); proposal for the app subdomain (PRD §2).
-6. Founder + engineering: keep `keep-supabase-active.yml` pinging a retired Supabase project daily? Root-level Vite files (`package.json`, `index.html`, `vite.config.js`, `postcss.config.js`, `tailwind.config.js`, `eslint.config.js`, `public/`, `src/…` at root) still exist and are not archived. Decide and archive (housekeeping; not Phase 0 blocking).
-7. Founder: revisit S0.2 click tracking against D01's reopen trigger (measured friction over ≥20 users).
+1. Counsel review of PRD §20.2 and §19.5 (privacy notice, terms, retention) — blocks **live** launch, not the build.
+2. Trademark/domain clearance for ORREI — blocks paid spend (D14), not the build.
+3. Founder: the title to use in the early-access signoff (old D23 residual).
+4. Engineering: canonical host + 301 map and `noindex` sweep (PRD §19.6); proposal for the app subdomain (PRD §2).
+5. Founder: revisit S0.2 click tracking against D01's reopen trigger (measured friction over ≥20 users).
+
+Resolved 2026-11-13: password surface removed at founder direction (D-CODE-1, `d9cec46`); keep-supabase-active.yml deleted and the root Vite app archived into `archive/` (`73e3e23`); click tracking stays on.
 
 ---
 
 ## H. Immediate next actions (in order)
 
-1. **Founder: D01 in writing.** Then engineering removes the password surface (D-CODE-1) — or the PRD is reopened with AT-21 restated.
-2. **Engineering: D-CODE-2, 3, 4, 5, 6, 7** as small PRs, each citing the PRD ID and the AT it turns green. (`D03` needs a migration; `D04` an upload-pipeline change; `D07` touches record, page, API payload and map.)
-3. **Founder + engineering: D-CODE-8** — website claim sweep using PRD §19 copy verbatim; every claim labelled tested/beta/planned/illustrative or removed; W0 items before any invitation or announcement.
+1. ~~**Founder: D01 in writing.**~~ Done 2026-11-13 ("remove passwords"); password surface removed in `d9cec46`. AT-21 still to be executed on staging.
+2. ~~**Engineering: D-CODE-2, 3, 4, 5, 6, 7.**~~ Done in code 2026-11-13 (`b7ee82b`, `89b7270`, `e792d66`); migration `0006_prd_compliance.sql` authored but **not applied** — run `npm run db:status` then `db:migrate` on staging before AT-22/23. open: disclosure-level UI control (property edit form), in-app stale-export marking, AT evidence.
+3. ~~**Founder + engineering: D-CODE-8**~~ — claims sweep landed (`951524a`). Open: HOME-05 land/SFR imagery, legal-copy review (privacy/terms + effective dates), §19.4 consent split + unsubscribe/suppression proof, then AT-20 across all routes.
 4. **Engineering: D-CODE-9** — build AI-01 extraction + conflict path on the three demo deals, or descope it **in writing** before invites; close AT-06/07/08.
 5. **Engineering: AT-01…AT-23 on staging.** Record results in `docs/acceptance-results.md`. Fix until they pass (or an AT is formally restated by the founder in writing).
 6. **G0 demonstration** (§D.3) with the founder watching. Evidence → close Phase 0.
