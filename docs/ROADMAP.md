@@ -769,9 +769,8 @@ a deal that is published or distributed, receives a meaningful buyer or JV respo
 - **M-B — First deal on the platform (Phase 1 exit).** One real Florida opportunity published, shared and responded to.
 - **M-C — First buyer reached (Phase 4 exit).** One real deal sent to a consented audience, with recorded responses.
 - **M-D — First JV connection (Phase 5 exit).** One request answered by an eligible partner.
-- **M-E — First closed transactions.** Two independent wholesalers close a deal they sourced and distributed through the platform.
-  Evidence per deal: created on the platform; distributed through it; a buyer or partner discovered it through it; the parties
-  connected; the opportunity progressed; the transaction closed. This is the product's first real validation.
+- **M-E — First validated deals (founder decision, 2026-11-04).** Two independent wholesalers each source, publish and share a deal through ORREI, and the deal reaches a documented next step (for example, a buyer or partner response, or a request for a viewing). The closing happens outside the platform and is not required for M-E.
+  Evidence per deal: created on the platform; published and shared through it; a buyer or partner reached through it; the opportunity progressed to a recorded next step. Closings reported by the wholesalers are recorded as reported, not verified by ORREI. This is the product's first real validation.
 
 Do not begin Phase 7 or any expansion beyond Florida before M-E is accepted.
 
@@ -840,9 +839,7 @@ marked as conflicting.
 4. **RESOLVED per spec (2026-11-04): P4 moves after Stage 2.** Document 02 §10 defers auto-email blasts and SMS campaigns. Opt-out and consent must exist for any optional mail (Document 02 §14).
 5. **RESOLVED per spec (2026-11-04): P5 becomes a manual concierge pilot after Stage 2.** Document 02 §3 says JV is not required for V1. Document 03 places it in Stage 3 (JV-01, JV-02), with automation only in Stage 4 (JV-03).
 6. **RESOLVED per spec (2026-11-04): P6 is Stage 4, and P7 is a separate product line.** Document 03 §7 places network intelligence (INTEL-01) outside V1 and outside this roadmap's critical path.
-7. **OPEN, founder to confirm wording.** Milestone M-E (two wholesalers close a deal through the platform). Document 02 excludes transaction automation, and
-   Document 02 §17 says paid readiness needs independent users accepting a paid offer. M-E is a validation outcome, not a
-   closing feature. *Founder: confirm the wording.*
+7. **RESOLVED (founder, 2026-11-04): M-E reworded to progress, not closing.** Two wholesalers each source, publish and share a deal, and it reaches a documented next step. The platform does not run the closing (Document 02 §3; no transaction automation). §11 is updated.
 8. **RESOLVED as a requirement, not yet met: R2 storage.** §1 said uploads were built, but R2 is not configured (`storage: false`).
    The spec requires secure object storage for uploads (Document 03 PROP-03 dependency; Document 06 §1; Document 02 Stage 0
    "secure uploads"; acceptance test T13). *Founder or engineering: create the R2 bucket and set the four `R2_*` variables in Vercel.
