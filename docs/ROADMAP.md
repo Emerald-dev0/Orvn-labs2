@@ -1,9 +1,54 @@
 # ORVN Labs — Roadmap
 
-Status: working plan, dated 2026-11-11. Owner: Daniel (engineering) with the founder (product and market).
+Status: working plan, dated 2026-11-13, aligned to Documents 02, 03 and 06 (see §A). Owner: Daniel (engineering) with the founder (product and market).
 This file replaces nothing. `docs/PLATFORM-BUILD-PLAN.md` holds the detailed M0–M4 build notes for the
 operator workspace; this roadmap places that work inside the wider product blueprint and sets the rule
 for when each step counts as done.
+
+---
+
+## A. Source of truth and spec alignment
+
+**Precedence.** Three Drive documents dated 13 November 2026 are the source of truth for product scope, requirement IDs,
+stage gates, permissions and decisions:
+
+- **Document 02**: product strategy and phased roadmap. Stage gates (§9), the V1 definition (§5), and the validation program.
+- **Document 03**: complete feature specification. Requirement IDs (AUTH-01 … JV-03), acceptance tests (T01–T18), and the
+  decision register SPEC-D01–D14 (§15 of that document).
+- **Document 06**: technical architecture. Boundaries, state machines, engineering gates, and decisions D10–D21 in §10 below.
+
+This roadmap decides the order of work, the status of each step, and the evidence for it. Where the roadmap and a document
+disagree, the document wins. Each disagreement is listed in §15 until the founder resolves it.
+
+**Stage names.** "Stage 0" in §2 of this file means launch hardening. Document 02's Stage 0 means product readiness, with an exit
+test of three realistic deals run end to end. These are different gates. §15, item 1, explains the consequence.
+
+**Mapping of roadmap items to requirement IDs**
+
+| Roadmap item | Spec requirement IDs | Spec stage | Note |
+| --- | --- | --- | --- |
+| S0.1–S0.8 launch hardening | AUTH-01, SYS-01 | Pre-Stage 1 | Document 02 Stage 0 exit not yet met (§15-1) |
+| S0.9 operator admin console | SYS-01 | Stage 1 | Admin is least-privilege and logged |
+| P1.1 property record | PROP-01, PROP-02, PROP-04 | V1 required | |
+| P1.2 facts and missing information | AI-01, AI-02, PROP-02 | V1 required | AI is not a verifier |
+| P1.3 uploads and per-file visibility | PROP-03 | V1 required | Needs secure storage (§1) |
+| P1.4 publish snapshot and public page | PUB-01, PUB-04, PUB-05 | V1 required | Each output has its own state |
+| P1.5 share and link behaviour | PUB-03 | V1 required | Link-only is unlisted, not secret |
+| P1.6 inquiry intake | INQ-01, INQ-02 | V1 required | Owner inbox included |
+| P1.7 AI drafting | AI-03 | V1 required | Facts unchanged by tone edits |
+| P1.8 deal lifecycle statuses | PUB-05; Doc 06 §3 | V1 required | Record and publication states kept separate |
+| P1.9 PDF deal sheet | PUB-02; SPEC-D02 | V1 core target | Depends on D13 |
+| P2.1 profile and branding | AUTH-02, PRO-01, PRO-02 | V1 lean | No "verified" badge without evidence |
+| P2.2 website sections | none | not in spec | Spec rules out a general builder (§15-2) |
+| P2.3 replace sample data | Document 03 honesty boundary; AN-01 | V1 release blocker | Mock figures must not appear as real |
+| P2.4 follow | none | not in spec | §15-3 |
+| P2.5 updates | none | not in spec | §15-3 |
+| P3.1–P3.4 buyer network | NET-01, NET-04 | Stage 3 | Buyer preferences are declared, not verified |
+| P3.5 buyer inquiry without account | INQ-01 | V1 required | Already a V1 requirement |
+| P4.1–P4.6 distribution | none | Document 02 defers auto-email blasts | §15-4 |
+| P5.1–P5.6 JV network | JV-01, JV-02 | Stage 3 manual pilot | §15-5 |
+| P6 advanced distribution | JV-03, NET-03 | Stage 4 | Automation only after manual proof |
+| P7 network intelligence | INTEL-01 | Ecosystem, separate product | §15-6 |
 
 ---
 
@@ -643,33 +688,61 @@ Only start after two wholesalers have closed deals through the platform (§11, t
 
 ---
 
-## 10. Decisions the founder must make (and when)
+## 10. Decisions (roadmap, Document 06, and Document 03)
 
-These block the phases named. Record each decision in this section with a date.
+Record each decision here with a date. Code that depends on an open decision waits.
+
+**10a. Roadmap decisions**
 
 | ID | Decision | Blocks | Recommendation | Decided |
 | --- | --- | --- | --- | --- |
-| D1 | Product name (LAREI is rejected; ORREI is used in code and emails) | Public copy, domain, email sender name | Decide before Phase 2 so the sender name and profile URLs are stable | Open |
+| D1 | Product name. ORREI is in use (Document 02 §16). Clearance is open (SPEC-D14) | Public copy, domain, email sender name | Keep ORREI as the working name; clear it before broad spend | Open (name in use) |
 | D2 | Buyer data: what a buyer can declare vs what is verified | Phase 3 schema | Declared preferences only, labelled; verified status later, with defined evidence | Open |
 | D3 | Buyer contact details: shared immediately, or routed through ORVN first | Phase 3 and 4 | Controlled sharing with the buyer's explicit choice; routed through ORVN by default | Open |
-| D4 | Can a wholesaler request several JV partners at once | Phase 5 | Yes; each request tracked and disclosed separately | Open |
-| D5 | Company accounts and personal profiles | Phase 2 and 5 | Both, linked through an organisation | Open |
+| D4 | Can a wholesaler request several JV partners at once | Phase 5 | Yes; each request tracked and disclosed separately (matches JV-02) | Open |
+| D5 | Company accounts and personal profiles | Phase 2 and 5 | Both, linked through an organisation; publishing rights explicit (SPEC-D05) | Open |
 | D6 | Distribution pricing: per send or monthly allowance | Phase 4 billing | Monthly allowance with transparent limits; no prices announced until real wholesalers have been interviewed | Open |
-| D7 | Market scope at launch | Phase 1 defaults | Florida first; the data model stores Florida counties and ZIP codes from day one | Recommended, not yet confirmed |
+| D7 | Market scope at launch | Phase 1 defaults | Florida first as the proposed pilot; US-first data model (Document 02 §16) | Recommended, not yet confirmed |
 | D8 | Non-account interest on a deal | Phase 3 | Allowed; account invitation afterwards | Open |
 | D9 | Compliance and legal advisers engaged | P4.5, P5.6 | Engage before any bulk send or JV request leaves the platform | Open |
-| D10 | Auth approach: email link only, or passwords too | Auth flows, Phase 2 accounts | None recorded. Current build is email link only | Open |
-| D11 | Team role model within a workspace | Phase 1 permissions, Phase 2 organisations | Define editor, publisher and admin before multi-user access | Open |
-| D12 | Minimum media and file limits (size, count, types) | P1.3 uploads | Set explicit limits and enforce them server-side | Open |
-| D13 | Do PDFs and buyer summaries ship in the first beta | P1.9 | Decide before P1.9 starts | Open |
-| D14 | Public profile structure | P2.1, P3 visibility | Decide with D5 | Open |
-| D15 | Saved-profile requires an account, or not | Phase 3 saving | Require an account for saving, not for viewing | Open |
-| D16 | Anonymous inquiry policy (what an unknown visitor may send) | P1.6 | Allow basic inquiry with rate limits and anti-spam; no account needed | Open |
-| D17 | Link-only security behaviour (who can open, how links are revoked) | P1.4, P1.5 | Unguessable tokens; revocable; expiry configurable | Open |
-| D18 | Data retention periods and deletion process | Launch, all phases | Define before any real personal data is collected beyond beta | Open |
-| D19 | Hosting and database providers, and the app subdomain | §2A boundaries | Current: Vercel and Neon. Confirm before public launch | Open |
-| D20 | Error monitoring provider | S0.7, §2A gates | Deferred by the founder. Decide before public launch | Open |
-| D21 | Fee and payment provider | Phase 4 billing, later payments | Defer until D6 is decided | Open |
+
+**10b. Document 06 decisions (its §9 list)**
+
+| ID | Decision | Overlaps | Status |
+| --- | --- | --- | --- |
+| D10 | Auth approach: email link only, or passwords too | SPEC-D01 (same question) | Open. Current build is email link only |
+| D11 | Team role model within a workspace | Document 03 §8 permissions matrix | Open |
+| D12 | Minimum media and file limits (size, count, types) | PROP-03 "declared limits" | Open |
+| D13 | Do PDFs and buyer summaries ship in the first beta | SPEC-D02 (same question) | Open |
+| D14 | Public profile structure | SPEC-D06 | Open |
+| D15 | Saving a profile or deal requires an account | Document 02 §7: "save profile: no, sign-in prompt" | Decided by Document 02: saving needs sign-in |
+| D16 | Anonymous inquiry policy | Document 02 §6.7 and INQ-01: allowed, with safeguards | Decided by Document 02: allowed with rate limits and anti-spam |
+| D17 | Link-only security behaviour | Document 02 §7: "link-only is unlisted, not secret" | Principle decided. Token expiry and revocation mechanism open |
+| D18 | Data retention periods and deletion process | SPEC-D12 | Open |
+| D19 | Hosting and database providers, and the app subdomain | Document 06 §1 | Open. Current: Vercel and Neon |
+| D20 | Error monitoring provider | S0.7 (deferred by the founder) | Open. Decide before public launch |
+| D21 | Fee and payment provider | SPEC-D10 (free vs paid) | Open |
+
+**10c. Document 03 decision register (SPEC-D01–D14)**
+
+Each is the spec's proposed default until the founder approves it.
+
+| ID | Pending decision | Roadmap link | Spec default | Status |
+| --- | --- | --- | --- | --- |
+| SPEC-D01 | Email link only, or password-based auth | D10 | One secure primary path; add another only if needed | Open |
+| SPEC-D02 | Are deal sheet PDFs V1 release blockers | P1.9, D13 | Yes for primary wholesale use, unless beta narrows the promise | Open |
+| SPEC-D03 | Which property categories and countries launch | D7 | US-first vacant land and houses; other types after QA | Open |
+| SPEC-D04 | Which source import formats are supported | none | Pasted notes and direct file uploads first; provider integrations later | Open |
+| SPEC-D05 | Who can publish under a company account | D5 | Explicit admin or publisher role; never all members by default | Open |
+| SPEC-D06 | Are public profiles indexable by default | D14 | Only after explicit publish; never index private or link-only | Open |
+| SPEC-D07 | How much location is exposed | none | User-controlled approximate or exact level | Open |
+| SPEC-D08 | Which public analytics are implemented | P2.3 | Page-open and inquiry counts only at first | Open |
+| SPEC-D09 | Withdrawn links and previously downloaded files | D17 | Withdraw the URL; existing exports cannot be recalled; use version stamps | Open |
+| SPEC-D10 | Free vs paid | D6, D21 | Undecided; instrument usage and test willingness to pay | Open |
+| SPEC-D11 | When messaging, connect and JV arrive | P3, P5 | After manual network validation and legal and privacy review | Open |
+| SPEC-D12 | Data retained, exported, deleted and processed by AI | D18 | Finalise operational policy and contracts before beta | Open |
+| SPEC-D13 | Waitlist confirmation text and marketing consent | none | Founder note; opt-out of optional updates. Applicant confirmation already verified (S0.4) | Open |
+| SPEC-D14 | Brand clearance for ORREI | D1 | Working name; seek trademark and domain clearance before broad spend | Open |
 
 ---
 
@@ -732,3 +805,36 @@ Each of these needs a written reason before it enters a phase.
 6. Invite one tester; complete S0.6.
 7. Decide D1 and D7. Both are needed before Phase 2 copy.
 8. Book the compliance and legal review (D9) so P4.5 and P5.6 are not on the critical path later.
+
+---
+
+## 15. Where this roadmap disagrees with the spec
+
+Each item is a question for the founder, not a decision. Until one is resolved, the spec is followed and the roadmap item is
+marked as conflicting.
+
+1. **Phase 0 closure against the spec's Stage 0 exit.** Document 02 §9 requires three realistic deals run end to end, including
+   missing data, an import conflict, an update, private files and link withdrawal, with no critical auth or privacy issues.
+   Phase 0 was closed on 2026-11-11 with named exceptions, and no deal was run end to end. *Founder: reopen the spec's Stage 0
+   exit, or accept it as met in part.* Document 02 §18 says the gaps "block claiming a completed feature". I recommend the deal
+   test before any beta invitation.
+2. **P2.2 website sections against "do not build a general-purpose website builder"** (Document 02 §10). Keep controlled templates
+   only. *Founder: confirm.*
+3. **P2.4 follow and P2.5 updates.** Document 02 §6.1 excludes full social networking, and neither feature has a spec ID. *Founder: move to
+   Stage 3, or remove.*
+4. **P4.4 campaign send is P0.** Document 02 §10 says auto-email blasts and SMS campaigns are deferred. *Founder: confirm that P4 moves
+   after Stage 2.* Opt-out and consent must still exist for any optional mail (Document 02 §14).
+5. **P5 JV steps are P0.** Document 02 §3 says JV is not required for V1. Document 03 places JV in Stage 3 as a manual concierge pilot,
+   with automation only in Stage 4 (JV-02, JV-03). *Founder: P5.1–P5.4 become a manual pilot after Stage 2.*
+6. **P6 and P7.** Document 03 §7 places network intelligence (INTEL-01) in a separate product line, outside V1. The roadmap keeps it as
+   a phase. *Founder: keep as a later, separate product, or remove from this roadmap.*
+7. **Milestone M-E** (two wholesalers close a deal through the platform). Document 02 excludes transaction automation, and
+   Document 02 §17 says paid readiness needs independent users accepting a paid offer. M-E is a validation outcome, not a
+   closing feature. *Founder: confirm the wording.*
+8. **R2 storage.** §1 says uploads are built. The last production check reported `storage: false`. Document 03 PROP-03 requires
+   secure storage. *Engineering: verify on production before P1.3 is marked Verified.*
+9. **Analytics and sample data.** `/analytics` and `/website` still show sample data (§1). Document 03 AN-01 and acceptance test
+   T11 require that no mock figures appear in a real account. *Engineering: part of P2.3, and `/analytics` needs the same fix.*
+10. **Per-output publication states.** Document 03 PUB-04 requires each output (page, PDF, summary, card) to have its own state.
+    P1.4 and P1.8 do not yet say this. *Engineering: add to the P1.4 Done-when before it is built further.*
+
