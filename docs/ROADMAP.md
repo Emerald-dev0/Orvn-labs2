@@ -822,7 +822,7 @@ Record each decision here with a date. Code that depends on an open decision wai
 | D20 | Error monitoring provider | S0.7 (deferred by the founder) | Open. Decide before public launch |
 | D21 | Fee and payment provider | SPEC-D10 (free vs paid) | Open |
 | D22 | Website claim policy (Document 04 §5 substitutes) | §2B, all public copy | Adopt substitutes as default until proof exists | Open (working default) |
-| D23 | Early-access form: minimum fields, consent split, founder signoff (Document 04 §6) | W1.6, W1.7 | Name, email, role, market required; others optional; founder approves signoff | Open |
+| D23 | Early-access form: minimum fields, consent split, founder signoff (Document 04 §6) | W1.6, W1.7 | Name, email, role, market required; others optional; founder approves signoff | Fields confirmed by the founder 2026-11-13. Signoff title still open |
 
 **10c. Document 03 decision register (SPEC-D01–D14)**
 
@@ -936,5 +936,5 @@ marked as conflicting.
 10. **RESOLVED per spec (2026-11-04): each output has its own state.** Document 03 PUB-04 requires page, PDF, summary and card to have independent states. P1.4 is amended to say so.
 11. **RESOLVED (founder, 2026-11-13): the public name is ORREI.** LAREI copy is retired (Document 04 header). Trademark and domain clearance (D1, SPEC-D14) stays open. Any remaining LAREI text on the site is a defect under W1.1.
 12. **Website claim policy (Document 04 §5, D22).** The allowed substitutes in §2B are the working default. *Founder: approve or amend.*
-13. **Founder signoff identity (Document 04 §6.2, D23).** Founder name given by the founder on 2026-11-13: Daniel Oyegoke. *Founder: confirm the title to show in the signoff, and confirm the required early-access fields (D23).* The owner label in this file reads "Daniel (engineering)"; confirm whether that is the same person.
+13. **Founder signoff identity (Document 04 §6.2, D23).** Founder name given by the founder on 2026-11-13: Daniel Oyegoke. *Founder: the title to show in the signoff is still open. The required early-access fields are confirmed (D23).* The owner label in this file reads "Daniel (engineering)"; confirm whether that is the same person.
 
