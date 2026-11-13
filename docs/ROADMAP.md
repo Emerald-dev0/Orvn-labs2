@@ -795,7 +795,7 @@ Record each decision here with a date. Code that depends on an open decision wai
 
 | ID | Decision | Blocks | Recommendation | Decided |
 | --- | --- | --- | --- | --- |
-| D1 | Product name. ORREI is in use (Document 02 §16). Clearance is open (SPEC-D14) | Public copy, domain, email sender name | Keep ORREI as the working name; clear it before broad spend | Open (name in use) |
+| D1 | Product name. ORREI is in use (Document 02 §16). Clearance is open (SPEC-D14) | Public copy, domain, email sender name | Keep ORREI as the working name; clear it before broad spend | Name confirmed as ORREI by the founder 2026-11-13; clearance open |
 | D2 | Buyer data: what a buyer can declare vs what is verified | Phase 3 schema | Declared preferences only, labelled; verified status later, with defined evidence | Open |
 | D3 | Buyer contact details: shared immediately, or routed through ORVN first | Phase 3 and 4 | Controlled sharing with the buyer's explicit choice; routed through ORVN by default | Open |
 | D4 | Can a wholesaler request several JV partners at once | Phase 5 | Yes; each request tracked and disclosed separately (matches JV-02) | Open |
@@ -934,7 +934,7 @@ marked as conflicting.
    P1.3 cannot be Verified, and the Stage 0 deal test cannot run, until `/api/health` reports `storage: true`.*
 9. **RESOLVED per spec (2026-11-04): no mock figures in any real account.** Document 03 AN-01 and acceptance test T11 require it. `/analytics` and `/website` must be fixed under P2.3, before the Stage 0 deal test.
 10. **RESOLVED per spec (2026-11-04): each output has its own state.** Document 03 PUB-04 requires page, PDF, summary and card to have independent states. P1.4 is amended to say so.
-11. **Product name on the public site (Document 04 header).** Document 04 uses ORREI and rejects older LAREI copy. §1 still shows LAREI in some copy. *Founder: confirm ORREI as the public name now. Clearance (D1, SPEC-D14) stays open.*
+11. **RESOLVED (founder, 2026-11-13): the public name is ORREI.** LAREI copy is retired (Document 04 header). Trademark and domain clearance (D1, SPEC-D14) stays open. Any remaining LAREI text on the site is a defect under W1.1.
 12. **Website claim policy (Document 04 §5, D22).** The allowed substitutes in §2B are the working default. *Founder: approve or amend.*
-13. **Early-access minimum fields and founder identity (Document 04 §6, D23).** *Founder: confirm the required fields and the named signoff.*
+13. **Founder signoff identity (Document 04 §6.2, D23).** Founder name given by the founder on 2026-11-13: Daniel Oyegoke. *Founder: confirm the title to show in the signoff, and confirm the required early-access fields (D23).* The owner label in this file reads "Daniel (engineering)"; confirm whether that is the same person.
 
