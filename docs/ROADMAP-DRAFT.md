@@ -1,6 +1,6 @@
 # ORREI roadmap: connected chain (DRAFT)
 
-Status: **draft for founder review. Not in force.** Prepared 2026-11-04 from the Drive documents: 02, 03, 04, 06, 07, 08, 10 (13 Nov 2026), plus the 7 Nov developer corrections brief. Document 04 is partly unreadable in Drive (its middle section is missing), so its items are taken from what could be read.
+Status: **draft for founder review. Not in force.** Prepared 2026-11-04 from the Drive documents: 02, 03, 04, 06, 07, 08, 10, plus the 2026-11-07 website corrections PDF and the 2026-10-21 developer brief. Document 04 is partly unreadable in Drive (its middle section is missing), so its items are taken from what could be read.
 
 Older LAREI documents (21 Oct) are superseded by ORREI naming (Document 02 §1, Document 03 §1). Their ideas are used only where the newer documents repeat them.
 
