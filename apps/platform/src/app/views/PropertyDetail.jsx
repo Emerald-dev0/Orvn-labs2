@@ -1,7 +1,7 @@
 'use client';
 
 import { SIZES, THUMB_WIDTH, aspectRatio, mediaUrl, srcSetFor } from '../../../lib/images';
-import { useState } from 'react';
+import { useActionState, useState } from 'react';
 import Link from 'next/link';
 import { Icon } from '../icons';
 import { PageHead, Card, StatusPill, Tabs, FactRow, EmptyState } from '../ui';
@@ -9,11 +9,18 @@ import VisibilityControl from '../VisibilityControl';
 import DraftPanel from '../DraftPanel';
 import MediaUploader from '../MediaUploader';
 import { properties, activity } from '../data';
+import { updateLocation } from '../../../lib/actions/properties';
+
+const DISCLOSURE_LABEL = {
+  exact: 'Exact address',
+  street: 'Street only',
+  area: 'Area only',
+};
 
 const TABS = [
   { id: 'overview', label: 'Overview' },
   { id: 'details', label: 'Details' },
-  { id: 'media', label: 'Media', count: 4 },
+  { id: 'media', label: 'Media' },
   { id: 'copy', label: 'Copy & assets' },
   { id: 'sheet', label: 'Deal sheet' },
   { id: 'public', label: 'Public page' },
@@ -22,7 +29,12 @@ const TABS = [
 
 function Overview({ property, live = false, publicPath = null }) {
   const approved = property.facts.filter((f) => f.state === 'approved' && f.public).slice(0, 4);
+  const stale = live && property.publication
+    ? Date.parse(property.updatedAt) > Date.parse(property.publication.publishedAt)
+    : false;
   return (
+    <>
+    {stale ? <StaleBanner property={property} /> : null}
     <div className="ws-split">
       <Card>
         <div className="ws-section-head">
@@ -113,11 +125,136 @@ function Overview({ property, live = false, publicPath = null }) {
         )}
       </div>
     </div>
+    </>
   );
 }
 
-function Details({ property }) {
+function StaleBanner({ property }) {
+  const publishedAt = Date.parse(property.publication?.publishedAt ?? '');
+  const updatedAt = Date.parse(property.updatedAt ?? '');
+  if (Number.isNaN(publishedAt) || Number.isNaN(updatedAt) || updatedAt <= publishedAt) {
+    return null;
+  }
+  const publishedOn = new Date(publishedAt).toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
   return (
+    <div className="ws-callout is-warn" role="status" style={{ marginBottom: 12 }}>
+      <Icon name="alert" size={16} />
+      <div>
+        <strong>Version {property.publication.version} is out of date</strong>
+        <p>
+          The record changed after version {property.publication.version} was published on {publishedOn}.
+          Buyers, the public page and the deal sheet still carry version {property.publication.version}.
+          <Link href={`/properties/${property.id}?tab=public`}>Republish to issue the update</Link>
+        </p>
+      </div>
+    </div>
+  );
+}
+
+const fieldStyle = {
+  height: 40,
+  borderRadius: 12,
+  border: '1px solid var(--line)',
+  background: 'var(--bone)',
+  padding: '0 12px',
+  fontSize: 14,
+  color: 'var(--ink)',
+  width: '100%',
+};
+
+const labelStyle = { display: 'grid', gap: 6 };
+const labelText = { fontSize: 12, color: 'var(--muted)' };
+
+function LocationPanel({ property }) {
+  const [state, formAction, pending] = useActionState(updateLocation, { status: 'idle' });
+  const disclosure = property.locationDisclosure ?? 'area';
+
+  return (
+    <Card style={{ marginTop: 12 }}>
+      <div className="ws-section-head">
+        <h2>Address and what buyers see</h2>
+        <span className="ws-mono-note">D07 · Area only by default</span>
+      </div>
+      <form action={formAction}>
+        <input type="hidden" name="propertyId" value={property.id} />
+        <div className="ws-grid is-2">
+          <label style={labelStyle}>
+            <span style={labelText}>Street address</span>
+            <input name="addressLine" defaultValue={property.addressLine ?? ''} placeholder="18 Meridian Quay" style={fieldStyle} />
+          </label>
+          <label style={labelStyle}>
+            <span style={labelText}>ZIP / postcode</span>
+            <input name="postalCode" defaultValue={property.postalCode ?? ''} placeholder="33101" style={fieldStyle} />
+          </label>
+          <label style={labelStyle}>
+            <span style={labelText}>City</span>
+            <input name="city" defaultValue={property.city ?? ''} placeholder="Miami" style={fieldStyle} />
+          </label>
+          <label style={labelStyle}>
+            <span style={labelText}>State / region</span>
+            <input name="region" defaultValue={property.region ?? ''} placeholder="FL" style={fieldStyle} />
+          </label>
+          <label style={labelStyle}>
+            <span style={labelText}>Country</span>
+            <input name="country" defaultValue={property.country ?? ''} placeholder="US" style={fieldStyle} />
+          </label>
+          <label style={labelStyle}>
+            <span style={labelText}>Pin precision</span>
+            <select name="locationPrecision" defaultValue={property.locationPrecision ?? 'unknown'} style={fieldStyle}>
+              <option value="unknown">No pin — never shown beyond the disclosure level</option>
+              <option value="approximate">Approximate — neighbourhood-level</option>
+              <option value="exact">Exact pin — required for Exact disclosure</option>
+            </select>
+          </label>
+        </div>
+
+        <fieldset style={{ border: 0, padding: 0, margin: '14px 0 0' }}>
+          <legend style={{ ...labelText, marginBottom: 8 }}>What buyers see on the public page</legend>
+          {[
+            ['area', 'Area only (default)', 'City, state and ZIP — never the street.'],
+            ['street', 'Street only', 'The street name. House number and pin stay private.'],
+            ['exact', 'Exact address', 'Full street line and pin. Requires an exact pin.'],
+          ].map(([value, label, hint]) => (
+            <label key={value} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', padding: '6px 0', fontSize: 13.5 }}>
+              <input
+                type="radio"
+                name="locationDisclosure"
+                value={value}
+                defaultChecked={disclosure === value}
+                style={{ accentColor: 'var(--ink)', marginTop: 2 }}
+              />
+              <span>
+                <strong>{label}</strong>
+                <span className="ws-small ws-muted" style={{ display: 'block' }}>{hint}</span>
+              </span>
+            </label>
+          ))}
+        </fieldset>
+
+        {state.status === 'error' ? (
+          <p className="field-error" role="alert" style={{ marginTop: 10 }}>{state.message}</p>
+        ) : null}
+        {state.status === 'ok' ? (
+          <p className="ws-small ws-muted" role="status" style={{ marginTop: 10 }}>{state.message}</p>
+        ) : null}
+
+        <div style={{ marginTop: 12 }}>
+          <button type="submit" className="ws-btn is-dark" disabled={pending}>
+            {pending ? 'Saving…' : 'Save address and disclosure'}
+          </button>
+        </div>
+      </form>
+    </Card>
+  );
+}
+
+function Details({ property, live = false }) {
+  return (
+    <>
     <Card>
       <div className="ws-section-head">
         <h2>Approved fields</h2>
@@ -132,6 +269,8 @@ function Details({ property }) {
         A blank field stays blank. It is never rendered as “not in a flood zone” or “no restrictions”.
       </p>
     </Card>
+    {live ? <LocationPanel property={property} /> : null}
+    </>
   );
 }
 
@@ -347,7 +486,31 @@ function DealSheet({ property }) {
   );
 }
 
-function PublicPage({ property }) {
+function CopyLinkButton({ text }) {
+  const [copied, setCopied] = useState(false);
+  return (
+    <button
+      type="button"
+      className="ws-btn is-quiet is-sm"
+      style={{ marginLeft: 'auto' }}
+      onClick={async () => {
+        try {
+          await navigator.clipboard.writeText(text);
+          setCopied(true);
+          window.setTimeout(() => setCopied(false), 2000);
+        } catch {
+          setCopied(false);
+        }
+      }}
+    >
+      {copied ? 'Copied' : 'Copy'}
+    </button>
+  );
+}
+
+function PublicPage({ property, live = false, publicPath = null }) {
+  const shareUrl = live && publicPath ? `orvnlabs.com${publicPath}` : `orvnlabs.com/w/northaven/p/${property.id}`;
+  const disclosure = DISCLOSURE_LABEL[property.locationDisclosure] ?? 'Area only';
   return (
     <div className="ws-split">
       <Card>
@@ -366,10 +529,14 @@ function PublicPage({ property }) {
           }}
         >
           <Icon name="link" size={16} className="ws-muted" />
-          <span style={{ fontSize: 13.5 }}>orvnlabs.com/w/northaven/p/{property.id}</span>
-          <button type="button" className="ws-btn is-quiet is-sm" style={{ marginLeft: 'auto' }} disabled>
-            Copy
-          </button>
+          <span style={{ fontSize: 13.5, wordBreak: 'break-all' }}>{shareUrl}</span>
+          {live && publicPath ? (
+            <CopyLinkButton text={`https://${shareUrl}`} />
+          ) : (
+            <button type="button" className="ws-btn is-quiet is-sm" style={{ marginLeft: 'auto' }} disabled>
+              Copy
+            </button>
+          )}
         </div>
         <p className="ws-small ws-muted" style={{ marginTop: 12 }}>
           Unpublishing removes the page and its files. Old links land on a neutral unavailable page,
@@ -381,7 +548,7 @@ function PublicPage({ property }) {
         <div className="ws-preview-bar">
           <span style={{ width: 9, height: 9, borderRadius: 99, background: '#d9d2c6' }} />
           <span style={{ width: 9, height: 9, borderRadius: 99, background: '#d9d2c6' }} />
-          <span className="ws-preview-url">orvnlabs.com/w/northaven/p/{property.id}</span>
+          <span className="ws-preview-url">{shareUrl}</span>
         </div>
         <div style={{ padding: 18 }}>
           <img
@@ -392,7 +559,7 @@ function PublicPage({ property }) {
           <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 12, gap: 10 }}>
             <div>
               <div className="ws-preview-name" style={{ fontSize: 18 }}>{property.title}</div>
-              <div className="ws-preview-meta">{property.place} · Approximate location</div>
+              <div className="ws-preview-meta">{property.place} · {disclosure}</div>
             </div>
             <div style={{ fontSize: 14, fontWeight: 600 }}>{property.price}</div>
           </div>
@@ -402,33 +569,38 @@ function PublicPage({ property }) {
   );
 }
 
-function ActivityTab({ property }) {
+function ActivityTab({ property, live = false }) {
+  const rows = live ? (property.activity ?? []) : activity;
   return (
     <Card>
       <div className="ws-section-head">
         <h2>History</h2>
         <span className="ws-small ws-muted">{property.title}</span>
       </div>
-      <div className="ws-stack" style={{ gap: 14 }}>
-        {activity.map((a) => (
-          <div key={a.id} style={{ display: 'flex', gap: 11 }}>
-            <span
-              style={{
-                width: 7,
-                height: 7,
-                borderRadius: 999,
-                background: 'var(--lime-2)',
-                marginTop: 7,
-                flex: 'none',
-              }}
-            />
-            <div>
-              <div style={{ fontSize: 13.5, fontWeight: 500 }}>{a.text}</div>
-              <div className="ws-small ws-muted">{a.detail} · {a.when}</div>
+      {rows.length === 0 ? (
+        <p className="ws-small ws-muted">Nothing recorded yet. Publishing, edits and inquiries appear here.</p>
+      ) : (
+        <div className="ws-stack" style={{ gap: 14 }}>
+          {rows.map((a) => (
+            <div key={a.id} style={{ display: 'flex', gap: 11 }}>
+              <span
+                style={{
+                  width: 7,
+                  height: 7,
+                  borderRadius: 999,
+                  background: 'var(--lime-2)',
+                  marginTop: 7,
+                  flex: 'none',
+                }}
+              />
+              <div>
+                <div style={{ fontSize: 13.5, fontWeight: 500 }}>{a.text}</div>
+                <div className="ws-small ws-muted">{a.detail ? `${a.detail} · ` : ''}{a.when}</div>
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </Card>
   );
 }
@@ -503,12 +675,12 @@ export default function PropertyDetail({ id, property: provided = null, initialT
       </div>
 
       {tab === 'overview' ? <Overview property={property} live={live} publicPath={publicPath} /> : null}
-      {tab === 'details' ? <Details property={property} /> : null}
+      {tab === 'details' ? <Details property={property} live={live} /> : null}
       {tab === 'media' ? <Media property={property} live={live} /> : null}
       {tab === 'copy' ? <CopyAssets property={property} live={live} /> : null}
       {tab === 'sheet' ? <DealSheet property={property} /> : null}
-      {tab === 'public' ? <PublicPage property={property} /> : null}
-      {tab === 'activity' ? <ActivityTab property={property} /> : null}
+      {tab === 'public' ? <PublicPage property={property} live={live} publicPath={publicPath} /> : null}
+      {tab === 'activity' ? <ActivityTab property={property} live={live} /> : null}
     </>
   );
 }

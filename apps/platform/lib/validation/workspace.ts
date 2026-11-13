@@ -41,6 +41,17 @@ export const updatePropertySchema = z.object({
   showOnPortfolio: z.boolean().default(true),
 });
 
+export const locationSchema = z.object({
+  propertyId: z.string().uuid(),
+  addressLine: optionalText(200),
+  postalCode: optionalText(20),
+  city: optionalText(120),
+  region: optionalText(120),
+  country: optionalText(120),
+  locationPrecision: z.enum(LOCATION_PRECISION).default('unknown'),
+  locationDisclosure: z.enum(LOCATION_DISCLOSURE).default('area'),
+});
+
 export const factSchema = z.object({
   propertyId: z.string().uuid(),
   key: z.string().trim().min(1, 'Name the field').max(60),

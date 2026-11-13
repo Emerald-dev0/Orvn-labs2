@@ -78,6 +78,8 @@ export type PropertyDetailView = PropertyCard & {
   visibility: Visibility;
   blockers: string[];
   slugPreview: string;
+  /** Real per-property history, newest first. Sample rows are never used in a live account. */
+  activity: { id: string; text: string; detail: string; when: string }[];
 };
 
 export type InquiryCard = {
@@ -285,7 +287,7 @@ export async function getPropertyDetail(
 
     if (!row) return null;
 
-    const [details, media, publication, profile, counts, workspaceRow] = await Promise.all([
+    const [details, media, publication, profile, counts, workspaceRow, activityRows] = await Promise.all([
       tx
         .select()
         .from(propertyDetails)
@@ -313,6 +315,17 @@ export async function getPropertyDetail(
         .limit(1),
       countsFor(tx, workspaceId),
       tx.select({ username: workspaces.username }).from(workspaces).where(eq(workspaces.id, workspaceId)).limit(1),
+      tx
+        .select({
+          id: auditEvents.id,
+          action: auditEvents.action,
+          createdAt: auditEvents.createdAt,
+          metadata: auditEvents.metadata,
+        })
+        .from(auditEvents)
+        .where(and(eq(auditEvents.workspaceId, workspaceId), eq(auditEvents.targetId, propertyId)))
+        .orderBy(desc(auditEvents.createdAt))
+        .limit(20),
     ]);
 
     const publicFacts = details.filter(
@@ -394,6 +407,12 @@ export async function getPropertyDetail(
       }),
       cover: media.find((item) => item.isCover)?.storageKey ?? media[0]?.storageKey ?? null,
       slugPreview: `${workspaceRow[0]?.username ?? ''}/${row.slug}`,
+      activity: activityRows.map((row) => ({
+        id: row.id,
+        text: activityText(row.action),
+        detail: (row.metadata as { detail?: string } | null)?.detail ?? '',
+        when: timeAgo(row.createdAt),
+      })),
     };
   });
 }
@@ -511,6 +530,19 @@ function activityText(action: string): string {
     'property.archived': 'Property archived',
     'property.created': 'Property created',
     'property.updated': 'Property updated',
+    'property.location.updated': 'Address and disclosure updated',
+    'property.fact.added': 'Fact added',
+    'property.fact.approved': 'Fact approved',
+    'property.fact.rejected': 'Fact rejected',
+    'property.media.uploaded': 'Photo or document uploaded',
+    'property.media.removed': 'Photo or document removed',
+    'property.media.visibility': 'Media visibility changed',
+    'property.visibility.changed': 'Visibility changed',
+    'property.media.cover': 'Cover photo changed',
+    'property.description.drafted': 'Draft accepted for the description',
+    'property.rights.attested': 'Rights attested',
+    'workspace.renamed': 'Workspace renamed',
+    'site.unpublished': 'Website unpublished',
     'inquiry.received': 'Inquiry received',
     'inquiry.read': 'Inquiry marked read',
     'invitation.accepted': 'Invitation accepted',
