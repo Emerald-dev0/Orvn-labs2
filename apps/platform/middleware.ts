@@ -33,7 +33,5 @@ export const config = {
     '/w/:path*',
     '/invite/:path*',
     '/sign-in',
-    '/forgot-password',
-    '/reset-password/:path*',
   ],
 };

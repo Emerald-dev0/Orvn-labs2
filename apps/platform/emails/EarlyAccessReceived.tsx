@@ -74,6 +74,11 @@ export function EarlyAccessReceived({
         See what ORREI does
       </Action>
 
+      <Para>
+        Oyegoke Daniel<br />
+        Founder, ORVN Labs
+      </Para>
+
       <SmallPrint>
         Received {WHEN.format(receivedAt)} WAT. Reply to this message if anything above is wrong, or if
         your situation has changed.

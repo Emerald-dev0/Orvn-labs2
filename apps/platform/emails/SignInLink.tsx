@@ -23,13 +23,8 @@ export function SignInLink({ url, expiresAt }: { url: string; expiresAt: Date })
 
       <FallbackUrl url={url} />
 
-      <Para muted>
-        If you have a password you can still use it. This link is only for this device, and only
-        this once.
-      </Para>
-
       <SmallPrint>
-        We will never ask you for this link, for your password, or for a code over email or phone.
+        We will never ask you for this link, or for a code, over email or phone.
       </SmallPrint>
     </Brand>
   );

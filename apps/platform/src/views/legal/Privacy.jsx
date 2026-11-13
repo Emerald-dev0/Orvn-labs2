@@ -29,7 +29,7 @@ export default function Privacy() {
           heading: 'What we collect',
           body: (
             <UL items={[
-              'Account details: your name, email address and password hash. Authentication is handled by our auth provider; we never see your password.',
+              'Account details: your name and email address. Sign-in is by single-use email link; there is no password to store.',
               'Workspace content: your business profile, property records, notes, and the files you upload.',
               'Inquiries: the name, contact details and question a buyer chooses to send to a business through a published page.',
               'Early access requests: your name, email, and whatever you choose to tell us about how you work today.',
@@ -54,7 +54,7 @@ export default function Privacy() {
           body: (
             <UL items={[
               'To run ORREI: accounts, workspaces, published pages and the inbox where inquiries arrive.',
-              'To send transactional email only — invitations, password resets, and notice that an inquiry arrived.',
+              'To send transactional email only — invitations, single-use sign-in links, and notice that an inquiry arrived.',
               'To keep the service secure and to investigate abuse.',
               'To meet legal obligations and to answer you when you write to us.',
             ]} />

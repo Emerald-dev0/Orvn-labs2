@@ -261,8 +261,7 @@ Emails are React now, rendered by React Email and delivered through the same Cal
 emails/
   components/Brand.tsx     the shared shell: pine masthead, ORREI wordmark, bone page, white card
   Invitation.tsx           invitation to a workspace
-  ResetPassword.tsx        password reset
-  SignInLink.tsx           passwordless sign-in
+  SignInLink.tsx           the sign-in email (D01: magic link only)
   InquiryNotification.tsx  one inquiry, forwarded to the publisher
   BetaApplication.tsx      early-access request, sent to the operator inbox
   EarlyAccessReceived.tsx  the applicant's confirmation, sent to them

@@ -48,7 +48,7 @@ export async function earlyAccessReceivedEmail(opts: {
       '',
       `Received ${opts.receivedAt.toISOString()}`,
       '',
-      'ORVN Labs · hello@orvnlabs.com',
+      'Oyegoke Daniel — Founder, ORVN Labs · hello@orvnlabs.com',
     ].join('\n'),
     html: await renderEmail(
       <EarlyAccessReceived

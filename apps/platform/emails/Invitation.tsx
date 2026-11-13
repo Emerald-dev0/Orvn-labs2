@@ -23,17 +23,17 @@ export function Invitation({
 
   return (
     <Brand
-      preview={`Set your password and open ${workspaceName ? workspaceName : 'your workspace'}.`}
+      preview={`Open ${workspaceName ? workspaceName : 'your workspace'} on ORREI.`}
       footnote="You are receiving this because someone invited this address to a workspace. If that was not expected, ignore this email and nothing happens."
     >
       <Heading>You have been invited to {where}.</Heading>
 
       <Para>
-        The link below sets your password and opens the workspace. It works once.
+        The link below opens the workspace. It works once.
       </Para>
 
       <Action href={acceptUrl} note={`The link expires ${WHEN.format(expiresAt)} WAT.`}>
-        Set your password
+        Open the workspace
       </Action>
 
       <FallbackUrl url={acceptUrl} />

@@ -68,7 +68,7 @@ and every write path answers honestly that it is not connected.
 
 ## 3. `ADMIN_EMAILS` — and why it is not your domain address
 
-Sign-in is email + password or a magic link, so the identity is whatever address you register with.
+Sign-in is by single-use magic link (PRD D01 — there is no password), so the identity is whatever address you sign in with.
 The admin queue compares your **session email** against `ADMIN_EMAILS`, exactly:
 
 ```
@@ -81,26 +81,27 @@ reason to wait for that to use the queue.
 
 Anyone not on this list gets a **404** on `/admin`, not a 403. Changing the list is a redeploy.
 
-## 3a. Signing in — every operator sets their own password
+## 3a. Signing in — single-use email link, always
 
-There is no default password, and no shared one. Each person creates their own account the first
-time they sign in:
+There is no password anywhere in ORREI (PRD D01). Everyone signs in the same way:
 
-1. Open `/sign-in` → **Create your password**.
-2. Name, the address on `ADMIN_EMAILS`, and a password of at least 10 characters, twice.
-3. That is the account. Sign in with it from then on.
+1. Open `/sign-in`.
+2. Enter the address on `ADMIN_EMAILS` and request the sign-in link.
+3. Open the link — the account is created on first sign-in. The link works once and expires in
+   fifteen minutes.
 
 The beta gate decides who may create one: an address on `ADMIN_EMAILS`, or one holding a usable
-invitation. Everybody else is refused with the same sentence, so the form cannot be used to find out
-who has an account.
+invitation. Everybody else gets the same "Check your inbox" page, so the form cannot be used to
+find out who has an account.
 
-### 3b. A `403` on `/api/auth/sign-up/email`
+### 3b. A `403` on `/api/auth/*`
 
 Two things answer with exactly that status, and the browser shows only the number.
 
 | Server log line | Means | Fix |
 | --- | --- | --- |
 | `[auth] refused account creation { email: … }` | the beta gate — the address holds no invitation and is not on `ADMIN_EMAILS` | add it to `ADMIN_EMAILS`, redeploy, try again |
+| `[auth] magic link not sent { email: … }` | the pre-send gate — no account, no invitation, not on `ADMIN_EMAILS`, so no mail was sent | add it to `ADMIN_EMAILS`, redeploy; the page told the visitor "check your inbox" either way |
 | `[auth] ADMIN_EMAILS is empty` | nobody can create an account or receive a link; invitations only | set `ADMIN_EMAILS` and redeploy |
 | `Invalid origin: https://…` | the page you are on is not a trusted address (a preview URL, a different port, a tunnel) | open the site on the address in `BETTER_AUTH_URL`, or add the origin via `EXTRA_TRUSTED_ORIGINS` |
 
@@ -112,7 +113,7 @@ The deployment's own Vercel URL is trusted automatically, so preview builds can 
 without listing them. An `Origin` that is not trusted still gets a 403 — that check is what stops
 another site from posting to the auth endpoints with a session cookie.
 
-**More than one admin** is a comma-separated list, and each person creates their own password:
+**More than one admin** is a comma-separated list, and each person signs in with their own link:
 
 ```
 ADMIN_EMAILS=daniel@orvnlabs.com,ops@orvnlabs.com   # no spaces needed; spaces either side also work
@@ -127,25 +128,25 @@ cd apps/platform
 npm run admin:create -- --email you@example.com
 ```
 
-Same gate, no browser: generates a long password and prints it once. Useful for a headless or CI
-account, or when the sign-in page is not reachable yet.
+Checks the address against `ADMIN_EMAILS` and the required variables, and prints the exact three
+steps to sign in. It creates nothing and stores no credential — the account comes into existence
+on the first link, which is the only way accounts are created.
 
-### Why not one default password everyone changes later
+### Why magic link only
 
-A known starting password on a public URL is the most-exploited door in an admin panel, and "change
-it on first login" is a promise people break. It also destroys the answer to "who did this?" —
-two people on one account cannot be told apart in the audit trail. Self-service creation costs one
-extra field on a form and avoids both.
+One door, one failure mode, no credentials to leak or reuse anywhere else, and the address is
+proven before the account exists. A password option added later re-opens account enumeration and
+support load the beta has not earned yet — that is why PRD D01 removed it, and why the sign-in
+page contains no password control at all.
 
-### The other two ways in
+### The way in
 
-Both send mail through Calder, so they work only once the sender identity is verified:
+Mail sends through Calder, so the link works only once the sender identity is verified:
 
-- **Magic link** — the "Email me a link" tab. One use, ten minutes.
-- **Forgot password** — sends a reset link to an existing account.
+- **Magic link** — one use, fifteen minutes. The only way in.
 
 Locally, with no `DATABASE_URL`, there is no sign-in at all: the site runs in demo mode and the
-queue is not reachable. That is the honest behaviour, not a wrong password.
+queue is not reachable. That is the honest behaviour, not a broken sign-in.
 
 ## 4. Calder: sender identity and sending domain
 

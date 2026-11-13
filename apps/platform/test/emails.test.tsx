@@ -2,7 +2,6 @@ import * as React from 'react';
 import { describe, expect, it } from 'vitest';
 import { render } from '@react-email/render';
 import { invitationEmail } from '../lib/emails/invitation';
-import { resetPasswordEmail } from '../lib/emails/reset-password';
 import { signInLinkEmail } from '../lib/emails/sign-in-link';
 import { inquiryNotificationEmail } from '../lib/emails/inquiry-notification';
 import { betaApplicationEmail } from '../lib/emails/beta-application';
@@ -66,21 +65,7 @@ describe('invitation', () => {
   });
 });
 
-describe('password and sign-in mail', () => {
-  it('resets by link, and says nothing changed if it was not you', async () => {
-    const message = await resetPasswordEmail({ to: 'ada@example.com', url: 'https://orvnlabs.com/reset/x' });
-    expect(message.subject).toBe('Reset your ORREI password');
-    expect(message.text).toContain('https://orvnlabs.com/reset/x');
-    expect(message.text.toLowerCase()).toContain('nothing has changed');
-    expect(message.html).toContain('Choose a new password');
-  });
-
-  it('bucket-keys the reset so a double submit is one email', async () => {
-    const a = await resetPasswordEmail({ to: 'ada@example.com', url: 'https://x/1' });
-    const b = await resetPasswordEmail({ to: 'ada@example.com', url: 'https://x/1' });
-    expect(a.businessKey).toBe(b.businessKey);
-  });
-
+describe('sign-in mail', () => {
   it('signs in with a single-use link and states the expiry', async () => {
     const message = await signInLinkEmail({ to: 'ada@example.com', url: 'https://orvnlabs.com/sign-in/t', expiresAt: expires });
     expect(message.subject).toBe('Sign in to ORREI');
@@ -154,7 +139,7 @@ describe('early-access notification', () => {
 
 describe('shared shell', () => {
   it('renders the wordmark, the company and the address in every message', async () => {
-    const message = await resetPasswordEmail({ to: 'a@b.co', url: 'https://x/1' });
+    const message = await signInLinkEmail({ to: 'a@b.co', url: 'https://x/1', expiresAt: expires });
     expect(message.html).toContain('ORREI');
     expect(message.html).toContain('by ORVN Labs');
     expect(message.html).toContain('hello@orvnlabs.com');
@@ -163,7 +148,6 @@ describe('shared shell', () => {
   it('never mentions the retired product name', async () => {
     const messages = await Promise.all([
       invitationEmail({ to: 'a@b.co', acceptUrl: 'https://x/1', expiresAt: expires, invitationId: 'i' }),
-      resetPasswordEmail({ to: 'a@b.co', url: 'https://x/1' }),
       signInLinkEmail({ to: 'a@b.co', url: 'https://x/1', expiresAt: expires }),
     ]);
     for (const message of messages) {
