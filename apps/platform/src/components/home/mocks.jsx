@@ -34,9 +34,9 @@ export function SiteEditorMock() {
 
           <div className="site-editor-grid">
             {[
-              ['/images/prop-3.jpg', 'Halden House', '$480,000'],
+              ['/images/sample-vacant-land.jpg', 'Meridian infill lot', '$385,000'],
               ['/images/prop-4.jpg', 'Elm Court', '$320,000'],
-              ['/images/prop-2.jpg', 'Kestrel Row', '$210,000'],
+              ['/images/sample-sfr.jpg', 'Cypress single-family', '$265,000'],
             ].map(([src, name, price]) => (
               <div className="site-editor-card" key={name}>
                 <img src={src} alt="" />
@@ -83,7 +83,7 @@ export function VoiceMock() {
         </div>
         <div className="voice-row">
           <span>Terms to use</span>
-          <strong>detached, serviced, C of O</strong>
+          <strong>detached, serviced, fee simple</strong>
         </div>
         <div className="voice-row">
           <span>Terms to avoid</span>

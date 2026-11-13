@@ -66,7 +66,7 @@ function RecordMock() {
       <div className="app-window">
         <div className="app-bar">
           <span className="app-dots" aria-hidden="true"><i /><i /><i /></span>
-          <span className="app-url">app.orvnlabs.com/properties/adaora-house/record</span>
+          <span className="app-url">Illustrative design · pre-release</span>
         </div>
         <div className="app-main">
           <div className="mock-prop">
@@ -80,9 +80,9 @@ function RecordMock() {
           <div className="mock-facts">
             {[
               ['Asking price', '$480,000', 'Taken from your brief, 2 days ago'],
-              ['Internal area', '620 m²', 'Survey plan uploaded'],
+              ['Internal area', '2,200 sq ft', 'Survey plan uploaded'],
               ['Bedrooms', '4', 'Confirmed by the developer'],
-              ['Tenure', 'Certificate of occupancy', 'Document attached'],
+              ['Tenure', 'Fee simple', 'Document attached'],
             ].map(([k, v, note]) => (
               <div className="mock-fact-record" key={k}>
                 <div>
@@ -90,7 +90,7 @@ function RecordMock() {
                   <p className="mock-fact-val">{v}</p>
                 </div>
                 <p className="mock-fact-note">{note}</p>
-                <span className="mock-fact-state is-ok"><Check size={10} strokeWidth={3} /> Checked</span>
+                <span className="mock-fact-state is-ok"><Check size={10} strokeWidth={3} /> User approved</span>
               </div>
             ))}
           </div>

@@ -8,8 +8,8 @@ import { ArrowUpRight } from 'lucide-react';
 const ROLES = [
   {
     tint: 'sand',
-    title: 'Wholesalers',
-    body: 'Present off-market opportunities with consistent property information and a more professional buyer experience.',
+    title: 'Wholesalers & disposition teams',
+    body: 'Turn deal details into consistent, buyer-ready presentations.',
   },
   {
     tint: 'sky',
@@ -37,7 +37,7 @@ export default function Roles() {
             <span className="eyebrow">Roles</span>
           </Reveal>
           <Reveal delay={0.05}>
-            <h2 className="audience-title">Designed for the professionals moving the property.</h2>
+            <h2 className="audience-title">Start with the teams preparing and sharing deals.</h2>
           </Reveal>
         </div>
 

@@ -112,7 +112,7 @@ function Visual({ kind }) {
           <div className="flow-check-row is-open">
             <CircleAlert size={14} strokeWidth={2.4} />
             <div>
-              <strong>Price disagrees with the portal</strong>
+              <strong>Price disagrees with the brochure</strong>
               <span>$480,000 against $465,000</span>
             </div>
           </div>
@@ -120,14 +120,14 @@ function Visual({ kind }) {
             <Check size={14} strokeWidth={3} />
             <div>
               <strong>Internal area confirmed</strong>
-              <span>620 m², survey plan attached</span>
+              <span>2,200 sq ft, survey plan attached</span>
             </div>
           </div>
           <div className="flow-check-row is-ok">
             <Check size={14} strokeWidth={3} />
             <div>
               <strong>Tenure confirmed</strong>
-              <span>Certificate of occupancy</span>
+              <span>Fee simple, deed attached</span>
             </div>
           </div>
         </div>

@@ -22,8 +22,8 @@ const COLUMNS = [
       { to: '/about', label: 'About ORVN Labs' },
       { to: '/early-access', label: 'Early access' },
       { to: '/contact', label: 'Contact' },
-      { to: '/legal/privacy', label: 'Privacy' },
-      { to: '/legal/terms', label: 'Terms' },
+      { to: '/legal/privacy', label: 'Privacy notice' },
+      { to: '/legal/terms', label: 'Terms of service' },
     ],
   },
 ];
@@ -46,6 +46,10 @@ export default function Footer() {
             <p className="footer-note">
               ORREI is for wholesalers and small disposition teams first, with agents, investors
               and the teams behind property deals supported by the same record.
+            </p>
+            <p className="footer-note">
+              ORREI is in development. Screens and properties are illustrative. Access is limited to
+              approved beta users.
             </p>
 
             <div className="footer-actions">

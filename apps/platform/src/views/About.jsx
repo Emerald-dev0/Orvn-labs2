@@ -48,7 +48,7 @@ export default function About() {
               <p>
                 A workspace for a property record, the presentations built from it and the pages
                 published against your profile. AI-assisted drafts stay under your review. In
-                development.
+                development. ORREI is built by ORVN Labs, founded by Oyegoke Daniel.
               </p>
               <Link href="/product" className="arrow-link">
                 Explore ORREI
