@@ -5,7 +5,7 @@ const WHEN = new Intl.DateTimeFormat('en-GB', {
   day: 'numeric',
   month: 'long',
   year: 'numeric',
-  timeZone: 'Africa/Lagos',
+  timeZone: 'America/New_York',
 });
 
 /**
@@ -25,6 +25,7 @@ export function EarlyAccessReceived({
   frustration,
   receivedAt,
   productUrl,
+  unsubscribeUrl,
 }: {
   name: string;
   email: string;
@@ -35,6 +36,7 @@ export function EarlyAccessReceived({
   frustration?: string | null;
   receivedAt: Date;
   productUrl: string;
+  unsubscribeUrl?: string | null;
 }) {
   const firstName = name.trim().split(' ')[0] || 'there';
 
@@ -80,9 +82,14 @@ export function EarlyAccessReceived({
       </Para>
 
       <SmallPrint>
-        Received {WHEN.format(receivedAt)} WAT. Reply to this message if anything above is wrong, or if
+        Received {WHEN.format(receivedAt)} ET. Reply to this message if anything above is wrong, or if
         your situation has changed.
       </SmallPrint>
+      {unsubscribeUrl ? (
+        <SmallPrint>
+          Occasional product updates are optional. Want off the list? Unsubscribe: {unsubscribeUrl}
+        </SmallPrint>
+      ) : null}
     </Brand>
   );
 }

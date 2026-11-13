@@ -445,3 +445,7 @@ alter table beta_applications enable row level security;
 -- ---------------------------------------------------------------------------
 
 alter table contact_messages enable row level security;
+
+-- The unsubscribe list. Written from the public unsubscribe route with the admin connection;
+-- read only by whatever sends optional updates. No tenant, no public path, no grant.
+alter table marketing_suppressions enable row level security;

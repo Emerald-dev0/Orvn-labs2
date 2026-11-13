@@ -1,55 +1,62 @@
 {
-  "version": "7",
-  "dialect": "postgresql",
-  "entries": [
-    {
-      "idx": 0,
-      "version": "7",
-      "when": 1793817988140,
-      "tag": "0000_clear_stephen_strange",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1793828895378,
-      "tag": "0001_slow_risque",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1793828946626,
-      "tag": "0002_nifty_captain_flint",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1793829120609,
-      "tag": "0003_living_beast",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1793833083251,
-      "tag": "0004_gorgeous_fallen_one",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1794231844626,
-      "tag": "0005_uneven_stone_men",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "7",
-      "when": 1794571200000,
-      "tag": "0006_prd_compliance",
-      "breakpoints": true
-    }
-  ]
+ "version": "7",
+ "dialect": "postgresql",
+ "entries": [
+  {
+   "idx": 0,
+   "version": "7",
+   "when": 1793817988140,
+   "tag": "0000_clear_stephen_strange",
+   "breakpoints": true
+  },
+  {
+   "idx": 1,
+   "version": "7",
+   "when": 1793828895378,
+   "tag": "0001_slow_risque",
+   "breakpoints": true
+  },
+  {
+   "idx": 2,
+   "version": "7",
+   "when": 1793828946626,
+   "tag": "0002_nifty_captain_flint",
+   "breakpoints": true
+  },
+  {
+   "idx": 3,
+   "version": "7",
+   "when": 1793829120609,
+   "tag": "0003_living_beast",
+   "breakpoints": true
+  },
+  {
+   "idx": 4,
+   "version": "7",
+   "when": 1793833083251,
+   "tag": "0004_gorgeous_fallen_one",
+   "breakpoints": true
+  },
+  {
+   "idx": 5,
+   "version": "7",
+   "when": 1794231844626,
+   "tag": "0005_uneven_stone_men",
+   "breakpoints": true
+  },
+  {
+   "idx": 6,
+   "version": "7",
+   "when": 1794571200000,
+   "tag": "0006_prd_compliance",
+   "breakpoints": true
+  },
+  {
+   "idx": 7,
+   "version": "7",
+   "when": 1794599271966,
+   "tag": "0007_marketing_consent",
+   "breakpoints": true
+  }
+ ]
 }

@@ -355,12 +355,33 @@ export const betaApplications = pgTable(
     frustration: text('frustration'),
     website: text('website'),
     consent: boolean('consent').notNull().default(false),
+    /** Optional, separate from the operational consent above. Never implied by it. */
+    marketingConsent: boolean('marketing_consent').notNull().default(false),
+    marketingConsentAt: timestamp('marketing_consent_at', { withTimezone: true }),
+    /** Version of the consent wording shown, e.g. '2026-11-13'. */
+    consentVersion: text('consent_version'),
     status: text('status').notNull().default('new'),
     source: text('source'),
     ipHash: text('ip_hash'),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [uniqueIndex('beta_applications_email_key').on(t.email)],
+);
+
+/**
+ * Addresses that asked to stop receiving optional product/development updates.
+ * Operational mail (invitations, sign-in links, security) is never suppressed by this list —
+ * the two streams are separate by design (PRD §19.4).
+ */
+export const marketingSuppressions = pgTable(
+  'marketing_suppressions',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    email: text('email').notNull(),
+    reason: text('reason').notNull().default('unsubscribe'),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [uniqueIndex('marketing_suppressions_email_key').on(t.email)],
 );
 
 /**

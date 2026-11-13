@@ -26,6 +26,8 @@ export const betaApplySchema = z.object({
   website: z.string().trim().max(200).optional().or(z.literal('')),
   /** Consent is a real checkbox, not a footnote. */
   consent: z.literal('on', { message: 'Please agree to be contacted about the beta' }),
+  /** Optional product/development updates. Separate stream; never implied by `consent`. */
+  marketingConsent: z.literal('on').optional(),
   /** Honeypot. A person never sees this field. */
   company_url_confirm: z.literal('').optional(),
 });
