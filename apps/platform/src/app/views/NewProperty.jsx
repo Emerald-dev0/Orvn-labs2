@@ -6,11 +6,10 @@ import { Icon } from '../icons';
 import { PageHead, Card } from '../ui';
 import { createProperty } from '../../../lib/actions/properties';
 
+// PRD D03: launch picker is vacant land and single-family only, US only.
 const TYPES = [
-  { id: 'residential', label: 'House or apartment' },
-  { id: 'vacant_land', label: 'Vacant land' },
-  { id: 'package', label: 'Multi-property package' },
-  { id: 'project', label: 'Project or showcase' },
+  { id: 'residential_land', label: 'Vacant land' },
+  { id: 'SFR', label: 'Single-family home' },
 ];
 
 /**
@@ -19,7 +18,7 @@ const TYPES = [
  * rather than filling in a second form.
  */
 export default function NewProperty({ live = false }) {
-  const [type, setType] = useState('residential');
+  const [type, setType] = useState('residential_land');
   const [notice, setNotice] = useState(false);
   const [state, formAction, pending] = useActionState(createProperty, { status: 'idle' });
 
@@ -155,7 +154,7 @@ export default function NewProperty({ live = false }) {
                 Add files
               </button>
               <span className="ws-small ws-muted" style={{ alignSelf: 'center' }}>
-                File uploads arrive with storage. Notes are enough to start.
+                Photos and documents are added from the property page once it exists.
               </span>
             </div>
           </Card>
@@ -197,7 +196,7 @@ export default function NewProperty({ live = false }) {
               ))}
             </div>
             <p className="ws-small ws-muted" style={{ marginTop: 12 }}>
-              Specialised fields for other property kinds are labelled, never forced into one form.
+              Duplex, multifamily and other kinds arrive as they pass QA — one category at a time (PRD D03).
             </p>
           </Card>
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { MAX_UPLOAD_BYTES, detectType, validateUpload } from '../lib/uploads';
+import { MAX_PHOTO_BYTES, MAX_DOCUMENT_BYTES, detectType, validateUpload } from '../lib/uploads';
 
 const bytes = (...values: number[]) => new Uint8Array(values);
 
@@ -50,12 +50,24 @@ describe('upload validation', () => {
     );
   });
 
-  it('rejects files over the limit before reading them further', () => {
-    const big = new Uint8Array(MAX_UPLOAD_BYTES + 1);
-    big.set(jpeg);
-    expect(validateUpload({ filename: 'big.jpg', declaredType: 'image/jpeg', bytes: big }).reason).toBe(
-      'too_large',
-    );
+  it('enforces the 10 MB photo limit and the 25 MB PDF limit by detected type', () => {
+    const bigPhoto = new Uint8Array(MAX_PHOTO_BYTES + 1);
+    bigPhoto.set(jpeg);
+    expect(
+      validateUpload({ filename: 'big.jpg', declaredType: 'image/jpeg', bytes: bigPhoto }).reason,
+    ).toBe('too_large');
+
+    const bigPdf = new Uint8Array(MAX_DOCUMENT_BYTES + 1);
+    bigPdf.set(pdf);
+    expect(
+      validateUpload({ filename: 'big.pdf', declaredType: 'application/pdf', bytes: bigPdf }).reason,
+    ).toBe('too_large');
+
+    const okPdf = new Uint8Array(MAX_PHOTO_BYTES + 1);
+    okPdf.set(pdf);
+    expect(
+      validateUpload({ filename: 'plans.pdf', declaredType: 'application/pdf', bytes: okPdf }).ok,
+    ).toBe(true);
   });
 
   it('strips path characters out of the stored filename', () => {

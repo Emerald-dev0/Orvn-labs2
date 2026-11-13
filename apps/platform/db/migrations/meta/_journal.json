@@ -43,6 +43,13 @@
       "when": 1794231844626,
       "tag": "0005_uneven_stone_men",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1794571200000,
+      "tag": "0006_prd_compliance",
+      "breakpoints": true
     }
   ]
 }

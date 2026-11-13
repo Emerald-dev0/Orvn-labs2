@@ -48,8 +48,11 @@ export type PublicationSnapshot = {
     city: string | null;
     region: string | null;
     country: string | null;
+    postalCode: string | null;
     precision: 'exact' | 'approximate' | 'unknown';
-    /** Only ever populated when the owner explicitly allows the street address. */
+    /** PRD D07: per-property disclosure. Default area. Never inferred from precision. */
+    disclosure: 'exact' | 'street' | 'area';
+    /** exact: the full line. street: house number removed. area: always null. */
     addressLine: string | null;
   };
   price: SnapshotPrice;
@@ -58,6 +61,8 @@ export type PublicationSnapshot = {
   contactEmail: string | null;
   rightsAttestedAt: string | null;
   publishedAt: string;
+  /** D09: every export is stamped with the record version it was rendered from. */
+  recordVersion: number;
   disclaimer: string;
 };
 
@@ -89,7 +94,8 @@ export type SnapshotInput = {
     propertyType: string;
     availabilityStatus: string;
     addressLine: string | null;
-    addressVisible: boolean;
+    postalCode: string | null;
+    locationDisclosure: 'exact' | 'street' | 'area';
     city: string | null;
     region: string | null;
     country: string | null;
@@ -103,6 +109,7 @@ export type SnapshotInput = {
   media: MediaRow[];
   contactEmail: string | null;
   publishedAt: Date;
+  recordVersion: number;
 };
 
 /** A value only reaches a buyer when it was approved, marked public, and is actually there. */
@@ -144,10 +151,19 @@ export function buildSnapshot(input: SnapshotInput): PublicationSnapshot {
       height: row.height,
     }));
 
-  const showAddress =
-    property.addressVisible &&
-    property.locationPrecision === 'exact' &&
-    Boolean(property.addressLine?.trim());
+  const disclosure = property.locationDisclosure ?? 'area';
+  const rawLine = property.addressLine?.trim() || null;
+  const citySeg = [property.city, property.region, property.postalCode].filter(Boolean).join(', ');
+
+  // D07: what the public may see is decided per property, here, once. The page, the map, the
+  // deal sheet and the summary all render from this string — never from raw rows.
+  let publicAddress: string | null = null;
+  if (disclosure === 'exact') {
+    publicAddress = rawLine ? [rawLine, citySeg].filter(Boolean).join(', ') : null;
+  } else if (disclosure === 'street') {
+    const street = rawLine?.replace(/^\s*\d+[A-Za-z]?[\-\/]?\d*\s+/, '').trim() || null;
+    publicAddress = street ? [street, citySeg].filter(Boolean).join(', ') : null;
+  }
 
   return {
     v: SNAPSHOT_VERSION,
@@ -162,8 +178,10 @@ export function buildSnapshot(input: SnapshotInput): PublicationSnapshot {
       city: property.city,
       region: property.region,
       country: property.country,
+      postalCode: property.postalCode,
       precision: property.locationPrecision,
-      addressLine: showAddress ? property.addressLine!.trim() : null,
+      disclosure,
+      addressLine: publicAddress,
     },
     price: resolvePrice(property),
     facts,
@@ -171,17 +189,21 @@ export function buildSnapshot(input: SnapshotInput): PublicationSnapshot {
     contactEmail: input.contactEmail,
     rightsAttestedAt: property.rightsAttestedAt ? property.rightsAttestedAt.toISOString() : null,
     publishedAt: input.publishedAt.toISOString(),
+    recordVersion: input.recordVersion,
     disclaimer: PUBLIC_DISCLAIMER,
   };
 }
 
-/** "Approximate location" is a claim about the pin, and it is always stated in words. */
+/**
+ * The single string the public ever sees. D07: exact → full line; street → house number
+ * removed; area → city, region and ZIP only. Unknown stays unknown: never a guessed address.
+ */
 export function locationLabel(snapshot: PublicationSnapshot): string {
-  const parts = [snapshot.place.city, snapshot.place.region, snapshot.place.country].filter(Boolean);
-  const base = parts.join(', ') || 'Location on request';
-  if (snapshot.place.precision === 'exact' && snapshot.place.addressLine) {
+  if (snapshot.place.addressLine) {
     return snapshot.place.addressLine;
   }
+  const parts = [snapshot.place.city, snapshot.place.region, snapshot.place.postalCode].filter(Boolean);
+  const base = parts.join(', ') || 'Location on request';
   return snapshot.place.precision === 'approximate' ? `${base} · approximate location` : base;
 }
 

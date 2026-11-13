@@ -24,7 +24,7 @@ function snapshot(overrides: Partial<PublicationSnapshot> = {}): PublicationSnap
     description: 'A four-bedroom detached house with title documents on file.',
     propertyType: 'House',
     availability: 'available',
-    place: { city: 'Harbour district', region: null, country: null, precision: 'approximate', addressLine: null },
+    place: { city: 'Harbour district', region: null, country: null, postalCode: '78701', precision: 'approximate', disclosure: 'area', addressLine: null },
     price: { visibility: 'public', amount: '480000.00', currency: 'USD' },
     facts: [
       { key: 'bedrooms', value: '4', sourceType: 'manual' },
@@ -35,6 +35,7 @@ function snapshot(overrides: Partial<PublicationSnapshot> = {}): PublicationSnap
     rightsAttestedAt: '2026-11-01T00:00:00.000Z',
     publishedAt: '2026-11-04T10:00:00.000Z',
     disclaimer: 'Details supplied by the seller’s representative and not independently verified.',
+    recordVersion: 7,
     ...overrides,
   } as PublicationSnapshot;
 }
@@ -53,6 +54,7 @@ describe('deal sheet', () => {
     expect(html).toContain('Northaven Property Group');
     expect(html).toContain(pageUrl);
     expect(html).toContain('not independently verified');
+    expect(html).toContain('version 7');
   });
 
   it('escapes user supplied values instead of injecting them', () => {

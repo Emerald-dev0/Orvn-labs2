@@ -14,13 +14,14 @@ const baseProperty: SnapshotInput['property'] = {
   slug: 'halden-house',
   title: 'Halden House',
   description: 'A four-bedroom house with a walled garden.',
-  propertyType: 'residential',
+  propertyType: 'SFR',
   availabilityStatus: 'available',
   addressLine: '14 Halden Road',
-  addressVisible: false,
+  postalCode: '78701',
+  locationDisclosure: 'area',
   city: 'Harbour district',
   region: 'Northbank',
-  country: 'United Kingdom',
+  country: 'United States',
   locationPrecision: 'approximate',
   priceAmount: '480000.00',
   currency: 'GBP',
@@ -61,6 +62,7 @@ const input = (overrides: Partial<SnapshotInput> = {}): SnapshotInput => ({
   ],
   contactEmail: 'hello@northaven.example',
   publishedAt: new Date('2026-11-02T09:00:00Z'),
+  recordVersion: 3,
   ...overrides,
 });
 
@@ -113,18 +115,23 @@ describe('snapshot privacy boundary', () => {
     expect(snapshot.media[0].isCover).toBe(true);
   });
 
-  it('hides a street address unless the owner allows it and the pin is exact', () => {
+  it('hides the address on the default setting, shows a numberless street for street level, full line only on exact', () => {
+    // D07: default is area — city, region and ZIP only, whatever the pin says.
     expect(buildSnapshot(input()).place.addressLine).toBeNull();
-    expect(
-      buildSnapshot(
-        input({ property: { ...baseProperty, addressVisible: true, locationPrecision: 'approximate' } }),
-      ).place.addressLine,
-    ).toBeNull();
-    expect(
-      buildSnapshot(
-        input({ property: { ...baseProperty, addressVisible: true, locationPrecision: 'exact' } }),
-      ).place.addressLine,
-    ).toBe('14 Halden Road');
+    expect(locationLabel(buildSnapshot(input()))).toBe(
+      'Harbour district, Northbank, 78701 · approximate location',
+    );
+    // Street level: the house number is stripped even though the owner shared the street.
+    const street = buildSnapshot(
+      input({ property: { ...baseProperty, locationDisclosure: 'street', locationPrecision: 'exact' } }),
+    );
+    expect(street.place.addressLine).toBe('Halden Road, Harbour district, Northbank, 78701');
+    expect(street.place.addressLine).not.toContain('14');
+    // Exact: the full line, because the owner chose it.
+    const exact = buildSnapshot(
+      input({ property: { ...baseProperty, locationDisclosure: 'exact', locationPrecision: 'exact' } }),
+    );
+    expect(exact.place.addressLine).toBe('14 Halden Road, Harbour district, Northbank, 78701');
   });
 });
 
@@ -148,9 +155,9 @@ describe('price handling', () => {
     expect(formatPrice(price, { GBP: '£' })).toBe('£480,000');
   });
 
-  it('labels approximate locations in words', () => {
+  it('stamps the record version of the render (D09)', () => {
     const snapshot = buildSnapshot(input());
-    expect(locationLabel(snapshot)).toBe('Harbour district, Northbank, United Kingdom · approximate location');
+    expect(snapshot.recordVersion).toBe(3);
   });
 });
 

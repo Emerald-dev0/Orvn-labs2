@@ -59,9 +59,10 @@ export async function createProperty(_previous: ActionState, formData: FormData)
 
   const parsed = createPropertySchema.safeParse({
     title: text(formData, 'title'),
-    propertyType: text(formData, 'propertyType') || 'residential',
+    propertyType: text(formData, 'propertyType') || 'residential_land',
     city: text(formData, 'city'),
     region: text(formData, 'region'),
+    postalCode: text(formData, 'postalCode'),
     country: text(formData, 'country'),
     apns: text(formData, 'apns')
       ? text(formData, 'apns')
@@ -92,6 +93,7 @@ export async function createProperty(_previous: ActionState, formData: FormData)
         propertyType: input.propertyType,
         city: input.city || null,
         region: input.region || null,
+        postalCode: input.postalCode || null,
         country: input.country || null,
         createdBy: viewer.userId,
       })
@@ -138,9 +140,10 @@ export async function updateProperty(_previous: ActionState, formData: FormData)
     title: text(formData, 'title'),
     slug: text(formData, 'slug'),
     description: text(formData, 'description'),
-    propertyType: text(formData, 'propertyType') || 'residential',
+    propertyType: text(formData, 'propertyType') || 'residential_land',
     addressLine: text(formData, 'addressLine'),
-    addressVisible: checkbox(formData, 'addressVisible'),
+    postalCode: text(formData, 'postalCode'),
+    locationDisclosure: text(formData, 'locationDisclosure') || 'area',
     city: text(formData, 'city'),
     region: text(formData, 'region'),
     country: text(formData, 'country'),
@@ -168,7 +171,8 @@ export async function updateProperty(_previous: ActionState, formData: FormData)
           description: input.description || null,
           propertyType: input.propertyType,
           addressLine: input.addressLine || null,
-          addressVisible: input.addressVisible,
+          postalCode: input.postalCode || null,
+          locationDisclosure: input.locationDisclosure,
           city: input.city || null,
           region: input.region || null,
           country: input.country || null,

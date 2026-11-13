@@ -61,7 +61,8 @@ export type PropertyCard = {
 export type PropertyDetailView = PropertyCard & {
   description: string;
   addressLine: string;
-  addressVisible: boolean;
+  postalCode: string;
+  locationDisclosure: string;
   locationPrecision: string;
   city: string;
   region: string;
@@ -69,7 +70,7 @@ export type PropertyDetailView = PropertyCard & {
   priceAmount: string;
   currency: string;
   facts: FactView[];
-  media: { id: string; key: string; kind: string; visibility: string; isCover: boolean }[];
+  media: { id: string; key: string; kind: string; visibility: string; isCover: boolean; width: number | null; height: number | null }[];
   publication: { version: number; publishedAt: string; publicFacts: number } | null;
   rightsAttestedAt: string | null;
   showOnPortfolio: boolean;
@@ -338,7 +339,8 @@ export async function getPropertyDetail(
       ...card,
       description: row.description ?? '',
       addressLine: row.addressLine ?? '',
-      addressVisible: row.addressVisible,
+      postalCode: row.postalCode ?? '',
+      locationDisclosure: row.locationDisclosure,
       locationPrecision: row.locationPrecision,
       city: row.city ?? '',
       region: row.region ?? '',
@@ -380,6 +382,8 @@ export async function getPropertyDetail(
         rightsAttestedAt: row.rightsAttestedAt,
         publicMediaCount: visibleMedia.length,
         locationPrecision: row.locationPrecision,
+        locationDisclosure: row.locationDisclosure,
+        addressLine: row.addressLine,
         unreviewedPublicFactCount: details.filter(
           (fact) => fact.isPublic && fact.approvalState === 'unreviewed' && fact.value?.trim(),
         ).length,

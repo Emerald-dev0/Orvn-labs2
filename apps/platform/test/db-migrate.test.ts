@@ -39,8 +39,12 @@ describe('db:migrate reports instead of going quiet', () => {
   });
 
   it('counts the migrations on disk before it connects', async () => {
+    const { readFileSync } = await import('node:fs');
+    const journal = JSON.parse(
+      readFileSync(new URL('../db/migrations/meta/_journal.json', import.meta.url), 'utf8'),
+    ) as { entries: unknown[] };
     const { out } = await run([], {});
-    expect(out).toMatch(/migrations on disk\s+6 in db\/migrations/);
+    expect(out).toMatch(new RegExp(`migrations on disk\\s+${journal.entries.length} in db/migrations`));
   });
 
   it('fails loudly, and names the migration step, when the connection fails', async () => {

@@ -9,12 +9,17 @@ import { recordAudit } from '../audit';
 import { deleteObject, putObject, storageConfigured, storageKeyFor } from '../storage';
 import { renderImageRenditions } from '../image-encoder';
 import { isImageKey, variantKeyFor, variantKeysFor } from '../images';
-import { uploadErrorMessage, validateUpload } from '../uploads';
+import {
+  MAX_DOCUMENTS_PER_PROPERTY,
+  MAX_PHOTOS_PER_PROPERTY,
+  MAX_PROPERTY_TOTAL_BYTES,
+  uploadErrorMessage,
+  validateUpload,
+} from '../uploads';
 import { checkbox, propertyIdSchema, text } from '../validation/workspace';
 import type { ActionState } from './types';
 
 const MAX_FILES_PER_SUBMISSION = 6;
-const MAX_FILES_PER_PROPERTY = 60;
 
 /**
  * Uploads.
@@ -52,17 +57,47 @@ export async function uploadMedia(_previous: ActionState, formData: FormData): P
       .limit(1);
     if (!property) return null;
 
-    const [countRow] = await tx
-      .select({ total: sql<number>`count(*)::int` })
-      .from(propertyMedia)
-      .where(eq(propertyMedia.propertyId, parsed.data.propertyId));
+    const [kindRows, byteRows] = await Promise.all([
+      tx
+        .select({ kind: propertyMedia.kind, total: sql<number>`count(*)::int` })
+        .from(propertyMedia)
+        .where(eq(propertyMedia.propertyId, parsed.data.propertyId))
+        .groupBy(propertyMedia.kind),
+      tx
+        .select({ total: sql<number>`coalesce(sum(${propertyMedia.bytes}), 0)::bigint` })
+        .from(propertyMedia)
+        .where(eq(propertyMedia.propertyId, parsed.data.propertyId)),
+    ]);
 
-    return { total: Number(countRow?.total ?? 0) };
+    const photos = Number(kindRows.find((row) => row.kind === 'photo')?.total ?? 0);
+    const documents = Number(kindRows.find((row) => row.kind === 'document')?.total ?? 0);
+    return { photos, documents, bytes: Number(byteRows[0]?.total ?? 0) };
   });
 
   if (!existing) return { status: 'error', message: 'That property is not in this workspace.' };
-  if (existing.total + files.length > MAX_FILES_PER_PROPERTY) {
-    return { status: 'error', message: 'This property has reached its file limit.' };
+
+  // D18 is enforced per kind before anything is stored: 25 photos, 10 PDF documents,
+  // 500 MB per property in total.
+  const newPhotos = files.filter((file) => !file.type.includes('pdf')).length;
+  const newDocuments = files.length - newPhotos;
+  if (existing.photos + newPhotos > MAX_PHOTOS_PER_PROPERTY) {
+    return {
+      status: 'error',
+      message: `This property is at its photo limit (${MAX_PHOTOS_PER_PROPERTY} photos). Remove one before adding another.`,
+    };
+  }
+  if (existing.documents + newDocuments > MAX_DOCUMENTS_PER_PROPERTY) {
+    return {
+      status: 'error',
+      message: `This property is at its document limit (${MAX_DOCUMENTS_PER_PROPERTY} PDF documents). Remove one before adding another.`,
+    };
+  }
+  const incomingBytes = files.reduce((sum, file) => sum + file.size, 0);
+  if (existing.bytes + incomingBytes > MAX_PROPERTY_TOTAL_BYTES) {
+    return {
+      status: 'error',
+      message: 'This property would exceed its 500 MB storage. Remove a file before adding another.',
+    };
   }
 
   const failures: string[] = [];
@@ -71,7 +106,14 @@ export async function uploadMedia(_previous: ActionState, formData: FormData): P
     visibility: 'public' | 'private';
     width: number | null;
     height: number | null;
+    bytes: number;
   }[] = [];
+
+  // Enforced again here, on the detected type (not the declared one), so a renamed file can
+  // never slip past the per-kind caps.
+  let runningPhotos = existing.photos;
+  let runningDocuments = existing.documents;
+  let runningBytes = existing.bytes;
 
   for (const file of files) {
     const buffer = new Uint8Array(await file.arrayBuffer());
@@ -83,6 +125,20 @@ export async function uploadMedia(_previous: ActionState, formData: FormData): P
 
     if (!check.ok || !check.type || !check.filename) {
       failures.push(`${file.name}: ${uploadErrorMessage(check.reason ?? 'unsupported_type')}`);
+      continue;
+    }
+
+    const isPdf = check.type === 'application/pdf';
+    if (isPdf && runningDocuments >= MAX_DOCUMENTS_PER_PROPERTY) {
+      failures.push(`${file.name}: this property is at its PDF limit (${MAX_DOCUMENTS_PER_PROPERTY}).`);
+      continue;
+    }
+    if (!isPdf && runningPhotos >= MAX_PHOTOS_PER_PROPERTY) {
+      failures.push(`${file.name}: this property is at its photo limit (${MAX_PHOTOS_PER_PROPERTY}).`);
+      continue;
+    }
+    if (runningBytes + buffer.byteLength > MAX_PROPERTY_TOTAL_BYTES) {
+      failures.push(`${file.name}: this property would exceed 500 MB of storage.`);
       continue;
     }
 
@@ -116,7 +172,10 @@ export async function uploadMedia(_previous: ActionState, formData: FormData): P
       }
     }
 
-    stored.push({ key, visibility: makePublic ? 'public' : 'private', width, height });
+    stored.push({ key, visibility: makePublic ? 'public' : 'private', width, height, bytes: buffer.byteLength });
+    if (isPdf) runningDocuments += 1;
+    else runningPhotos += 1;
+    runningBytes += buffer.byteLength;
   }
 
   if (stored.length > 0) {
@@ -139,6 +198,7 @@ export async function uploadMedia(_previous: ActionState, formData: FormData): P
           visibility: item.visibility,
           width: item.width,
           height: item.height,
+          bytes: item.bytes,
         });
       }
 
