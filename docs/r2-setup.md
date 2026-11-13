@@ -1,6 +1,8 @@
+> **Operations doc — current** (vendor choice permitted by PRD §20.3 / D16; S3-compatible object storage with signed, expiring URLs is required by §20.3). Media rules that are binding come from PRD §11 (PROP-03) and §20 (D18) — including the per-property limits and the no-video rule. Update any hard-coded limits there before trusting this doc's examples.
+
 # Cloudflare R2 setup (property media)
 
-Roadmap: §14 step 9 and §15 item 8. Code: `apps/platform/lib/storage.ts`, `lib/env.ts`, `app/api/health/route.ts`, `app/api/media/[...key]/route.ts`.
+Roadmap pointer: this setup covers the storage leg of PRD §11 `PROP-03` (Secure uploads) and the secure-storage dependency of the Phase 0 exit (PRD §18.3, G0). The upload end-to-end checks it feeds are tracked in `docs/ROADMAP.md` (§D, D-CODE-2 and the G0 demonstration) and gate Phase 0. Code: `apps/platform/lib/storage.ts`, `lib/env.ts`, `app/api/health/route.ts`, `app/api/media/[...key]/route.ts`.
 
 Dashboard labels can change slightly. If a label differs, look for the nearest match and tell the engineer.
 
@@ -124,7 +126,7 @@ Vercel only reads new variables when a deployment is built.
 
 ### 4d. Record the evidence
 
-Write the date, the health result, and the screenshots from 4a–4c into the P1.3 evidence in `docs/ROADMAP.md`. Only then mark P1.3 Verified.
+Write the date, the health result, and the screenshots from 4a–4c into `docs/ROADMAP.md` (the Phase 0 / PROP-03 evidence, feeding `AT-09` and `AT-22`). Only then count the upload leg of Phase 0 as Verified.
 
 ---
 

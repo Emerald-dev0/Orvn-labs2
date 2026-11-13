@@ -1,3 +1,5 @@
+> **Operations doc — current.** Vendor choices here (Vercel, Neon, Cloudflare DNS/R2, Calder) are engineering's, which is permitted by PRD §20.3 / D16 (hosting and monitoring vendors are engineering's decision, constrained by the §20.3 requirements: managed relational DB with point-in-time recovery, S3-compatible signed URLs, transactional email with bounce/complaint webhooks, error monitoring with request-ID correlation, separate staging and production, managed secrets, tested restore). Document 06 §9's open questions are resolved in PRD §20. If anything here drifts from that constraint set, the PRD wins. Also see `docs/PRD.md` §20.3 and `docs/ROADMAP.md` §G.
+
 # Infrastructure: database, Cloudflare and email
 
 Written 4 November 2026. This is the deployment plan the code already assumes, with the parts you

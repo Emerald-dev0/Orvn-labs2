@@ -1487,6 +1487,7 @@ These are general implementation guidance. State-specific privacy, marketing and
 |---|---|---|---|
 | 2026-11-13 | v1.0 consolidated from Nov 13 document set | Founder (ORVN Labs) | §0–12 founder-authored; §13–23 completed from Drive sources |
 | 2026-11-13 | v1.1 — **all decisions D01–D18 resolved in §20** | ORVN Labs | Magic-link auth, PDF in V1, land+SFR only, four formats, retention defaults, file limits. No open choices remain |
+| 2026-11-13 | Repo documentation reconciled to this PRD | ORVN Labs | `docs/ROADMAP.md` rewritten and re-based on §§10/11/18/19/20/22; AGENTS.md and README.md updated; legacy docs (`docs/ROADMAP-DRAFT.md`, `docs/PLATFORM-BUILD-PLAN.md`, `docs/source/*`, `docs/review-2026-11-07-response.md`) bannered as superseded |
 | | | | |
 
 **Decision log:** record every D-number closed here with date, choice and rationale.

@@ -21,7 +21,7 @@ the public internet**, and a published thing is a frozen copy, not a window into
 ## 2. Trust boundaries
 
 ```
-browser  ──HTTPS──▶  Next.js server (Workers)  ──TLS──▶  Neon Postgres
+browser  ──HTTPS──▶  Next.js server (Node on Vercel)  ──TLS──▶  Neon Postgres
                             │
                             └──▶  R2 (private bucket, signed, proxied)
 ```
@@ -70,7 +70,7 @@ change invalidates the other sessions on the account, which is the only safe beh
 reason for resetting might be a compromise.
 
 **Rate limits** on auth endpoints (Better Auth, per route) plus the application limiter below.
-Caveat: Better Auth's limiter is in-memory, so on Workers it is per-isolate. The
+Caveat: Better Auth's limiter is in-memory, so it is per-instance on a serverless host. The
 application-level limiter is the one that holds.
 
 ## 4. Authorisation: two checks, not one
@@ -297,8 +297,7 @@ Incident responses that exist today:
    behind a visible "Preview build" banner, so the preview is never mistaken for live data.
 2. **No live policy test.** A Neon branch plus a test that runs as `orrei_app` and asserts
    cross-tenant reads return zero rows would turn the static checks into proof.
-3. **Better Auth rate limiting is per-isolate.** Move to the Postgres limiter or Workers rate
-   limiting before the beta opens.
+3. **Better Auth rate limiting is per-instance.** Move to the Postgres limiter (or the platform's shared limiter) before the beta opens.
 4. **Uploads are server-side only.** `uploadMedia` validates bytes, writes to R2 and records a
    row; files start private and `setCoverMedia` / `setMediaVisibility` / `removeMedia` follow the
    same rules. Still missing: image resizing and thumbnails, HEIC acceptance, per-workspace

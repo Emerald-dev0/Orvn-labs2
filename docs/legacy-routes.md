@@ -1,3 +1,5 @@
+> **Operations doc — current.** Route retirement implements PRD §19.6 (canonical host, `noindex` on private routes, no blanket redirects). PAS and LAREI artefacts are retired names (PRD §2/§3); redirects must never point old PAS URLs at a route that implies PAS still exists.
+
 # Legacy routes
 
 Every URL the previous site published is listed here, with where it goes now and why. The

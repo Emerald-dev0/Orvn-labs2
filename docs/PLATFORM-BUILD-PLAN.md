@@ -1,3 +1,5 @@
+> **SUPERSEDED AS A PLAN — 2026-11-13.** This was the LAREI-era build plan. The product and scope authority is now `docs/PRD.md` (v1.1); the working plan is `docs/ROADMAP.md` (reconciled 2026-11-13). Keep this file only as the record of the M0–M4 build decisions (vendor picks, tenancy model, RLS approach). Two corrections when reading it: (1) it says the target host was Cloudflare Workers — the app actually runs on **Next.js on Vercel with Neon Postgres, R2 for media and Calder for mail**, which is consistent with PRD §20.3 leaving vendor choice to engineering (D16); (2) requirements, test IDs and decisions it cites now live in PRD §11/§18/§20 — where this file and the PRD disagree, **the PRD wins**.
+
 # LAREI platform build plan
 
 > **Naming decided (November 2026).** The product is **ORREI**; **ORVN Labs** is the company.

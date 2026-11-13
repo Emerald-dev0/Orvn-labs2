@@ -1,3 +1,5 @@
+> **Historical record — 2026-11-07.** Not a plan and not in force. The governing documents are now `docs/PRD.md` (v1.1) and `docs/ROADMAP.md` (2026-11-13). The LAREI references below are the point-in-time state being recorded (the sweep that removed LAREI from rendered copy); PRD §2/§3 and §19 are the current rule. Kept because it is the evidence trail for the naming change.
+
 # Response to the review of 7 November 2026
 
 Review reference: *ORVN LABS / REVIEW BEFORE MAIN — Website V1, Developer Correction & Acceptance*.

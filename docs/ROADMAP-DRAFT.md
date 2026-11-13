@@ -1,3 +1,5 @@
+> **SUPERSEDED — 2026-11-13.** Not in force. The working plan is now `docs/ROADMAP.md`, reconciled to `docs/PRD.md` (v1.1). Every decision this draft waits on is resolved in PRD §20 (D01–D18); its requirement and test IDs now cite PRD §11 (`AUTH-01`…`SYS-01`) and PRD §18 (`AT-01`…`AT-23`). Kept for provenance only — do not execute from it.
+
 # ORREI roadmap: connected chain (DRAFT)
 
 Status: **draft for founder review. Not in force.** Prepared 2026-11-04 from the Drive documents: 02, 03, 04, 06, 07, 08, 10, plus the 2026-11-07 website corrections PDF and the 2026-10-21 developer brief. Document 04 is partly unreadable in Drive (its middle section is missing), so its items are taken from what could be read.

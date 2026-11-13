@@ -1,3 +1,5 @@
+> **Operations doc — current** (vendor choice permitted by PRD §20.3 / D16). Read `docs/PRD.md` first for what the product must do; this doc only explains how to stand the infrastructure up.
+
 # Environment values, and where each one comes from
 
 The short version of what goes in `.env.local` (local) or the Vercel project (deployed), in the order

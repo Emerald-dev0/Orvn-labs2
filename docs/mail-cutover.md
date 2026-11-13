@@ -1,3 +1,5 @@
+> **Operations doc — current** (vendor choice permitted by PRD §20.3 / D16; transactional email with bounce/complaint webhooks is required by §20.3). Read `docs/PRD.md` §19.4 first — confirmation email, consent separation and unsubscribe copy are specified there and are binding.
+
 # Mail: Cloudflare receives, Gmail replies, Calder sends the product's mail
 
 Decided 4 November 2026, replacing Google Workspace. Three systems, three jobs:
