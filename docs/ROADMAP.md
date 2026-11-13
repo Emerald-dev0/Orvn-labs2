@@ -295,9 +295,9 @@ Applies to every phase. Each phase has frontend and backend work (see `AGENTS.md
 
 **Repository cleanup**
 
-- Root `src/`, `api/` and `supabase/` belong to the retired Vite app. `AGENTS.md` says not to extend them.
-- The `(app)` pages in `apps/platform` still import from root `src/app/views/*` and `src/styles/app.css`. Removing the root folders is therefore a separate PR: move those views and styles into `apps/platform` first, then delete. Status: not started.
-- `.github/workflows/keep-supabase-active.yml` pings a Supabase project daily. Decide whether it stays once `supabase/` is removed (OPEN).
+- The retired Vite app's `src/`, `api/` and `supabase/` have been moved into `archive/` (kept, not deleted; history preserved). Nothing in `apps/platform` imports from them. This was checked by resolving every relative import in the platform.
+- `.github/workflows/keep-supabase-active.yml` still pings a Supabase project daily, using secrets. It is unrelated to the platform. Decide whether to keep it (OPEN).
+- The root `package.json`, `vite.config.js`, `index.html` and root `ROADMAP.md` still exist. They relate to the retired app and are not yet archived (OPEN).
 
 **Known discrepancy to resolve before P1.3 is marked Verified**
 
