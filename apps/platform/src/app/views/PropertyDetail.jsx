@@ -10,6 +10,7 @@ import DraftPanel from '../DraftPanel';
 import MediaUploader from '../MediaUploader';
 import { properties, activity } from '../data';
 import { updateLocation } from '../../../lib/actions/properties';
+import ExtractPanel from '../ExtractPanel';
 
 const DISCLOSURE_LABEL = {
   exact: 'Exact address',
@@ -269,6 +270,7 @@ function Details({ property, live = false }) {
         A blank field stays blank. It is never rendered as “not in a flood zone” or “no restrictions”.
       </p>
     </Card>
+    {live ? <ExtractPanel propertyId={property.id} /> : null}
     {live ? <LocationPanel property={property} /> : null}
     </>
   );
