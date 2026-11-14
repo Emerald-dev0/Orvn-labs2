@@ -182,7 +182,7 @@ The old detailed Phase 3–7 plan (buyer network, distribution campaigns, JV aut
 1. Counsel review of PRD §20.2 and §19.5 (privacy notice, terms, retention) — blocks **live** launch, not the build.
 2. Trademark/domain clearance for ORREI — blocks paid spend (D14), not the build.
 3. Founder: the title to use in the early-access signoff (old D23 residual).
-4. Engineering: canonical host + 301 map and `noindex` sweep (PRD §19.6); proposal for the app subdomain (PRD §2).
+4. ~~Engineering: canonical host + 301 map and `noindex` sweep (PRD §19.6)~~ — **Done 2026-11-13** (`1cc6c5a`): every marketing route emits a canonical; legal pages carry descriptions; `sitemap.xml` lists only live 200 routes (it pointed at retired 301s); `robots.txt` disallows authenticated surfaces; `X-Robots-Tag: noindex` extended to admin/invite/sign-in/no-workspace/unsubscribe; published profiles carry an explicit index directive. **Open:** app-subdomain proposal (PRD §2); Search Console verification after deploy.
 5. Founder: revisit S0.2 click tracking against D01's reopen trigger (measured friction over ≥20 users).
 
 Resolved 2026-11-13: password surface removed at founder direction (D-CODE-1, `d9cec46`); keep-supabase-active.yml deleted and the root Vite app archived into `archive/` (`73e3e23`); click tracking stays on.
