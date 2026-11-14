@@ -15,9 +15,11 @@ export default async function Page() {
   }
 
   const members = await listMembers(context.viewer.userId, context.workspace.id);
+  const isOwner = context.workspace.role === 'owner';
 
   return (
     <Settings
+      showNotifications={isOwner}
       data={{
         workspace: { name: context.workspace.name, username: context.workspace.username },
         owner: { name: context.viewer.name, email: context.viewer.email },
