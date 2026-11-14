@@ -257,6 +257,7 @@
 .ws-main {
   width: 100%;
   max-width: 1220px;
+  margin-inline: auto;
   padding: 22px clamp(16px, 3vw, 30px) 72px;
 }
 
