@@ -47,7 +47,6 @@ function SampleSettings() {
           <Row label="Owner" value={`${ws.owner.name} · ${ws.owner.email}`} />
         </Card>
         <SignInCard email={ws.owner.email} connected={false} />
-        <NotificationsCard />
         <PrivacyCard />
         <BillingCard />
         <SupportCard />
@@ -137,7 +136,7 @@ function SupportCard() {
   );
 }
 
-export default function Settings({ data = null }) {
+export default function Settings({ data = null, showNotifications = false }) {
   if (!data) {
     return <SampleSettings />;
   }
@@ -164,7 +163,7 @@ export default function Settings({ data = null }) {
         </Card>
 
         <SignInCard email={owner.email} connected />
-        <NotificationsCard />
+        {showNotifications ? <NotificationsCard /> : null}
         <PrivacyCard />
         <BillingCard />
         <SupportCard />
