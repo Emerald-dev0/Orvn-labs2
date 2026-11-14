@@ -11,7 +11,6 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { render } from '@react-email/render';
 import { Invitation } from '../emails/Invitation';
-import { ResetPassword } from '../emails/ResetPassword';
 import { SignInLink } from '../emails/SignInLink';
 import { InquiryNotification } from '../emails/InquiryNotification';
 import { BetaApplication } from '../emails/BetaApplication';
@@ -29,12 +28,6 @@ const samples = [
         acceptUrl="https://orvnlabs.com/invite/9f2c1a7e-5b6d-4c8a-9e10-2f3b4c5d6e7f"
         expiresAt={new Date('2026-11-11T18:30:00Z')}
       />
-    ),
-  },
-  {
-    name: 'reset-password',
-    element: (
-      <ResetPassword url="https://orvnlabs.com/reset-password?token=8d1f0a2b3c4d5e6f7a8b9c0d1e2f3a4b" />
     ),
   },
   {

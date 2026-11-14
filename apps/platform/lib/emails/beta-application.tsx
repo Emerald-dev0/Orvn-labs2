@@ -2,7 +2,7 @@ import * as React from 'react';
 import type { EmailMessage } from '../email';
 import { renderEmail } from '../../emails/render';
 import { BetaApplication } from '../../emails/BetaApplication';
-import { formatWhen } from './when';
+import { formatWhenOperator } from './when';
 
 /**
  * An early-access request, delivered to the operator inbox.
@@ -45,7 +45,7 @@ export async function betaApplicationEmail(opts: {
       opts.currentTools ? `Shares properties today with:\n${opts.currentTools}` : null,
       opts.frustration ? `\nMost frustrating part:\n${opts.frustration}` : null,
       '',
-      `Received ${formatWhen(opts.receivedAt)} · application ${opts.id}`,
+      `Received ${formatWhenOperator(opts.receivedAt)} · application ${opts.id}`,
       opts.adminUrl ? `Open in the queue: ${opts.adminUrl}` : null,
       '',
       'Reply to this email to answer them directly. To invite them, open the queue and press Send invitation.',

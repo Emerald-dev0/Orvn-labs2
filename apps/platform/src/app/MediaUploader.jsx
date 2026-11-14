@@ -29,8 +29,8 @@ export default function MediaUploader({ propertyId }) {
       >
         <Icon name="upload" size={20} />
         <span style={{ fontSize: 13.5, fontWeight: 500 }}>Choose photos or documents</span>
-        <span className="ws-small ws-muted">JPEG, PNG, WebP, AVIF or PDF · up to 12 MB each</span>
-        <input type="file" name="files" multiple accept="image/jpeg,image/png,image/webp,image/avif,application/pdf" style={{ display: 'none' }} />
+        <span className="ws-small ws-muted">Photos: JPEG, PNG, WebP · up to 10 MB and 25 per property. Documents: PDF · up to 25 MB and 10 per property. Max 500 MB per property.</span>
+        <input type="file" name="files" multiple accept="image/jpeg,image/png,image/webp,application/pdf" style={{ display: 'none' }} />
       </label>
 
       <label className="ws-small ws-muted" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>

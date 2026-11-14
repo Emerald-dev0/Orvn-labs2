@@ -30,7 +30,7 @@ export async function invitationEmail(opts: {
     text: [
       `You have been invited to ${where}.`,
       '',
-      'Set your password and open the workspace:',
+      'Open the workspace:',
       opts.acceptUrl,
       '',
       `The link expires ${formatWhen(opts.expiresAt)} and works once.`,

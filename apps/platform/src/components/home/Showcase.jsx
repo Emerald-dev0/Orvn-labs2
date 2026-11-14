@@ -19,26 +19,26 @@ const TABS = [
   {
     id: 'record',
     label: 'The record',
-    title: 'One property, one set of facts.',
+    title: 'Organize the details you already have.',
     body: 'Address, price, size, tenure, the agent responsible and where each fact came from. Everything else in ORREI reads from this page.',
   },
   {
     id: 'check',
     label: 'Checking',
-    title: 'Disagreements get caught, not published.',
-    body: 'When a portal, a brochure and a colleague say three different things about the same flat, the record shows you the conflict and asks you to settle it.',
+    title: 'Review conflicting information before sharing.',
+    body: 'When a brochure, a portal and a colleague say three different things about the same property, the record shows you the conflict and asks you to settle it.',
   },
   {
     id: 'publish',
     label: 'Publishing',
-    title: 'Nothing goes live without your say.',
+    title: 'Approve each output separately.',
     body: 'Draft, review, publish. Each output has its own state, so you can send a deal sheet before the public page is ready.',
   },
   {
     id: 'insight',
     label: 'Insight',
-    title: 'See what people actually looked at.',
-    body: 'Page views, which photographs held attention, how many enquired. No personal data, no tracking pixels, no guesswork.',
+    title: 'Understand page activity and inquiries — when measurement is available.',
+    body: 'Page opens and submitted inquiries, where measurement is available. No personal data, no tracking pixels, no guesswork.',
   },
 ];
 
@@ -66,17 +66,17 @@ function RecordPanel() {
       <div className="mock-facts">
         {[
           ['Asking price', '$480,000', true],
-          ['Internal area', '620 m²', true],
+          ['Internal area', '2,200 sq ft', true],
           ['Bedrooms', '4', true],
-          ['Tenure', 'Certificate of occupancy', true],
-          ['Service charge', '$4,200 per year', false],
+          ['Tenure', 'Fee simple', true],
+          ['HOA dues', '$350 per month', false],
         ].map(([k, v, ok]) => (
           <div className="mock-fact" key={k}>
             <span className="mock-fact-key">{k}</span>
             <span className="mock-fact-val">{v}</span>
             <span className={`mock-fact-state ${ok ? 'is-ok' : 'is-todo'}`}>
               {ok ? <Check size={11} strokeWidth={3} /> : <CircleAlert size={11} strokeWidth={2.6} />}
-              {ok ? 'Verified' : 'Review'}
+              {ok ? 'User confirmed' : 'Review'}
             </span>
           </div>
         ))}
@@ -91,16 +91,16 @@ function CheckPanel() {
       <div className="mock-conflict">
         <div className="mock-conflict-head">
           <span className="mock-conflict-icon"><CircleAlert size={14} strokeWidth={2.4} /></span>
-          <p>Price does not match the portal</p>
+          <p>Price does not match the brochure</p>
           <span className="mock-time">2h ago</span>
         </div>
         <div className="mock-conflict-rows">
           <div><span>Record</span><strong>$480,000</strong><em>your source</em></div>
-          <div><span>Portal import</span><strong>$465,000</strong><em>imported</em></div>
+          <div><span>Brochure (PDF)</span><strong>$465,000</strong><em>your document</em></div>
         </div>
         <div className="mock-conflict-actions">
           <span className="mock-btn-dark">Use my figure</span>
-          <span className="mock-btn-light">Accept import</span>
+          <span className="mock-btn-light">Use brochure figure</span>
         </div>
       </div>
 
@@ -144,14 +144,17 @@ function InsightPanel() {
   const bars = [42, 66, 54, 82, 71, 96, 63];
   return (
     <div className="mock-insight">
+      <p className="mock-insight-note" style={{ margin: '0 0 10px' }}>
+        Illustrative example — not real customer results
+      </p>
       <div className="mock-insight-top">
         <div>
-          <p className="mock-insight-num">1,284</p>
-          <span className="mock-insight-label">Property page views, last 7 days</span>
+          <p className="mock-insight-num">132</p>
+          <span className="mock-insight-label">Page opens, last 7 days</span>
         </div>
         <div>
-          <p className="mock-insight-num">37</p>
-          <span className="mock-insight-label">Enquiries this month</span>
+          <p className="mock-insight-num">12</p>
+          <span className="mock-insight-label">Inquiries this month</span>
         </div>
       </div>
       <div className="mock-bars" aria-hidden="true">
@@ -161,7 +164,7 @@ function InsightPanel() {
       </div>
       <p className="mock-insight-note">
         <Sparkles size={13} strokeWidth={2.2} />
-        Most people stopped on the kitchen photograph.
+        Views are not verified buyers, and interest is not proof of purchase.
       </p>
     </div>
   );
@@ -184,14 +187,15 @@ export default function Showcase() {
       <div className="shell">
         <div className="showcase-panel on-dark">
           <div className="showcase-head">
-            <span className="eyebrow on-dark">AI that works with your facts</span>
+            <span className="eyebrow on-dark">Product concept — example screens, not live customer data</span>
             <h2 className="showcase-title">
-              Spend less time assembling. Keep control of what gets said.
+              Your facts. Your voice.
             </h2>
             <p className="lead">
-              Start from notes, documents and photos. The platform organizes what you supply, flags gaps for
-              review and helps draft property descriptions, deal sheets and outreach copy. Your
-              approval comes before publication.
+              ORREI is designed to draft from the details you approve, without making up missing
+              information. Start from notes, documents and photos. The platform organizes what you
+              supply, flags gaps for review and helps draft property descriptions, deal sheets and
+              outreach copy. Your approval comes before publication.
             </p>
           </div>
 
@@ -221,7 +225,7 @@ export default function Showcase() {
                 <span className="app-dots" aria-hidden="true">
                   <i /><i /><i />
                 </span>
-                <span className="app-url">app.orvnlabs.com/properties/adaora-house</span>
+                <span className="app-url">Illustrative design · pre-release</span>
               </div>
 
               <div className="app-shell">

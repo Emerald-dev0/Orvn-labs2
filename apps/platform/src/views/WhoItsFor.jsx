@@ -11,31 +11,34 @@ import { useDocumentMeta } from '../lib/seo';
 const ROLES = [
   {
     tint: 'sand',
+    name: 'Wholesalers & disposition teams',
+    availability: 'Available now — the focus of early access',
+    title: 'Stop rebuilding the same deal information for every buyer.',
+    body: 'One organized record, reviewed once, then shared as a clear presentation — whether it is a vacant infill lot in Tampa or a single-family in North Tampa. Start with a deal you actually run.',
+    gets: [
+      'A record you edit once, not five documents',
+      'A page and a deal sheet per opportunity',
+      'Buyer inquiries routed straight to you',
+      'Control over who sees what, until you say otherwise',
+    ],
+  },
+  {
+    tint: 'sky',
     name: 'Agents and brokers',
+    availability: 'Available now — supported by the same record',
     title: 'Look as good as the property does.',
     body: 'You already have the photographs and the facts. ORREI turns them into a page you are happy to send, a deal sheet you can hand over, and an inspection sheet that matches both.',
     gets: [
       'A page per property, in your name',
       'Deal sheets for serious buyers',
       'Print sheets for site inspections',
-      'Enquiry buttons that come straight to you',
+      'Inquiry buttons that come straight to you',
     ],
   },
   {
-    tint: 'sky',
-    name: 'Developers',
-    title: 'Keep a whole scheme consistent.',
-    body: 'Twenty units, one story. Hold the scheme and every unit in one workspace so the brochure, the site office and the sales agent are always talking about the same numbers.',
-    gets: [
-      'Multiple units under one project',
-      'Shared facts across a scheme',
-      'Print-ready site packs',
-      'Updates pushed to every output',
-    ],
-  },
-  {
-    tint: 'blush',
-    name: 'Small agencies',
+    tint: 'lime',
+    name: 'Property teams',
+    availability: 'Available now for small teams — larger rollouts are exploration, not current availability',
     title: 'Make the newest hire sound senior.',
     body: 'One record, one house style, one approval step. Everybody publishes from the same source, so the quality does not depend on who happened to answer the phone.',
     gets: [
@@ -43,6 +46,19 @@ const ROLES = [
       'Approval before publishing',
       'Consistent branding across the team',
       'A record that survives staff changes',
+    ],
+  },
+  {
+    tint: 'blush',
+    name: 'Developers',
+    availability: 'Exploration — not current availability',
+    title: 'Keep a whole scheme consistent.',
+    body: 'Twenty units, one story. Multi-unit scheme packs are being explored, not shipped. Today ORREI handles one opportunity per page, which is what the early group needs.',
+    gets: [
+      'Multiple units under one project — planned, not shipped',
+      'Shared facts across a scheme — planned, not shipped',
+      'One opportunity per page today',
+      'Tell us if this is your world — it shapes the roadmap',
     ],
   },
 ];
@@ -74,8 +90,8 @@ export default function WhoItsFor() {
             <div className="hero-photo-chip glass">
               <Check size={16} strokeWidth={2.6} />
               <div>
-                <strong>Built with property people</strong>
-                <span>Agents, developers, small teams</span>
+                <strong>Built with wholesalers first</strong>
+                <span>Florida, US · sample locale</span>
               </div>
             </div>
           </div>
@@ -91,6 +107,9 @@ export default function WhoItsFor() {
             >
               <div className={`role-block-panel tint-${role.tint}`}>
                 <span className="pill">{role.name}</span>
+                {role.availability ? (
+                  <span className="ws-small ws-muted" style={{ marginTop: 8, display: 'block' }}>{role.availability}</span>
+                ) : null}
                 <h2 className="role-block-title">{role.title}</h2>
                 <p className="role-block-body">{role.body}</p>
               </div>

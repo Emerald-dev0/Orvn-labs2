@@ -18,11 +18,14 @@ import { user } from './auth-schema';
 /* ── Enums ─────────────────────────────────────────────────────────────── */
 
 export const memberRole = pgEnum('member_role', ['owner', 'editor', 'viewer']);
+// PRD D03/D07: canonical types (Doc 07). Only residential_land and SFR are offered at
+// launch; the rest are stored in schema, hidden in the picker.
 export const propertyType = pgEnum('property_type', [
-  'vacant_land',
-  'residential',
-  'package',
-  'project',
+  'residential_land',
+  'SFR',
+  'duplex',
+  'multifamily',
+  'other',
 ]);
 export const availabilityStatus = pgEnum('availability_status', [
   'available',
@@ -45,6 +48,8 @@ export const approvalState = pgEnum('approval_state', [
   'unknown',
 ]);
 export const locationPrecision = pgEnum('location_precision', ['exact', 'approximate', 'unknown']);
+// PRD D07: three levels, stored per property. Default for public output is 'area'.
+export const locationDisclosure = pgEnum('location_disclosure', ['exact', 'street', 'area']);
 export const priceVisibility = pgEnum('price_visibility', ['public', 'on_request', 'hidden']);
 export const inquiryStatus = pgEnum('inquiry_status', ['new', 'read', 'archived']);
 
@@ -98,7 +103,8 @@ export const properties = pgTable(
     description: text('description'),
     propertyType: propertyType('property_type').notNull(),
     addressLine: text('address_line'),
-    addressVisible: boolean('address_visible').notNull().default(true),
+    postalCode: text('postal_code'),
+    locationDisclosure: locationDisclosure('location_disclosure').notNull().default('area'),
     city: text('city'),
     region: text('region'),
     country: text('country'),
@@ -161,6 +167,8 @@ export const propertyMedia = pgTable(
     visibility: visibility('visibility').notNull().default('private'),
     width: integer('width'),
     height: integer('height'),
+    /** PRD D18: 10 MB photos / 25 MB PDFs; totals tracked for the 500 MB per-property cap. */
+    bytes: integer('bytes'),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [index('property_media_property_idx').on(t.propertyId)],
@@ -347,12 +355,33 @@ export const betaApplications = pgTable(
     frustration: text('frustration'),
     website: text('website'),
     consent: boolean('consent').notNull().default(false),
+    /** Optional, separate from the operational consent above. Never implied by it. */
+    marketingConsent: boolean('marketing_consent').notNull().default(false),
+    marketingConsentAt: timestamp('marketing_consent_at', { withTimezone: true }),
+    /** Version of the consent wording shown, e.g. '2026-11-13'. */
+    consentVersion: text('consent_version'),
     status: text('status').notNull().default('new'),
     source: text('source'),
     ipHash: text('ip_hash'),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [uniqueIndex('beta_applications_email_key').on(t.email)],
+);
+
+/**
+ * Addresses that asked to stop receiving optional product/development updates.
+ * Operational mail (invitations, sign-in links, security) is never suppressed by this list —
+ * the two streams are separate by design (PRD §19.4).
+ */
+export const marketingSuppressions = pgTable(
+  'marketing_suppressions',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    email: text('email').notNull(),
+    reason: text('reason').notNull().default('unsubscribe'),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [uniqueIndex('marketing_suppressions_email_key').on(t.email)],
 );
 
 /**

@@ -1,8 +1,12 @@
 import { z } from 'zod';
 import { amountField, apnListField, currencyField, slugField } from './common';
 
-export const PROPERTY_TYPES = ['vacant_land', 'residential', 'package', 'project'] as const;
+// PRD D03: canonical set is stored everywhere; only the first two are offered at launch
+// (the picker in NewProperty is built from LAUNCH_PROPERTY_TYPES).
+export const PROPERTY_TYPES = ['residential_land', 'SFR', 'duplex', 'multifamily', 'other'] as const;
+export const LAUNCH_PROPERTY_TYPES = ['residential_land', 'SFR'] as const;
 export const LOCATION_PRECISION = ['exact', 'approximate', 'unknown'] as const;
+export const LOCATION_DISCLOSURE = ['exact', 'street', 'area'] as const;
 export const PRICE_VISIBILITY = ['public', 'on_request', 'hidden'] as const;
 export const AVAILABILITY = ['available', 'pending', 'sold', 'showcase'] as const;
 
@@ -11,7 +15,8 @@ export const propertyDraftSchema = z.object({
   slug: slugField.optional(),
   propertyType: z.enum(PROPERTY_TYPES),
   addressLine: z.string().trim().max(200).optional().or(z.literal('')),
-  addressVisible: z.boolean().default(false),
+  postalCode: z.string().trim().max(20).optional().or(z.literal('')),
+  locationDisclosure: z.enum(LOCATION_DISCLOSURE).default('area'),
   city: z.string().trim().max(120).optional().or(z.literal('')),
   region: z.string().trim().max(120).optional().or(z.literal('')),
   country: z.string().trim().max(120).optional().or(z.literal('')),
@@ -38,6 +43,8 @@ export function publicationBlockers(input: {
   rightsAttestedAt?: Date | null;
   publicMediaCount: number;
   locationPrecision?: string | null;
+  locationDisclosure?: string | null;
+  addressLine?: string | null;
   /** Public facts nobody has approved or rejected. A page must not carry an unreviewed claim. */
   unreviewedPublicFactCount?: number;
 }): string[] {
@@ -46,8 +53,11 @@ export function publicationBlockers(input: {
   if (!input.city && !input.region) {
     blockers.push('Add a city or region so buyers know roughly where this is.');
   }
-  if (input.locationPrecision === 'exact') {
-    blockers.push('Confirm that the exact address may be shown, or mark the pin approximate.');
+  if (input.locationDisclosure === 'exact' && input.locationPrecision !== 'exact') {
+    blockers.push('Exact address is selected for public view, but the pin is not set to exact. Set the pin to exact, or choose Street-level / Area.');
+  }
+  if (input.locationDisclosure === 'exact' && !input.addressLine?.trim()) {
+    blockers.push('Exact address is selected for public view, but the address line is empty.');
   }
   if (!input.contactEmail) blockers.push('Set a contact email for inquiries.');
   if (!input.rightsAttestedAt) {

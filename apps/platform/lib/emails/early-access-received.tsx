@@ -2,6 +2,7 @@ import * as React from 'react';
 import type { EmailMessage } from '../email';
 import { renderEmail } from '../../emails/render';
 import { EarlyAccessReceived } from '../../emails/EarlyAccessReceived';
+import { unsubscribeUrlFor } from '../unsubscribe';
 
 /**
  * The confirmation the applicant receives. `replyTo` is the shared inbox, so answering it is the
@@ -18,6 +19,14 @@ export async function earlyAccessReceivedEmail(opts: {
   receivedAt: Date;
   productUrl: string;
 }): Promise<EmailMessage> {
+  // Optional-stream unsubscribe link, built from the address we are sending to.
+  // Signing can only fail on missing config, in which case we omit the link rather than break the receipt.
+  let unsubscribeUrl: string | null = null;
+  try {
+    unsubscribeUrl = unsubscribeUrlFor(opts.to);
+  } catch (error) {
+    console.error('[early-access] unsubscribe link not built', { message: (error as Error).message });
+  }
   const facts = [
     opts.company ? `Company: ${opts.company}` : '',
     opts.role ? `Role: ${opts.role}` : '',
@@ -48,7 +57,8 @@ export async function earlyAccessReceivedEmail(opts: {
       '',
       `Received ${opts.receivedAt.toISOString()}`,
       '',
-      'ORVN Labs · hello@orvnlabs.com',
+      ...(unsubscribeUrl ? [`Occasional product updates are optional. Unsubscribe: ${unsubscribeUrl}`, ''] : []),
+      'Oyegoke Daniel — Founder, ORVN Labs · hello@orvnlabs.com',
     ].join('\n'),
     html: await renderEmail(
       <EarlyAccessReceived
@@ -61,6 +71,7 @@ export async function earlyAccessReceivedEmail(opts: {
         frustration={opts.frustration}
         receivedAt={opts.receivedAt}
         productUrl={opts.productUrl}
+        unsubscribeUrl={unsubscribeUrl}
       />,
     ),
   };

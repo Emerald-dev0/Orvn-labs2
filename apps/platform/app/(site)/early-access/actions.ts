@@ -27,6 +27,9 @@ export type BetaApplyState =
  */
 const INBOX = () => serverEnv().EARLY_ACCESS_INBOX ?? 'hello@orvnlabs.com';
 
+/** Version of the consent wording shown on the form. Bump when the copy changes materially. */
+const CONSENT_VERSION = '2026-11-13';
+
 /** Where the applicant is sent after we confirm: the plainest explanation of the product. */
 const PRODUCT_URL = () => `${serverEnv().BETTER_AUTH_URL ?? 'https://orvnlabs.com'}/product`;
 
@@ -64,6 +67,7 @@ export async function requestEarlyAccess(
     frustration: value('frustration'),
     website: value('site'),
     consent: value('consent'),
+    marketingConsent: value('marketing_consent') === 'on' ? ('on' as const) : undefined,
     company_url_confirm: value('company_url_confirm'),
   });
 
@@ -114,6 +118,9 @@ export async function requestEarlyAccess(
         frustration: input.frustration || null,
         website: input.website || null,
         consent: true,
+        marketingConsent: input.marketingConsent === 'on',
+        marketingConsentAt: input.marketingConsent === 'on' ? receivedAt : null,
+        consentVersion: CONSENT_VERSION,
         source: 'early-access',
         ipHash: await rateLimitIdentity(['ip', ip || 'unknown']),
       })

@@ -30,6 +30,9 @@ export async function generateMetadata({ params }) {
     title: { absolute: title },
     description,
     alternates: { canonical: `/w/${site.username}` },
+    // Publishing the profile is the explicit publish-as-public act; the page 404s until then,
+    // so indexing after publication is the PRD D06 rule, not a leak.
+    robots: { index: true, follow: true },
     openGraph: {
       type: 'website',
       title,

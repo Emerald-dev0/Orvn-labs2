@@ -45,12 +45,17 @@ export default function Hero() {
 
       <div className="shell hero-grid">
         <div className="hero-copy">
-          <motion.h1 className="hero-title" {...rise(0)}>
+          <motion.p className="eyebrow" style={{ marginBottom: 14 }} {...rise(0)}>
+            Built first for wholesalers and disposition teams
+          </motion.p>
+          <motion.h1 className="hero-title" {...rise(0.05)}>
             A property deserves better than a <em>forwarded PDF</em>.
           </motion.h1>
 
           <motion.p className="hero-sub" {...rise(0.1)}>
-            A record, an editable deal sheet, and a page that looks like the price you are asking.
+            Turn scattered property notes, photos and documents into one organized record, a
+            buyer-ready deal sheet and a professional page you can share. Review the facts before
+            anything goes live.
           </motion.p>
 
           <motion.div className="hero-actions" {...rise(0.18)}>
@@ -112,7 +117,7 @@ export default function Hero() {
 
             <div className="proof-body">
               <p className="proof-title">Halden House</p>
-              <p className="proof-facts">4 bed · 5 bath · 620 m² · 480,000 asking</p>
+              <p className="proof-facts">4 bed · 5 bath · 2,200 sq ft · $480,000 asking</p>
 
               <div className="proof-sheet">
                 <span className="proof-sheet-icon">

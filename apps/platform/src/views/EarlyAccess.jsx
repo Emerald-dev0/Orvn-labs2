@@ -30,10 +30,12 @@ export default function EarlyAccess() {
               {state.status === 'sent' ? (
                 <Reveal className="form-success-block">
                   <span className="form-success-icon"><Check size={20} strokeWidth={2.6} /></span>
-                  <h2>Your request is in review.</h2>
+                  <h2>We received your request.</h2>
                   <p>
-                    A person reads it. If there is a suitable place in the next cohort, you will get
-                    an email with a workspace invitation. No newsletter and no follow-up sequence.
+                    Thank you for telling us about your work. We review applications for a small
+                    early-access group. If there is a suitable opening, we will email you at the address
+                    you provided. You can ask us to remove your details, or to stop optional updates,
+                    whenever you choose.
                   </p>
                   <Link href="/" className="btn btn-primary">
                     Back to the site
@@ -71,8 +73,8 @@ export default function EarlyAccess() {
                     <textarea id="current" name="current" required maxLength={1000} className="textarea" rows={3} placeholder="Links, PDFs, WhatsApp, a website, a deck." />
                   </div>
                   <div className="field span-2">
-                    <label className="field-label" htmlFor="frustration">What is the most frustrating part of that?</label>
-                    <textarea id="frustration" name="frustration" required maxLength={1000} className="textarea" rows={3} placeholder="Be specific. This is the part we are building against." />
+                    <label className="field-label" htmlFor="frustration">What is the most frustrating part of that? <span style={{ color: 'var(--muted)', fontWeight: 400 }}>Optional</span></label>
+                    <textarea id="frustration" name="frustration" maxLength={1000} className="textarea" rows={3} placeholder="Be specific. This is the part we are building against." />
                   </div>
                   <div className="field span-2">
                     <label className="field-label" htmlFor="site">Website or professional profile</label>
@@ -96,6 +98,13 @@ export default function EarlyAccess() {
                         I agree that ORVN Labs may contact me about early access. See our{' '}
                         <Link href="/legal/privacy">Privacy Policy</Link>. Nothing else is done with
                         these details.
+                      </span>
+                    </label>
+                    <label className="form-legal" htmlFor="marketing_consent" style={{ display: 'flex', gap: 8, alignItems: 'flex-start', marginTop: 8 }}>
+                      <input id="marketing_consent" name="marketing_consent" type="checkbox" style={{ marginTop: 3 }} />
+                      <span>
+                        Also send me occasional product and development updates. Optional — one click to
+                        unsubscribe at any time, and account/security email still arrives.
                       </span>
                     </label>
                     <button type="submit" className="btn btn-primary" disabled={pending}>

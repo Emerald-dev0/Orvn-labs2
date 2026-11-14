@@ -6,9 +6,15 @@
  * than stored and later served by the media route.
  */
 
-export const MAX_UPLOAD_BYTES = 12 * 1024 * 1024;
+/** PRD D18: photos 10 MB each (JPEG/PNG/WebP), documents 25 MB each (PDF only). No AVIF, no video. */
+export const MAX_PHOTO_BYTES = 10 * 1024 * 1024;
+export const MAX_DOCUMENT_BYTES = 25 * 1024 * 1024;
+export const MAX_UPLOAD_BYTES = MAX_DOCUMENT_BYTES; // back-compat upper bound
+export const MAX_PHOTOS_PER_PROPERTY = 25;
+export const MAX_DOCUMENTS_PER_PROPERTY = 10;
+export const MAX_PROPERTY_TOTAL_BYTES = 500 * 1024 * 1024;
 
-export type AllowedType = 'image/jpeg' | 'image/png' | 'image/webp' | 'image/avif' | 'application/pdf';
+export type AllowedType = 'image/jpeg' | 'image/png' | 'image/webp' | 'application/pdf';
 
 const SIGNATURES: { type: AllowedType; test: (bytes: Uint8Array) => boolean; ext: string }[] = [
   { type: 'image/jpeg', ext: 'jpg', test: (b) => b[0] === 0xff && b[1] === 0xd8 && b[2] === 0xff },
@@ -23,13 +29,6 @@ const SIGNATURES: { type: AllowedType; test: (bytes: Uint8Array) => boolean; ext
     test: (b) =>
       b[0] === 0x52 && b[1] === 0x49 && b[2] === 0x46 && b[3] === 0x46 &&
       b[8] === 0x57 && b[9] === 0x45 && b[10] === 0x42 && b[11] === 0x50,
-  },
-  {
-    type: 'image/avif',
-    ext: 'avif',
-    test: (b) =>
-      b[4] === 0x66 && b[5] === 0x74 && b[6] === 0x79 && b[7] === 0x70 &&
-      b[8] === 0x61 && b[9] === 0x76 && b[10] === 0x69 && b[11] === 0x66,
   },
   {
     type: 'application/pdf',
@@ -73,11 +72,15 @@ export type ValidatedUpload = {
 
 const REASON_COPY: Record<ValidationFailure, string> = {
   empty: 'That file was empty.',
-  too_large: 'That file is over 12 MB. Compress it and try again.',
-  unsupported_type: 'Photos (JPEG, PNG, WebP, AVIF) and PDFs only.',
+  too_large: 'That file is over the limit: 10 MB for photos, 25 MB for PDFs. Compress it and try again.',
+  unsupported_type: 'Photos (JPEG, PNG, WebP, up to 10 MB) and PDFs (up to 25 MB) only.',
   name_too_long: 'That filename is too long. Rename it and try again.',
   type_mismatch: 'That file is not the type its name claims. We did not store it.',
 };
+
+export function byteLimitFor(type: AllowedType): number {
+  return type === 'application/pdf' ? MAX_DOCUMENT_BYTES : MAX_PHOTO_BYTES;
+}
 
 export function uploadErrorMessage(reason: ValidationFailure): string {
   return REASON_COPY[reason];
@@ -93,11 +96,11 @@ export function validateUpload(input: {
   bytes: Uint8Array;
 }): ValidatedUpload {
   if (input.bytes.byteLength === 0) return { ok: false, reason: 'empty' };
-  if (input.bytes.byteLength > MAX_UPLOAD_BYTES) return { ok: false, reason: 'too_large' };
   if (input.filename.length > 120) return { ok: false, reason: 'name_too_long' };
 
   const detected = detectType(input.bytes);
   if (!detected) return { ok: false, reason: 'unsupported_type' };
+  if (input.bytes.byteLength > byteLimitFor(detected)) return { ok: false, reason: 'too_large' };
 
   if (
     input.declaredType &&

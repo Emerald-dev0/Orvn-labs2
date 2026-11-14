@@ -5,10 +5,10 @@ import { Reveal } from '../site/Reveal';
 import { Building2, Eye, Inbox, LayoutGrid } from 'lucide-react';
 
 const HOMES = [
-  { img: '/images/interior-1.jpg', name: 'Halden House', place: 'Harbour district', price: '$480,000' },
-  { img: '/images/prop-2.jpg', name: 'Kestrel Row', place: 'Harbour district', price: '$210,000' },
-  { img: '/images/prop-5.jpg', name: 'Harbour Point', place: 'Riverside', price: '$1,150,000' },
-  { img: '/images/prop-4.jpg', name: 'Elm Court', place: 'Old town', price: '$320,000' },
+  { img: '/images/sample-vacant-land.jpg', name: 'Meridian infill lot', place: 'Tampa, FL', price: '$385,000' },
+  { img: '/images/interior-1.jpg', name: 'Halden House', place: 'Tampa, FL', price: '$480,000' },
+  { img: '/images/sample-sfr.jpg', name: 'Cypress single-family', place: 'North Tampa, FL', price: '$265,000' },
+  { img: '/images/prop-4.jpg', name: 'Elm Court', place: 'Tampa, FL', price: '$320,000' },
 ];
 
 const MINI = [
@@ -64,7 +64,7 @@ export default function Portfolio() {
 
         <p className="portfolio-note">
           Illustrative sample listings used to show how a published page looks. No real customer or
-          property is represented.
+          property is represented. Sample currency and locale: US dollars, Florida (D03).
         </p>
       </div>
     </section>

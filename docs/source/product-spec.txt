@@ -1,3 +1,5 @@
+RETIRED — 2026-11-13. This is the October 2026 developer handoff written under the working name LAREI. It is NOT in force. The product is ORREI (PRD §2); the spec is docs/PRD.md (v1.1); the plan is docs/ROADMAP.md. "PAS" is also retired (PRD §3). Kept only as the provenance record for the original V1 thinking. Do not copy copy, scope or claims from it.
+
 LAREI — Product & Developer Specification
 ORVN Labs | Developer handoff | Revision 1.0 | 21 October 2026Product name: LAREI (provisional)Release model: Private beta, invitation-controlledStatus: Build brief / proposed product requirements, not evidence of completed functionality
 Operating principle: One approved professional identity; one structured source of truth for each property; multiple consistent, publishable outputs. AI assists, but the user approves factual claims and publication.

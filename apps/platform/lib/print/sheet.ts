@@ -111,7 +111,7 @@ function sheetHead(snapshot: PublicationSnapshot, site: SheetSite, label: string
   return `<header class="head">
     <div class="brand">${escapeHtml(site.businessName)}<span>${escapeHtml(label)}</span></div>
     <div class="head-meta">
-      Prepared ${escapeHtml(publishedDate(snapshot))}<br />
+      Prepared ${escapeHtml(publishedDate(snapshot))} · version ${escapeHtml(String(snapshot.recordVersion))}<br />
       ${email}
     </div>
   </header>`;
@@ -143,7 +143,7 @@ export function renderDealSheet(snapshot: PublicationSnapshot, site: SheetSite, 
 <body>
   <div class="screen-only">
     <span>Print-ready. Use your browser's print dialog and choose “Save as PDF”.</span>
-    <span>${escapeHtml(pageUrl)}</span>
+    <span>Record version ${escapeHtml(String(snapshot.recordVersion))} · ${escapeHtml(publishedDate(snapshot))} · ${escapeHtml(pageUrl)}</span>
   </div>
 
   <div class="sheet">
@@ -176,7 +176,7 @@ export function renderDealSheet(snapshot: PublicationSnapshot, site: SheetSite, 
 
     <footer class="foot">
       <p>${escapeHtml(snapshot.disclaimer)}</p>
-      <p style="text-align:right">${escapeHtml(pageUrl)}</p>
+      <p style="text-align:right">Record version ${escapeHtml(String(snapshot.recordVersion))} · ${escapeHtml(publishedDate(snapshot))}<br />${escapeHtml(pageUrl)}</p>
     </footer>
   </div>
 </body>
@@ -210,7 +210,7 @@ export function renderBuyerSummary(snapshot: PublicationSnapshot, site: SheetSit
 
   lines.push(`Full details and photos: ${pageUrl}`);
   if (site.contactEmail) lines.push(`Enquiries: ${site.contactEmail}`);
-  lines.push('', `${site.businessName}`, snapshot.disclaimer);
+  lines.push('', `${site.businessName} · record version ${snapshot.recordVersion} · ${publishedDate(snapshot)}`, snapshot.disclaimer);
 
   return lines.filter((line, index, all) => !(line === '' && all[index - 1] === '')).join('\n');
 }

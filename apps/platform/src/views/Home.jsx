@@ -19,7 +19,7 @@ import { SiteEditorMock, VoiceMock, StatsMock } from '../components/home/mocks';
 
 export default function Home() {
   useDocumentMeta({
-    title: 'ORREI by ORVN Labs | Professional websites and property deal pages',
+    title: 'ORREI by ORVN Labs | Property records, deal sheets and pages',
     description:
       'ORREI, from ORVN Labs, turns property details into presentations you can share: organise a property, prepare an editable deal sheet and publish a professional page linked to your profile.',
     path: '/',
@@ -48,7 +48,7 @@ export default function Home() {
       <FeatureSplit
         eyebrow="Your voice, not a generic template"
         title="Make your materials sound like your business."
-        body="Bring in approved business context and examples of how you communicate. Shape the tone, vocabulary and audience of your content without changing the underlying facts. You choose what the AI remembers for future drafts."
+        body="Set the tone and wording you prefer for property descriptions. ORREI is designed to draft from the details you approve, without making up missing information. Business-context memory is planned, not shipped."
         media={<VoiceMock />}
         reverse
       />

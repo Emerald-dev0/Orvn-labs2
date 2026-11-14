@@ -55,10 +55,11 @@ export function timeAgo(date: Date | string | null, now = new Date()): string {
 }
 
 const TYPE_LABELS: Record<string, string> = {
-  residential: 'Residential',
-  vacant_land: 'Vacant land',
-  package: 'Package',
-  project: 'Project',
+  residential_land: 'Vacant land',
+  SFR: 'Single-family',
+  duplex: 'Duplex',
+  multifamily: 'Multifamily',
+  other: 'Other',
 };
 
 export function typeLabel(type: string): string {

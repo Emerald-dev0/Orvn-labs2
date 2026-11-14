@@ -74,6 +74,8 @@ export async function publishProperty(
     rightsAttestedAt: property.rightsAttestedAt,
     publicMediaCount: opts.allowWithoutPhotos ? 1 : publicMediaCount,
     locationPrecision: property.locationPrecision,
+    locationDisclosure: property.locationDisclosure,
+    addressLine: property.addressLine,
     unreviewedPublicFactCount: details.filter(
       (detail) =>
         detail.isPublic &&
@@ -83,6 +85,17 @@ export async function publishProperty(
   });
 
   if (blockers.length) throw new PublicationError(blockers);
+
+  // The version is decided before the snapshot is built so the stored artefact carries it —
+  // every export can be stamped (D09).
+  const [latest] = await tx
+    .select({ version: propertyPublications.version })
+    .from(propertyPublications)
+    .where(eq(propertyPublications.propertyId, property.id))
+    .orderBy(desc(propertyPublications.version))
+    .limit(1);
+
+  const version = (latest?.version ?? 0) + 1;
 
   const publishedAt = new Date();
   const snapshot = buildSnapshot({
@@ -95,7 +108,8 @@ export async function publishProperty(
       propertyType: property.propertyType,
       availabilityStatus: property.availabilityStatus,
       addressLine: property.addressLine,
-      addressVisible: property.addressVisible,
+      postalCode: property.postalCode,
+      locationDisclosure: property.locationDisclosure,
       city: property.city,
       region: property.region,
       country: property.country,
@@ -109,16 +123,8 @@ export async function publishProperty(
     media,
     contactEmail: profile?.contactEmail ?? null,
     publishedAt,
+    recordVersion: version,
   });
-
-  const [latest] = await tx
-    .select({ version: propertyPublications.version })
-    .from(propertyPublications)
-    .where(eq(propertyPublications.propertyId, property.id))
-    .orderBy(desc(propertyPublications.version))
-    .limit(1);
-
-  const version = (latest?.version ?? 0) + 1;
 
   await tx.insert(propertyPublications).values({
     propertyId: property.id,

@@ -12,3 +12,9 @@ export type DraftState =
   | { status: 'idle' }
   | { status: 'ok'; message?: string; draft?: string; warnings?: string[]; usedFacts?: { key: string; value: string }[] }
   | { status: 'error'; message: string; blockers?: string[] };
+
+/** Extraction results carry the candidates to review, plus every problem the parser hit, in plain language. */
+export type ExtractionState =
+  | { status: 'idle' }
+  | { status: 'ok'; message?: string; candidates?: import('../ai/extract').ExtractCandidate[]; comparisons?: import('../ai/extract').Comparison[]; notes?: string }
+  | { status: 'error'; message: string };

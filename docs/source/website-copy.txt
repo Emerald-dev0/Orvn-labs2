@@ -1,3 +1,5 @@
+RETIRED — 2026-11-13. This is the October 2026 website redesign brief written under the working name LAREI. It is NOT in force. Website requirements and copy are now in PRD §19 (derived from Document 04, 13 Nov 2026) and the live plan in docs/ROADMAP.md §D.2/D-CODE-8. "PAS" is also retired (PRD §3). Kept only as the provenance record for the redesign. Do not copy copy from it.
+
 ORVN Labs — Website Redesign, UX Architecture & Complete Copy
 Developer / design handoff | Revision 1.0 | 21 October 2026Primary property: orvnlabs.comProduct: LAREI (provisional), by ORVN LabsLaunch status: Controlled early access / private beta; text must not imply features are already live
 Public message: A professional presence for the people behind real-estate deals—and a clearer way to prepare, publish and share property opportunities.

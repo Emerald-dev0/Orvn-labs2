@@ -44,7 +44,7 @@ describe('property draft', () => {
   it('keeps parcel numbers as strings, leading zeros intact', () => {
     const parsed = propertyDraftSchema.parse({
       title: 'Halden House',
-      propertyType: 'residential',
+      propertyType: 'SFR',
       apns: ['0017', '017-234-11'],
     });
     expect(parsed.apns).toEqual(['0017', '017-234-11']);
@@ -52,7 +52,7 @@ describe('property draft', () => {
   });
 
   it('defaults location precision to unknown rather than guessing', () => {
-    const parsed = propertyDraftSchema.parse({ title: 'Halden House', propertyType: 'residential' });
+    const parsed = propertyDraftSchema.parse({ title: 'Halden House', propertyType: 'SFR' });
     expect(parsed.locationPrecision).toBe('unknown');
   });
 
@@ -60,7 +60,7 @@ describe('property draft', () => {
     expect(
       propertyDraftSchema.safeParse({
         title: 'Halden House',
-        propertyType: 'residential',
+        propertyType: 'SFR',
         priceAmount: '480000.999',
       }).success,
     ).toBe(false);

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { amountField, apnListField, currencyField, emailField, slugField } from './common';
-import { AVAILABILITY, LOCATION_PRECISION, PRICE_VISIBILITY, PROPERTY_TYPES } from './property';
+import { AVAILABILITY, LOCATION_DISCLOSURE, LOCATION_PRECISION, PRICE_VISIBILITY, PROPERTY_TYPES } from './property';
 import { VISIBILITIES } from '../publication/visibility';
 
 /**
@@ -15,6 +15,7 @@ export const createPropertySchema = z.object({
   propertyType: z.enum(PROPERTY_TYPES),
   city: optionalText(120),
   region: optionalText(120),
+  postalCode: optionalText(20),
   country: optionalText(120),
   apns: apnListField.default([]),
   notes: optionalText(4000),
@@ -27,7 +28,8 @@ export const updatePropertySchema = z.object({
   description: optionalText(4000),
   propertyType: z.enum(PROPERTY_TYPES),
   addressLine: optionalText(200),
-  addressVisible: z.boolean().default(false),
+  postalCode: optionalText(20),
+  locationDisclosure: z.enum(LOCATION_DISCLOSURE).default('area'),
   city: optionalText(120),
   region: optionalText(120),
   country: optionalText(120),
@@ -37,6 +39,17 @@ export const updatePropertySchema = z.object({
   priceVisibility: z.enum(PRICE_VISIBILITY).default('on_request'),
   availabilityStatus: z.enum(AVAILABILITY).default('available'),
   showOnPortfolio: z.boolean().default(true),
+});
+
+export const locationSchema = z.object({
+  propertyId: z.string().uuid(),
+  addressLine: optionalText(200),
+  postalCode: optionalText(20),
+  city: optionalText(120),
+  region: optionalText(120),
+  country: optionalText(120),
+  locationPrecision: z.enum(LOCATION_PRECISION).default('unknown'),
+  locationDisclosure: z.enum(LOCATION_DISCLOSURE).default('area'),
 });
 
 export const factSchema = z.object({

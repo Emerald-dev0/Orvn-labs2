@@ -1,3 +1,5 @@
+> **Operations doc — current** (vendor choice permitted by PRD §20.3 / D16). Read `docs/PRD.md` first for what the product must do; this doc only explains how to stand the infrastructure up.
+
 # Neon, from an empty account to a working database
 
 Neon is hosted Postgres. Nothing to install, no server to keep alive. You need two strings out of it

@@ -1,6 +1,7 @@
 import WhoItsFor from '../../../src/views/WhoItsFor';
 
 export const metadata = {
+  alternates: { canonical: '/who-its-for' },
   title: "Who it's for",
   description: 'Wholesalers, agents, investors, and the operators and teams behind property deals.',
 };

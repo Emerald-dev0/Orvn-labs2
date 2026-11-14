@@ -10,7 +10,7 @@ import { workspace } from './data';
 const NAV = [
   { href: '/dashboard', label: 'Overview', icon: 'dashboard' },
   { href: '/properties', label: 'Properties', icon: 'properties' },
-  { href: '/website', label: 'My website', icon: 'website' },
+  { href: '/website', label: 'Professional profile', icon: 'website' },
   { href: '/inquiries', label: 'Inquiries', icon: 'inquiries', badgeKey: 'inquiries' },
   { href: '/analytics', label: 'Analytics', icon: 'analytics' },
   { href: '/settings', label: 'Settings', icon: 'settings' },

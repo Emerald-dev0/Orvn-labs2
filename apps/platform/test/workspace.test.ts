@@ -77,8 +77,8 @@ describe('record completeness', () => {
 
 describe('labels', () => {
   it('reads like a person wrote them', () => {
-    expect(typeLabel('vacant_land')).toBe('Vacant land');
-    expect(typeLabel('residential')).toBe('Residential');
+    expect(typeLabel('residential_land')).toBe('Vacant land');
+    expect(typeLabel('SFR')).toBe('Single-family');
     expect(statusLabel('needs_review')).toBe('Needs review');
     expect(statusLabel('unpublished')).toBe('Unpublished');
   });
@@ -90,9 +90,10 @@ describe('property input', () => {
     title: 'Halden House',
     slug: 'halden-house',
     description: 'Four bedrooms, walled garden.',
-    propertyType: 'residential',
+    propertyType: 'SFR',
     addressLine: '14 Halden Road',
-    addressVisible: false,
+    postalCode: '78701',
+    locationDisclosure: 'area',
     city: 'Harbour district',
     region: 'Northbank',
     country: 'United Kingdom',
@@ -107,7 +108,7 @@ describe('property input', () => {
   it('accepts a normal record and normalises currency', () => {
     const parsed = updatePropertySchema.parse(valid);
     expect(parsed.currency).toBe('GBP');
-    expect(parsed.addressVisible).toBe(false);
+    expect(parsed.locationDisclosure).toBe('area');
   });
 
   it('rejects a non-uuid property id, so a guessed id cannot be shaped past validation', () => {
@@ -126,7 +127,7 @@ describe('property input', () => {
 
 describe('creation input', () => {
   it('needs a title and a known type', () => {
-    expect(createPropertySchema.safeParse({ title: 'Ha', propertyType: 'residential' }).success).toBe(false);
+    expect(createPropertySchema.safeParse({ title: 'Ha', propertyType: 'SFR' }).success).toBe(false);
     expect(
       createPropertySchema.safeParse({ title: 'Halden House', propertyType: 'castle' }).success,
     ).toBe(false);
@@ -135,7 +136,7 @@ describe('creation input', () => {
   it('keeps parcel numbers as typed', () => {
     const parsed = createPropertySchema.parse({
       title: 'Halden House',
-      propertyType: 'residential',
+      propertyType: 'SFR',
       apns: ['0017', '017-234-11'],
     });
     expect(parsed.apns).toEqual(['0017', '017-234-11']);

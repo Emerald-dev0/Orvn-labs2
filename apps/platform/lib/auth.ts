@@ -7,7 +7,6 @@ import { db } from './db';
 import * as schema from '../db/schema';
 import { sendEmail } from './email';
 import { signInLinkEmail } from './emails/sign-in-link';
-import { resetPasswordEmail } from './emails/reset-password';
 import { findUsableInvitation } from './invitations';
 import { magicLinkDecision } from './magic-link-gate';
 import { adminDb } from './db/admin';
@@ -36,9 +35,10 @@ async function deliver(message: Parameters<typeof sendEmail>[0]) {
  * Better Auth: users, sessions and invitations live in our Neon database.
  *
  * Access model:
- * - The beta is invitation-only. Account creation — password or magic link — passes through
- *   one gate below: a usable invitation for that exact address, or an address on the
- *   operator allowlist. There is no open sign-up route to forget to disable.
+ * - The beta is invitation-only. Sign-in — creation included — passes through one gate below:
+ *   a usable invitation for that exact address, or an address on the operator allowlist.
+ *   There is no open sign-up route to forget to disable.
+ * - D01: magic link only. There is no password surface anywhere in the product.
  * - Sessions are httpOnly, secure in production, same-site lax, and rotate their expiry on use.
  * - The sign-in form always answers the same way, so the form cannot be used to enumerate
  *   which addresses have accounts.
@@ -97,17 +97,6 @@ export const auth = betterAuth({
     },
   }),
 
-  emailAndPassword: {
-    enabled: true,
-    minPasswordLength: 10,
-    maxPasswordLength: 200,
-    // Invited users may set a password; nobody else can create an account (see the hook).
-    disableSignUp: false,
-    sendResetPassword: async ({ user, url }) => {
-      await deliver(await resetPasswordEmail({ to: user.email, url }));
-    },
-  },
-
   session: {
     expiresIn: 60 * 60 * 24 * 30,
     updateAge: 60 * 60 * 24,
@@ -133,9 +122,6 @@ export const auth = betterAuth({
     window: 60,
     max: 60,
     customRules: {
-      '/sign-in/*': { window: 60 * 15, max: 10 },
-      '/sign-up/*': { window: 60 * 60, max: 5 },
-      '/request-password-reset': { window: 60 * 15, max: 5 },
       '/send-magic-link': { window: 60 * 15, max: 5 },
     },
   },
@@ -175,7 +161,8 @@ export const auth = betterAuth({
   plugins: [
     nextCookies(),
     magicLink({
-      expiresIn: 60 * 10,
+      // D01: single-use link, 15-minute expiry.
+      expiresIn: 60 * 15,
       disableSignUp: false, // Account creation is governed by the hook above, not by the plugin.
       sendMagicLink: async ({ email, url }) => {
         // Decide before sending. An address with no account, no invitation and no operator entry
@@ -199,7 +186,7 @@ export const auth = betterAuth({
           return;
         }
         await deliver(
-          await signInLinkEmail({ to: email, url, expiresAt: new Date(Date.now() + 10 * 60 * 1000) }),
+          await signInLinkEmail({ to: email, url, expiresAt: new Date(Date.now() + 15 * 60 * 1000) }),
         );
       },
     }),

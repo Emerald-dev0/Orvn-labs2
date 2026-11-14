@@ -13,6 +13,7 @@ import {
   createPropertySchema,
   factDecisionSchema,
   factSchema,
+  locationSchema,
   propertyIdSchema,
   text,
   updatePropertySchema,
@@ -59,9 +60,10 @@ export async function createProperty(_previous: ActionState, formData: FormData)
 
   const parsed = createPropertySchema.safeParse({
     title: text(formData, 'title'),
-    propertyType: text(formData, 'propertyType') || 'residential',
+    propertyType: text(formData, 'propertyType') || 'residential_land',
     city: text(formData, 'city'),
     region: text(formData, 'region'),
+    postalCode: text(formData, 'postalCode'),
     country: text(formData, 'country'),
     apns: text(formData, 'apns')
       ? text(formData, 'apns')
@@ -92,6 +94,7 @@ export async function createProperty(_previous: ActionState, formData: FormData)
         propertyType: input.propertyType,
         city: input.city || null,
         region: input.region || null,
+        postalCode: input.postalCode || null,
         country: input.country || null,
         createdBy: viewer.userId,
       })
@@ -138,9 +141,10 @@ export async function updateProperty(_previous: ActionState, formData: FormData)
     title: text(formData, 'title'),
     slug: text(formData, 'slug'),
     description: text(formData, 'description'),
-    propertyType: text(formData, 'propertyType') || 'residential',
+    propertyType: text(formData, 'propertyType') || 'residential_land',
     addressLine: text(formData, 'addressLine'),
-    addressVisible: checkbox(formData, 'addressVisible'),
+    postalCode: text(formData, 'postalCode'),
+    locationDisclosure: text(formData, 'locationDisclosure') || 'area',
     city: text(formData, 'city'),
     region: text(formData, 'region'),
     country: text(formData, 'country'),
@@ -168,7 +172,8 @@ export async function updateProperty(_previous: ActionState, formData: FormData)
           description: input.description || null,
           propertyType: input.propertyType,
           addressLine: input.addressLine || null,
-          addressVisible: input.addressVisible,
+          postalCode: input.postalCode || null,
+          locationDisclosure: input.locationDisclosure,
           city: input.city || null,
           region: input.region || null,
           country: input.country || null,
@@ -206,6 +211,70 @@ export async function updateProperty(_previous: ActionState, formData: FormData)
   revalidatePath('/properties');
   revalidatePath(`/w/${workspace.username}`);
   return { status: 'ok', message: 'Saved.' };
+}
+
+/**
+ * The D07 disclosure control. Edits only what buyers may find: the address block and
+ * how much of it the public page reveals. `locationDisclosure` is the single switch that
+ * decides what leaves the building; the pin precision is stored alongside it so an
+ * Exact setting without a real pin can be blocked at publish time.
+ */
+export async function updateLocation(_previous: ActionState, formData: FormData): Promise<ActionState> {
+  const { viewer, workspace } = await requireEditor();
+
+  const parsed = locationSchema.safeParse({
+    propertyId: text(formData, 'propertyId'),
+    addressLine: text(formData, 'addressLine'),
+    postalCode: text(formData, 'postalCode'),
+    city: text(formData, 'city'),
+    region: text(formData, 'region'),
+    country: text(formData, 'country'),
+    locationPrecision: text(formData, 'locationPrecision') || 'unknown',
+    locationDisclosure: text(formData, 'locationDisclosure') || 'area',
+  });
+
+  if (!parsed.success) {
+    return { status: 'error', message: parsed.error.issues[0]?.message ?? 'Check the address fields.' };
+  }
+
+  const input = parsed.data;
+
+  let slug: string | null = null;
+  await withUserDb(viewer.userId, async (tx) => {
+    const updated = await tx
+      .update(properties)
+      .set({
+        addressLine: input.addressLine || null,
+        postalCode: input.postalCode || null,
+        city: input.city || null,
+        region: input.region || null,
+        country: input.country || null,
+        locationPrecision: input.locationPrecision,
+        locationDisclosure: input.locationDisclosure,
+        updatedAt: new Date(),
+      })
+      .where(and(eq(properties.id, input.propertyId), eq(properties.workspaceId, workspace.id)))
+      .returning({ slug: properties.slug });
+    slug = updated[0]?.slug ?? null;
+
+    await recordAudit(
+      {
+        workspaceId: workspace.id,
+        actorId: viewer.userId,
+        action: 'property.location.updated',
+        targetType: 'property',
+        targetId: input.propertyId,
+        metadata: { detail: input.locationDisclosure },
+      },
+      tx,
+    );
+  });
+
+  revalidatePath(`/properties/${input.propertyId}`);
+  revalidatePath('/properties');
+  revalidatePath(`/w/${workspace.username}`);
+  if (slug) revalidatePath(`/w/${workspace.username}/p/${slug}`);
+  return { status: 'ok', message: 'Address and disclosure saved.' };
 }
 
 export async function saveFact(_previous: ActionState, formData: FormData): Promise<ActionState> {

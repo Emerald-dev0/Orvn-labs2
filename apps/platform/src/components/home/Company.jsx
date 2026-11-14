@@ -39,7 +39,7 @@ export default function Company() {
             </Reveal>
             <Reveal delay={0.05}>
               <h2 className="company-title">
-                A company for the work behind a property listing.
+                Building practical tools for the work behind real estate deals.
               </h2>
             </Reveal>
             <Reveal delay={0.1}>

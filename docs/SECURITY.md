@@ -21,7 +21,7 @@ the public internet**, and a published thing is a frozen copy, not a window into
 ## 2. Trust boundaries
 
 ```
-browser  ──HTTPS──▶  Next.js server (Workers)  ──TLS──▶  Neon Postgres
+browser  ──HTTPS──▶  Next.js server (Node on Vercel)  ──TLS──▶  Neon Postgres
                             │
                             └──▶  R2 (private bucket, signed, proxied)
 ```
@@ -41,7 +41,7 @@ Two database URLs exist on purpose:
 ## 3. Authentication and membership
 
 **Invitation only.** There is no reachable sign-up path. Every way of creating a user —
-password, magic link, or a future provider — passes through one gate in
+magic link (D01: the only sign-in) — passes through one gate in
 `lib/auth.ts` (`databaseHooks.user.create.before`), which requires a usable invitation for that
 exact address, or an address on `ADMIN_EMAILS`. The gate cannot be bypassed by calling an
 endpoint directly, because it is inside account creation rather than in front of a form.
@@ -64,13 +64,14 @@ daily rotation, five-minute cookie cache. Signing out revokes the session row.
 account; the magic-link call swallows a beta-gate rejection and returns the same sentence. The
 invite page shows a masked address (`d•••@example.com`), never the full one.
 
-**Account recovery.** `/forgot-password` requests a single-use link (one hour) and `/reset-password`
-consumes it. The request form answers identically whether or not the address exists. A password
-change invalidates the other sessions on the account, which is the only safe behaviour when the
-reason for resetting might be a compromise.
+**Account recovery.** There is no password to recover (D01). A lost way back in is the same path as
+any sign-in: request a new magic link on `/sign-in`. The form answers identically whether or not
+the address exists, and a fresh link never changes a property record, a published page or a file.
+Compromise response is to invalidate sessions (rotate `BETTER_AUTH_SECRET`), not to rotate a
+credential.
 
 **Rate limits** on auth endpoints (Better Auth, per route) plus the application limiter below.
-Caveat: Better Auth's limiter is in-memory, so on Workers it is per-isolate. The
+Caveat: Better Auth's limiter is in-memory, so it is per-instance on a serverless host. The
 application-level limiter is the one that holds.
 
 ## 4. Authorisation: two checks, not one
@@ -211,7 +212,7 @@ build does not require them, so CI can compile without secrets, but `/api/health
 booleans only — never a value.
 
 Rotating `ANALYTICS_HASH_SALT` invalidates every stored visitor hash. Rotating
-`BETTER_AUTH_SECRET` invalidates every session and password reset link. Both are intended
+`BETTER_AUTH_SECRET` invalidates every session and sign-in link. Both are intended
 effects; document them in the incident runbook, not in a commit message.
 
 ## 10. Audit
@@ -297,8 +298,7 @@ Incident responses that exist today:
    behind a visible "Preview build" banner, so the preview is never mistaken for live data.
 2. **No live policy test.** A Neon branch plus a test that runs as `orrei_app` and asserts
    cross-tenant reads return zero rows would turn the static checks into proof.
-3. **Better Auth rate limiting is per-isolate.** Move to the Postgres limiter or Workers rate
-   limiting before the beta opens.
+3. **Better Auth rate limiting is per-instance.** Move to the Postgres limiter (or the platform's shared limiter) before the beta opens.
 4. **Uploads are server-side only.** `uploadMedia` validates bytes, writes to R2 and records a
    row; files start private and `setCoverMedia` / `setMediaVisibility` / `removeMedia` follow the
    same rules. Still missing: image resizing and thumbnails, HEIC acceptance, per-workspace

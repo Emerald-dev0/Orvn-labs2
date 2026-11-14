@@ -1,21 +1,20 @@
 User-agent: *
 Allow: /
 Disallow: /api/
-Disallow: /admin/
-Disallow: /admin/*
-Disallow: /test
-Disallow: /test/*
-Disallow: /test-pas
-Disallow: /newsletter
-Disallow: /scorecard
-Disallow: /lead-leakage-scorecard
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /properties
+Disallow: /website
+Disallow: /inquiries
+Disallow: /analytics
+Disallow: /settings
+Disallow: /invite
+Disallow: /sign-in
+Disallow: /no-workspace
+Disallow: /unsubscribe
 
-# Disallow dynamic filters that create duplicate content
-Disallow: /*?category=
-Disallow: /*?preview=true
-
-# AI crawlers and answer engines are welcome on public content.
-# Admin, API, and preview routes stay excluded via the rules above.
+# AI crawlers and answer engines are welcome on public content. The authenticated
+# surfaces above stay excluded; never rely on this file alone for privacy.
 User-agent: GPTBot
 Allow: /
 
@@ -40,5 +39,4 @@ Allow: /
 User-agent: CCBot
 Allow: /
 
-# Sitemaps
 Sitemap: https://orvnlabs.com/sitemap.xml

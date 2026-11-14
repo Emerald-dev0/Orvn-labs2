@@ -1,10 +1,12 @@
 import * as React from 'react';
 import { Action, Brand, FallbackUrl, Heading, Para, SmallPrint } from './components/Brand';
 
-const WHEN = new Intl.DateTimeFormat('en-GB', {
-  hour: '2-digit',
+const WHEN = new Intl.DateTimeFormat('en-US', {
+  hour: 'numeric',
   minute: '2-digit',
-  timeZone: 'Africa/Lagos',
+  hour12: true,
+  timeZone: 'America/New_York',
+  timeZoneName: 'short',
 });
 
 export function SignInLink({ url, expiresAt }: { url: string; expiresAt: Date }) {
@@ -17,19 +19,14 @@ export function SignInLink({ url, expiresAt }: { url: string; expiresAt: Date })
 
       <Para>Use the link below to open your workspace. No password needed.</Para>
 
-      <Action href={url} note={`Works once, expires at ${WHEN.format(expiresAt)} WAT.`}>
+      <Action href={url} note={`Works once, expires at ${WHEN.format(expiresAt)}.`}>
         Open ORREI
       </Action>
 
       <FallbackUrl url={url} />
 
-      <Para muted>
-        If you have a password you can still use it. This link is only for this device, and only
-        this once.
-      </Para>
-
       <SmallPrint>
-        We will never ask you for this link, for your password, or for a code over email or phone.
+        We will never ask you for this link, or for a code, over email or phone.
       </SmallPrint>
     </Brand>
   );
