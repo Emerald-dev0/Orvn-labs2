@@ -59,7 +59,7 @@ const nextConfig = {
       { source: '/:path*', headers: baselineHeaders },
       // Authenticated surfaces are private by definition: no crawler, no cache, no framing.
       {
-        source: '/(dashboard|properties|website|inquiries|analytics|settings)/:path*',
+        source: '/(dashboard|properties|website|inquiries|analytics|settings|admin|invite|sign-in|no-workspace|unsubscribe)/:path*',
         headers: [
           { key: 'X-Robots-Tag', value: 'noindex, nofollow, noarchive' },
           { key: 'Cache-Control', value: 'private, no-store, max-age=0' },
