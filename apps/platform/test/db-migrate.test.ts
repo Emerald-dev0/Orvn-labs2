@@ -31,14 +31,18 @@ function run(args: string[], env: Record<string, string>) {
 }
 
 describe('db:migrate reports instead of going quiet', () => {
-  it('says what is missing when no connection string is set', async () => {
+  // Each case spawns a real child that imports the database driver; on a slow machine that
+  // alone can pass the default 5s timeout.
+  const TIMEOUT = 30_000;
+
+  it('says what is missing when no connection string is set', { timeout: TIMEOUT }, async () => {
     const { code, out } = await run([], {});
     expect(code).toBe(1);
     expect(out).toContain('No DATABASE_URL');
     expect(out).toContain('.env.local');
   });
 
-  it('counts the migrations on disk before it connects', async () => {
+  it('counts the migrations on disk before it connects', { timeout: TIMEOUT }, async () => {
     const { readFileSync } = await import('node:fs');
     const journal = JSON.parse(
       readFileSync(new URL('../db/migrations/meta/_journal.json', import.meta.url), 'utf8'),
@@ -47,7 +51,7 @@ describe('db:migrate reports instead of going quiet', () => {
     expect(out).toMatch(new RegExp(`migrations on disk\\s+${journal.entries.length} in db/migrations`));
   });
 
-  it('fails loudly, and names the migration step, when the connection fails', async () => {
+  it('fails loudly, and names the migration step, when the connection fails', { timeout: TIMEOUT }, async () => {
     const { code, out } = await run(['--dry'], {
       DATABASE_URL: 'postgresql://nobody:nothing@127.0.0.1:1/none',
     });
@@ -56,7 +60,7 @@ describe('db:migrate reports instead of going quiet', () => {
     expect(out).toContain('migration');
   });
 
-  it('never prints the connection string it was given', async () => {
+  it('never prints the connection string it was given', { timeout: TIMEOUT }, async () => {
     const { out } = await run(['--dry'], {
       DATABASE_URL: 'postgresql://secret-user:secret-password@127.0.0.1:1/none',
     });
