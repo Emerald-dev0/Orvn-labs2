@@ -571,6 +571,25 @@
   backdrop-filter: blur(6px);
 }
 .ws-media-tag.is-private { background: rgba(255, 253, 248, 0.86); color: var(--ink); }
+.ws-media-cell { display: grid; gap: 6px; }
+.ws-media-actions { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
+.ws-media-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 9px;
+  border-radius: 8px;
+  border: 1px solid var(--line-2);
+  background: var(--white);
+  color: var(--ink-2);
+  cursor: pointer;
+}
+.ws-media-btn:hover { border-color: var(--ink); color: var(--ink); }
+.ws-media-btn[disabled] { opacity: 0.5; cursor: default; }
+.ws-media-btn.is-danger { color: #8a2f2b; border-color: #d8b3ae; }
+.ws-media-btn.is-danger:hover { border-color: #8a2f2b; color: #8a2f2b; }
 .ws-media-add {
   display: grid;
   place-items: center;

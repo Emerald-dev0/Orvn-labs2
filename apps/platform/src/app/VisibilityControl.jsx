@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Icon } from './icons';
 import { setVisibilityAction } from '../../lib/actions/properties';
 import { VISIBILITIES, visibilityCopy } from '../../lib/publication/visibility';
+import RightsAttestation from './RightsAttestation';
 
 /**
  * The visibility control.
@@ -16,7 +17,7 @@ import { VISIBILITIES, visibilityCopy } from '../../lib/publication/visibility';
  * When a move needs a publication check and the check fails, the action returns the blockers and
  * the record stays exactly where it was. Nothing is shown as changed until the server agrees.
  */
-export default function VisibilityControl({ propertyId, visibility, blockers = [], publicPath }) {
+export default function VisibilityControl({ propertyId, visibility, blockers = [], publicPath, rightsAttested = true }) {
   const [state, submit, pending] = useActionState(setVisibilityAction, { status: 'idle' });
   const current = visibilityCopy(visibility);
   const failures = state.status === 'error' ? state.blockers ?? [] : [];
@@ -35,6 +36,8 @@ export default function VisibilityControl({ propertyId, visibility, blockers = [
       <p className="ws-small ws-muted" style={{ margin: 0 }}>
         Right now: <strong>{current.label.toLowerCase()}</strong>. {current.summary}.
       </p>
+
+      {!rightsAttested ? <RightsAttestation propertyId={propertyId} /> : null}
 
       <form action={submit} style={{ display: 'grid', gap: 8 }}>
         <input type="hidden" name="propertyId" value={propertyId} />

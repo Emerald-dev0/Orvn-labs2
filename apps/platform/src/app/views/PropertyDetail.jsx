@@ -1,6 +1,6 @@
 'use client';
 
-import { SIZES, THUMB_WIDTH, aspectRatio, mediaUrl, srcSetFor } from '../../../lib/images';
+import { mediaUrl } from '../../../lib/images';
 import { useActionState, useState } from 'react';
 import Link from 'next/link';
 import { Icon } from '../icons';
@@ -8,6 +8,7 @@ import { PageHead, Card, StatusPill, Tabs, FactRow, EmptyState } from '../ui';
 import VisibilityControl from '../VisibilityControl';
 import DraftPanel from '../DraftPanel';
 import MediaUploader from '../MediaUploader';
+import MediaTile from '../MediaTile';
 import { properties, activity } from '../data';
 import { updateLocation } from '../../../lib/actions/properties';
 import ExtractPanel from '../ExtractPanel';
@@ -96,6 +97,7 @@ function Overview({ property, live = false, publicPath = null }) {
               propertyId={property.id}
               visibility={property.visibility ?? 'private'}
               blockers={property.blockers ?? []}
+              rightsAttested={Boolean(property.rightsAttestedAt)}
               publicPath={property.visibility === 'public' || property.visibility === 'link_only' ? publicPath : null}
             />
           </Card>
@@ -300,25 +302,7 @@ function Media({ property, live = false }) {
       {live && items.length > 0 ? (
         <div className="ws-media-grid">
           {items.map((item) => (
-            <div className="ws-media" key={item.id}>
-              <img
-                src={mediaUrl(item.key, { width: THUMB_WIDTH, sourceWidth: item.width })}
-                srcSet={srcSetFor(item.key, { sourceWidth: item.width })}
-                sizes={SIZES.thumb}
-                width={item.width || undefined}
-                height={item.height || undefined}
-                style={{ aspectRatio: aspectRatio(item.width, item.height) }}
-                alt=""
-                loading="lazy"
-                decoding="async"
-              />
-              <div className="ws-media-tags">
-                {item.isCover ? <span className="ws-media-tag">Cover</span> : null}
-                <span className={`ws-media-tag ${item.visibility === 'public' ? '' : 'is-private'}`}>
-                  {item.visibility === 'public' ? 'Public' : 'Private'}
-                </span>
-              </div>
-            </div>
+            <MediaTile key={item.id} item={item} propertyId={property.id} />
           ))}
         </div>
       ) : null}
@@ -427,7 +411,9 @@ function CopyAssets({ property, live = false }) {
   );
 }
 
-function DealSheet({ property }) {
+function DealSheet({ property, live = false, publicPath = null }) {
+  const published = live && property.status === 'published' && Boolean(publicPath);
+  const sheetPath = published ? `${publicPath}/sheet` : null;
   return (
     <div className="ws-split">
       <Card style={{ background: 'var(--bone)' }}>
@@ -468,21 +454,38 @@ function DealSheet({ property }) {
           <h2>Export</h2>
         </div>
         <p className="ws-small ws-muted">
-          One or two pages, print-ready, generated from the same record as the page.
+          One or two pages, print-ready, generated from the same snapshot as the page. Downloaded
+          or printed copies cannot be recalled or re-dated later.
         </p>
-        <div style={{ display: 'flex', gap: 8, marginTop: 14 }}>
-          <button type="button" className="ws-btn is-dark" disabled>
-            <Icon name="printer" size={15} />
-            Print sheet
-          </button>
-          <button type="button" className="ws-btn is-quiet" disabled>
-            <Icon name="download" size={15} />
-            PDF
-          </button>
-        </div>
-        <p className="ws-small ws-muted" style={{ marginTop: 12 }}>
-          Export arrives with the record editor. The layout above is the print target.
-        </p>
+        {live ? (
+          published ? (
+            <div style={{ display: 'flex', gap: 8, marginTop: 14, flexWrap: 'wrap' }}>
+              <a href={sheetPath ?? undefined} target="_blank" rel="noreferrer" className="ws-btn is-dark">
+                <Icon name="printer" size={15} />
+                Open print-ready sheet
+              </a>
+              <a href={`${publicPath}/summary`} target="_blank" rel="noreferrer" className="ws-btn is-quiet">
+                <Icon name="view" size={15} />
+                Buyer summary
+              </a>
+            </div>
+          ) : (
+            <p className="ws-small ws-muted" style={{ marginTop: 14 }}>
+              The sheet exists only for a published page. Publish this property and it will appear
+              here.
+            </p>
+          )
+        ) : (
+          <p className="ws-small ws-muted" style={{ marginTop: 14 }}>
+            The print-ready sheet is generated from the published page, so it appears here once the
+            page is live.
+          </p>
+        )}
+        {published ? (
+          <p className="ws-small ws-muted" style={{ marginTop: 12 }}>
+            Then choose “Print” or “Save as PDF” in the browser — the print layout is the download.
+          </p>
+        ) : null}
       </Card>
     </div>
   );
@@ -680,7 +683,7 @@ export default function PropertyDetail({ id, property: provided = null, initialT
       {tab === 'details' ? <Details property={property} live={live} /> : null}
       {tab === 'media' ? <Media property={property} live={live} /> : null}
       {tab === 'copy' ? <CopyAssets property={property} live={live} /> : null}
-      {tab === 'sheet' ? <DealSheet property={property} /> : null}
+      {tab === 'sheet' ? <DealSheet property={property} live={live} publicPath={publicPath} /> : null}
       {tab === 'public' ? <PublicPage property={property} live={live} publicPath={publicPath} /> : null}
       {tab === 'activity' ? <ActivityTab property={property} live={live} /> : null}
     </>
