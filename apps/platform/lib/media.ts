@@ -1,6 +1,6 @@
-import { and, eq } from 'drizzle-orm';
+import { and, eq, isNotNull, or } from 'drizzle-orm';
 import { databaseConfigured, withPublicDb } from './db/tenant';
-import { properties, propertyMedia } from '../db/schema';
+import { professionalProfiles, properties, propertyMedia } from '../db/schema';
 import { filesReleased } from './publication/visibility';
 
 /**
@@ -56,7 +56,29 @@ export async function authoriseMediaRequest(storageKey: string): Promise<MediaDe
   );
 
   const row = rows[0];
-  if (!row) return { allowed: false, reason: 'not_found' };
+  if (!row) {
+    // Not a property file. It may be a published profile's logo or cover — those are released
+    // the same way the page is: only while the site itself is published.
+    const profileRows = await withPublicDb(async (tx) =>
+      tx
+        .select({ id: professionalProfiles.id })
+        .from(professionalProfiles)
+        .where(
+          and(
+            or(
+              eq(professionalProfiles.logoKey, storageKey),
+              eq(professionalProfiles.coverKey, storageKey),
+            ),
+            isNotNull(professionalProfiles.publishedAt),
+          ),
+        )
+        .limit(1),
+    );
+    if (profileRows.length === 0) return { allowed: false, reason: 'not_found' };
+    const contentType = contentTypeFor(storageKey);
+    if (!contentType) return { allowed: false, reason: 'not_found' };
+    return { allowed: true, key: storageKey, contentType };
+  }
   // The page gate decides first: an unpublished property releases no files at all.
   if (!filesReleased({ publicationStatus: row.status, showOnPortfolio: true })) {
     return { allowed: false, reason: 'unpublished' };

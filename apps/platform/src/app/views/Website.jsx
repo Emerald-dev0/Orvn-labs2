@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Icon } from '../icons';
 import { PageHead, Card, EmptyState } from '../ui';
 import { updateProfile, unpublishSite } from '../../../lib/actions/site';
+import SiteImageSlot from '../SiteImageSlot';
 import { workspace, properties } from '../data';
 
 function Field({ label, name, value, hint, type = 'text', required = false, disabled = false }) {
@@ -222,6 +223,30 @@ export default function Website({ empty = false, data = null, sample = false }) 
                   ) : null}
                 </div>
               ) : null}
+            </Card>
+
+            <Card>
+              <div className="ws-section-head">
+                <h2>Brand</h2>
+                <span className="ws-small ws-muted">Shown on the public page</span>
+              </div>
+              <div style={{ display: 'grid', gap: 16 }}>
+                <SiteImageSlot
+                  kind="logo"
+                  label="Logo mark"
+                  note="Square-ish image; small mark next to your name."
+                  currentKey={profile?.logoKey ?? null}
+                  published={isLive}
+                />
+                <div className="ws-divider" style={{ margin: 0 }} />
+                <SiteImageSlot
+                  kind="cover"
+                  label="Cover image"
+                  note="Wide image; the hero of your public page."
+                  currentKey={profile?.coverKey ?? null}
+                  published={isLive}
+                />
+              </div>
             </Card>
           </div>
         </div>

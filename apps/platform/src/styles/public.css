@@ -59,7 +59,9 @@
   font-size: 13px;
   font-weight: 700;
   letter-spacing: -0.02em;
+  overflow: hidden;
 }
+.pub-mark img { width: 100%; height: 100%; object-fit: cover; }
 
 .pub-bar-link {
   font-size: 13.5px;
