@@ -2,7 +2,7 @@
 
 import { useActionState, useEffect, useMemo, useState } from 'react';
 import { Icon } from './icons';
-import { acceptExtractionAction, extractNotesAction } from '../../lib/actions/extraction';
+import { acceptExtractionAction, extractNotesAction, extractFileAction } from '../../lib/actions/extraction';
 import { extractionKeyLabel } from '../../lib/ai/extract';
 
 /**
@@ -17,13 +17,16 @@ import { extractionKeyLabel } from '../../lib/ai/extract';
  */
 export default function ExtractPanel({ propertyId }) {
   const [state, extract, extracting] = useActionState(extractNotesAction, { status: 'idle' });
+  const [fileState, extractFile, extractingFile] = useActionState(extractFileAction, { status: 'idle' });
   const [acceptState, accept, accepting] = useActionState(acceptExtractionAction, { status: 'idle' });
   const [checked, setChecked] = useState({});
   const [decisions, setDecisions] = useState({});
 
-  const candidates = state.status === 'ok' ? state.candidates ?? [] : [];
-  const comparisons = state.status === 'ok' ? state.comparisons ?? [] : [];
-  const notes = state.status === 'ok' ? state.notes ?? '' : '';
+  // Either source (pasted notes or an uploaded PDF) fills the same review list.
+  const sourceState = fileState.status === 'ok' ? fileState : state;
+  const candidates = sourceState.status === 'ok' ? sourceState.candidates ?? [] : [];
+  const comparisons = sourceState.status === 'ok' ? sourceState.comparisons ?? [] : [];
+  const notes = sourceState.status === 'ok' ? sourceState.notes ?? '' : '';
 
   // compareWithCurrent maps over the candidates in order, so comparison index === candidate index.
   const comparisonFor = (index) => comparisons[index] ?? null;
@@ -64,15 +67,62 @@ export default function ExtractPanel({ propertyId }) {
   return (
     <div style={{ display: 'grid', gap: 12, marginTop: 12 }}>
       <div className="ws-section-head" style={{ marginBottom: 0 }}>
-        <h2>Extract from notes</h2>
-        <span className="ws-small ws-muted">Paste first · documents next</span>
+        <h2>Extract from notes or a PDF</h2>
+        <span className="ws-small ws-muted">Paste text · or upload a brochure PDF</span>
       </div>
 
       <p className="ws-small ws-muted" style={{ margin: 0 }}>
-        Paste whatever you have — a seller text, a broker email, your own notes. The service proposes
-        facts with the exact line each came from. It never follows instructions hidden in the notes,
-        never fills in what is not stated, and saves nothing until you accept.
+        Paste whatever you have — a seller text, a broker email, your own notes — or upload a PDF
+        brochure from the seller. The service proposes facts with the exact line each came from.
+        It never follows instructions hidden in the text, never fills in what is not stated, and
+        saves nothing until you accept.
       </p>
+
+      <form action={extractFile} style={{ display: 'grid', gap: 10 }}>
+        <input type="hidden" name="propertyId" value={propertyId} />
+        <label
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 10,
+            padding: '10px 14px',
+            borderRadius: 12,
+            border: '1px dashed var(--line-2)',
+            background: 'var(--bone)',
+            cursor: 'pointer',
+          }}
+        >
+          <Icon name="file" size={18} />
+          <span className="ws-small" style={{ fontWeight: 600 }}>
+            {extractingFile ? 'Reading the PDF…' : 'Upload a PDF to extract from'}
+          </span>
+          <input
+            type="file"
+            name="file"
+            accept="application/pdf"
+            required
+            style={{ marginLeft: 'auto', maxWidth: 220, fontSize: 12 }}
+            aria-label="PDF file to extract facts from"
+          />
+        </label>
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+          <button type="submit" className="ws-btn is-dark is-sm" disabled={extractingFile}>
+            <Icon name="magic" size={15} />
+            {extractingFile ? 'Extracting…' : 'Extract facts from PDF'}
+          </button>
+          <span className="ws-small ws-muted">Documents go to the drafting service as text; the record is untouched until you accept.</span>
+        </div>
+      </form>
+
+      {fileState.status === 'error' ? (
+        <div className="ws-callout is-warn" role="alert">
+          <Icon name="alert" size={16} />
+          <div>
+            <strong>Nothing extracted</strong>
+            <p>{fileState.message}</p>
+          </div>
+        </div>
+      ) : null}
 
       <form action={extract} style={{ display: 'grid', gap: 10 }}>
         <input type="hidden" name="propertyId" value={propertyId} />
