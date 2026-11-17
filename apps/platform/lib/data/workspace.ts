@@ -563,7 +563,7 @@ export async function getAnalytics(userId: string, workspaceId: string, days = 3
   return withUserDb(userId, async (tx) => {
     const since = new Date(Date.now() - days * 86_400_000);
 
-    const [eventRows, cards, countRows] = await Promise.all([
+    const [eventRows, cards, countRows, sheetRows] = await Promise.all([
       tx
         .select({
           propertyId: analyticsEvents.propertyId,
@@ -585,6 +585,17 @@ export async function getAnalytics(userId: string, workspaceId: string, days = 3
         .select({ total: sql<number>`count(*)::int` })
         .from(inquiries)
         .where(and(eq(inquiries.workspaceId, workspaceId), gte(inquiries.createdAt, since))),
+      tx
+        .select({ total: sql<number>`count(*)::int` })
+        .from(analyticsEvents)
+        .where(
+          and(
+            eq(analyticsEvents.workspaceId, workspaceId),
+            eq(analyticsEvents.type, 'sheet_open'),
+            eq(analyticsEvents.isBot, false),
+            gte(analyticsEvents.createdAt, since),
+          ),
+        ),
     ]);
 
     const dayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -621,6 +632,7 @@ export async function getAnalytics(userId: string, workspaceId: string, days = 3
       totals: {
         views: totalViews,
         inquiries: Number(countRows[0]?.total ?? 0),
+        sheetOpens: Number(sheetRows[0]?.total ?? 0),
         published: cards.filter((card) => card.status === 'published').length,
       },
       series: [...seriesMap.values()],

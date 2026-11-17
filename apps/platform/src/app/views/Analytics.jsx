@@ -105,6 +105,7 @@ export default function Analytics({ empty = false, data = null, sample = false }
   const statCards = [
     { label: 'Page opens', value: totals.views.toLocaleString('en-GB'), delta: '', trend: 'flat', note: 'last 30 days' },
     { label: 'Inquiries', value: String(totals.inquiries), delta: '', trend: 'flat', note: 'last 30 days' },
+    { label: 'Deal sheet opens', value: String(totals.sheetOpens ?? 0), delta: '', trend: 'flat', note: 'print-ready sheet, last 30 days' },
     { label: 'Published', value: String(totals.published), delta: '', trend: 'flat', note: 'properties live' },
   ];
 

@@ -37,7 +37,10 @@ export async function visitorHash(
   return hashKey([ip, userAgent ?? '', dayBucket(now)], salt);
 }
 
-export async function recordPropertyView(input: {
+export type AnalyticsEventType = 'property_view' | 'sheet_open';
+
+export async function recordPropertyEvent(input: {
+  type: AnalyticsEventType;
   username: string;
   slug: string;
   visitorHash: string | null;
@@ -57,10 +60,20 @@ export async function recordPropertyView(input: {
     await tx.insert(analyticsEvents).values({
       workspaceId: property.workspaceId,
       propertyId: property.id,
-      type: 'property_view',
+      type: input.type,
       visitorHash: input.visitorHash,
       referrer: input.referrer,
       isBot: input.isBot,
     });
   });
+}
+
+export async function recordPropertyView(input: {
+  username: string;
+  slug: string;
+  visitorHash: string | null;
+  referrer: string | null;
+  isBot: boolean;
+}): Promise<void> {
+  return recordPropertyEvent({ ...input, type: 'property_view' });
 }
