@@ -21,7 +21,8 @@
  * connection can land on a different backend mid-transaction. Falls back to
  * DATABASE_URL with a note. Never prints the string itself.
  */
-import './load-env.mjs';
+import { loadEnv } from './load-env.mjs';
+loadEnv();
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';

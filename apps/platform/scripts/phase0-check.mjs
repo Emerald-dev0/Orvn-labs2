@@ -9,7 +9,8 @@
  * database items. Prints pass / FAIL / manual for each item. Exit code 1 if anything fails.
  * Manual items need a person: they live in dashboards or inboxes no script can see.
  */
-import './load-env.mjs';
+import { loadEnv } from './load-env.mjs';
+loadEnv();
 import { readFileSync, readdirSync } from 'node:fs';
 import { resolve, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';

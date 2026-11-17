@@ -10,7 +10,11 @@ import { z } from 'zod';
  * - Parsing is lazy and cached, so `next build` can compile without a database.
  */
 
-const optionalString = z.string().trim().min(1).optional();
+/** An empty value in .env.local (as .env.example ships) means "not configured", same as absent. */
+const optionalString = z.preprocess(
+  (value) => (typeof value === 'string' && value.trim() === '' ? undefined : value),
+  z.string().trim().min(1).optional(),
+);
 
 const schema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),

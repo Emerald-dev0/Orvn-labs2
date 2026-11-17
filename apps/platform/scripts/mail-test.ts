@@ -14,7 +14,8 @@
  * here: send yourself something at hello@orvnlabs.com from a phone.
  */
 import { randomUUID } from 'node:crypto';
-import '../scripts/load-env.mjs';
+import { loadEnv } from '../scripts/load-env.mjs';
+loadEnv();
 import { EmailError, sendEmail } from '../lib/email';
 
 function arg(name: string): string | undefined {
