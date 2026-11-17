@@ -2,7 +2,7 @@
 
 import { useActionState, useState } from 'react';
 import { Icon } from './icons';
-import { setMediaVisibility, setCoverMedia, removeMedia } from '../../lib/actions/media';
+import { setMediaVisibility, setCoverMedia, removeMedia, moveMedia } from '../../lib/actions/media';
 import { SIZES, THUMB_WIDTH, aspectRatio, mediaUrl, srcSetFor } from '../../lib/images';
 
 /**
@@ -12,17 +12,18 @@ import { SIZES, THUMB_WIDTH, aspectRatio, mediaUrl, srcSetFor } from '../../lib/
  * optimistic flip: nothing changes on screen until the server agrees. Removing a file
  * confirms first, because a removed photo cannot be brought back.
  */
-export default function MediaTile({ item, propertyId }) {
+export default function MediaTile({ item, propertyId, position = 0, total = 1 }) {
   const [visibilityState, toggleVisibility, visibilityPending] = useActionState(setMediaVisibility, {
     status: 'idle',
   });
   const [coverState, makeCover, coverPending] = useActionState(setCoverMedia, { status: 'idle' });
   const [removeState, remove, removePending] = useActionState(removeMedia, { status: 'idle' });
+  const [moveState, move, movePending] = useActionState(moveMedia, { status: 'idle' });
   const [confirming, setConfirming] = useState(false);
 
   const isPublic = item.visibility === 'public';
-  const error = [visibilityState, coverState, removeState].find((s) => s.status === 'error');
-  const pending = visibilityPending || coverPending || removePending;
+  const error = [visibilityState, coverState, removeState, moveState].find((s) => s.status === 'error');
+  const pending = visibilityPending || coverPending || removePending || movePending;
 
   return (
     <div className="ws-media-cell">
@@ -54,6 +55,28 @@ export default function MediaTile({ item, propertyId }) {
               {coverPending ? 'Setting…' : 'Set as cover'}
             </button>
           </form>
+        ) : null}
+        {total > 1 ? (
+          <>
+            <form action={move}>
+              <input type="hidden" name="mediaId" value={item.id} />
+              <input type="hidden" name="propertyId" value={propertyId} />
+              <input type="hidden" name="direction" value="up" />
+              <button type="submit" className="ws-media-btn" disabled={pending || position === 0} title="Move earlier">
+                <Icon name="arrowLeft" size={13} />
+                Earlier
+              </button>
+            </form>
+            <form action={move}>
+              <input type="hidden" name="mediaId" value={item.id} />
+              <input type="hidden" name="propertyId" value={propertyId} />
+              <input type="hidden" name="direction" value="down" />
+              <button type="submit" className="ws-media-btn" disabled={pending || position === total - 1} title="Move later">
+                Later
+                <Icon name="arrowRight" size={13} />
+              </button>
+            </form>
+          </>
         ) : null}
         <form action={toggleVisibility}>
           <input type="hidden" name="mediaId" value={item.id} />

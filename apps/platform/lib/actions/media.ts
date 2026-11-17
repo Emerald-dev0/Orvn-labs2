@@ -1,7 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { and, eq, sql } from 'drizzle-orm';
+import { and, asc, eq, sql } from 'drizzle-orm';
 import { requireEditor } from '../access';
 import { withUserDb } from '../db/tenant';
 import { properties, propertyMedia } from '../../db/schema';
@@ -265,6 +265,67 @@ export async function setMediaVisibility(_previous: ActionState, formData: FormD
 
   revalidatePath(`/properties/${propertyId}`);
   return { status: 'ok', message: makePublic ? 'Now public.' : 'Now private.' };
+}
+
+/**
+ * Reorder media one step. The buyer-facing page and the deal sheet both render by sortOrder,
+ * so this is the order buyers actually see. Buttons move a file by one slot; the whole list is
+ * re-numbered so gaps and duplicates from earlier swaps cannot accumulate.
+ */
+export async function moveMedia(_previous: ActionState, formData: FormData): Promise<ActionState> {
+  const { viewer, workspace } = await requireEditor();
+  const mediaId = text(formData, 'mediaId');
+  const propertyId = text(formData, 'propertyId');
+  const direction = text(formData, 'direction');
+
+  if (!mediaId || !propertyId) return { status: 'error', message: 'Unknown file.' };
+  if (direction !== 'up' && direction !== 'down') return { status: 'error', message: 'Unknown move.' };
+
+  let atEdge = false;
+  let missing = false;
+  await withUserDb(viewer.userId, async (tx) => {
+    const rows = await tx
+      .select({ id: propertyMedia.id })
+      .from(propertyMedia)
+      .where(eq(propertyMedia.propertyId, propertyId))
+      .orderBy(asc(propertyMedia.sortOrder), asc(propertyMedia.createdAt));
+
+    // Cross-workspace guesses land here: RLS means the rows are already invisible, so an empty
+    // list is indistinguishable from a wrong propertyId, and that is the right answer.
+    if (rows.length === 0) { missing = true; return; }
+
+    const index = rows.findIndex((row) => row.id === mediaId);
+    if (index === -1) { missing = true; return; }
+
+    const target = direction === 'up' ? index - 1 : index + 1;
+    if (target < 0 || target >= rows.length) { atEdge = true; return; }
+
+    const ordered = [...rows];
+    [ordered[index], ordered[target]] = [ordered[target], ordered[index]];
+    for (let i = 0; i < ordered.length; i += 1) {
+      await tx
+        .update(propertyMedia)
+        .set({ sortOrder: i })
+        .where(eq(propertyMedia.id, ordered[i].id));
+    }
+
+    await recordAudit(
+      {
+        workspaceId: workspace.id,
+        actorId: viewer.userId,
+        action: 'property.media.reordered',
+        targetType: 'property',
+        targetId: propertyId,
+        metadata: { from: index, to: target },
+      },
+      tx,
+    );
+  });
+
+  if (missing) return { status: 'error', message: 'That file is not in this workspace.' };
+  if (atEdge) return { status: 'ok', message: direction === 'up' ? 'Already first.' : 'Already last.' };
+  revalidatePath(`/properties/${propertyId}`);
+  return { status: 'ok', message: direction === 'up' ? 'Moved earlier.' : 'Moved later.' };
 }
 
 export async function setCoverMedia(_previous: ActionState, formData: FormData): Promise<ActionState> {
