@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { Icon } from './icons';
 import { Avatar } from './ui';
 import { workspace } from './data';
+import { authClient } from '../../lib/auth-client';
 
 const NAV = [
   { href: '/dashboard', label: 'Overview', icon: 'dashboard' },
@@ -106,9 +107,20 @@ export default function AppShell({ children, workspace: ws = workspace, unread =
               <strong>{ws.owner.name}</strong>
               <em>{ws.plan}</em>
             </span>
-            <button type="button" className="ws-icon-btn" aria-label="Account menu">
-              <Icon name="more" size={18} strokeWidth={1.8} />
-            </button>
+            {!demo ? (
+              <button
+                type="button"
+                className="ws-icon-btn"
+                aria-label="Sign out"
+                title="Sign out"
+                onClick={async () => {
+                  await authClient.signOut();
+                  window.location.href = '/sign-in';
+                }}
+              >
+                <Icon name="logOut" size={18} strokeWidth={1.8} />
+              </button>
+            ) : null}
           </div>
         </div>
 

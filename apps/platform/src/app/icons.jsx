@@ -87,6 +87,7 @@ const ICONS = {
   alert: Alert02Icon,
   info: InformationCircleIcon,
   help: HelpCircleIcon,
+  logOut: Logout01Icon,
 
   upload: Upload01Icon,
   image: Image01Icon,
@@ -118,7 +119,6 @@ const ICONS = {
   mail: Mail01Icon,
   magic: AiMagicIcon,
   user: UserIcon,
-  logout: Logout01Icon,
 };
 
 export function Icon({ name, size = 18, strokeWidth = 1.6, className, color = 'currentColor' }) {
