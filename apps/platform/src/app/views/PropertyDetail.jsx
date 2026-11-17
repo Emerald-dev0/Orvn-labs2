@@ -12,6 +12,7 @@ import MediaTile from '../MediaTile';
 import { properties, activity } from '../data';
 import { updateLocation } from '../../../lib/actions/properties';
 import ExtractPanel from '../ExtractPanel';
+import FactControls from '../FactControls';
 
 const DISCLOSURE_LABEL = {
   exact: 'Exact address',
@@ -258,20 +259,34 @@ function LocationPanel({ property }) {
 function Details({ property, live = false }) {
   return (
     <>
-    <Card>
-      <div className="ws-section-head">
-        <h2>Approved fields</h2>
-        <span className="ws-small ws-muted">Source and approval are stored per value</span>
-      </div>
-      <div className="ws-facts">
-        {property.facts.map((f) => (
-          <FactRow key={`${f.key}-${f.source}`} fact={f} />
-        ))}
-      </div>
-      <p className="ws-small ws-muted" style={{ marginTop: 14 }}>
-        A blank field stays blank. It is never rendered as “not in a flood zone” or “no restrictions”.
-      </p>
-    </Card>
+    {live ? (
+      <Card>
+        <div className="ws-section-head">
+          <h2>Fields and approval</h2>
+          <span className="ws-small ws-muted">Blank stays blank · approval before public</span>
+        </div>
+        <FactControls propertyId={property.id} facts={property.facts} />
+        <p className="ws-small ws-muted" style={{ marginTop: 14 }}>
+          A blank field stays blank. It is never rendered as “not in a flood zone” or “no restrictions”.
+          Editing an approved value drops it back to unreviewed and private.
+        </p>
+      </Card>
+    ) : (
+      <Card>
+        <div className="ws-section-head">
+          <h2>Approved fields</h2>
+          <span className="ws-small ws-muted">Source and approval are stored per value</span>
+        </div>
+        <div className="ws-facts">
+          {property.facts.map((f) => (
+            <FactRow key={`${f.key}-${f.source}`} fact={f} />
+          ))}
+        </div>
+        <p className="ws-small ws-muted" style={{ marginTop: 14 }}>
+          A blank field stays blank. It is never rendered as “not in a flood zone” or “no restrictions”.
+        </p>
+      </Card>
+    )}
     {live ? <ExtractPanel propertyId={property.id} /> : null}
     {live ? <LocationPanel property={property} /> : null}
     </>
@@ -301,8 +316,8 @@ function Media({ property, live = false }) {
 
       {live && items.length > 0 ? (
         <div className="ws-media-grid">
-          {items.map((item) => (
-            <MediaTile key={item.id} item={item} propertyId={property.id} />
+          {items.map((item, index) => (
+            <MediaTile key={item.id} item={item} propertyId={property.id} position={index} total={items.length} />
           ))}
         </div>
       ) : null}
