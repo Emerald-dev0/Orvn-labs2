@@ -58,6 +58,68 @@ async function uniqueSlug(
   return `${base}-${Date.now().toString(36)}`;
 }
 
+/** Normalised for loose comparison: only structural characters survive. */
+const normKey = (value: string): string => value.toLowerCase().replace(/[^a-z0-9]/g, '');
+
+/**
+ * Possible-duplicate hint for the create form. Deliberately weak signals — a shared APN or the
+ * exact same title in the same city — and deliberately non-blocking, per PROP-01's "suggestion,
+ * not merge". Runs over the workspace's own records only.
+ */
+export async function findPossibleDuplicates(
+  formData: FormData,
+): Promise<{ status: 'ok' | 'error'; matches: { id: string; title: string; place: string }[] }> {
+  const { viewer, workspace } = await requireEditor();
+
+  const title = normKey(String(formData.get('title') ?? ''));
+  const city = normKey(String(formData.get('city') ?? ''));
+  const apns = String(formData.get('apns') ?? '')
+    .split(/[\n,]/)
+    .map(normKey)
+    .filter(Boolean);
+  if (title.length < 4 && apns.length === 0) return { status: 'ok', matches: [] };
+
+  try {
+    return await withUserDb(viewer.userId, async (tx) => {
+      const rows = await tx
+        .select({
+          id: properties.id,
+          title: properties.title,
+          city: properties.city,
+          region: properties.region,
+        })
+        .from(properties)
+        .where(eq(properties.workspaceId, workspace.id));
+
+      const matches: { id: string; title: string; place: string }[] = [];
+      for (const row of rows) {
+        const titleMatch = title.length >= 4 && normKey(row.title) === title && (!city || normKey(row.city ?? '') === city);
+        let apnMatch = false;
+        if (apns.length > 0) {
+          const facts = await tx
+            .select({ value: propertyDetails.value })
+            .from(propertyDetails)
+            .where(and(eq(propertyDetails.propertyId, row.id), eq(propertyDetails.key, 'APN')));
+          const have = new Set(facts.map((fact) => normKey(fact.value ?? '')).filter(Boolean));
+          apnMatch = apns.some((apn) => have.has(apn));
+        }
+        if (titleMatch || apnMatch) {
+          matches.push({
+            id: row.id,
+            title: row.title,
+            place: [row.city, row.region].filter(Boolean).join(', ') || 'No place recorded',
+          });
+        }
+        if (matches.length >= 5) break;
+      }
+      return { status: 'ok' as const, matches };
+    });
+  } catch (error) {
+    console.error('[duplicate] check failed', { message: (error as Error).message });
+    return { status: 'error', matches: [] };
+  }
+}
+
 export async function createProperty(_previous: ActionState, formData: FormData): Promise<ActionState> {
   const { viewer, workspace } = await requireEditor();
 

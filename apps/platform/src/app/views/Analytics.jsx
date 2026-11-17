@@ -15,12 +15,39 @@ function PageHeadBlock({ action }) {
   );
 }
 
-function ExportButton() {
+function csvCell(value) {
+  let text = String(value ?? '');
+  // A leading =, +, - or @ is a formula to a spreadsheet; a title may legitimately start one.
+  if (/^[=+\-@]/.test(text)) text = `'${text}`;
+  return `"${text.replace(/"/g, '""')}"`;
+}
+
+/** Builds a CSV of the live numbers the person is already looking at. No server, no PII. */
+function ExportButton({ data }) {
+  if (!data) {
+    return null;
+  }
+  const { totals, byProperty, sources } = data;
+  const rows = [
+    ['metric', 'value'],
+    ['page opens (30 days)', totals.views],
+    ['inquiries (30 days)', totals.inquiries],
+    ['deal sheet opens (30 days)', totals.sheetOpens ?? 0],
+    ['published properties', totals.published],
+    [],
+    ['property', 'page opens', 'inquiries', 'conversion rate'],
+    ...byProperty.map((row) => [row.title, row.views, row.inquiries, row.rate]),
+    [],
+    ['referrer', 'percent'],
+    ...sources.map((row) => [row.label, row.percent]),
+  ];
+  const csv = rows.map((row) => row.map(csvCell).join(',')).join('\r\n');
+  const href = `data:text/csv;charset=utf-8,${encodeURIComponent(csv)}`;
   return (
-    <button type="button" className="ws-btn is-quiet" disabled>
+    <a href={href} download="orrei-analytics.csv" className="ws-btn is-quiet">
       <Icon name="download" size={15} />
       Export
-    </button>
+    </a>
   );
 }
 
@@ -29,7 +56,7 @@ function SampleAnalytics() {
   const max = Math.max(...weeklyViews.map((d) => d.property));
   return (
     <>
-      <PageHeadBlock action={<ExportButton />} />
+      <PageHeadBlock action={null} />
       <p className="ws-small ws-muted" style={{ marginBottom: 12 }}>
         <span className="ws-mono-note">Sample data</span> — no database is connected in this preview,
         so these are illustrative numbers. They are not shown in a real account.
@@ -101,6 +128,7 @@ export default function Analytics({ empty = false, data = null, sample = false }
   }
 
   const { totals, series, byProperty, sources } = data;
+  const exportData = { totals, byProperty, sources };
   const max = Math.max(1, ...series.map((d) => d.property));
   const statCards = [
     { label: 'Page opens', value: totals.views.toLocaleString('en-GB'), delta: '', trend: 'flat', note: 'last 30 days' },
@@ -111,7 +139,7 @@ export default function Analytics({ empty = false, data = null, sample = false }
 
   return (
     <>
-      <PageHeadBlock action={<ExportButton />} />
+      <PageHeadBlock action={<ExportButton data={exportData} />} />
       <p className="ws-small ws-muted" style={{ marginBottom: 12 }}>
         Counts come from real events. Page opens are not verified buyers, and interest is not proof of purchase.
       </p>

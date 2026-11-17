@@ -4,7 +4,7 @@ import { useActionState, useState } from 'react';
 import Link from 'next/link';
 import { Icon } from '../icons';
 import { PageHead, Card } from '../ui';
-import { createProperty } from '../../../lib/actions/properties';
+import { createProperty, findPossibleDuplicates } from '../../../lib/actions/properties';
 
 // PRD D03: launch picker is vacant land and single-family only, US only.
 const TYPES = [
@@ -20,7 +20,22 @@ const TYPES = [
 export default function NewProperty({ live = false }) {
   const [type, setType] = useState('residential_land');
   const [notice, setNotice] = useState(false);
+  const [dupes, setDupes] = useState([]);
   const [state, formAction, pending] = useActionState(createProperty, { status: 'idle' });
+
+  // Non-blocking duplicate hint (PROP-01): a shared parcel number or the same title in the same
+  // city. It never merges or blocks; it offers the existing record instead of a second one.
+  async function checkDuplicates(event) {
+    if (!live) return;
+    const form = event.target.closest('form');
+    if (!form) return;
+    try {
+      const result = await findPossibleDuplicates(new FormData(form));
+      setDupes(result.status === 'ok' ? result.matches : []);
+    } catch {
+      setDupes([]); // never block creation on a failed hint
+    }
+  }
 
   const body = (
     <>
@@ -40,6 +55,7 @@ export default function NewProperty({ live = false }) {
               minLength={3}
               maxLength={160}
               placeholder="Halden House"
+              onBlur={checkDuplicates}
               style={{
                 width: '100%',
                 marginTop: 8,
@@ -130,6 +146,7 @@ export default function NewProperty({ live = false }) {
                 name="apns"
                 type="text"
                 placeholder="017-234-11, 0017"
+                onBlur={checkDuplicates}
                 style={{
                   width: '100%',
                   marginTop: 6,
@@ -206,6 +223,27 @@ export default function NewProperty({ live = false }) {
               <div>
                 <strong>Nothing was created</strong>
                 <p>{state.message}</p>
+              </div>
+            </div>
+          ) : null}
+
+          {dupes.length > 0 ? (
+            <div className="ws-callout is-warn" role="status">
+              <Icon name="alert" size={16} />
+              <div>
+                <strong>This looks like a record you already have</strong>
+                <ul style={{ margin: '6px 0 0', paddingLeft: 16 }}>
+                  {dupes.map((dupe) => (
+                    <li key={dupe.id} className="ws-small">
+                      <Link href={`/properties/${dupe.id}`}>
+                        {dupe.title} — {dupe.place}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+                <p className="ws-small ws-muted" style={{ marginTop: 6 }}>
+                  Create anyway if this is a different property — nothing merges automatically.
+                </p>
               </div>
             </div>
           ) : null}
