@@ -12,7 +12,10 @@ import {
   checkbox,
   createPropertySchema,
   factDecisionSchema,
+  factPublicSchema,
+  factRemoveSchema,
   factSchema,
+  factUpdateSchema,
   locationSchema,
   propertyIdSchema,
   text,
@@ -53,6 +56,68 @@ async function uniqueSlug(
     if (!taken.has(candidate)) return candidate;
   }
   return `${base}-${Date.now().toString(36)}`;
+}
+
+/** Normalised for loose comparison: only structural characters survive. */
+const normKey = (value: string): string => value.toLowerCase().replace(/[^a-z0-9]/g, '');
+
+/**
+ * Possible-duplicate hint for the create form. Deliberately weak signals — a shared APN or the
+ * exact same title in the same city — and deliberately non-blocking, per PROP-01's "suggestion,
+ * not merge". Runs over the workspace's own records only.
+ */
+export async function findPossibleDuplicates(
+  formData: FormData,
+): Promise<{ status: 'ok' | 'error'; matches: { id: string; title: string; place: string }[] }> {
+  const { viewer, workspace } = await requireEditor();
+
+  const title = normKey(String(formData.get('title') ?? ''));
+  const city = normKey(String(formData.get('city') ?? ''));
+  const apns = String(formData.get('apns') ?? '')
+    .split(/[\n,]/)
+    .map(normKey)
+    .filter(Boolean);
+  if (title.length < 4 && apns.length === 0) return { status: 'ok', matches: [] };
+
+  try {
+    return await withUserDb(viewer.userId, async (tx) => {
+      const rows = await tx
+        .select({
+          id: properties.id,
+          title: properties.title,
+          city: properties.city,
+          region: properties.region,
+        })
+        .from(properties)
+        .where(eq(properties.workspaceId, workspace.id));
+
+      const matches: { id: string; title: string; place: string }[] = [];
+      for (const row of rows) {
+        const titleMatch = title.length >= 4 && normKey(row.title) === title && (!city || normKey(row.city ?? '') === city);
+        let apnMatch = false;
+        if (apns.length > 0) {
+          const facts = await tx
+            .select({ value: propertyDetails.value })
+            .from(propertyDetails)
+            .where(and(eq(propertyDetails.propertyId, row.id), eq(propertyDetails.key, 'APN')));
+          const have = new Set(facts.map((fact) => normKey(fact.value ?? '')).filter(Boolean));
+          apnMatch = apns.some((apn) => have.has(apn));
+        }
+        if (titleMatch || apnMatch) {
+          matches.push({
+            id: row.id,
+            title: row.title,
+            place: [row.city, row.region].filter(Boolean).join(', ') || 'No place recorded',
+          });
+        }
+        if (matches.length >= 5) break;
+      }
+      return { status: 'ok' as const, matches };
+    });
+  } catch (error) {
+    console.error('[duplicate] check failed', { message: (error as Error).message });
+    return { status: 'error', matches: [] };
+  }
 }
 
 export async function createProperty(_previous: ActionState, formData: FormData): Promise<ActionState> {
@@ -375,6 +440,167 @@ export async function decideFact(_previous: ActionState, formData: FormData): Pr
 
   revalidatePath(`/properties/${propertyId}`);
   return { status: 'ok', message: 'Decision recorded.' };
+}
+
+/**
+ * Manual fact editing. Three small actions, deliberately separate:
+ * editing a value, flipping public visibility, removing a row. An edit to an approved fact drops
+ * it back to unreviewed and private, because what was approved was the old value.
+ */
+export async function updateFact(_previous: ActionState, formData: FormData): Promise<ActionState> {
+  const { viewer, workspace } = await requireEditor();
+  const parsed = factUpdateSchema.safeParse({
+    propertyId: text(formData, 'propertyId'),
+    factId: text(formData, 'factId'),
+    value: text(formData, 'value'),
+  });
+  if (!parsed.success) return { status: 'error', message: 'The value must be 400 characters or fewer.' };
+  const { propertyId, factId, value } = parsed.data;
+
+  let missing = false;
+  await withUserDb(viewer.userId, async (tx) => {
+    const owned = await tx
+      .select({ id: properties.id })
+      .from(properties)
+      .where(and(eq(properties.id, propertyId), eq(properties.workspaceId, workspace.id)))
+      .limit(1);
+    if (owned.length === 0) { missing = true; return; }
+
+    const [fact] = await tx
+      .select({ state: propertyDetails.approvalState })
+      .from(propertyDetails)
+      .where(and(eq(propertyDetails.id, factId), eq(propertyDetails.propertyId, propertyId)))
+      .limit(1);
+    const wasApproved = fact?.state === 'approved';
+
+    await tx
+      .update(propertyDetails)
+      .set({
+        value: value || null,
+        approvalState: wasApproved ? 'unreviewed' : (fact?.state ?? 'unreviewed'),
+        isPublic: wasApproved ? false : undefined,
+        updatedAt: new Date(),
+      })
+      .where(and(eq(propertyDetails.id, factId), eq(propertyDetails.propertyId, propertyId)));
+
+    await tx
+      .update(properties)
+      .set({ updatedAt: new Date() })
+      .where(and(eq(properties.id, propertyId), eq(properties.workspaceId, workspace.id)));
+
+    await recordAudit(
+      {
+        workspaceId: workspace.id,
+        actorId: viewer.userId,
+        action: 'property.fact.updated',
+        targetType: 'property',
+        targetId: propertyId,
+        metadata: { resetApproval: wasApproved },
+      },
+      tx,
+    );
+  });
+
+  if (missing) return { status: 'error', message: 'That property is not in this workspace.' };
+  revalidatePath(`/properties/${propertyId}`);
+  return { status: 'ok', message: 'Field updated. Approval resets when an approved value changes.' };
+}
+
+export async function setFactPublic(_previous: ActionState, formData: FormData): Promise<ActionState> {
+  const { viewer, workspace } = await requireEditor();
+  const parsed = factPublicSchema.safeParse({
+    propertyId: text(formData, 'propertyId'),
+    factId: text(formData, 'factId'),
+    isPublic: checkbox(formData, 'isPublic'),
+  });
+  if (!parsed.success) return { status: 'error', message: 'Unknown field.' };
+  const { propertyId, factId, isPublic } = parsed.data;
+
+  let blocked: string | null = null;
+  let missing = false;
+  await withUserDb(viewer.userId, async (tx) => {
+    const owned = await tx
+      .select({ id: properties.id })
+      .from(properties)
+      .where(and(eq(properties.id, propertyId), eq(properties.workspaceId, workspace.id)))
+      .limit(1);
+    if (owned.length === 0) { missing = true; return; }
+
+    const [fact] = await tx
+      .select({ state: propertyDetails.approvalState })
+      .from(propertyDetails)
+      .where(and(eq(propertyDetails.id, factId), eq(propertyDetails.propertyId, propertyId)))
+      .limit(1);
+
+    if (isPublic && fact?.state !== 'approved') {
+      blocked = 'Approve this fact before making it public.';
+      return;
+    }
+
+    await tx
+      .update(propertyDetails)
+      .set({ isPublic, updatedAt: new Date() })
+      .where(and(eq(propertyDetails.id, factId), eq(propertyDetails.propertyId, propertyId)));
+
+    await recordAudit(
+      {
+        workspaceId: workspace.id,
+        actorId: viewer.userId,
+        action: isPublic ? 'property.fact.made_public' : 'property.fact.made_private',
+        targetType: 'property',
+        targetId: propertyId,
+      },
+      tx,
+    );
+  });
+
+  if (missing) return { status: 'error', message: 'That property is not in this workspace.' };
+  if (blocked) return { status: 'error', message: blocked };
+  revalidatePath(`/properties/${propertyId}`);
+  return { status: 'ok', message: isPublic ? 'Now public.' : 'Now private.' };
+}
+
+export async function removeFact(_previous: ActionState, formData: FormData): Promise<ActionState> {
+  const { viewer, workspace } = await requireEditor();
+  const parsed = factRemoveSchema.safeParse({
+    propertyId: text(formData, 'propertyId'),
+    factId: text(formData, 'factId'),
+  });
+  if (!parsed.success) return { status: 'error', message: 'Unknown field.' };
+  const { propertyId, factId } = parsed.data;
+
+  let removed = false;
+  await withUserDb(viewer.userId, async (tx) => {
+    const owned = await tx
+      .select({ id: properties.id })
+      .from(properties)
+      .where(and(eq(properties.id, propertyId), eq(properties.workspaceId, workspace.id)))
+      .limit(1);
+    if (owned.length === 0) return;
+
+    const gone = await tx
+      .delete(propertyDetails)
+      .where(and(eq(propertyDetails.id, factId), eq(propertyDetails.propertyId, propertyId)))
+      .returning({ id: propertyDetails.id });
+    removed = gone.length > 0;
+
+    if (removed) {
+      await recordAudit(
+        {
+          workspaceId: workspace.id,
+          actorId: viewer.userId,
+          action: 'property.fact.removed',
+          targetType: 'property',
+          targetId: propertyId,
+        },
+        tx,
+      );
+    }
+  });
+
+  if (!removed) return { status: 'error', message: 'That field is already gone.' };
+  revalidatePath(`/properties/${propertyId}`);
+  return { status: 'ok', message: 'Field removed.' };
 }
 
 export async function attestRights(_previous: ActionState, formData: FormData): Promise<ActionState> {

@@ -58,7 +58,11 @@ export default async function PublicSitePage({ params }) {
         <div className="pub-wrap pub-bar-inner">
           <Link href={`/w/${site.username}`} className="pub-brand">
             <span className="pub-mark" aria-hidden="true">
-              {initials(site.businessName) || 'L'}
+              {site.logoKey ? (
+                <img src={mediaUrl(site.logoKey, { width: 480 })} alt="" />
+              ) : (
+                initials(site.businessName) || 'L'
+              )}
             </span>
             {site.businessName}
           </Link>

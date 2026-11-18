@@ -9,7 +9,8 @@
  * must hold for that first sign-in to work, and tells you what happens next. It never creates
  * or stores a password, and there is no default anywhere in the project.
  */
-import '../scripts/load-env.mjs';
+import { loadEnv } from '../scripts/load-env.mjs';
+loadEnv();
 
 function arg(name: string): string | undefined {
   const index = process.argv.indexOf(name);

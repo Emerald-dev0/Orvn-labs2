@@ -9,7 +9,8 @@
  * console: did the migrations land, do the two application roles exist, does the
  * connecting user own them, and is row level security actually switched on.
  */
-import './load-env.mjs';
+import { loadEnv } from './load-env.mjs';
+loadEnv();
 import { Pool, neonConfig } from '@neondatabase/serverless';
 import WebSocket from 'ws';
 

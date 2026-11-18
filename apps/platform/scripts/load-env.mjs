@@ -51,4 +51,6 @@ export function loadEnv(dir = process.cwd()) {
   return loaded;
 }
 
-loadEnv();
+if (process.argv[1] && import.meta.url === `file://${process.argv[1]}`) {
+  loadEnv();
+}

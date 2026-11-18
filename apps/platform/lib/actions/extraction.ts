@@ -36,7 +36,9 @@ import {
   snippetInSource,
   type Comparison,
 } from '../ai/extract';
+import { extractText } from 'unpdf';
 import { complete, draftingConfigured } from '../ai/groq';
+import { detectType, MAX_DOCUMENT_BYTES } from '../uploads';
 import type { ActionState, ExtractionState } from './types';
 
 const propertyIdSchema = z.string().regex(/^[0-9a-f-]{36}$/i);
@@ -100,6 +102,17 @@ export async function extractNotesAction(
   );
   if (!current) return { status: 'error', message: 'Unknown property.' };
 
+  return runExtraction(notes, current);
+}
+
+/**
+ * Shared tail of the extraction actions: call the model, hard-validate the answer against the
+ * source text, and return the proposals. Nothing is written here.
+ */
+async function runExtraction(
+  notes: string,
+  current: { key: string; value: string; state: string }[],
+): Promise<ExtractionState> {
   if (!draftingConfigured()) {
     return {
       status: 'error',
@@ -117,15 +130,14 @@ export async function extractNotesAction(
   }
 
   const { candidates, problems } = parseExtractionOutput(result.text ?? '', notes);
-  const comparisons = compareWithCurrent(candidates, current);
-
   if (candidates.length === 0) {
     return {
       status: 'error',
-      message: problems[0]?.message ?? 'Nothing could be extracted from those notes. You can continue entering details manually.',
+      message: problems[0]?.message ?? 'Nothing could be extracted from that source. You can continue entering details manually.',
     };
   }
 
+  const comparisons = compareWithCurrent(candidates, current);
   return {
     status: 'ok',
     message: `${candidates.length} ${candidates.length === 1 ? 'fact' : 'facts'} proposed. Nothing is saved until you accept.`,
@@ -133,6 +145,63 @@ export async function extractNotesAction(
     comparisons,
     notes,
   };
+}
+
+/**
+ * Extract from a PDF document instead of pasted notes — for when the source is a brochure or a
+ * comparable-sales sheet rather than a seller text. The text is extracted on the server, treated
+ * as data (never as instructions), and passed through the same allowlist and snippet checks as
+ * pasted notes. Scanned PDFs with no text layer fail honestly rather than guessing.
+ */
+export async function extractFileAction(
+  _previous: ExtractionState,
+  formData: FormData,
+): Promise<ExtractionState> {
+  const { viewer, workspace } = await requireEditor();
+
+  const propertyId = String(formData.get('propertyId') ?? '');
+  if (!propertyIdSchema.safeParse(propertyId).success) {
+    return { status: 'error', message: 'Unknown property.' };
+  }
+
+  const file = formData.get('file');
+  if (!(file instanceof File) || file.size === 0) {
+    return { status: 'error', message: 'Choose a PDF first.' };
+  }
+  if (file.size > MAX_DOCUMENT_BYTES) {
+    return { status: 'error', message: 'That PDF is over 25 MB. Export a smaller copy and try again.' };
+  }
+
+  const bytes = new Uint8Array(await file.arrayBuffer());
+  if (detectType(bytes) !== 'application/pdf') {
+    return { status: 'error', message: 'That file is not a PDF. Save or export the document as PDF and try again.' };
+  }
+
+  let text = '';
+  try {
+    const extracted = await extractText(bytes, { mergePages: true });
+    text = (extracted.text ?? '').trim();
+  } catch (error) {
+    console.error('[extract] pdf parse failed', { message: (error as Error).message });
+    return { status: 'error', message: 'That PDF could not be read. If it is a scan with no text layer, paste the text instead.' };
+  }
+  if (!text) {
+    return { status: 'error', message: 'That PDF has no readable text. If it is a scan, paste the text instead.' };
+  }
+
+  const truncated = text.length > EXTRACT_MAX_CHARS;
+  const notes = truncated ? text.slice(0, EXTRACT_MAX_CHARS) : text;
+
+  const current = await withUserDb(viewer.userId, (tx) =>
+    loadCurrentFacts(tx, propertyId, workspace.id),
+  );
+  if (!current) return { status: 'error', message: 'Unknown property.' };
+
+  const state = await runExtraction(notes, current);
+  if (state.status === 'ok' && truncated) {
+    state.message = `${state.message} Only the first ${EXTRACT_MAX_CHARS.toLocaleString()} characters were read.`;
+  }
+  return state;
 }
 
 export async function acceptExtractionAction(

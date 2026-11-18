@@ -18,5 +18,5 @@ export default async function Page({ searchParams }) {
   }
 
   const items = await listInquiryCards(context.viewer.userId, context.workspace.id);
-  return <Inquiries empty={params?.state === 'empty'} items={items} />;
+  return <Inquiries empty={params?.state === 'empty'} items={items} live />;
 }

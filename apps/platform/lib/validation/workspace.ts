@@ -67,6 +67,23 @@ export const factDecisionSchema = z.object({
   decision: z.enum(['approved', 'rejected', 'unknown', 'reset']),
 });
 
+export const factUpdateSchema = z.object({
+  propertyId: z.string().uuid(),
+  factId: z.string().uuid(),
+  value: z.string().trim().max(400),
+});
+
+export const factPublicSchema = z.object({
+  propertyId: z.string().uuid(),
+  factId: z.string().uuid(),
+  isPublic: z.boolean().default(false),
+});
+
+export const factRemoveSchema = z.object({
+  propertyId: z.string().uuid(),
+  factId: z.string().uuid(),
+});
+
 export const visibilitySchema = z.object({
   propertyId: z.string().uuid(),
   visibility: z.enum(VISIBILITIES),

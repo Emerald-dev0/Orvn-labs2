@@ -1,12 +1,16 @@
 'use client';
 
-import { useState } from 'react';
+import { useActionState, useState } from 'react';
 import { Icon } from '../icons';
 import { PageHead, Card, EmptyState } from '../ui';
 import { inquiries } from '../data';
+import { setInquiryStatus } from '../../../lib/actions/inquiries';
 
-export default function Inquiries({ empty = false, items: provided = inquiries }) {
+const STATUS_LABEL = { new: 'New', read: 'Read', archived: 'Archived' };
+
+export default function Inquiries({ empty = false, items: provided = inquiries, live = false }) {
   const [selectedId, setSelectedId] = useState(provided[0]?.id);
+  const [statusState, setStatus, statusPending] = useActionState(setInquiryStatus, { status: 'idle' });
   const items = empty ? [] : provided;
   const selected = items.find((i) => i.id === selectedId) ?? items[0];
 
@@ -62,7 +66,7 @@ export default function Inquiries({ empty = false, items: provided = inquiries }
               <h2>{selected.property}</h2>
               <span className={`ws-status ${selected.status === 'new' ? 'is-live' : 'is-muted'}`}>
                 <span className="ws-status-dot" />
-                {selected.status === 'new' ? 'New' : 'Read'}
+                {STATUS_LABEL[selected.status] ?? selected.status}
               </span>
             </div>
 
@@ -98,9 +102,34 @@ export default function Inquiries({ empty = false, items: provided = inquiries }
                 <Icon name="mail" size={16} />
                 Reply by email
               </a>
-              <button type="button" className="ws-btn is-quiet">Mark as read</button>
-              <button type="button" className="ws-btn is-quiet">Archive</button>
+              {live ? (
+                <>
+                  {selected.status !== 'read' ? (
+                    <form action={setStatus}>
+                      <input type="hidden" name="inquiryId" value={selected.id} />
+                      <input type="hidden" name="status" value="read" />
+                      <button type="submit" className="ws-btn is-quiet" disabled={statusPending}>
+                        {statusPending ? 'Saving…' : 'Mark as read'}
+                      </button>
+                    </form>
+                  ) : null}
+                  {selected.status !== 'archived' ? (
+                    <form action={setStatus}>
+                      <input type="hidden" name="inquiryId" value={selected.id} />
+                      <input type="hidden" name="status" value="archived" />
+                      <button type="submit" className="ws-btn is-quiet" disabled={statusPending}>
+                        Archive
+                      </button>
+                    </form>
+                  ) : null}
+                </>
+              ) : null}
             </div>
+            {statusState.status !== 'idle' ? (
+              <p className="ws-small ws-muted" role="status" style={{ marginTop: 10 }}>
+                {statusState.message}
+              </p>
+            ) : null}
 
             <p className="ws-small ws-muted" style={{ marginTop: 14 }}>
               Replies go from your own inbox. The platform does not send anything on your behalf.

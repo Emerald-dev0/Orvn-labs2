@@ -8,6 +8,10 @@ import { professionalProfiles } from '../../db/schema';
 import { recordAudit } from '../audit';
 import { createInvitation, InvitationError } from '../invitations';
 import { checkbox, inviteMemberSchema, profileSchema, text } from '../validation/workspace';
+import { putObject, deleteObject, storageKeyFor } from '../storage';
+import { detectType, extensionFor, MAX_PHOTO_BYTES } from '../uploads';
+import { renderImageRenditions } from '../image-encoder';
+import { isImageKey, variantKeyFor, variantKeysFor } from '../images';
 import type { ActionState } from './types';
 
 /**
@@ -80,6 +84,134 @@ export async function updateProfile(_previous: ActionState, formData: FormData):
   revalidatePath('/website');
   revalidatePath(`/w/${workspace.username}`);
   return { status: 'ok', message: input.publishSite ? 'Your page is live.' : 'Saved.' };
+}
+
+const SITE_IMAGE_KINDS = new Set(['logo', 'cover']);
+
+/**
+ * Upload or replace the professional page's logo mark or hero cover. Renditions are made here
+ * like property photos, and the old object (plus its renditions) is deleted after the swap so
+ * storage does not accumulate orphans. The public route only serves these once the site is
+ * published — an unpublished upload never leaves storage by any other door.
+ */
+export async function uploadSiteMedia(_previous: ActionState, formData: FormData): Promise<ActionState> {
+  const { viewer, workspace } = await requireEditor();
+  const kind = text(formData, 'kind');
+  if (!SITE_IMAGE_KINDS.has(kind)) return { status: 'error', message: 'Unknown image slot.' };
+
+  const file = formData.get('file');
+  if (!(file instanceof File) || file.size === 0) {
+    return { status: 'error', message: 'Choose an image first.' };
+  }
+  if (file.size > MAX_PHOTO_BYTES) {
+    return { status: 'error', message: 'That image is over 10 MB. Export a smaller one.' };
+  }
+
+  const bytes = new Uint8Array(await file.arrayBuffer());
+  const type = detectType(bytes);
+  if (type !== 'image/jpeg' && type !== 'image/png' && type !== 'image/webp') {
+    return { status: 'error', message: 'Photos only: JPEG, PNG or WebP.' };
+  }
+
+  const key = storageKeyFor(workspace.id, `${kind}.${extensionFor(type)}`);
+  const body = bytes.buffer as ArrayBuffer;
+  const written = await putObject(key, body, type);
+  if (!written) {
+    return { status: 'error', message: 'Storage refused the upload. Nothing was changed.' };
+  }
+
+  if (isImageKey(key)) {
+    const rendition = await renderImageRenditions(body);
+    if (rendition) {
+      await Promise.allSettled(
+        rendition.variants.map((variant) =>
+          putObject(variantKeyFor(key, variant.width), variant.body, 'image/webp'),
+        ),
+      );
+    }
+  }
+
+  let replaced: string | null = null;
+  await withUserDb(viewer.userId, async (tx) => {
+    const [profile] = await tx
+      .select({ logoKey: professionalProfiles.logoKey, coverKey: professionalProfiles.coverKey })
+      .from(professionalProfiles)
+      .where(eq(professionalProfiles.workspaceId, workspace.id))
+      .limit(1);
+    replaced = (kind === 'logo' ? profile?.logoKey : profile?.coverKey) ?? null;
+
+    await tx
+      .update(professionalProfiles)
+      .set(
+        kind === 'logo'
+          ? { logoKey: key, updatedAt: new Date() }
+          : { coverKey: key, updatedAt: new Date() },
+      )
+      .where(eq(professionalProfiles.workspaceId, workspace.id));
+
+    await recordAudit(
+      {
+        workspaceId: workspace.id,
+        actorId: viewer.userId,
+        action: kind === 'logo' ? 'site.logo.uploaded' : 'site.cover.uploaded',
+        targetType: 'workspace',
+        targetId: workspace.id,
+      },
+      tx,
+    );
+  });
+
+  if (replaced && replaced !== key) {
+    void Promise.allSettled([replaced, ...variantKeysFor(replaced)].map((target) => deleteObject(target)));
+  }
+
+  revalidatePath('/website');
+  revalidatePath(`/w/${workspace.username}`);
+  return { status: 'ok', message: kind === 'logo' ? 'Logo uploaded.' : 'Cover image uploaded.' };
+}
+
+export async function removeSiteMedia(_previous: ActionState, formData: FormData): Promise<ActionState> {
+  const { viewer, workspace } = await requireEditor();
+  const kind = text(formData, 'kind');
+  if (!SITE_IMAGE_KINDS.has(kind)) return { status: 'error', message: 'Unknown image slot.' };
+
+  let removed: string | null = null;
+  await withUserDb(viewer.userId, async (tx) => {
+    const [profile] = await tx
+      .select({ logoKey: professionalProfiles.logoKey, coverKey: professionalProfiles.coverKey })
+      .from(professionalProfiles)
+      .where(eq(professionalProfiles.workspaceId, workspace.id))
+      .limit(1);
+    removed = (kind === 'logo' ? profile?.logoKey : profile?.coverKey) ?? null;
+
+    await tx
+      .update(professionalProfiles)
+      .set(
+        kind === 'logo'
+          ? { logoKey: null, updatedAt: new Date() }
+          : { coverKey: null, updatedAt: new Date() },
+      )
+      .where(eq(professionalProfiles.workspaceId, workspace.id));
+
+    await recordAudit(
+      {
+        workspaceId: workspace.id,
+        actorId: viewer.userId,
+        action: kind === 'logo' ? 'site.logo.removed' : 'site.cover.removed',
+        targetType: 'workspace',
+        targetId: workspace.id,
+      },
+      tx,
+    );
+  });
+
+  if (removed) {
+    void Promise.allSettled([removed, ...variantKeysFor(removed)].map((target) => deleteObject(target)));
+  }
+
+  revalidatePath('/website');
+  revalidatePath(`/w/${workspace.username}`);
+  return { status: 'ok', message: kind === 'logo' ? 'Logo removed.' : 'Cover image removed.' };
 }
 
 export async function unpublishSite(_previous: ActionState, formData: FormData): Promise<ActionState> {

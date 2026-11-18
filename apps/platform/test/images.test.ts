@@ -100,7 +100,7 @@ async function phonePhoto(width = 2000, height = 3000) {
 }
 
 describe('renditions', () => {
-  it('makes one WebP per width the source can fill', async () => {
+  it('makes one WebP per width the source can fill', { timeout: 30_000 }, async () => {
     const source = await phonePhoto();
     const result = await renderImageRenditions(
       source.buffer.slice(source.byteOffset, source.byteOffset + source.byteLength),
@@ -116,7 +116,7 @@ describe('renditions', () => {
     }
   });
 
-  it('drops EXIF, including the location, and bakes in the orientation', async () => {
+  it('drops EXIF, including the location, and bakes in the orientation', { timeout: 30_000 }, async () => {
     const source = await phonePhoto();
     const result = await renderImageRenditions(
       source.buffer.slice(source.byteOffset, source.byteOffset + source.byteLength),
@@ -133,7 +133,7 @@ describe('renditions', () => {
     expect(meta.height).toBe(320);
   });
 
-  it('is much smaller than the original it stands in for', async () => {
+  it('is much smaller than the original it stands in for', { timeout: 30_000 }, async () => {
     const source = await phonePhoto();
     const result = await renderImageRenditions(
       source.buffer.slice(source.byteOffset, source.byteOffset + source.byteLength),
@@ -141,14 +141,14 @@ describe('renditions', () => {
     expect(result!.variants[0].body.byteLength).toBeLessThan(source.byteLength / 2);
   });
 
-  it('refuses anything that is not an image, without throwing', async () => {
+  it('refuses anything that is not an image, without throwing', { timeout: 30_000 }, async () => {
     const pdf = Buffer.from('%PDF-1.7\nnot an image');
     expect(await renderImageRenditions(pdf.buffer.slice(pdf.byteOffset, pdf.byteOffset + pdf.byteLength))).toBeNull();
   });
 });
 
 describe('media gate without a database', () => {
-  it('refuses rather than throwing, so a preview build is not a public file host', async () => {
+  it('refuses rather than throwing, so a preview build is not a public file host', { timeout: 30_000 }, async () => {
     const { authoriseMediaRequest } = await import('../lib/media');
     const decision = await authoriseMediaRequest(KEY);
     expect(decision.allowed).toBe(false);

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Icon } from '../icons';
 import { PageHead, Card } from '../ui';
 import { workspace as sampleWorkspace } from '../data';
+import { authClient } from '../../../lib/auth-client';
 
 function Row({ label, value, action }) {
   return (
@@ -68,6 +69,68 @@ function SignInCard({ email, connected }) {
           ? 'Every sign-in sends a fresh, single-use link to your email. Links expire after fifteen minutes.'
           : 'In a connected workspace every sign-in sends a fresh, single-use link to your email. Links expire after fifteen minutes.'}
       </p>
+    </Card>
+  );
+}
+
+/**
+ * Session controls. "Sign out other devices" invalidates every session except the current one —
+ * what you want after leaving a browser you don't control. "Sign out everywhere" revokes all of
+ * them, which ends this session too.
+ */
+function SessionsCard() {
+  const [status, setStatus] = useState('idle');
+
+  async function revokeOthers() {
+    setStatus('pending-others');
+    try {
+      await authClient.revokeOtherSessions();
+      setStatus('others');
+    } catch (error) {
+      console.error('[settings] revoke other sessions failed', { message: error?.message });
+      setStatus('error');
+    }
+  }
+
+  async function revokeAll() {
+    setStatus('pending-all');
+    try {
+      await authClient.revokeSessions();
+      window.location.href = '/sign-in';
+    } catch (error) {
+      console.error('[settings] revoke all sessions failed', { message: error?.message });
+      setStatus('error');
+    }
+  }
+
+  return (
+    <Card>
+      <div className="ws-section-head">
+        <h2>Sessions</h2>
+        <span className="ws-mono-note">This device and others</span>
+      </div>
+      <p className="ws-small ws-muted" style={{ marginTop: 0 }}>
+        A magic link opens a 15-minute window; each signs you in to one device. If you used a
+        shared or kiosk computer, revoke its session here.
+      </p>
+      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 10 }}>
+        <button type="button" className="ws-btn is-quiet" disabled={status === 'pending-others'} onClick={revokeOthers}>
+          {status === 'pending-others' ? 'Signing out…' : 'Sign out other devices'}
+        </button>
+        <button type="button" className="ws-btn is-quiet" disabled={status === 'pending-all'} onClick={revokeAll}>
+          {status === 'pending-all' ? 'Signing out…' : 'Sign out everywhere'}
+        </button>
+      </div>
+      {status === 'others' ? (
+        <p className="ws-small ws-muted" role="status" style={{ marginTop: 10 }}>
+          Every other session is signed out. This one stays active.
+        </p>
+      ) : null}
+      {status === 'error' ? (
+        <p className="ws-small" role="alert" style={{ marginTop: 10 }}>
+          That did not work. Try again — if it keeps failing, contact hello@orvnlabs.com.
+        </p>
+      ) : null}
     </Card>
   );
 }
@@ -163,6 +226,7 @@ export default function Settings({ data = null, showNotifications = false }) {
         </Card>
 
         <SignInCard email={owner.email} connected />
+        <SessionsCard />
         {showNotifications ? <NotificationsCard /> : null}
         <PrivacyCard />
         <BillingCard />

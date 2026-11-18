@@ -5,6 +5,11 @@
    this is a tool, not a brochure.
    ========================================================================= */
 
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
 .ws {
   --ws-side: 264px;
   min-height: 100vh;
@@ -571,6 +576,25 @@
   backdrop-filter: blur(6px);
 }
 .ws-media-tag.is-private { background: rgba(255, 253, 248, 0.86); color: var(--ink); }
+.ws-media-cell { display: grid; gap: 6px; }
+.ws-media-actions { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
+.ws-media-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 9px;
+  border-radius: 8px;
+  border: 1px solid var(--line-2);
+  background: var(--white);
+  color: var(--ink-2);
+  cursor: pointer;
+}
+.ws-media-btn:hover { border-color: var(--ink); color: var(--ink); }
+.ws-media-btn[disabled] { opacity: 0.5; cursor: default; }
+.ws-media-btn.is-danger { color: #8a2f2b; border-color: #d8b3ae; }
+.ws-media-btn.is-danger:hover { border-color: #8a2f2b; color: #8a2f2b; }
 .ws-media-add {
   display: grid;
   place-items: center;
@@ -724,6 +748,62 @@
 }
 
 /* --- Visibility control: three states, one decision -------------------------------- */
+/* ── Live fact controls ─────────────────────────────────────────────────── */
+.ws-fact-live-list { display: grid; }
+.ws-fact-live {
+  display: grid;
+  gap: 8px;
+  padding: 12px 2px;
+  border-bottom: 1px solid var(--line);
+}
+.ws-fact-live:last-child { border-bottom: 0; }
+.ws-fact-live-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.ws-fact-live-head .ws-fact-key { display: flex; gap: 7px; align-items: center; }
+.ws-fact-live-edit { display: flex; gap: 6px; }
+.ws-fact-live-edit input {
+  flex: 1;
+  min-width: 0;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--bone);
+  padding: 0 12px;
+  font-size: 13.5px;
+  color: var(--ink);
+}
+.ws-fact-live-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+.ws-fact-live-add {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+.ws-fact-live-add input {
+  height: 40px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--bone);
+  padding: 0 12px;
+  font-size: 14px;
+  color: var(--ink);
+  min-width: 0;
+  flex: 1 1 180px;
+}
+.ws-danger-btn { color: #8a2f2b; }
+.ws-danger-btn:hover { border-color: #8a2f2b; color: #8a2f2b; }
+
 .ws-visibility-option {
   display: grid;
   gap: 4px;

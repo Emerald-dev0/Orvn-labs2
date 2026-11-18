@@ -1,5 +1,6 @@
 import { getPublishedProperty } from '../../../../../../lib/data/public-site';
 import { renderDealSheet } from '../../../../../../lib/print/sheet';
+import { isLikelyBot, recordPropertyEvent, visitorHash } from '../../../../../../lib/analytics';
 
 /**
  * The deal sheet, as a printable document.
@@ -26,6 +27,23 @@ export async function GET(request: Request, { params }: { params: Promise<{ user
 
   if (!data) {
     return new Response('Not found', { status: 404, headers: { 'content-type': 'text/plain; charset=utf-8' } });
+  }
+
+  // Counting is inline and tolerant: a metrics failure never breaks the sheet.
+  try {
+    const forwarded = request.headers.get('x-forwarded-for') ?? '';
+    const ip = request.headers.get('cf-connecting-ip') ?? forwarded.split(',')[0]?.trim() ?? null;
+    const userAgent = request.headers.get('user-agent');
+    await recordPropertyEvent({
+      type: 'sheet_open',
+      username,
+      slug,
+      visitorHash: await visitorHash(ip, userAgent ?? null),
+      referrer: request.headers.get('referer'),
+      isBot: isLikelyBot(userAgent),
+    });
+  } catch (error) {
+    console.error('[analytics] sheet open not recorded', { message: (error as Error).message });
   }
 
   const origin = new URL(request.url).origin;
