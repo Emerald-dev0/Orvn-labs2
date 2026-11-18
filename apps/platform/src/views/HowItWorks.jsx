@@ -31,7 +31,7 @@ const STEPS = [
     icon: ScanEye,
     label: 'Step two',
     title: 'Check it once.',
-    body: 'ORREI lists the facts it can support and flags the ones that disagree with another source. You confirm each figure. Publication stays blocked until the open questions are closed.',
+    body: 'ORREI lists the facts it can support and flags the ones that disagree with another source. You confirm each figure. A public fact stays unpublished until you approve it.',
     points: ['Conflicts shown side by side', 'Unknown values left blank', 'Every decision dated', 'Nothing published by accident'],
     visual: 'check',
   },
@@ -60,7 +60,7 @@ const NEEDS = [
   },
   {
     title: 'Photographs worth showing',
-    body: 'Phone photographs are fine. ORREI crops and lays them out, and tells you when an image is too small to print well.',
+    body: 'Phone photographs are fine. ORREI resizes and lays them out, and tells you when an image is too small to print well.',
   },
   {
     title: 'One property to begin with',
@@ -83,7 +83,7 @@ const FAQS = [
   },
   {
     q: 'What happens when a price changes?',
-    a: 'You change it once in the record. Every output that carries the price is regenerated, and the previous version stays in the history so you can see what was sent and when.',
+    a: 'You change it once in the record. The page and the next print come from the updated record. Files you already sent keep the old price and date; the sheet is stamped with its version. The previous version stays in the history, so you can see what was sent and when.',
   },
 ];
 
@@ -170,7 +170,7 @@ function Visual({ kind }) {
           </div>
         </div>
         <div className="flow-update-list">
-          {['Property page regenerated', 'Deal sheet regenerated', 'Buyer summary updated', 'Previous versions kept'].map((t) => (
+          {['Record updated', 'Page serves the new price after republish', 'Deal sheet stamped with its version', 'Previous versions kept'].map((t) => (
             <div key={t}>
               <Check size={12} strokeWidth={3} />
               {t}

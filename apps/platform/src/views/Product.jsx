@@ -267,7 +267,7 @@ export default function Product() {
             {[
               'Conflicts surfaced with both sources',
               'One click to keep your figure',
-              'Publishing blocked while a check is open',
+              'Publication waits for public facts to be approved',
               'A dated trail of every decision',
             ].map((t) => (
               <li key={t}>
