@@ -17,7 +17,7 @@ const STEPS = [
   {
     n: '03',
     title: 'Review',
-    body: 'Nothing publishes while a fact is unapproved or two sources disagree. You see the conflict, not a silent guess.',
+    body: 'Nothing publishes while a public fact is unapproved or two sources disagree. You see the conflict, not a silent guess.',
   },
   {
     n: '04',
