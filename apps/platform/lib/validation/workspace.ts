@@ -107,6 +107,7 @@ export const profileSchema = z.object({
   showPhone: z.boolean().default(false),
   markets: z.array(z.string().trim().min(2).max(60)).max(8).default([]),
   publishSite: z.boolean().default(false),
+  role: z.enum(['wholesaler', 'agent', 'investor', 'other']).optional().or(z.literal('')),
 });
 
 export const inviteMemberSchema = z.object({

@@ -1,8 +1,10 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 import { and, eq, sql } from 'drizzle-orm';
 import { requireEditor, requireOwner, requireWorkspace } from '../access';
+import { parseOnboarding } from '../onboarding';
 import { withUserDb } from '../db/tenant';
 import { professionalProfiles } from '../../db/schema';
 import { recordAudit } from '../audit';
@@ -37,6 +39,7 @@ export async function updateProfile(_previous: ActionState, formData: FormData):
           .slice(0, 8)
       : [],
     publishSite: checkbox(formData, 'publishSite'),
+    role: text(formData, 'role'),
   });
 
   if (!parsed.success) {
@@ -64,6 +67,7 @@ export async function updateProfile(_previous: ActionState, formData: FormData):
         contactPhone: input.contactPhone || null,
         showPhone: input.showPhone,
         markets: input.markets,
+        ...(input.role ? { role: input.role } : {}),
         updatedAt: now,
         ...(input.publishSite ? { publishedAt: now } : {}),
       })
@@ -212,6 +216,99 @@ export async function removeSiteMedia(_previous: ActionState, formData: FormData
   revalidatePath('/website');
   revalidatePath(`/w/${workspace.username}`);
   return { status: 'ok', message: kind === 'logo' ? 'Logo removed.' : 'Cover image removed.' };
+}
+
+export type OnboardingState = { status: 'idle' } | { status: 'error'; message: string };
+
+/**
+ * AUTH-02: first-run onboarding. One screen, two buttons.
+ *
+ * `completeOnboarding` writes the five things a buyer sees on a public page — who you are, what
+ * you do, where, and how to reach you. `skipOnboarding` records the date and leaves the profile
+ * exactly as it is; it is not the same as never having asked. Both lead to creating the first
+ * property, either way.
+ */
+export async function completeOnboarding(
+  _previous: OnboardingState,
+  formData: FormData,
+): Promise<OnboardingState> {
+  const { viewer, workspace } = await requireEditor();
+
+  const parsed = parseOnboarding({
+    displayName: text(formData, 'displayName'),
+    role: text(formData, 'role'),
+    market: text(formData, 'market'),
+    contactEmail: text(formData, 'contactEmail'),
+    contactPhone: text(formData, 'contactPhone'),
+  });
+  if (parsed.ok === false) return { status: 'error', message: parsed.error };
+
+  try {
+    await withUserDb(viewer.userId, async (tx) => {
+      await tx
+        .update(professionalProfiles)
+        .set({
+          displayName: parsed.displayName,
+          role: parsed.role,
+          markets: [parsed.market],
+          contactEmail: parsed.contactEmail,
+          contactPhone: parsed.contactPhone,
+          onboardedAt: new Date(),
+          updatedAt: new Date(),
+        })
+        .where(eq(professionalProfiles.workspaceId, workspace.id));
+
+      await recordAudit(
+        {
+          workspaceId: workspace.id,
+          actorId: viewer.userId,
+          action: 'site.onboarded',
+          targetType: 'workspace',
+          targetId: workspace.id,
+          metadata: { role: parsed.role, market: parsed.market },
+        },
+        tx,
+      );
+    });
+  } catch (error) {
+    console.error('[onboarding] save failed', { message: (error as Error).message });
+    return { status: 'error', message: 'That could not be saved just now. Nothing was changed.' };
+  }
+
+  revalidatePath('/');
+  revalidatePath(`/w/${workspace.username}`);
+  revalidatePath('/website');
+  redirect('/properties/new');
+}
+
+/** Mark the onboarding step as seen without touching any field. */
+export async function skipOnboarding(_previous: OnboardingState): Promise<OnboardingState> {
+  const { viewer, workspace } = await requireEditor();
+
+  try {
+    await withUserDb(viewer.userId, async (tx) => {
+      await tx
+        .update(professionalProfiles)
+        .set({ onboardedAt: new Date(), updatedAt: new Date() })
+        .where(and(eq(professionalProfiles.workspaceId, workspace.id)));
+
+      await recordAudit(
+        {
+          workspaceId: workspace.id,
+          actorId: viewer.userId,
+          action: 'site.onboarding_skipped',
+          targetType: 'workspace',
+          targetId: workspace.id,
+        },
+        tx,
+      );
+    });
+  } catch (error) {
+    console.error('[onboarding] skip failed', { message: (error as Error).message });
+    return { status: 'error', message: 'That could not be saved just now. Nothing was changed.' };
+  }
+
+  redirect('/properties/new');
 }
 
 export async function unpublishSite(_previous: ActionState, formData: FormData): Promise<ActionState> {

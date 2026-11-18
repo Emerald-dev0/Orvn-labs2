@@ -52,5 +52,5 @@ export async function acceptInvite(
     return { status: 'error', message: 'We could not open your workspace just now. Try again.' };
   }
 
-  redirect('/dashboard');
+  redirect('/onboarding');
 }

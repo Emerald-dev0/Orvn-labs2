@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { SIZES, mediaUrl, srcSetFor } from '@/lib/images';
 import { notFound } from 'next/navigation';
 import { getPublicSite, listPortfolio } from '../../../lib/data/public-site';
+import { roleLabel } from '../../../lib/onboarding';
 
 export const dynamic = 'force-dynamic';
 
@@ -80,7 +81,11 @@ export default async function PublicSitePage({ params }) {
             <div className="pub-hero-body" style={{ paddingTop: 0 }}>
               <div style={{ display: 'grid', gap: 16 }}>
                 <div className="pub-eyebrow">
-                  {markets.length > 0 ? <span>{markets.join(' · ')}</span> : <span>Property</span>}
+                  {(() => {
+                    const role = roleLabel(site.role);
+                    const parts = [markets.length > 0 ? markets.join(' · ') : null, role].filter(Boolean);
+                    return <span>{parts.length > 0 ? parts.join(' · ') : 'Property'}</span>;
+                  })()}
                 </div>
                 <h1 className="pub-title">{site.headline ?? site.businessName}</h1>
                 {site.bio ? <p className="pub-lede">{site.bio}</p> : null}
@@ -212,6 +217,7 @@ export default async function PublicSitePage({ params }) {
           <span>
             {site.businessName}
             {markets.length > 0 ? ` · ${markets.join(' · ')}` : ''}
+            {roleLabel(site.role) ? ` · ${roleLabel(site.role)}` : ''}
           </span>
           <span>
             Property details are supplied by the seller’s representative and are not independently
