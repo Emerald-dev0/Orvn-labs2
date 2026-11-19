@@ -22,6 +22,8 @@ export async function GET() {
     email: Boolean(env.CALDER_API_KEY),
     storage: storageConfigured(),
     analyticsSalt: Boolean(env.ANALYTICS_HASH_SALT && env.ANALYTICS_HASH_SALT.length >= 16),
+    // Optional capabilities, reported so nobody has to read the env file to know.
+    drafting: Boolean(env.GROQ_API_KEY),
   };
 
   const ok = missing.length === 0;

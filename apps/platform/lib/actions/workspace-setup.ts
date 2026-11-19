@@ -51,5 +51,5 @@ export async function setUpOperatorWorkspace(formData: FormData): Promise<void> 
 
   // app_create_workspace writes the 'workspace.created' audit entry itself.
   if (!workspaceId) redirect('/no-workspace?error=We+could+not+create+the+workspace.+Try+again.');
-  redirect('/dashboard');
+  redirect('/onboarding');
 }

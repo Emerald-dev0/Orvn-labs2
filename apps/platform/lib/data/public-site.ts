@@ -28,6 +28,7 @@ export type PublicSite = {
   contactEmail: string | null;
   contactPhone: string | null;
   accent: string | null;
+  role: string | null;
   coverKey: string | null;
   logoKey: string | null;
   publishedAt: string | null;
@@ -60,6 +61,7 @@ export async function getPublicSite(username: string): Promise<PublicSite | null
         contactPhone: professionalProfiles.contactPhone,
         showPhone: professionalProfiles.showPhone,
         accent: professionalProfiles.accent,
+        role: professionalProfiles.role,
         coverKey: professionalProfiles.coverKey,
         logoKey: professionalProfiles.logoKey,
         publishedAt: professionalProfiles.publishedAt,
@@ -84,6 +86,7 @@ export async function getPublicSite(username: string): Promise<PublicSite | null
       contactEmail: row.contactEmail,
       contactPhone: row.showPhone ? row.contactPhone : null,
       accent: row.accent,
+      role: row.role,
       coverKey: row.coverKey,
       logoKey: row.logoKey,
       publishedAt: row.publishedAt.toISOString(),

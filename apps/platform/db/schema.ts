@@ -300,6 +300,10 @@ export const professionalProfiles = pgTable(
     logoKey: text('logo_key'),
     coverKey: text('cover_key'),
     accent: text('accent'),
+    /** Stated role shown on the public page, e.g. Wholesaler, Agent, Investor. Free text capped at 80. */
+    role: text('role'),
+    /** Set once the first-run onboarding is done or skipped. NULL means: show the onboarding step. */
+    onboardedAt: timestamp('onboarded_at', { withTimezone: true }),
     publishedAt: timestamp('published_at', { withTimezone: true }),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
