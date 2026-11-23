@@ -10,6 +10,7 @@ const WHEN = new Intl.DateTimeFormat('en-US', {
 });
 
 export function SignInLink({ url, expiresAt }: { url: string; expiresAt: Date }) {
+  const minutes = Math.max(1, Math.round((expiresAt.getTime() - Date.now()) / 60_000));
   return (
     <Brand
       preview="Your ORREI sign-in link. It works once."
@@ -19,7 +20,10 @@ export function SignInLink({ url, expiresAt }: { url: string; expiresAt: Date })
 
       <Para>Use the link below to open your workspace. No password needed.</Para>
 
-      <Action href={url} note={`Works once, expires at ${WHEN.format(expiresAt)}.`}>
+      <Action
+        href={url}
+        note={`Works once, expires in about ${minutes} minute${minutes === 1 ? '' : 's'} (at ${WHEN.format(expiresAt)}).`}
+      >
         Open ORREI
       </Action>
 

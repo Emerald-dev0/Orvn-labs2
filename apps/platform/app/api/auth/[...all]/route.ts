@@ -19,7 +19,13 @@ export async function GET(request: Request) {
   } catch (error) {
     // A thrown refusal on the verify step gets the same friendly redirect as a returned one.
     if (path === MAGIC_LINK_VERIFY_PATH) {
-      console.error('[auth] magic-link verify failed', error);
+      // Never log the error object here. The verify step handles the one-time token in the query
+      // string, so the error's message (and the request URL) can carry it. Log the failure with
+      // only its type and the token-free pathname; the token must not reach logs or analytics.
+      console.error('[auth] magic-link verify failed', {
+        name: error instanceof Error ? error.name : 'Error',
+        path,
+      });
       return NextResponse.redirect(refusalRedirect(path, 403, originFor(request))!);
     }
     throw error;
