@@ -90,11 +90,21 @@ export default function Discover({ cards, states, savedIds, q = '', role = '' })
       </form>
 
       {cards.length === 0 ? (
-        <EmptyState
-          icon="search"
-          title="No professionals found"
-          body="Try a different name or market. Only profiles that have been published appear in Discover."
-        />
+        q || role ? (
+          <EmptyState
+            icon="search"
+            title="No matches"
+            body="Try a different name, market or role."
+            action={{ href: '/discover', label: 'Clear search' }}
+          />
+        ) : (
+          <EmptyState
+            icon="search"
+            title="No professionals here yet"
+            body="Professionals appear here once they publish their profile. Publish yours so others can find you."
+            action={{ href: '/website', label: 'Complete your profile' }}
+          />
+        )
       ) : (
         <div
           style={{

@@ -33,11 +33,7 @@ export default function Messages({ threads, active, thread, person, viewerId }) 
         }}
       >
         <div className="ws-stack" style={{ display: 'grid', gap: 4, alignContent: 'start' }}>
-          {threads.length === 0 ? (
-            <p className="ws-small ws-muted" style={{ padding: '8px 4px' }}>
-              No conversations yet. Start one from a profile in Discover.
-            </p>
-          ) : (
+          {threads.length === 0 ? null : (
             threads.map((t) => (
               <Link
                 key={t.userId}
@@ -69,7 +65,12 @@ export default function Messages({ threads, active, thread, person, viewerId }) 
 
         <div>
           {!active ? (
-            <EmptyState icon="mail" title="No conversation selected" body="Choose a conversation on the left, or start one from a professional's profile in Discover." />
+            <EmptyState
+              icon="mail"
+              title="No messages yet"
+              body="When you connect with someone you can message them here, or start a conversation from a professional's profile in Discover."
+              action={{ href: '/discover', label: 'Discover professionals' }}
+            />
           ) : (
             <>
               <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginBottom: 14 }}>
