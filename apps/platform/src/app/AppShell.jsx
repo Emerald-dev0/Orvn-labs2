@@ -10,7 +10,11 @@ import { authClient } from '../../lib/auth-client';
 
 const NAV = [
   { href: '/dashboard', label: 'Overview', icon: 'dashboard' },
+  { href: '/discover', label: 'Discover', icon: 'search' },
   { href: '/properties', label: 'Properties', icon: 'properties' },
+  { href: '/network', label: 'Network', icon: 'user', badgeKey: 'connections' },
+  { href: '/messages', label: 'Messages', icon: 'mail', badgeKey: 'messages' },
+  { href: '/saved', label: 'Saved', icon: 'check' },
   { href: '/website', label: 'Professional profile', icon: 'website' },
   { href: '/inquiries', label: 'Inquiries', icon: 'inquiries', badgeKey: 'inquiries' },
   { href: '/analytics', label: 'Analytics', icon: 'analytics' },
@@ -33,7 +37,16 @@ function Brand() {
   );
 }
 
-export default function AppShell({ children, workspace: ws = workspace, unread = 0, demo = false, admin = false, published = false }) {
+export default function AppShell({
+  children,
+  workspace: ws = workspace,
+  unread = 0,
+  demo = false,
+  admin = false,
+  published = false,
+  messagesUnread = 0,
+  connectionsPending = 0,
+}) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
@@ -68,9 +81,17 @@ export default function AppShell({ children, workspace: ws = workspace, unread =
         >
           <Icon name={item.icon} size={19} strokeWidth={1.6} />
           <span>{item.label}</span>
-          {item.badgeKey === 'inquiries' && unread > 0 ? (
-            <span className="ws-nav-badge">{unread}</span>
-          ) : null}
+          {(() => {
+            const count =
+              item.badgeKey === 'inquiries'
+                ? unread
+                : item.badgeKey === 'messages'
+                  ? messagesUnread
+                  : item.badgeKey === 'connections'
+                    ? connectionsPending
+                    : 0;
+            return count > 0 ? <span className="ws-nav-badge">{count}</span> : null;
+          })()}
         </Link>
       ))}
     </nav>

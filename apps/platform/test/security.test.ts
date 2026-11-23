@@ -100,6 +100,9 @@ describe('row level security coverage', () => {
     'beta_applications',
     'contact_messages',
     'marketing_suppressions',
+    'connections',
+    'messages',
+    'saved_profiles',
   ];
 
   it('enables RLS on every table that holds workspace data', () => {

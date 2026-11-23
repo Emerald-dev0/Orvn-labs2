@@ -64,6 +64,13 @@
       "when": 1794994770031,
       "tag": "0008_minor_mantis",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1795000000000,
+      "tag": "0009_professional_network",
+      "breakpoints": true
     }
   ]
 }

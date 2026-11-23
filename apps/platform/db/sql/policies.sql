@@ -289,6 +289,46 @@ grant insert on inquiries, analytics_events to orrei_public;
 grant select, insert, update on rate_limits to orrei_public;
 
 -- ---------------------------------------------------------------------------
+-- Professional network. Account-scoped, not workspace-scoped: the two ids are
+-- Better Auth user ids and every policy keys on app_uid(). orrei_app only — the
+-- public role has no grant on these tables, so none of this is reachable without
+-- a signed-in account (connections, messages and saved profiles are private).
+-- ---------------------------------------------------------------------------
+
+alter table connections enable row level security;
+drop policy if exists connections_select on connections;
+create policy connections_select on connections for select to orrei_app
+  using (requester_id = app_uid() or recipient_id = app_uid());
+drop policy if exists connections_insert on connections;
+create policy connections_insert on connections for insert to orrei_app
+  with check (requester_id = app_uid());
+drop policy if exists connections_update on connections;
+create policy connections_update on connections for update to orrei_app
+  using (requester_id = app_uid() or recipient_id = app_uid())
+  with check (requester_id = app_uid() or recipient_id = app_uid());
+drop policy if exists connections_delete on connections;
+create policy connections_delete on connections for delete to orrei_app
+  using (requester_id = app_uid());
+
+alter table messages enable row level security;
+drop policy if exists messages_select on messages;
+create policy messages_select on messages for select to orrei_app
+  using (sender_id = app_uid() or recipient_id = app_uid());
+drop policy if exists messages_insert on messages;
+create policy messages_insert on messages for insert to orrei_app
+  with check (sender_id = app_uid());
+drop policy if exists messages_update on messages;
+create policy messages_update on messages for update to orrei_app
+  using (recipient_id = app_uid())
+  with check (recipient_id = app_uid());
+
+alter table saved_profiles enable row level security;
+drop policy if exists saved_profiles_all on saved_profiles;
+create policy saved_profiles_all on saved_profiles for all to orrei_app
+  using (user_id = app_uid())
+  with check (user_id = app_uid());
+
+-- ---------------------------------------------------------------------------
 -- Narrow privileged paths.
 --
 -- Everything above denies by default. These two functions are the only places the

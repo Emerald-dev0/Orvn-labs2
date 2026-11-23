@@ -311,6 +311,83 @@ export const professionalProfiles = pgTable(
   (t) => [uniqueIndex('professional_profiles_workspace_key').on(t.workspaceId)],
 );
 
+/* ── Professional network ────────────────────────────────────────────────── */
+
+/**
+ * A two-sided relationship between two professionals. Account-scoped, not workspace-scoped:
+ * the two ids are Better Auth user ids, and RLS keys on `app_uid()` rather than a workspace.
+ * A connection is created pending by the requester and moves to accepted/declined by the
+ * recipient; `blocked` is set by either party to stop contact.
+ */
+export const connectionStatus = pgEnum('connection_status', [
+  'pending',
+  'accepted',
+  'declined',
+  'blocked',
+]);
+
+export const connections = pgTable(
+  'connections',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    requesterId: text('requester_id')
+      .notNull()
+      .references(() => user.id, { onDelete: 'cascade' }),
+    recipientId: text('recipient_id')
+      .notNull()
+      .references(() => user.id, { onDelete: 'cascade' }),
+    status: connectionStatus('status').notNull().default('pending'),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    // One row per ordered pair: a person cannot send the same request twice.
+    uniqueIndex('connections_pair_key').on(t.requesterId, t.recipientId),
+    index('connections_recipient_idx').on(t.recipientId, t.status),
+    index('connections_requester_idx').on(t.requesterId, t.status),
+  ],
+);
+
+/**
+ * A direct message between two accounts. A "thread" is the unordered pair; RLS lets each
+ * participant read and send only their own side. Read state is per recipient.
+ */
+export const messages = pgTable(
+  'messages',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    senderId: text('sender_id')
+      .notNull()
+      .references(() => user.id, { onDelete: 'cascade' }),
+    recipientId: text('recipient_id')
+      .notNull()
+      .references(() => user.id, { onDelete: 'cascade' }),
+    body: text('body').notNull(),
+    readAt: timestamp('read_at', { withTimezone: true }),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    index('messages_sender_idx').on(t.senderId, t.createdAt),
+    index('messages_recipient_idx').on(t.recipientId, t.readAt),
+  ],
+);
+
+/** A private bookmark of a professional profile. Never visible to anyone but the saver. */
+export const savedProfiles = pgTable(
+  'saved_profiles',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    userId: text('user_id')
+      .notNull()
+      .references(() => user.id, { onDelete: 'cascade' }),
+    profileId: uuid('profile_id')
+      .notNull()
+      .references(() => professionalProfiles.id, { onDelete: 'cascade' }),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [uniqueIndex('saved_profiles_user_profile_key').on(t.userId, t.profileId)],
+);
+
 /* ── Operations ────────────────────────────────────────────────────────── */
 
 /** Fixed-window counters. Keys are hashed before they get here, never raw addresses. */

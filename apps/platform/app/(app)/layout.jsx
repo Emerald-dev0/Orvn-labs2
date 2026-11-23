@@ -20,6 +20,8 @@ export default async function WorkspaceLayout({ children }) {
       demo={context.demo}
       admin={context.demo ? false : isAdminEmail(context.viewer.email)}
       published={context.demo ? false : Boolean(context.workspace.profilePublishedAt)}
+      messagesUnread={context.network.messagesUnread}
+      connectionsPending={context.network.connectionsPending}
     >
       {children}
     </AppShell>

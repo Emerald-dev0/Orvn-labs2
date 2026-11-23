@@ -4,6 +4,7 @@ import { getActiveWorkspace, getViewer, type ActiveWorkspace, type Viewer } from
 import { databaseConfigured, withUserDb } from './db/tenant';
 import { professionalProfiles } from '../db/schema';
 import { countUnreadInquiries } from './data/workspace';
+import { networkCounts, type NetworkCounts } from './data/network';
 import { needsOnboarding } from './onboarding';
 
 /**
@@ -25,8 +26,15 @@ export type ShellWorkspace = {
 };
 
 export type AppContext =
-  | { demo: true; unread: 0; shell: ShellWorkspace }
-  | { demo: false; unread: number; viewer: Viewer; workspace: ActiveWorkspace; shell: ShellWorkspace };
+  | { demo: true; unread: 0; network: NetworkCounts; shell: ShellWorkspace }
+  | {
+      demo: false;
+      unread: number;
+      network: NetworkCounts;
+      viewer: Viewer;
+      workspace: ActiveWorkspace;
+      shell: ShellWorkspace;
+    };
 
 function initials(name: string): string {
   return (
@@ -63,7 +71,8 @@ export function shellFor(viewer: Viewer, workspace: ActiveWorkspace): ShellWorks
 
 export async function loadAppContext(): Promise<AppContext> {
   if (!databaseConfigured) {
-    return { demo: true, unread: 0, shell: demoShell() };
+    const empty: NetworkCounts = { messagesUnread: 0, connectionsPending: 0 };
+    return { demo: true, unread: 0, network: empty, shell: demoShell() };
   }
 
   const viewer = await getViewer();
@@ -85,6 +94,9 @@ export async function loadAppContext(): Promise<AppContext> {
   });
   if (needsOnboarding({ onboardedAt: onboarded })) redirect('/onboarding');
 
-  const unread = await countUnreadInquiries(viewer.userId, workspace.id);
-  return { demo: false, unread, viewer, workspace, shell: shellFor(viewer, workspace) };
+  const [unread, network] = await Promise.all([
+    countUnreadInquiries(viewer.userId, workspace.id),
+    networkCounts(viewer.userId),
+  ]);
+  return { demo: false, unread, network, viewer, workspace, shell: shellFor(viewer, workspace) };
 }
