@@ -4,6 +4,23 @@ import { APPLICATION_STATUSES, listApplications, statusCounts } from '../../../l
 import StatusForm from './StatusForm';
 import { formatWhen } from '../../../lib/emails/when';
 
+// The queue's status vocabulary. `APPLICATION_STATUSES` is the source of truth for which states
+// exist; these are the words an operator reads. Kept in one place so the filter chips, the count
+// lookup and the per-card badge can never drift apart (and so none of them is an undefined name).
+const STATUS_LABEL = {
+  new: 'New',
+  reviewing: 'Reviewing',
+  invited: 'Invited',
+  declined: 'Declined',
+};
+
+// Filter chips: "All" plus one per real status, in the declared order. Derived from
+// APPLICATION_STATUSES so a new status cannot be added without also appearing as a filter.
+const FILTERS = [
+  { id: 'all', label: 'All' },
+  ...APPLICATION_STATUSES.map((id) => ({ id, label: STATUS_LABEL[id] ?? id })),
+];
+
 /** One labelled answer. Shown in full: an operator decides from the words the person used. */
 function Answer({ label, text }) {
   return (
