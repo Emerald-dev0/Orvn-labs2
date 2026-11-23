@@ -33,7 +33,7 @@ function Brand() {
   );
 }
 
-export default function AppShell({ children, workspace: ws = workspace, unread = 0, demo = false, admin = false }) {
+export default function AppShell({ children, workspace: ws = workspace, unread = 0, demo = false, admin = false, published = false }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
@@ -97,10 +97,12 @@ export default function AppShell({ children, workspace: ws = workspace, unread =
             <Icon name="help" size={17} strokeWidth={1.6} />
             How it works
           </Link>
-          <Link href="/website" className="ws-side-link">
-            <Icon name="arrowUpRight" size={17} strokeWidth={1.6} />
-            View public site
-          </Link>
+          {published ? (
+            <Link href={ws.publicUrl} className="ws-side-link" target="_blank" rel="noreferrer">
+              <Icon name="arrowUpRight" size={17} strokeWidth={1.6} />
+              View public site
+            </Link>
+          ) : null}
           <div className="ws-account">
             <Avatar initials={ws.owner.initials} />
             <span className="ws-account-text">

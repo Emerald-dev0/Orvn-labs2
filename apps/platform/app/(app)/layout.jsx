@@ -19,6 +19,7 @@ export default async function WorkspaceLayout({ children }) {
       unread={context.unread}
       demo={context.demo}
       admin={context.demo ? false : isAdminEmail(context.viewer.email)}
+      published={context.demo ? false : Boolean(context.workspace.profilePublishedAt)}
     >
       {children}
     </AppShell>
