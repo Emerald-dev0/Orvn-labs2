@@ -10,7 +10,6 @@ import {
   CircleAlert,
   FileSpreadsheet,
   FileText,
-  Printer,
   Send,
 } from 'lucide-react';
 import PageWrapper from '../components/PageWrapper';
@@ -27,17 +26,12 @@ const OUTPUTS = [
   {
     icon: FileSpreadsheet,
     title: 'Deal sheet',
-    body: 'One page for the buyer, the bank or the developer, with every figure taken from the record.',
+    body: 'One printable A4 page for the buyer, the bank or the site office, with every figure taken from the record.',
   },
   {
     icon: Send,
     title: 'Buyer summary',
     body: 'A short overview you can forward on WhatsApp without losing the details that matter.',
-  },
-  {
-    icon: Printer,
-    title: 'Print sheet',
-    body: 'An A4 sheet for the site office and the inspection, laid out so nothing is cut off.',
   },
 ];
 
@@ -283,7 +277,7 @@ export default function Product() {
         <div className="shell">
           <div className="section-head">
             <span className="eyebrow">Publishing</span>
-            <h2 className="section-title">Four outputs, one set of facts.</h2>
+            <h2 className="section-title">Three outputs, one set of facts.</h2>
             <p className="lead">
               Choose what to send and who can see it. Each output has its own state, so a deal sheet
               can go to a buyer before the public page exists.

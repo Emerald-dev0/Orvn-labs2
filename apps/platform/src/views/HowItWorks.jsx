@@ -39,8 +39,8 @@ const STEPS = [
     icon: Send,
     label: 'Step three',
     title: 'Publish what you need.',
-    body: 'Publish the property page and send the link. Deal sheets, buyer summaries and print sheets come later from the same record. Each output has its own state, so you control who sees what.',
-    points: ['Page, sheet, summary, printout', 'Preview before publishing', 'Private documents stay private', 'Each output approved on its own'],
+    body: 'Publish the property page and send the link. Deal sheets and buyer summaries come from the same record. Each output has its own state, so you control who sees what.',
+    points: ['Page, deal sheet, buyer summary', 'Preview before publishing', 'Private documents stay private', 'Each output approved on its own'],
     visual: 'publish',
   },
   {
@@ -143,7 +143,6 @@ function Visual({ kind }) {
             ['Property page', 'Live on the web', true],
             ['Deal sheet', 'Sent to 2 buyers', true],
             ['Buyer summary', 'Draft', false],
-            ['Print sheet', 'Draft', false],
           ].map(([name, meta, on]) => (
             <div className="flow-publish-row" key={name}>
               <FileText size={15} strokeWidth={1.9} />
@@ -214,7 +213,7 @@ export default function HowItWorks() {
               <FileText size={16} strokeWidth={2.2} />
               <div>
                 <strong>One record</strong>
-                <span>Page, sheet, summary, printout</span>
+                <span>Page, deal sheet, summary</span>
               </div>
             </div>
           </div>

@@ -27,11 +27,11 @@ const ROLES = [
     name: 'Agents and brokers',
     availability: 'Available now — supported by the same record',
     title: 'Look as good as the property does.',
-    body: 'You already have the photographs and the facts. ORREI turns them into a page you are happy to send, a deal sheet you can hand over, and an inspection sheet that matches both.',
+    body: 'You already have the photographs and the facts. ORREI turns them into a page you are happy to send and a printable deal sheet you can hand over.',
     gets: [
       'A page per property, in your name',
       'Deal sheets for serious buyers',
-      'Print sheets for site inspections',
+      'Printable deal sheets for viewings',
       'Inquiry buttons that come straight to you',
     ],
   },
@@ -74,7 +74,7 @@ export default function WhoItsFor() {
   useDocumentMeta({
     title: "Who it's for",
     description:
-      'ORREI is built for wholesalers and small disposition teams first, with agents, brokers and developers supported by the same record behind every page, sheet and printout they send.',
+      'ORREI is built for wholesalers and small disposition teams first, with agents, brokers and developers supported by the same record behind every page, deal sheet and summary they send.',
     path: '/who-its-for',
   });
 

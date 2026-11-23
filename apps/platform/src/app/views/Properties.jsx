@@ -32,7 +32,7 @@ export default function Properties({ empty = false, items = properties }) {
     <>
       <PageHead
         title="Properties"
-        description="One record per property. Every page, sheet and printout is generated from it."
+        description="One record per property. Every page, deal sheet and summary is generated from it."
         actions={
           <Link href="/properties/new" className="ws-btn is-lime">
             <Icon name="add" size={16} strokeWidth={2.2} />
