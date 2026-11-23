@@ -80,6 +80,11 @@ async function seed(): Promise<void> {
     [propDraftB, wsB],
   );
   await sql(
+    `insert into property_details (property_id, key, value)
+     values ($1, 'price', '999999')`,
+    [propDraftB],
+  );
+  await sql(
     `insert into properties (id, workspace_id, title, slug, property_type, city,
        publication_status, published_at, rights_attested_at)
      values ($1, $2, 'Published property', 'published-1', 'residential_land', 'Testville',
@@ -154,6 +159,30 @@ describeDb(`rls integration (TEST_DATABASE_URL=${TEST_HOST})`, () => {
         .returning({ id: properties.id });
     });
     expect(updated).toHaveLength(0);
+  });
+
+  it("a member of workspace A cannot read workspace B's draft, its facts or its private file by guessed id", async () => {
+    // The authenticated path, not just the public one: even a signed-in user from another
+    // workspace gets nothing for a draft property, its fact rows, or a private file id.
+    const { properties, propertyDetails, propertyMedia } = schema;
+
+    const draft = await tenant.withUserDb(userA, async (tx) =>
+      tx.select({ id: properties.id }).from(properties).where(eq(properties.id, propDraftB)),
+    );
+    expect(draft).toHaveLength(0);
+
+    const facts = await tenant.withUserDb(userA, async (tx) =>
+      tx
+        .select({ id: propertyDetails.id })
+        .from(propertyDetails)
+        .where(eq(propertyDetails.propertyId, propDraftB)),
+    );
+    expect(facts).toHaveLength(0);
+
+    const files = await tenant.withUserDb(userA, async (tx) =>
+      tx.select({ id: propertyMedia.id }).from(propertyMedia).where(eq(propertyMedia.id, mediaPrivateB)),
+    );
+    expect(files).toHaveLength(0);
   });
 
   it('the public path cannot see a draft or a private file row', async () => {
