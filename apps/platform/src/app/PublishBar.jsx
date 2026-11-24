@@ -40,8 +40,14 @@ export default function PublishBar({ propertyId, status, blockers = [], publicPa
             </button>
           </form>
         ) : (
-          <form action={publish}>
+          <form action={publish} style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
             <input type="hidden" name="propertyId" value={propertyId} />
+            <label
+              style={{ display: 'flex', gap: 6, alignItems: 'center', fontSize: 12, color: 'var(--muted)' }}
+            >
+              <input type="checkbox" name="allowWithoutPhotos" value="1" />
+              Publish without photos
+            </label>
             <button type="submit" className="ws-btn is-dark" disabled={publishing}>
               <Icon name="upload" size={16} />
               {publishing ? 'Publishing…' : 'Publish'}

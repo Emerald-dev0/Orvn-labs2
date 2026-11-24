@@ -638,12 +638,17 @@ export async function publishPropertyAction(
   const parsed = propertyIdSchema.safeParse({ propertyId: text(formData, 'propertyId') });
   if (!parsed.success) return { status: 'error', message: 'Unknown property.' };
 
+  // Publishing without a public photo is allowed (the product supports photo-less listings such
+  // as vacant land); the PublishBar surfaces an explicit opt-in so the nudge to add a photo stays.
+  const allowWithoutPhotos = text(formData, 'allowWithoutPhotos') === '1';
+
   try {
     await withUserDb(viewer.userId, async (tx) => {
       await publishProperty(tx, {
         propertyId: parsed.data.propertyId,
         workspaceId: workspace.id,
         actorId: viewer.userId,
+        allowWithoutPhotos,
       });
     });
   } catch (error) {
