@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useActionState, useRef } from 'react';
 import { Icon } from './icons';
@@ -10,6 +10,11 @@ import { uploadSiteMedia, removeSiteMedia } from '../../lib/actions/site';
  * Uploads are server-validated like every other image; the public page serves these files only
  * while the site is published, so the preview here is a local object URL the browser builds
  * from the picked file — nothing pretends to be public before it is.
+ *
+ * This slot is rendered inside the profile <form>, so it must not open a nested <form> of its
+ * own (nested forms are invalid and make React fall back to a javascript: action that CSP
+ * blocks). The file change and Remove button call the server-action dispatch directly with a
+ * FormData instead.
  */
 export default function SiteImageSlot({ kind, label, note, currentKey, published }) {
   const [uploadState, upload, uploading] = useActionState(uploadSiteMedia, { status: 'idle' });
@@ -18,6 +23,22 @@ export default function SiteImageSlot({ kind, label, note, currentKey, published
 
   const state = uploadState.status !== 'idle' ? uploadState : removeState;
   const isSet = Boolean(currentKey) || uploadState.status === 'ok';
+
+  function onPick(event) {
+    const file = event.target.files?.[0];
+    event.target.value = '';
+    if (!file) return;
+    const data = new FormData();
+    data.set('kind', kind);
+    data.set('file', file);
+    upload(data);
+  }
+
+  function onRemove() {
+    const data = new FormData();
+    data.set('kind', kind);
+    remove(data);
+  }
 
   return (
     <div style={{ display: 'grid', gap: 8 }}>
@@ -36,39 +57,33 @@ export default function SiteImageSlot({ kind, label, note, currentKey, published
           <button
             type="button"
             className="ws-btn is-quiet is-sm"
-            disabled={uploading}
+            disabled={uploading || removing}
             onClick={() => inputRef.current?.click()}
           >
             <Icon name="upload" size={14} />
             {isSet ? 'Replace' : 'Upload'}
           </button>
           {isSet ? (
-            <form action={remove}>
-              <input type="hidden" name="kind" value={kind} />
-              <button type="submit" className="ws-btn is-quiet is-sm" disabled={removing || uploading}>
-                {removing ? 'Removing…' : 'Remove'}
-              </button>
-            </form>
+            <button
+              type="button"
+              className="ws-btn is-quiet is-sm"
+              disabled={removing || uploading}
+              onClick={onRemove}
+            >
+              {removing ? 'Removing…' : 'Remove'}
+            </button>
           ) : null}
         </div>
       </div>
 
-      <form action={upload}>
-        <input type="hidden" name="kind" value={kind} />
-        <input
-          ref={inputRef}
-          type="file"
-          name="file"
-          accept="image/jpeg,image/png,image/webp"
-          required
-          style={{ display: 'none' }}
-          aria-label={`${label} to upload`}
-          onChange={(event) => {
-            const form = event.target.closest('form');
-            if (form) form.requestSubmit();
-          }}
-        />
-      </form>
+      <input
+        ref={inputRef}
+        type="file"
+        accept="image/jpeg,image/png,image/webp"
+        hidden
+        aria-label={`${label} to upload`}
+        onChange={onPick}
+      />
 
       {state.status === 'error' ? (
         <p className="ws-small" role="alert" style={{ margin: 0 }}>{state.message}</p>
