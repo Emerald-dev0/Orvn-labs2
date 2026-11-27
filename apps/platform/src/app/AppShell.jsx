@@ -25,9 +25,7 @@ function Brand() {
   return (
     <Link href="/dashboard" className="ws-brand">
       <span className="ws-brand-mark" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9">
-          <path d="M4 19V5l8 8 8-8v14" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
+        <img src="/logo.png" width={22} height={22} alt="" />
       </span>
       <span className="ws-brand-text">
         <strong>ORREI</strong>

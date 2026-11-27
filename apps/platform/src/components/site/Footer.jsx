@@ -2,7 +2,6 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowUpRight, Mail } from 'lucide-react';
 import Logo from './Logo';
 
@@ -28,14 +27,7 @@ const COLUMNS = [
   },
 ];
 
-/** The roofline from the brand mark, drawn at poster scale. */
-const ROOFLINE =
-  'M0 208 L96 128 L192 208 M216 208 L336 100 L456 208 M480 208 L576 128 L672 208 ' +
-  'M696 208 L816 100 L936 208 M960 208 L1056 128 L1152 208';
-
 export default function Footer() {
-  const reduce = useReducedMotion();
-
   return (
     <footer className="site-footer on-dark">
       <div className="shell">
@@ -91,42 +83,9 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Illustrated lockup: the mark's roofline drawn wide, the letters outlined over it. */}
+      {/* The mark, served from /logo.png so the footer carries the same asset. */}
       <div className="footer-wordmark" aria-hidden="true">
-        <svg
-          className="footer-wordmark-art"
-          viewBox="0 0 1152 240"
-          preserveAspectRatio="xMidYMax meet"
-          focusable="false"
-        >
-          <motion.path
-            d={ROOFLINE}
-            fill="none"
-            stroke="var(--lime)"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            initial={reduce ? false : { pathLength: 0, opacity: 0 }}
-            whileInView={reduce ? {} : { pathLength: 1, opacity: 0.34 }}
-            viewport={{ once: true, amount: 0.35 }}
-            transition={{ duration: 1.8, ease: [0.16, 1, 0.3, 1] }}
-          />
-          <motion.path
-            d="M0 208 H1152"
-            fill="none"
-            stroke="rgba(255, 253, 248, 0.16)"
-            strokeWidth="1.5"
-            initial={reduce ? false : { pathLength: 0 }}
-            whileInView={reduce ? {} : { pathLength: 1 }}
-            viewport={{ once: true, amount: 0.35 }}
-            transition={{ duration: 1.2, delay: 0.25, ease: 'easeOut' }}
-          />
-        </svg>
-
-        <span className="footer-wordmark-type">
-          ORVN
-          <i className="footer-wordmark-dot" />
-        </span>
+        <img src="/logo.png" width={132} height={132} alt="" className="footer-wordmark-logo" />
       </div>
     </footer>
   );

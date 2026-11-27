@@ -18,7 +18,7 @@ export default function AdminNav({ email }) {
   return (
     <aside className="adm-side">
       <Link href="/admin" className="adm-brand">
-        <span className="adm-mark" aria-hidden="true">O</span>
+        <span className="adm-mark" aria-hidden="true"><img src="/logo.png" width={26} height={26} alt="" /></span>
         <span>
           <strong>ORREI</strong>
           <em>Operator console</em>

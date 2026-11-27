@@ -292,6 +292,14 @@
   overflow: visible;
 }
 
+.footer-wordmark-logo {
+  position: relative;
+  display: block;
+  width: clamp(72px, 9vw, 132px);
+  height: auto;
+  border-radius: 18px;
+}
+
 .footer-wordmark-type {
   position: relative;
   display: block;

@@ -3,28 +3,18 @@
 import React from 'react';
 import Link from 'next/link';
 
-/** The ORVN Studios mark: a soft square holding a roofline cut from the accent. */
+/** The ORREI mark, served from /logo.png so the same asset carries everywhere. */
 export function Mark({ size = 30, className = '' }) {
   return (
-    <svg
+    <img
+      src="/logo.png"
       width={size}
       height={size}
-      viewBox="0 0 32 32"
       className={className}
+      alt=""
       aria-hidden="true"
       focusable="false"
-    >
-      <rect width="32" height="32" rx="10" fill="currentColor" />
-      <path
-        d="M8 19.6 16 12l8 7.6"
-        stroke="var(--lime, #c9f26e)"
-        strokeWidth="2.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
-      />
-      <circle cx="16" cy="22.4" r="1.7" fill="var(--lime, #c9f26e)" />
-    </svg>
+    />
   );
 }
 

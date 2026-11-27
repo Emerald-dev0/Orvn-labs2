@@ -13,7 +13,7 @@ export const metadata = {
   description:
     'ORREI, from ORVN Labs, turns property details into presentations you can share: organise a property, prepare an editable deal sheet and publish a professional page linked to your profile.',
   applicationName: 'ORREI',
-  icons: { icon: '/favicon.svg' },
+  icons: { icon: '/logo.png', apple: '/logo.png' },
   manifest: '/manifest.json',
   openGraph: {
     type: 'website',

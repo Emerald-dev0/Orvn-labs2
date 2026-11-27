@@ -52,6 +52,7 @@
   color: var(--lime);
 }
 .ws-brand-mark svg { width: 17px; height: 17px; }
+.ws-brand-mark img { width: 22px; height: 22px; border-radius: 6px; display: block; }
 .ws-brand-text { display: flex; align-items: baseline; gap: 7px; }
 .ws-brand-text strong {
   font-family: var(--font-display);
@@ -1011,7 +1012,9 @@
   display: grid; place-items: center;
   background: var(--lime); color: var(--lime-ink);
   font-weight: 700; font-size: 13px;
+  overflow: hidden;
 }
+.adm-mark img { width: 26px; height: 26px; display: block; }
 .adm-brand strong { display: block; font-size: 14px; letter-spacing: 0.12em; }
 .adm-brand em { display: block; font-style: normal; font-size: 11px; color: rgba(255, 253, 248, 0.55); }
 .adm-nav { display: flex; gap: 18px; }
