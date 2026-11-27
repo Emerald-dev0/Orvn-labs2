@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useRef } from 'react';
+import { useActionState, useEffect, useRef, useState } from 'react';
 import { Icon } from './icons';
 import { uploadSiteMedia, removeSiteMedia } from '../../lib/actions/site';
 
@@ -21,8 +21,19 @@ export default function SiteImageSlot({ kind, label, note, currentKey, published
   const [removeState, remove, removing] = useActionState(removeSiteMedia, { status: 'idle' });
   const inputRef = useRef(null);
 
+  // What the slot shows. The server key is the source of truth; local state only bridges the
+  // gap between a successful action and the revalidated prop arriving.
+  const [isSet, setIsSet] = useState(Boolean(currentKey));
+  useEffect(() => setIsSet(Boolean(currentKey)), [currentKey]);
+  useEffect(() => {
+    if (uploadState.status === 'ok') setIsSet(true);
+  }, [uploadState]);
+  useEffect(() => {
+    if (removeState.status === 'ok') setIsSet(false);
+  }, [removeState]);
+
   const state = uploadState.status !== 'idle' ? uploadState : removeState;
-  const isSet = Boolean(currentKey) || uploadState.status === 'ok';
+  const busy = uploading || removing;
 
   function onPick(event) {
     const file = event.target.files?.[0];
@@ -57,7 +68,7 @@ export default function SiteImageSlot({ kind, label, note, currentKey, published
           <button
             type="button"
             className="ws-btn is-quiet is-sm"
-            disabled={uploading || removing}
+            disabled={busy}
             onClick={() => inputRef.current?.click()}
           >
             <Icon name="upload" size={14} />
@@ -67,7 +78,7 @@ export default function SiteImageSlot({ kind, label, note, currentKey, published
             <button
               type="button"
               className="ws-btn is-quiet is-sm"
-              disabled={removing || uploading}
+              disabled={busy}
               onClick={onRemove}
             >
               {removing ? 'Removing…' : 'Remove'}
@@ -75,6 +86,13 @@ export default function SiteImageSlot({ kind, label, note, currentKey, published
           ) : null}
         </div>
       </div>
+
+      {uploading ? (
+        <div className="ws-upload" role="progressbar" aria-label={`Uploading ${label}`}>
+          <span className="ws-upload-bar" />
+          <span className="ws-small ws-muted">Uploading…</span>
+        </div>
+      ) : null}
 
       <input
         ref={inputRef}
@@ -88,7 +106,7 @@ export default function SiteImageSlot({ kind, label, note, currentKey, published
       {state.status === 'error' ? (
         <p className="ws-small" role="alert" style={{ margin: 0 }}>{state.message}</p>
       ) : null}
-      {state.status === 'ok' ? (
+      {state.status === 'ok' && !uploading ? (
         <p className="ws-small ws-muted" role="status" style={{ margin: 0 }}>{state.message}</p>
       ) : null}
     </div>

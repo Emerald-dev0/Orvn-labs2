@@ -892,6 +892,35 @@
 }
 .ws-input:focus-visible { outline: 2px solid var(--lime-2); outline-offset: 1px; border-color: var(--ink); }
 
+/* --- Upload progress (indeterminate bar while a server action runs) ------------------ */
+.ws-upload { display: grid; gap: 5px; }
+.ws-upload-bar {
+  position: relative;
+  display: block;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--bone-3);
+  overflow: hidden;
+}
+.ws-upload-bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 40%;
+  border-radius: 999px;
+  background: var(--lime-2);
+  animation: ws-upload-slide 1.1s ease-in-out infinite;
+}
+@keyframes ws-upload-slide {
+  0% { transform: translateX(-110%); }
+  100% { transform: translateX(260%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ws-upload-bar::after { animation: none; width: 100%; opacity: 0.6; }
+}
+
 /* --- Custom select (workspace) ------------------------------------------------------- */
 /* A native select still carries the name and required check, but the visible control is a
    button + listbox so the operating system's menu never opens. */
