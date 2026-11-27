@@ -6,6 +6,7 @@ import { Icon } from '../icons';
 import { PageHead, Card, EmptyState } from '../ui';
 import { updateProfile, unpublishSite } from '../../../lib/actions/site';
 import SiteImageSlot from '../SiteImageSlot';
+import WsSelect from '../WsSelect';
 import { workspace, properties } from '../data';
 
 function Field({ label, name, value, hint, type = 'text', required = false, disabled = false }) {
@@ -150,25 +151,18 @@ export default function Website({ empty = false, data = null, sample = false }) 
               <Field label="Contact phone" name="contactPhone" value={profile?.contactPhone ?? ''} hint="Shown only if you tick the box below." />
               <label style={{ display: 'grid', gap: 6 }}>
                 <span className="ws-small ws-muted">Your role</span>
-                <select
+                <WsSelect
                   name="role"
                   defaultValue={profile?.role ?? ''}
-                  style={{
-                    height: 40,
-                    borderRadius: 12,
-                    border: '1px solid var(--line)',
-                    background: 'var(--bone)',
-                    padding: '0 12px',
-                    fontSize: 14,
-                    color: 'var(--ink)',
-                  }}
-                >
-                  <option value="">Prefer not to say</option>
-                  <option value="wholesaler">Wholesaler / disposition operator</option>
-                  <option value="agent">Agent or broker</option>
-                  <option value="investor">Investor or developer</option>
-                  <option value="other">Something else</option>
-                </select>
+                  placeholder="Prefer not to say"
+                  options={[
+                    { value: '', label: 'Prefer not to say' },
+                    { value: 'wholesaler', label: 'Wholesaler / disposition operator' },
+                    { value: 'agent', label: 'Agent or broker' },
+                    { value: 'investor', label: 'Investor or developer' },
+                    { value: 'other', label: 'Something else' },
+                  ]}
+                />
               </label>
             </div>
 

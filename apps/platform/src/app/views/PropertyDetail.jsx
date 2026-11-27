@@ -9,6 +9,7 @@ import VisibilityControl from '../VisibilityControl';
 import DraftPanel from '../DraftPanel';
 import MediaUploader from '../MediaUploader';
 import MediaTile from '../MediaTile';
+import WsSelect from '../WsSelect';
 import { properties, activity } from '../data';
 import { updateLocation } from '../../../lib/actions/properties';
 import ExtractPanel from '../ExtractPanel';
@@ -208,11 +209,15 @@ function LocationPanel({ property }) {
           </label>
           <label style={labelStyle}>
             <span style={labelText}>Pin precision</span>
-            <select name="locationPrecision" defaultValue={property.locationPrecision ?? 'unknown'} style={fieldStyle}>
-              <option value="unknown">No pin — never shown beyond the disclosure level</option>
-              <option value="approximate">Approximate — neighbourhood-level</option>
-              <option value="exact">Exact pin — required for Exact disclosure</option>
-            </select>
+            <WsSelect
+              name="locationPrecision"
+              defaultValue={property.locationPrecision ?? 'unknown'}
+              options={[
+                { value: 'unknown', label: 'No pin — never shown beyond the disclosure level' },
+                { value: 'approximate', label: 'Approximate — neighbourhood-level' },
+                { value: 'exact', label: 'Exact pin — required for Exact disclosure' },
+              ]}
+            />
           </label>
         </div>
 
