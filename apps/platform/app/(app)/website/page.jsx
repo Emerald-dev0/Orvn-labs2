@@ -22,8 +22,8 @@ export default async function Page({ searchParams }) {
   const [portfolioRow] = await withUserDb(context.viewer.userId, async (tx) =>
     tx
       .select({
-        total: sql<number>`count(*)::int`,
-        published: sql<number>`count(*) filter (where ${properties.publicationStatus} = 'published')::int`,
+        total: sql`count(*)::int`,
+        published: sql`count(*) filter (where ${properties.publicationStatus} = 'published')::int`,
       })
       .from(properties)
       .where(eq(properties.workspaceId, context.workspace.id)),
@@ -34,8 +34,8 @@ export default async function Page({ searchParams }) {
       data={{
         profile,
         workspace,
-        publishedCount: portfolioRow?.published ?? 0,
-        totalCount: portfolioRow?.total ?? 0,
+        publishedCount: Number(portfolioRow?.published ?? 0),
+        totalCount: Number(portfolioRow?.total ?? 0),
       }}
     />
   );
